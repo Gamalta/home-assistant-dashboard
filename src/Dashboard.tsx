@@ -1,13 +1,7 @@
-import {
-  ButtonCard,
-  GarbageCollectionCard,
-  Group,
-  WeatherCard,
-} from '@hakit/components';
-import {GarbageCollectionCardProps} from '@hakit/components/dist/types/Cards/GarbageCollectionCard';
 import Stack from '@mui/material/Stack';
 import {Light} from './components/Light';
 import {IrisIcon} from './components/Icons/IrisIcon';
+import {ButtonCard} from '@hakit/components';
 
 export default function Dashboard() {
   return (
@@ -15,7 +9,8 @@ export default function Dashboard() {
       <Light entity="light.hue_iris" icon={<IrisIcon />} />
       <Light entity="light.hue_play_1" />
       <Light entity="light.salon" />
-      <Group title="coucou">
+      <ButtonCard entity="light.salon" />
+      {/**<Group title="coucou">
         <WeatherCard
           entity="weather.maison"
           forecastType="hourly"
@@ -51,7 +46,7 @@ export default function Dashboard() {
             hideNextCollection: true,
           },
         ]}
-      />
+      /> */}
     </Stack>
   );
 }

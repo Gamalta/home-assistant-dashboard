@@ -6,6 +6,7 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 import {useDialogContext} from '../../contexts/DialogContext';
+import {useState} from 'react';
 
 require('dayjs/locale/fr');
 const dayjs = require('dayjs');
@@ -24,17 +25,41 @@ export function Light(props: LightProps) {
   const lightEntity = useEntity(entity);
   const {open} = useDialogContext();
 
-  const brightness = Math.round(
-    ((lightEntity.attributes.brightness ?? 0) * 100) / 255
-  );
   const lastUpdated = dayjs
     .duration(dayjs().diff(dayjs(lightEntity.last_updated)))
     .locale('fr')
     .humanize();
 
+  const [brightness, setBrightness] = useState(
+    Math.round(((lightEntity.attributes.brightness ?? 0) * 100) / 255)
+  );
+
+  const handleSwitchChange = (checked: boolean) => {
+    if (checked) {
+      lightEntity.service.turnOn();
+      setBrightness(
+        Math.round(((lightEntity.attributes.brightness ?? 0) * 100) / 255)
+      );
+    } else {
+      lightEntity.service.turnOff();
+      setBrightness(0);
+    }
+  };
+
+  const handleBrightnessChange = (value: number) => {
+    setBrightness(value);
+  };
+
+  const handleBrightnessChangeCommitted = (value: number) => {
+    lightEntity.service.turnOn({
+      brightness: Math.round((value as number) * 2.55),
+    });
+  };
+
   return (
     <Card>
       <CardHeader
+        sx={{width: '100%'}}
         avatar={
           <Avatar
             sx={{bgcolor: 'red'}}
@@ -48,11 +73,7 @@ export function Light(props: LightProps) {
         action={
           <Switch
             checked={lightEntity.state === 'on'}
-            onChange={event => {
-              event.target.checked
-                ? lightEntity.service.turnOn()
-                : lightEntity.service.turnOff();
-            }}
+            onChange={(_, checked) => handleSwitchChange(checked)}
           />
         }
         title={lightEntity.attributes.friendly_name}
@@ -61,7 +82,13 @@ export function Light(props: LightProps) {
         } - modifié il y a ${lastUpdated}`}
       />
       <Box px={2}>
-        <Slider />
+        <Slider
+          value={brightness}
+          onChange={(_, value) => handleBrightnessChange(value as number)}
+          onChangeCommitted={(_, value) =>
+            handleBrightnessChangeCommitted(value as number)
+          }
+        />
       </Box>
     </Card>
   );
