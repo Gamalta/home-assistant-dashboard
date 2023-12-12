@@ -6,7 +6,6 @@ import {theme} from './theme/theme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
 function App() {
-  console.log('coucou', process.env.REACT_APP_HASS_URL);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
