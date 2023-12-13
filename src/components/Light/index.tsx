@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import Switch from '@mui/material/Switch';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
@@ -6,7 +7,6 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 import {useDialogContext} from '../../contexts/DialogContext';
-import {useState} from 'react';
 
 require('dayjs/locale/fr');
 const dayjs = require('dayjs');
@@ -31,30 +31,18 @@ export function Light(props: LightProps) {
     .humanize();
 
   const [brightness, setBrightness] = useState(
-    Math.round(((lightEntity.attributes.brightness ?? 0) * 100) / 255)
+    lightEntity.attributes.brightness
+      ? Math.round((lightEntity.attributes.brightness * 100) / 255)
+      : undefined
   );
 
-  const handleSwitchChange = (checked: boolean) => {
-    if (checked) {
-      lightEntity.service.turnOn();
+  useEffect(() => {
+    if (lightEntity.attributes.brightness) {
       setBrightness(
-        Math.round(((lightEntity.attributes.brightness ?? 0) * 100) / 255)
+        Math.round((lightEntity.attributes.brightness * 100) / 255)
       );
-    } else {
-      lightEntity.service.turnOff();
-      setBrightness(0);
     }
-  };
-
-  const handleBrightnessChange = (value: number) => {
-    setBrightness(value);
-  };
-
-  const handleBrightnessChangeCommitted = (value: number) => {
-    lightEntity.service.turnOn({
-      brightness: Math.round((value as number) * 2.55),
-    });
-  };
+  }, [lightEntity.state]);
 
   return (
     <Card>
@@ -73,7 +61,11 @@ export function Light(props: LightProps) {
         action={
           <Switch
             checked={lightEntity.state === 'on'}
-            onChange={(_, checked) => handleSwitchChange(checked)}
+            onChange={(_, checked) =>
+              checked
+                ? lightEntity.service.turnOn()
+                : (lightEntity.service.turnOff(), setBrightness(0))
+            }
           />
         }
         title={lightEntity.attributes.friendly_name}
@@ -84,9 +76,11 @@ export function Light(props: LightProps) {
       <Box px={2}>
         <Slider
           value={brightness}
-          onChange={(_, value) => handleBrightnessChange(value as number)}
+          onChange={(_, value) => setBrightness(value as number)}
           onChangeCommitted={(_, value) =>
-            handleBrightnessChangeCommitted(value as number)
+            lightEntity.service.turnOn({
+              brightness: Math.round((value as number) * 2.55),
+            })
           }
         />
       </Box>
