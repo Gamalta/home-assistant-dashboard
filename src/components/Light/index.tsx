@@ -33,8 +33,18 @@ export function Light(props: LightProps) {
   const [brightness, setBrightness] = useState(
     lightEntity.attributes.brightness
       ? Math.round((lightEntity.attributes.brightness * 100) / 255)
-      : undefined
+      : 0
   );
+
+  const textColor =
+    lightEntity.state === 'on' &&
+    (lightEntity.custom.color[0] * 299 +
+      lightEntity.custom.color[1] * 587 +
+      lightEntity.custom.color[2] * 114) /
+      1000 <
+      128
+      ? 'white'
+      : 'black';
 
   useEffect(() => {
     if (lightEntity.attributes.brightness) {
@@ -48,7 +58,7 @@ export function Light(props: LightProps) {
     <Card
       sx={{
         background: `linear-gradient(0deg, rgba(0, 0, 0, ${
-          ((100 - (brightness ?? 0)) * 0.5) / 100 + 0.3
+          ((100 - brightness) * 0.5) / 100 + 0.3
         }) 0%, rgba(255, 255, 255, 0) 100%), ${lightEntity.custom.hexColor}`,
       }}
     >
@@ -75,9 +85,15 @@ export function Light(props: LightProps) {
           />
         }
         title={lightEntity.attributes.friendly_name}
+        titleTypographyProps={{
+          color: textColor,
+        }}
         subheader={`${
           lightEntity.state === 'on' ? `allumé - ${brightness}%` : 'éteint'
         } - modifié il y a ${lastUpdated}`}
+        subheaderTypographyProps={{
+          color: textColor,
+        }}
       />
       <Box px={2}>
         <Slider
