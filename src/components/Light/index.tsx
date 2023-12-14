@@ -48,7 +48,7 @@ export function Light(props: LightProps) {
     <Card
       sx={{
         background: `linear-gradient(0deg, rgba(0, 0, 0, ${
-          (brightness ?? 0 / 100) * (0.8 - 0.3) + 0.3
+          ((100 - (brightness ?? 0)) * 0.5) / 100 + 0.3
         }) 0%, rgba(255, 255, 255, 0) 100%), ${lightEntity.custom.hexColor}`,
       }}
     >
