@@ -45,7 +45,13 @@ export function Light(props: LightProps) {
   }, [lightEntity.state]);
 
   return (
-    <Card>
+    <Card
+      sx={{
+        background: `linear-gradient(0deg, rgba(0, 0, 0, ${
+          (brightness ?? 0 / 100) * (0.8 - 0.3) + 0.3
+        }) 0%, rgba(255, 255, 255, 0) 100%), ${lightEntity.custom.hexColor}`,
+      }}
+    >
       <CardHeader
         sx={{width: '100%'}}
         avatar={
