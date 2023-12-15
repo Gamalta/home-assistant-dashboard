@@ -3,4 +3,6 @@ import {PaletteOptions} from '@mui/material/styles/createPalette';
 
 const augmentColor = createTheme().palette.augmentColor;
 
-export const Palette: PaletteOptions = {};
+export const Palette: PaletteOptions = {
+  mode: 'dark',
+};
