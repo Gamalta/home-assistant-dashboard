@@ -4,14 +4,15 @@ import {hsv2rgb, rgb2hex, rgb2hs, useLightColor} from '@hakit/core';
 import {adjustRgb, drawColorWheel} from './utils';
 import {Point, motion, useDragControls} from 'framer-motion';
 
-export interface ColorPickerProps {
+export type ColorPickerProps = {
   defaultColor: [number, number, number];
   minKelvin?: number;
   maxKelvin?: number;
   lightColors: ReturnType<typeof useLightColor>;
-  onChangeApplied?: (colors: string) => void;
-  onChange?: (color: string) => void;
-}
+  onChangeApplied?: (color: [number, number, number]) => void;
+  onChange?: (color: [number, number, number]) => void;
+};
+
 export function ColorPicker(props: ColorPickerProps) {
   const {
     defaultColor,
@@ -23,13 +24,9 @@ export function ColorPicker(props: ColorPickerProps) {
   } = props;
 
   const [color, setColor] = useState<[number, number, number]>(defaultColor);
-  const [position, setPosition] = useState<{
-    x: number;
-    y: number;
-  }>({x: -1, y: -1});
+  const [position, setPosition] = useState({x: -1, y: -1});
   const dragControls = useDragControls();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const elementRef = useRef<HTMLDivElement>(null);
 
   const getCoordFromHSLColor = useCallback(
     ([hue, saturation]: [number, number]) => {
@@ -74,8 +71,7 @@ export function ColorPicker(props: ColorPickerProps) {
 
   const getHSLColorFromCoord = useCallback((x: number, y: number) => {
     const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
-    const saturation =
-      Math.round(Math.min(Math.sqrt(x * x + y * y), 1) * 100) / 100;
+    const saturation = Math.round(Math.min(Math.hypot(x, y), 1) * 100) / 100;
     return {hue, saturation};
   }, []);
 
@@ -114,9 +110,7 @@ export function ColorPicker(props: ColorPickerProps) {
 
   useEffect(() => {
     generateColorWheel();
-    console.log('entree', lightColors.hs, rgb2hs(defaultColor));
-    const pos = getCoordFromHSLColor(lightColors.hs ?? rgb2hs(defaultColor));
-    console.log('pos', pos);
+    const pos = getCoordFromHSLColor(rgb2hs(defaultColor));
     setPosition(pos);
   }, [generateColorWheel]);
 
@@ -133,7 +127,7 @@ export function ColorPicker(props: ColorPickerProps) {
       lightColors.warmWhite
     );
     setColor(color);
-    onChange && onChange(rgb2hex(color));
+    onChange && onChange(color);
 
     const {clientWidth, clientHeight} = canvasRef.current;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -157,20 +151,16 @@ export function ColorPicker(props: ColorPickerProps) {
       />
       <Picker
         drag
-        ref={elementRef}
         dragControls={dragControls}
         dragMomentum={false}
         onDrag={onDrag}
-        onDragEnd={() => onChangeApplied && onChangeApplied(rgb2hex(color))}
-        whileTap={{scale: 1.5}}
-        whileHover={{scale: 1.2}}
+        onDragEnd={() => onChangeApplied && onChangeApplied(color)}
+        whileTap={{scale: 1.5, cursor: 'grabbing'}}
+        whileHover={{scale: 1.2, cursor: 'grab'}}
         style={{
           backgroundColor: `rgb(${color.join(',')})`,
         }}
       />
-      <>
-        x: {position.x} | y: {position.y}
-      </>
     </Container>
   );
 }

@@ -52,8 +52,12 @@ export function DialogProvider({children}: {children: React.ReactNode}) {
           },
         }}
       >
-        <Stack p={2} gap={2}>
-          <Stack direction="row-reverse">
+        <Stack p={2} gap={2} alignItems="center">
+          <Stack
+            direction="row-reverse"
+            justifyContent="space-between"
+            width="100%"
+          >
             <IconButton onClick={() => handleClose()}>
               <CloseIcon />
             </IconButton>

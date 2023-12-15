@@ -1,4 +1,10 @@
-import {hsv2rgb, rgb2hex, rgbw2rgb, rgbww2rgb} from '@hakit/core';
+import {
+  hsv2rgb,
+  rgb2hex,
+  rgbw2rgb,
+  rgbww2rgb,
+  temperature2rgb,
+} from '@hakit/core';
 
 export function drawColorWheel(
   ctx: CanvasRenderingContext2D,
@@ -44,6 +50,35 @@ export function drawColorWheel(
     gradient.addColorStop(0, start);
     gradient.addColorStop(1, end);
     ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+}
+
+export function drawColorTempWheel(
+  ctx: CanvasRenderingContext2D,
+  minTemp: number,
+  maxTemp: number
+) {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  const radius = ctx.canvas.width / 2;
+
+  const min = Math.max(minTemp, 2000);
+  const max = Math.min(maxTemp, 40000);
+
+  for (let y = -radius; y < radius; y += 1) {
+    const x = radius * Math.sqrt(1 - (y / radius) ** 2);
+
+    const fraction = (y / (radius * 0.9) + 1) / 2;
+
+    const temperature = Math.max(
+      Math.min(min + fraction * (max - min), max),
+      min
+    );
+
+    const color = rgb2hex(temperature2rgb(temperature));
+
+    ctx.fillStyle = color;
+    ctx.fillRect(radius - x, radius + y - 0.5, 2 * x, 2);
     ctx.fill();
   }
 }
