@@ -7,6 +7,7 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 import {useDialogContext} from '../../contexts/DialogContext';
+import {LightModal} from './LightModal';
 
 require('dayjs/locale/fr');
 const dayjs = require('dayjs');
@@ -23,7 +24,7 @@ type LightProps = {
 export function Light(props: LightProps) {
   const {entity, icon} = props;
   const lightEntity = useEntity(entity);
-  const {open} = useDialogContext();
+  const {open, setContent} = useDialogContext();
 
   const lastUpdated = dayjs
     .duration(dayjs().diff(dayjs(lightEntity.last_updated)))
@@ -66,9 +67,17 @@ export function Light(props: LightProps) {
         sx={{width: '100%'}}
         avatar={
           <Avatar
-            sx={{bgcolor: 'red'}}
             onClick={() => {
+              setContent(<LightModal entity={lightEntity} />);
               open();
+            }}
+            sx={{
+              bgcolor: 'transparent',
+              '& svg': {
+                height: 46,
+                width: 46,
+                fill: textColor,
+              },
             }}
           >
             {icon}
