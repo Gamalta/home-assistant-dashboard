@@ -10,7 +10,7 @@ export const theme = responsiveFontSizes(
     typography: Typography,
     components: {},
     shape: {
-      borderRadius: 8,
+      borderRadius: 12,
     },
   })
 );
