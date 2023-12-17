@@ -6,11 +6,15 @@ import {ButtonCard} from '@hakit/components';
 export default function Dashboard() {
   return (
     <Stack gap={2} p={2} direction={{xs: 'column', sm: 'row'}}>
-      <Light entity="light.hue_iris" icon={<IrisIcon />} />
-      <Light entity="light.hue_play_1" />
+      <Light
+        entityGroup="light.sejour"
+        lights={['light.hue_iris', 'light.salon']}
+        icon={<IrisIcon />}
+      />
+      <ButtonCard entity="light.sejour" />
+      {/*<Light entity="light.hue_play_1" />
       <Light entity="light.salon" />
-      <ButtonCard entity="light.salon" />
-      {/**<Group title="coucou">
+      *<Group title="coucou">
         <WeatherCard
           entity="weather.maison"
           forecastType="hourly"
