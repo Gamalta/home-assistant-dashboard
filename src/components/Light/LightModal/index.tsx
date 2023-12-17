@@ -1,12 +1,7 @@
-import {
-  HassEntityWithService,
-  lightSupportsColor,
-  useLightColor,
-} from '@hakit/core';
+import {HassEntityWithService, useLightColor} from '@hakit/core';
 import SvgIcon from '@mui/material/SvgIcon';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNewRounded';
-import Brightness6Icon from '@mui/icons-material/Brightness6Rounded';
 import {ColorPicker} from './ColorPicker';
 import {ColorTempPicker} from './ColorTempPicker';
 import Stack from '@mui/material/Stack';
@@ -16,7 +11,8 @@ import Divider from '@mui/material/Divider';
 import {useState} from 'react';
 
 type LightModalProps = {
-  entity: HassEntityWithService<'light'>;
+  entityGroup: HassEntityWithService<'light'>;
+  entities: HassEntityWithService<'light'>[];
 };
 
 enum LightModalTab {
@@ -26,48 +22,36 @@ enum LightModalTab {
 }
 
 export function LightModal(props: LightModalProps) {
-  const {entity} = props;
-  const {attributes} = entity;
-  const lightColors = useLightColor(entity);
-  const supportsColor = lightSupportsColor(entity);
-  const [control, setControl] = useState(
-    supportsColor ? LightModalTab.Color : LightModalTab.Temperature
-  );
+  const {entityGroup, entities} = props;
+  const lightColors = useLightColor(entityGroup);
+  const [control, setControl] = useState(LightModalTab.Color);
 
   return (
-    <Stack
-    //justifyContent={device.xxs ? 'flex-start' : 'center'}
-    >
-      <Stack>
+    <Stack gap={2} justifyContent="space-between" height="100%">
+      {
         {
-          {
-            color: (
-              <ColorPicker
-                key="color"
-                defaultColor={attributes.rgb_color ?? [0, 0, 0]}
-                minKelvin={attributes.min_color_temp_kelvin}
-                maxKelvin={attributes.max_color_temp_kelvin}
-                lightColors={lightColors}
-                onChangeApplied={color => {
-                  entity.service.turnOn({rgb_color: color});
-                }}
-              />
-            ),
-            temperature: (
-              <ColorTempPicker
-                key="temp"
-                defaultTemperature={attributes.color_temp_kelvin ?? 2000}
-                minKelvin={attributes.min_color_temp_kelvin}
-                maxKelvin={attributes.max_color_temp_kelvin}
-                onChangeApplied={kelvin => {
-                  entity.service.turnOn({kelvin});
-                }}
-              />
-            ),
-            effect: <div key="effect">Effect</div>,
-          }[control]
-        }
-      </Stack>
+          color: (
+            <ColorPicker
+              key="color"
+              entities={entities}
+              lightColors={lightColors}
+              onChangeApplied={(entity, color) => {
+                entity.service.turnOn({rgb_color: color});
+              }}
+            />
+          ),
+          temperature: (
+            <ColorTempPicker
+              key="temp"
+              entities={entities}
+              onChangeApplied={(entity, kelvin) => {
+                //entity.service.turnOn({kelvin});
+              }}
+            />
+          ),
+          effect: <div key="effect">Effect</div>,
+        }[control]
+      }
 
       <ToggleButtonGroup
         exclusive
@@ -77,25 +61,23 @@ export function LightModal(props: LightModalProps) {
         <ToggleButton
           value={LightModalTab.Color}
           onClick={() => {
-            entity.service.toggle();
+            entityGroup.service.toggle();
           }}
           sx={{'&.Mui-selected': {bgcolor: 'transparent'}}}
         >
           <PowerSettingsNewIcon />
         </ToggleButton>
         <Divider />
-        {supportsColor && (
-          <ToggleButton value={LightModalTab.Color} key="buttonColor">
-            <SvgIcon
-              viewBox="0 0 24 24"
-              sx={{
-                backgroundImage: 'url(color_wheel.png)',
-                backgroundSize: 'cover',
-                borderRadius: '50%',
-              }}
-            />
-          </ToggleButton>
-        )}
+        <ToggleButton value={LightModalTab.Color} key="buttonColor">
+          <SvgIcon
+            viewBox="0 0 24 24"
+            sx={{
+              backgroundImage: 'url(color_wheel.png)',
+              backgroundSize: 'cover',
+              borderRadius: '50%',
+            }}
+          />
+        </ToggleButton>
         <ToggleButton value={LightModalTab.Temperature} key="buttonTemp">
           <SvgIcon
             viewBox="0 0 24 24"

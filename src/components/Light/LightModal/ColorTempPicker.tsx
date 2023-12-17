@@ -1,27 +1,20 @@
 import {useRef, useCallback, useEffect, useState} from 'react';
 import styled from '@emotion/styled';
-import {temperature2rgb, rgb2hex} from '@hakit/core';
-import {drawColorTempWheel} from './utils';
+import {temperature2rgb, rgb2hex, HassEntityWithService} from '@hakit/core';
+import {drawColorTempWheel, getRelativePosition} from './utils';
 import {Point, motion, useDragControls} from 'framer-motion';
 
 export interface ColorTempPickerProps {
-  defaultTemperature: number;
-  minKelvin?: number;
-  maxKelvin?: number;
+  entities: HassEntityWithService<'light'>[];
   onChangeApplied?: (kelvin: number, color: string) => void;
   onChange?: (kelvin: number, color: string) => void;
 }
 
 export function ColorTempPicker(props: ColorTempPickerProps) {
-  const {
-    defaultTemperature,
-    minKelvin = 2000,
-    maxKelvin = 10000,
-    onChangeApplied,
-    onChange,
-  } = props;
-
-  const [temperature, setColor] = useState(defaultTemperature);
+  const {entities, onChangeApplied, onChange} = props;
+  const minKelvin = 2000;
+  const maxKelvin = 10000;
+  const [temperature, setColor] = useState(2000); //TODO
   const [position, setPosition] = useState({x: -1, y: -1});
   const dragControls = useDragControls();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -68,15 +61,6 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
     [minKelvin, maxKelvin]
   );
 
-  const getRelativePosition = useCallback((x: number, y: number) => {
-    if (!canvasRef.current) return {x: 0, y: 0};
-    const canvas = canvasRef.current;
-    const {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
-    const xRel = (2 * (x - canvasX)) / canvas.clientWidth - 1;
-    const yRel = (2 * (y - canvasY)) / canvas.clientHeight - 1;
-    return {x: xRel, y: yRel};
-  }, []);
-
   const onDrag = useCallback(
     (
       _: MouseEvent | TouchEvent | PointerEvent | null,
@@ -84,7 +68,7 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
     ) => {
       if (!canvasRef.current) return;
 
-      const {x, y} = getRelativePosition(info.point.x, info.point.y);
+      const {x, y} = getRelativePosition(canvasRef, info.point.x, info.point.y);
       const radius = canvasRef.current.clientWidth / 2;
       const distanceFromMiddle = Math.hypot(x, y);
 
@@ -103,7 +87,7 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
 
   useEffect(() => {
     generateColorWheel();
-    const pos = getCoordsFromTemperature(defaultTemperature);
+    const pos = getCoordsFromTemperature(2000); //TODO
     console.log('set pos', pos);
     setPosition(pos);
   }, [generateColorWheel]);
@@ -111,7 +95,7 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
   useEffect(() => {
     if (position.x === -1 || position.y === -1 || !canvasRef.current) return;
 
-    const {x, y} = getRelativePosition(position.x, position.y);
+    const {x, y} = getRelativePosition(canvasRef, position.x, position.y);
     const temperature = getTemperatureFromCoord(x, y);
     setColor(temperature);
     onChange && onChange(temperature, rgb2hex(temperature2rgb(temperature)));
