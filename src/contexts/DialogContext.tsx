@@ -52,7 +52,7 @@ export function DialogProvider({children}: {children: React.ReactNode}) {
           },
         }}
       >
-        <Stack p={2} gap={2} alignItems="center">
+        <Stack p={2} gap={2} alignItems="center" height="100%">
           <Stack
             direction="row-reverse"
             justifyContent="space-between"
