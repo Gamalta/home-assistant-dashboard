@@ -9,58 +9,47 @@ import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 import {useDialogContext} from '../../contexts/DialogContext';
 import {LightModal} from './LightModal';
 
-require('dayjs/locale/fr');
-const dayjs = require('dayjs');
-const duration = require('dayjs/plugin/duration');
-const relativeTime = require('dayjs/plugin/relativeTime');
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
-
 type LightProps = {
-  entity: FilterByDomain<EntityName, 'light'>;
+  entityGroup: FilterByDomain<EntityName, 'light'>;
+  lights: FilterByDomain<EntityName, 'light'>[];
   icon?: React.ReactNode;
 };
 
 export function Light(props: LightProps) {
-  const {entity, icon} = props;
-  const lightEntity = useEntity(entity);
+  const {entityGroup, lights, icon} = props;
+
+  const entity = useEntity(entityGroup);
+  const entities = lights.map(light => useEntity(light));
   const {open, setContent} = useDialogContext();
 
-  const lastUpdated = dayjs
-    .duration(dayjs().diff(dayjs(lightEntity.last_updated)))
-    .locale('fr')
-    .humanize();
-
   const [brightness, setBrightness] = useState(
-    lightEntity.attributes.brightness
-      ? Math.round((lightEntity.attributes.brightness * 100) / 255)
+    entity.attributes.brightness
+      ? Math.round((entity.attributes.brightness * 100) / 255)
       : 0
   );
 
   const textColor =
-    lightEntity.state === 'on' &&
-    (lightEntity.custom.color[0] * 299 +
-      lightEntity.custom.color[1] * 587 +
-      lightEntity.custom.color[2] * 114) /
+    entity.state === 'on' &&
+    (entity.custom.color[0] * 299 +
+      entity.custom.color[1] * 587 +
+      entity.custom.color[2] * 114) /
       1000 <
       128
       ? 'white'
       : 'black';
 
   useEffect(() => {
-    if (lightEntity.attributes.brightness) {
-      setBrightness(
-        Math.round((lightEntity.attributes.brightness * 100) / 255)
-      );
+    if (entity.attributes.brightness) {
+      setBrightness(Math.round((entity.attributes.brightness * 100) / 255));
     }
-  }, [lightEntity.state]);
+  }, [entity.state]);
 
   return (
     <Card
       sx={{
         background: `linear-gradient(0deg, rgba(0, 0, 0, ${
           ((100 - brightness) * 0.5) / 100 + 0.3
-        }) 0%, rgba(255, 255, 255, 0) 100%), ${lightEntity.custom.hexColor}`,
+        }) 0%, rgba(255, 255, 255, 0) 100%), ${entity.custom.hexColor}`,
       }}
     >
       <CardHeader
@@ -68,7 +57,9 @@ export function Light(props: LightProps) {
         avatar={
           <Avatar
             onClick={() => {
-              setContent(<LightModal entity={lightEntity} />);
+              setContent(
+                <LightModal entityGroup={entity} entities={entities} />
+              );
               open();
             }}
             sx={{
@@ -85,21 +76,19 @@ export function Light(props: LightProps) {
         }
         action={
           <Switch
-            checked={lightEntity.state === 'on'}
+            checked={entity.state === 'on'}
             onChange={(_, checked) =>
               checked
-                ? lightEntity.service.turnOn()
-                : (lightEntity.service.turnOff(), setBrightness(0))
+                ? entity.service.turnOn()
+                : (entity.service.turnOff(), setBrightness(0))
             }
           />
         }
-        title={lightEntity.attributes.friendly_name}
+        title={entity.attributes.friendly_name}
         titleTypographyProps={{
           color: textColor,
         }}
-        subheader={`${
-          lightEntity.state === 'on' ? `allumé - ${brightness}%` : 'éteint'
-        } - modifié il y a ${lastUpdated}`}
+        subheader={entity.state === 'on' ? `allumé - ${brightness}%` : 'éteint'}
         subheaderTypographyProps={{
           color: textColor,
         }}
@@ -109,7 +98,7 @@ export function Light(props: LightProps) {
           value={brightness}
           onChange={(_, value) => setBrightness(value as number)}
           onChangeCommitted={(_, value) =>
-            lightEntity.service.turnOn({
+            entity.service.turnOn({
               brightness: Math.round((value as number) * 2.55),
             })
           }
