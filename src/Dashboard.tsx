@@ -11,6 +11,11 @@ export default function Dashboard() {
         lights={['light.hue_iris', 'light.salon']}
         icon={<IrisIcon />}
       />
+      <Light
+        entityGroup="light.cuisine"
+        lights={['light.hue_play_1']}
+        icon={<IrisIcon />}
+      />
       <ButtonCard entity="light.sejour" />
     </Stack>
   );
