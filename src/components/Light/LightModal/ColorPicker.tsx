@@ -1,8 +1,8 @@
 import {useRef, useCallback, useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 import {HassEntityWithService, useLightColor} from '@hakit/core';
-import {drawColorWheel} from './utils';
-import {motion} from 'framer-motion';
+import {drawColorWheel, getRelativePosition} from './utils';
+import {Point, motion, useDragControls} from 'framer-motion';
 import {Picker} from './Picker';
 
 export type ColorPickerProps = {
@@ -25,7 +25,8 @@ export function ColorPicker(props: ColorPickerProps) {
   const maxKelvin = 10000;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [active, setActive] = useState({id: '', x: -1, y: -1});
+  const [activeIds, setActiveIds] = useState<string[]>([]);
+  const [activePos, setActivePos] = useState({x: -1, y: -1});
 
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
@@ -61,27 +62,36 @@ export function ColorPicker(props: ColorPickerProps) {
         onClick={event => {
           if (!canvasRef.current) return;
           const eventPos = {x: event.clientX, y: event.clientY};
-          setActive(prev => ({
-            ...prev,
-            ...eventPos,
-          }));
+          //move active to pos
         }}
       />
-      {entities.map((entity, index) => (
-        <Picker
-          key={index}
-          canvasRef={canvasRef}
-          entity={entity}
-          active={active.id === entity.entity_id}
-          activePosition={{x: active.x, y: active.y}}
-          lightColors={lightColors}
-          onClick={() => {
-            setActive({id: entity.entity_id, x: -1, y: -1});
-          }}
-          onChange={onChange}
-          onChangeApplied={onChangeApplied}
-        />
-      ))}
+      {entities
+        .filter(entity => !activeIds.includes(entity.entity_id))
+        .map((entity, index) => (
+          <Picker
+            key={index}
+            canvasRef={canvasRef}
+            entities={[entity]}
+            lightColors={lightColors}
+            onClick={() => {
+              setActiveIds(prev => [...prev, entity.entity_id]);
+            }}
+            onChange={onChange}
+            onChangeApplied={onChangeApplied}
+          />
+        ))}
+      <Picker
+        canvasRef={canvasRef}
+        entities={entities.filter(entity =>
+          activeIds.includes(entity.entity_id)
+        )}
+        lightColors={lightColors}
+        onClick={() => {
+          // setActiveIds(prev => [...prev, entity.entity_id]);
+        }}
+        onChange={onChange}
+        onChangeApplied={onChangeApplied}
+      />
     </Container>
   );
 }

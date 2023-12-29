@@ -9,6 +9,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Divider from '@mui/material/Divider';
 import {useState} from 'react';
+import {LightCard} from '../lightCard';
 
 type LightModalProps = {
   entityGroup: HassEntityWithService<'light'>;
@@ -27,7 +28,12 @@ export function LightModal(props: LightModalProps) {
   const [control, setControl] = useState(LightModalTab.Color);
 
   return (
-    <Stack gap={2} justifyContent="space-between" height="100%">
+    <Stack
+      gap={2}
+      justifyContent="space-evenly"
+      alignItems="center"
+      height="100%"
+    >
       {
         {
           color: (
@@ -92,6 +98,11 @@ export function LightModal(props: LightModalProps) {
           <AutoAwesomeIcon />
         </ToggleButton>
       </ToggleButtonGroup>
+      <Stack direction="row" flexWrap="wrap" gap={2} width="100%">
+        {entities.map(entity => (
+          <LightCard entity={entity} variant="small" />
+        ))}
+      </Stack>
     </Stack>
   );
 }

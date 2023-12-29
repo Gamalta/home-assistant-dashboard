@@ -11,9 +11,7 @@ import {adjustRgb, getRelativePosition} from './utils';
 
 export type PickerProps = {
   canvasRef: RefObject<HTMLCanvasElement>;
-  active: boolean;
-  activePosition: Point;
-  entity: HassEntityWithService<'light'>;
+  entities: HassEntityWithService<'light'>[];
   lightColors: ReturnType<typeof useLightColor>;
   onClick(): void;
   onChangeApplied?: (
@@ -27,20 +25,12 @@ export type PickerProps = {
 };
 
 export function Picker(props: PickerProps) {
-  const {
-    canvasRef,
-    active,
-    activePosition,
-    entity,
-    lightColors,
-    onClick,
-    onChange,
-    onChangeApplied,
-  } = props;
+  const {canvasRef, entities, lightColors, onClick, onChange, onChangeApplied} =
+    props;
   const [color, setColor] = useState<[number, number, number]>(
-    entity.attributes.rgb_color ?? [255, 255, 255]
+    entities[0]?.attributes.rgb_color ?? [255, 255, 255]
   );
-  const [position, setPosition] = useState(activePosition);
+  const [position, setPosition] = useState({x: -1, y: -1});
   const dragControls = useDragControls();
 
   const getCoordFromHSLColor = useCallback(
@@ -107,7 +97,7 @@ export function Picker(props: PickerProps) {
       lightColors.warmWhite
     );
     setColor(color);
-    onChange && onChange(entity, color);
+    onChange && entities.forEach(entity => onChange(entity, color));
 
     const {clientWidth, clientHeight} = canvasRef.current;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,12 +118,15 @@ export function Picker(props: PickerProps) {
       dragMomentum={false}
       onClick={onClick}
       onDrag={onDrag}
-      onDragEnd={() => onChangeApplied && onChangeApplied(entity, color)}
+      onDragEnd={() =>
+        onChangeApplied &&
+        entities.forEach(entity => onChangeApplied(entity, color))
+      }
       whileTap={{scale: 1.5, cursor: 'grabbing'}}
       whileHover={{scale: 1.2, cursor: 'grab'}}
       style={{
         backgroundColor: `rgb(${color.join(',')})`,
-        borderColor: active ? 'red' : 'white',
+        borderColor: 'white',
       }}
     />
   );
