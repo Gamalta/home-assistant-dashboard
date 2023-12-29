@@ -1,6 +1,7 @@
 import {
   EntityName,
   FilterByDomain,
+  rgb2hs,
   useEntity,
   useLightColor,
 } from '@hakit/core';
@@ -13,7 +14,7 @@ import Stack from '@mui/material/Stack';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Divider from '@mui/material/Divider';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {LightCard} from '../lightCard';
 
 type LightModalProps = {
@@ -34,17 +35,38 @@ export function LightModal(props: LightModalProps) {
   const lights = entities.map(entity => useEntity(entity));
   const lightColors = useLightColor(lightGroup);
   const [control, setControl] = useState(LightModalTab.Color);
-  const [activeIds, setActiveIds] = useState<string[]>([]);
+  const [activeIds, setActiveIds] = useState<
+    FilterByDomain<EntityName, 'light'>[]
+  >([entities[0]]);
+  const [hoverIds, setHoverIds] = useState<
+    FilterByDomain<EntityName, 'light'>[]
+  >([]);
 
-  const onColorPickerClick = (color: [number, number, number]) => {
-    console.log(color);
-    console.log(activeIds.length);
-    lights
-      .filter(entity => activeIds.includes(entity.entity_id))
-      .forEach(entity => {
-        entity.service.turnOn({rgb_color: color});
-      });
-  };
+  const getCoordFromHSLColor = useCallback(
+    ([hue, saturation]: [number, number]) => {
+      const phi = (hue / 360) * 2 * Math.PI;
+      const sat = Math.min(saturation, 1);
+      const x = Math.cos(phi) * sat;
+      const y = Math.sin(phi) * sat;
+      return {x, y};
+    },
+    []
+  );
+
+  const getColorDistance = useCallback(
+    (color1: [number, number, number], color2: [number, number, number]) => {
+      const [hue1, saturation1] = rgb2hs(color1);
+      const [hue2, saturation2] = rgb2hs(color2);
+
+      const coord1 = getCoordFromHSLColor([hue1, saturation1]);
+      const coord2 = getCoordFromHSLColor([hue2, saturation2]);
+
+      const dx = coord2.x - coord1.x;
+      const dy = coord2.y - coord1.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    },
+    [getCoordFromHSLColor]
+  );
 
   return (
     <Stack
@@ -58,17 +80,64 @@ export function LightModal(props: LightModalProps) {
           color: (
             <ColorPicker
               key="color"
-              entities={lights}
+              entities={entities}
+              hoverEntities={hoverIds}
+              activeEntities={activeIds}
               lightColors={lightColors}
-              onClick={onColorPickerClick}
               onEntitiesClick={entities =>
-                setActiveIds(entities.map(entity => entity.entity_id))
-              }
-              onEntitiesChangeApplied={(entities, color) =>
-                entities.forEach(entity =>
-                  entity.service.turnOn({rgb_color: color})
+                setActiveIds(
+                  entities.map(
+                    entity =>
+                      entity.entity_id as FilterByDomain<EntityName, 'light'>
+                  )
                 )
               }
+              onEntitiesChange={(entities, color) => {
+                const entityIds = new Set(
+                  entities.map(entity => entity.entity_id)
+                );
+                const newHoverIds = lights
+                  .filter(
+                    ({entity_id, custom: {color: entityColor}}) =>
+                      !entityIds.has(entity_id) &&
+                      getColorDistance(color, entityColor) < 0.25
+                  )
+                  .map(
+                    ({entity_id}) =>
+                      entity_id as FilterByDomain<EntityName, 'light'>
+                  );
+                setHoverIds(newHoverIds);
+              }}
+              onEntitiesChangeApplied={(entities, color) => {
+                const entityIds = new Set(
+                  entities.map(
+                    entity =>
+                      entity.entity_id as FilterByDomain<EntityName, 'light'>
+                  )
+                );
+                const newActiveIds: FilterByDomain<EntityName, 'light'>[] = [];
+                const lightsToTurnOn = [...entities];
+
+                lights.forEach(light => {
+                  const entityId = light.entity_id as FilterByDomain<
+                    EntityName,
+                    'light'
+                  >;
+                  if (
+                    !entityIds.has(entityId) &&
+                    getColorDistance(color, light.custom.color) < 0.25
+                  ) {
+                    newActiveIds.push(entityId);
+                    lightsToTurnOn.push(light);
+                  }
+                });
+
+                setActiveIds([...newActiveIds, ...Array.from(entityIds)]);
+                setHoverIds([]);
+                lightsToTurnOn.forEach(light =>
+                  light.service.turnOn({rgb_color: color})
+                );
+              }}
             />
           ),
           temperature: (
@@ -83,9 +152,6 @@ export function LightModal(props: LightModalProps) {
           effect: <div key="effect">Effect</div>,
         }[control]
       }
-      <Divider />
-      <>{activeIds}</>
-      <Divider />
       <ToggleButtonGroup
         exclusive
         value={control}

@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 import {
+  EntityName,
+  FilterByDomain,
   HassEntityWithService,
   hsv2rgb,
   rgb2hs,
+  useEntity,
   useLightColor,
 } from '@hakit/core';
 import {Point, motion, useDragControls} from 'framer-motion';
@@ -11,7 +14,9 @@ import {adjustRgb, getHSLColorFromCoord, getRelativePosition} from './utils';
 
 export type PickerProps = {
   canvasRef: RefObject<HTMLCanvasElement>;
-  entities: HassEntityWithService<'light'>[];
+  entities: FilterByDomain<EntityName, 'light'>[];
+  hovered?: boolean;
+  active?: boolean;
   lightColors: ReturnType<typeof useLightColor>;
   onClick?: (entities: HassEntityWithService<'light'>[]) => void;
   onChangeApplied?: (
@@ -25,10 +30,20 @@ export type PickerProps = {
 };
 
 export function Picker(props: PickerProps) {
-  const {canvasRef, entities, lightColors, onClick, onChange, onChangeApplied} =
-    props;
+  const {
+    canvasRef,
+    entities,
+    hovered = false,
+    active = false,
+    lightColors,
+    onClick,
+    onChange,
+    onChangeApplied,
+  } = props;
+
+  const lights = entities.map(entity => useEntity(entity));
   const [color, setColor] = useState<[number, number, number]>(
-    entities[0]?.attributes.rgb_color ?? [255, 255, 255]
+    lights[0]?.attributes.rgb_color ?? [255, 255, 255]
   );
   const [position, setPosition] = useState({x: -1, y: -1});
   const dragControls = useDragControls();
@@ -59,7 +74,7 @@ export function Picker(props: PickerProps) {
       info: {point: Point}
     ) => {
       if (!canvasRef.current) return;
-      onClick && onClick(entities);
+      onClick && onClick(lights);
 
       const {x, y} = getRelativePosition(canvasRef, info.point.x, info.point.y);
       const radius = canvasRef.current.clientWidth / 2;
@@ -96,7 +111,7 @@ export function Picker(props: PickerProps) {
       lightColors.warmWhite
     );
     setColor(color);
-    onChange && onChange(entities, color);
+    onChange && onChange(lights, color);
 
     const {clientWidth, clientHeight} = canvasRef.current;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,14 +130,14 @@ export function Picker(props: PickerProps) {
       drag
       dragControls={dragControls}
       dragMomentum={false}
-      onClick={() => onClick && onClick(entities)}
+      onClick={() => onClick && onClick(lights)}
       onDrag={onDrag}
-      onDragEnd={() => onChangeApplied && onChangeApplied(entities, color)}
-      whileTap={{scale: 1.5, cursor: 'grabbing'}}
-      whileHover={{scale: 1.2, cursor: 'grab'}}
+      onDragEnd={() => onChangeApplied && onChangeApplied(lights, color)}
+      whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
+      whileHover={{scale: 1.2, zIndex: 10, cursor: 'grab'}}
       style={{
         backgroundColor: `rgb(${color.join(',')})`,
-        borderColor: 'white',
+        borderColor: hovered ? 'red' : active ? 'green' : 'white',
       }}
     />
   );

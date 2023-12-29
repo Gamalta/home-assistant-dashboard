@@ -1,19 +1,20 @@
-import {useRef, useCallback, useEffect, MouseEventHandler} from 'react';
+import {useRef, useCallback, useEffect} from 'react';
 import styled from '@emotion/styled';
-import {HassEntityWithService, hsv2rgb, useLightColor} from '@hakit/core';
 import {
-  adjustRgb,
-  drawColorWheel,
-  getHSLColorFromCoord,
-  getRelativePosition,
-} from './utils';
+  EntityName,
+  FilterByDomain,
+  HassEntityWithService,
+  useLightColor,
+} from '@hakit/core';
+import {drawColorWheel} from './utils';
 import {motion} from 'framer-motion';
 import {Picker} from './Picker';
 
 export type ColorPickerProps = {
-  entities: HassEntityWithService<'light'>[];
+  entities: FilterByDomain<EntityName, 'light'>[];
+  hoverEntities: FilterByDomain<EntityName, 'light'>[];
+  activeEntities: FilterByDomain<EntityName, 'light'>[];
   lightColors: ReturnType<typeof useLightColor>;
-  onClick?: (color: [number, number, number]) => void;
   onEntitiesClick?: (entities: HassEntityWithService<'light'>[]) => void;
   onEntitiesChange?: (
     entities: HassEntityWithService<'light'>[],
@@ -27,9 +28,10 @@ export type ColorPickerProps = {
 
 export function ColorPicker(props: ColorPickerProps) {
   const {
-    entities: entities,
+    entities,
+    hoverEntities,
+    activeEntities,
     lightColors,
-    onClick: onCanvasClick,
     onEntitiesClick,
     onEntitiesChange,
     onEntitiesChangeApplied,
@@ -61,43 +63,37 @@ export function ColorPicker(props: ColorPickerProps) {
     maxKelvin,
   ]);
 
-  const getColorFromCoord = useCallback(
-    (x: number, y: number) => getHSLColorFromCoord(x, y),
-    []
-  );
-
   useEffect(() => {
     generateColorWheel();
   }, [generateColorWheel]);
 
-  const onClick: MouseEventHandler<HTMLCanvasElement> = useCallback(event => {
-    if (!canvasRef.current) return;
-
-    const {x, y} = getRelativePosition(canvasRef, event.clientX, event.clientY);
-    const {hue, saturation} = getColorFromCoord(x, y);
-    const color = adjustRgb(
-      hsv2rgb([hue, saturation, lightColors.colorBrightness ?? 255]),
-      lightColors.white,
-      lightColors.coolWhite,
-      lightColors.warmWhite
-    );
-    onCanvasClick && onCanvasClick(color);
-  }, []);
-
   return (
     <Container>
-      <Canvas ref={canvasRef} width="400px" height="400px" onClick={onClick} />
-      {entities.map((entity, index) => (
-        <Picker
-          key={index}
-          canvasRef={canvasRef}
-          entities={[entity]}
-          lightColors={lightColors}
-          onClick={onEntitiesClick}
-          onChange={onEntitiesChange}
-          onChangeApplied={onEntitiesChangeApplied}
-        />
-      ))}
+      <Canvas ref={canvasRef} width="400px" height="400px" />
+      {entities
+        .filter(entity => !activeEntities.includes(entity))
+        .map(entity => (
+          <Picker
+            key={entity}
+            canvasRef={canvasRef}
+            entities={[entity]}
+            hovered={hoverEntities.includes(entity)}
+            lightColors={lightColors}
+            onClick={onEntitiesClick}
+            onChange={onEntitiesChange}
+            onChangeApplied={onEntitiesChangeApplied}
+          />
+        ))}
+      <Picker
+        key={activeEntities[0]}
+        canvasRef={canvasRef}
+        entities={activeEntities}
+        active={true}
+        lightColors={lightColors}
+        onClick={onEntitiesClick}
+        onChange={onEntitiesChange}
+        onChangeApplied={onEntitiesChangeApplied}
+      />
     </Container>
   );
 }
