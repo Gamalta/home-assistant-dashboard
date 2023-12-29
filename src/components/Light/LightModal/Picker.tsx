@@ -7,19 +7,19 @@ import {
 } from '@hakit/core';
 import {Point, motion, useDragControls} from 'framer-motion';
 import {RefObject, useCallback, useEffect, useState} from 'react';
-import {adjustRgb, getRelativePosition} from './utils';
+import {adjustRgb, getHSLColorFromCoord, getRelativePosition} from './utils';
 
 export type PickerProps = {
   canvasRef: RefObject<HTMLCanvasElement>;
   entities: HassEntityWithService<'light'>[];
   lightColors: ReturnType<typeof useLightColor>;
-  onClick(): void;
+  onClick?: (entities: HassEntityWithService<'light'>[]) => void;
   onChangeApplied?: (
-    entity: HassEntityWithService<'light'>,
+    entities: HassEntityWithService<'light'>[],
     color: [number, number, number]
   ) => void;
   onChange?: (
-    entity: HassEntityWithService<'light'>,
+    entities: HassEntityWithService<'light'>[],
     color: [number, number, number]
   ) => void;
 };
@@ -53,19 +53,13 @@ export function Picker(props: PickerProps) {
     []
   );
 
-  const getHSLColorFromCoord = useCallback((x: number, y: number) => {
-    const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
-    const saturation = Math.round(Math.min(Math.hypot(x, y), 1) * 100) / 100;
-    return {hue, saturation};
-  }, []);
-
   const onDrag = useCallback(
     (
       _: MouseEvent | TouchEvent | PointerEvent | null,
       info: {point: Point}
     ) => {
       if (!canvasRef.current) return;
-      onClick();
+      onClick && onClick(entities);
 
       const {x, y} = getRelativePosition(canvasRef, info.point.x, info.point.y);
       const radius = canvasRef.current.clientWidth / 2;
@@ -84,11 +78,16 @@ export function Picker(props: PickerProps) {
     []
   );
 
+  const getColorFromCoord = useCallback(
+    (x: number, y: number) => getHSLColorFromCoord(x, y),
+    []
+  );
+
   useEffect(() => {
     if (position.x === -1 || position.y === -1 || !canvasRef.current) return;
 
     const {x, y} = getRelativePosition(canvasRef, position.x, position.y);
-    const {hue, saturation} = getHSLColorFromCoord(x, y);
+    const {hue, saturation} = getColorFromCoord(x, y);
 
     const color = adjustRgb(
       hsv2rgb([hue, saturation, lightColors.colorBrightness ?? 255]),
@@ -97,7 +96,7 @@ export function Picker(props: PickerProps) {
       lightColors.warmWhite
     );
     setColor(color);
-    onChange && entities.forEach(entity => onChange(entity, color));
+    onChange && onChange(entities, color);
 
     const {clientWidth, clientHeight} = canvasRef.current;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,12 +115,9 @@ export function Picker(props: PickerProps) {
       drag
       dragControls={dragControls}
       dragMomentum={false}
-      onClick={onClick}
+      onClick={() => onClick && onClick(entities)}
       onDrag={onDrag}
-      onDragEnd={() =>
-        onChangeApplied &&
-        entities.forEach(entity => onChangeApplied(entity, color))
-      }
+      onDragEnd={() => onChangeApplied && onChangeApplied(entities, color)}
       whileTap={{scale: 1.5, cursor: 'grabbing'}}
       whileHover={{scale: 1.2, cursor: 'grab'}}
       style={{

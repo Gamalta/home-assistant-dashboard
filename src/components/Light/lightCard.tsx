@@ -1,15 +1,15 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Switch from '@mui/material/Switch';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
-import {HassEntityWithService} from '@hakit/core';
 import CardActionArea from '@mui/material/CardActionArea';
+import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 
 type LightCardProps = {
-  entity: HassEntityWithService<'light'>;
+  entity: FilterByDomain<EntityName, 'light'>;
   icon?: React.ReactNode;
   variant?: 'small' | 'normal';
   active?: boolean;
@@ -19,27 +19,29 @@ type LightCardProps = {
 export function LightCard(props: LightCardProps) {
   const {entity, icon, variant = 'normal', active, onClick} = props;
 
+  const light = useEntity(entity);
+
   const [brightness, setBrightness] = useState(
-    entity.attributes.brightness
-      ? Math.round((entity.attributes.brightness * 100) / 255)
+    light.attributes.brightness
+      ? Math.round((light.attributes.brightness * 100) / 255)
       : 0
   );
 
   const textColor =
-    entity.state === 'on' &&
-    (entity.custom.color[0] * 299 +
-      entity.custom.color[1] * 587 +
-      entity.custom.color[2] * 114) /
+    light.state === 'on' &&
+    (light.custom.color[0] * 299 +
+      light.custom.color[1] * 587 +
+      light.custom.color[2] * 114) /
       1000 <
       128
       ? 'white'
       : 'black';
 
   useEffect(() => {
-    if (entity.attributes.brightness) {
-      setBrightness(Math.round((entity.attributes.brightness * 100) / 255));
+    if (light.attributes.brightness) {
+      setBrightness(Math.round((light.attributes.brightness * 100) / 255));
     }
-  }, [entity.state]);
+  }, [light.state]);
 
   return (
     <Card
@@ -47,12 +49,12 @@ export function LightCard(props: LightCardProps) {
         background: `linear-gradient(0deg, rgba(0, 0, 0, ${
           ((100 - brightness) * 0.5) / 100 + 0.3
         }) 0%, rgba(255, 255, 255, 0) 100%), ${
-          entity.custom.hexColor
+          light.custom.hexColor
         } content-box`,
         ...(variant === 'small' && active
           ? {
               padding: '2px',
-              border: `2px solid ${entity.custom.hexColor}`,
+              border: `2px solid ${light.custom.hexColor}`,
             }
           : {margin: '4px'}),
       }}
@@ -84,25 +86,25 @@ export function LightCard(props: LightCardProps) {
           }
           action={
             <Switch
-              checked={entity.state === 'on'}
+              checked={light.state === 'on'}
               onClick={event => {
                 event.stopPropagation();
               }}
               onChange={(_, checked) =>
                 checked
-                  ? entity.service.turnOn()
-                  : (entity.service.turnOff(), setBrightness(0))
+                  ? light.service.turnOn()
+                  : (light.service.turnOff(), setBrightness(0))
               }
             />
           }
-          title={entity.attributes.friendly_name}
+          title={light.attributes.friendly_name}
           titleTypographyProps={{
             color: textColor,
             align: variant === 'small' ? 'center' : 'left',
           }}
           subheader={
             variant === 'normal'
-              ? entity.state === 'on'
+              ? light.state === 'on'
                 ? `allumé - ${brightness}%`
                 : 'éteint'
               : undefined
@@ -120,7 +122,7 @@ export function LightCard(props: LightCardProps) {
               }}
               onChange={(_, value) => setBrightness(value as number)}
               onChangeCommitted={(_, value) =>
-                entity.service.turnOn({
+                light.service.turnOn({
                   brightness: Math.round((value as number) * 2.55),
                 })
               }

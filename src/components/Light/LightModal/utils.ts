@@ -5,7 +5,7 @@ import {
   rgbww2rgb,
   temperature2rgb,
 } from '@hakit/core';
-import {RefObject, useCallback} from 'react';
+import {RefObject} from 'react';
 
 export function drawColorWheel(
   ctx: CanvasRenderingContext2D,
@@ -120,4 +120,10 @@ export const getRelativePosition = (
   const xRel = (2 * (x - canvasX)) / canvas.clientWidth - 1;
   const yRel = (2 * (y - canvasY)) / canvas.clientHeight - 1;
   return {x: xRel, y: yRel};
+};
+
+export const getHSLColorFromCoord = (x: number, y: number) => {
+  const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
+  const saturation = Math.round(Math.min(Math.hypot(x, y), 1) * 100) / 100;
+  return {hue, saturation};
 };

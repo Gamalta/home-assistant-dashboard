@@ -1,4 +1,9 @@
-import {HassEntityWithService, useLightColor} from '@hakit/core';
+import {
+  EntityName,
+  FilterByDomain,
+  useEntity,
+  useLightColor,
+} from '@hakit/core';
 import SvgIcon from '@mui/material/SvgIcon';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNewRounded';
@@ -12,8 +17,8 @@ import {useState} from 'react';
 import {LightCard} from '../lightCard';
 
 type LightModalProps = {
-  entityGroup: HassEntityWithService<'light'>;
-  entities: HassEntityWithService<'light'>[];
+  entityGroup: FilterByDomain<EntityName, 'light'>;
+  entities: FilterByDomain<EntityName, 'light'>[];
 };
 
 enum LightModalTab {
@@ -24,9 +29,22 @@ enum LightModalTab {
 
 export function LightModal(props: LightModalProps) {
   const {entityGroup, entities} = props;
-  const lightColors = useLightColor(entityGroup);
+
+  const lightGroup = useEntity(entityGroup);
+  const lights = entities.map(entity => useEntity(entity));
+  const lightColors = useLightColor(lightGroup);
   const [control, setControl] = useState(LightModalTab.Color);
   const [activeIds, setActiveIds] = useState<string[]>([]);
+
+  const onColorPickerClick = (color: [number, number, number]) => {
+    console.log(color);
+    console.log(activeIds.length);
+    lights
+      .filter(entity => activeIds.includes(entity.entity_id))
+      .forEach(entity => {
+        entity.service.turnOn({rgb_color: color});
+      });
+  };
 
   return (
     <Stack
@@ -40,17 +58,23 @@ export function LightModal(props: LightModalProps) {
           color: (
             <ColorPicker
               key="color"
-              entities={entities}
+              entities={lights}
               lightColors={lightColors}
-              onChangeApplied={(entity, color) => {
-                entity.service.turnOn({rgb_color: color});
-              }}
+              onClick={onColorPickerClick}
+              onEntitiesClick={entities =>
+                setActiveIds(entities.map(entity => entity.entity_id))
+              }
+              onEntitiesChangeApplied={(entities, color) =>
+                entities.forEach(entity =>
+                  entity.service.turnOn({rgb_color: color})
+                )
+              }
             />
           ),
           temperature: (
             <ColorTempPicker
               key="temp"
-              entities={entities}
+              entities={lights}
               onChangeApplied={(entity, kelvin) => {
                 //entity.service.turnOn({kelvin});
               }}
@@ -59,7 +83,9 @@ export function LightModal(props: LightModalProps) {
           effect: <div key="effect">Effect</div>,
         }[control]
       }
-
+      <Divider />
+      <>{activeIds}</>
+      <Divider />
       <ToggleButtonGroup
         exclusive
         value={control}
@@ -68,7 +94,7 @@ export function LightModal(props: LightModalProps) {
         <ToggleButton
           value={LightModalTab.Color}
           onClick={() => {
-            entityGroup.service.toggle();
+            lightGroup.service.toggle();
           }}
           sx={{'&.Mui-selected': {bgcolor: 'transparent'}}}
         >
@@ -99,18 +125,14 @@ export function LightModal(props: LightModalProps) {
           <AutoAwesomeIcon />
         </ToggleButton>
       </ToggleButtonGroup>
-      <Stack direction="row" flexWrap="wrap" gap={2} width="100%">
+      <Stack direction="row" flexWrap="wrap" gap={1} width="100%">
         {entities.map(entity => (
           <LightCard
-            key={entity.entity_id}
+            key={entity}
             entity={entity}
             variant="small"
-            onClick={() =>
-              activeIds.includes(entity.entity_id)
-                ? setActiveIds(activeIds.filter(id => id !== entity.entity_id))
-                : setActiveIds([...activeIds, entity.entity_id])
-            }
-            active={activeIds.includes(entity.entity_id)}
+            onClick={() => setActiveIds([entity])}
+            active={activeIds.includes(entity)}
           />
         ))}
       </Stack>

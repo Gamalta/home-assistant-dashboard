@@ -8,12 +8,12 @@ export default function Dashboard() {
     <Stack gap={2} p={2} direction={{xs: 'column', sm: 'row'}}>
       <LightGroupCard
         entityGroup="light.sejour"
-        lights={['light.hue_iris', 'light.salon']}
+        entities={['light.hue_iris', 'light.salon']}
         icon={<IrisIcon />}
       />
       <LightGroupCard
         entityGroup="light.cuisine"
-        lights={['light.hue_play_1']}
+        entities={['light.hue_play_1']}
         icon={<IrisIcon />}
       />
       <ButtonCard entity="light.sejour" />
