@@ -12,11 +12,12 @@ type LightCardProps = {
   entity: HassEntityWithService<'light'>;
   icon?: React.ReactNode;
   variant?: 'small' | 'normal';
+  active?: boolean;
   onClick?(): void;
 };
 
 export function LightCard(props: LightCardProps) {
-  const {entity, icon, variant = 'normal', onClick} = props;
+  const {entity, icon, variant = 'normal', active, onClick} = props;
 
   const [brightness, setBrightness] = useState(
     entity.attributes.brightness
@@ -45,7 +46,15 @@ export function LightCard(props: LightCardProps) {
       sx={{
         background: `linear-gradient(0deg, rgba(0, 0, 0, ${
           ((100 - brightness) * 0.5) / 100 + 0.3
-        }) 0%, rgba(255, 255, 255, 0) 100%), ${entity.custom.hexColor}`,
+        }) 0%, rgba(255, 255, 255, 0) 100%), ${
+          entity.custom.hexColor
+        } content-box`,
+        ...(variant === 'small' && active
+          ? {
+              padding: '2px',
+              border: `2px solid ${entity.custom.hexColor}`,
+            }
+          : {margin: '4px'}),
       }}
     >
       <CardActionArea onClick={onClick}>

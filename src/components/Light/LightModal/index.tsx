@@ -26,6 +26,7 @@ export function LightModal(props: LightModalProps) {
   const {entityGroup, entities} = props;
   const lightColors = useLightColor(entityGroup);
   const [control, setControl] = useState(LightModalTab.Color);
+  const [activeIds, setActiveIds] = useState<string[]>([]);
 
   return (
     <Stack
@@ -100,7 +101,17 @@ export function LightModal(props: LightModalProps) {
       </ToggleButtonGroup>
       <Stack direction="row" flexWrap="wrap" gap={2} width="100%">
         {entities.map(entity => (
-          <LightCard entity={entity} variant="small" />
+          <LightCard
+            key={entity.entity_id}
+            entity={entity}
+            variant="small"
+            onClick={() =>
+              activeIds.includes(entity.entity_id)
+                ? setActiveIds(activeIds.filter(id => id !== entity.entity_id))
+                : setActiveIds([...activeIds, entity.entity_id])
+            }
+            active={activeIds.includes(entity.entity_id)}
+          />
         ))}
       </Stack>
     </Stack>
