@@ -84,8 +84,8 @@ export function Picker(props: PickerProps) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dragControls as any).componentControls.forEach((entry: any) => {
           const angle = Math.atan2(y, x);
-          entry.getAxisMotionValue('x').set(radius * Math.cos(angle));
-          entry.getAxisMotionValue('y').set(radius * Math.sin(angle));
+          entry.getAxisMotionValue('x').set(radius * Math.cos(angle) - 4);
+          entry.getAxisMotionValue('y').set(radius * Math.sin(angle) - 4);
         });
       }
       setPosition(info.point);
