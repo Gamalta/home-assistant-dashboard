@@ -126,7 +126,7 @@ export function Picker(props: PickerProps) {
   }, []);
 
   return (
-    <StyledPicker
+    <PickerContainer
       drag
       dragControls={dragControls}
       dragMomentum={false}
@@ -135,18 +135,47 @@ export function Picker(props: PickerProps) {
       onDragEnd={() => onChangeApplied && onChangeApplied(lights, color)}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
       whileHover={{scale: 1.2, zIndex: 10, cursor: 'grab'}}
-      style={{
-        backgroundColor: `rgb(${color.join(',')})`,
-        borderColor: hovered ? 'red' : active ? 'green' : 'white',
-      }}
-    />
+    >
+      {active ? (
+        <ActivePickerMark
+          style={{
+            backgroundColor: `rgb(${color.join(',')})`,
+          }}
+        ></ActivePickerMark>
+      ) : (
+        <PickerMark
+          style={{
+            backgroundColor: `rgb(${color.join(',')})`,
+          }}
+        />
+      )}
+    </PickerContainer>
   );
 }
 
-const StyledPicker = styled(motion.div)`
+const PickerContainer = styled(motion.div)`
   position: absolute;
   top: calc(50% - 12px);
   left: calc(50% - 12px);
+  width: 32px;
+  height: 32px;
+`;
+
+const ActivePickerMark = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: rotate(45deg) translate(-50%, -50%);
+  border-bottom-right-radius: 0;
+  border: 2px solid white;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.15);
+`;
+
+const PickerMark = styled.div`
+  margin: 4px;
   width: 24px;
   height: 24px;
   border-radius: 50%;
