@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import {IrisIcon} from './components/Icons/IrisIcon';
 import {ButtonCard} from '@hakit/components';
-import {LightGroupCard} from './components/light/lightGroupCard';
+import {LightGroupCard} from './components/Light/lightGroupCard';
 
 export default function Dashboard() {
   return (

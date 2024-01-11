@@ -76,18 +76,20 @@ export function Picker(props: PickerProps) {
       if (!canvasRef.current) return;
       onClick && onClick(lights);
 
-      const {x, y} = getRelativePosition(canvasRef, info.point.x, info.point.y);
-      const radius = canvasRef.current.clientWidth / 2;
-      const distanceFromMiddle = Math.hypot(x, y);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (dragControls as any).componentControls.forEach((entry: any) => {
+        const radius = canvasRef.current!.clientWidth / 2;
+        const x = entry.getAxisMotionValue('x').get() / radius;
+        const y = entry.getAxisMotionValue('y').get() / radius;
+        const distanceFromMiddle = Math.hypot(x, y);
 
-      if (distanceFromMiddle > 1 || distanceFromMiddle < 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dragControls as any).componentControls.forEach((entry: any) => {
+        if (distanceFromMiddle > 1 || distanceFromMiddle < 0) {
           const angle = Math.atan2(y, x);
           entry.getAxisMotionValue('x').set(radius * Math.cos(angle) - 4);
           entry.getAxisMotionValue('y').set(radius * Math.sin(angle) - 4);
-        });
-      }
+        }
+      });
+
       setPosition(info.point);
     },
     []
