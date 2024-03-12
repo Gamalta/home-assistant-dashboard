@@ -28,7 +28,8 @@ export function Header() {
   return (
     <Stack
       component="header"
-      p={3}
+      mx={5}
+      py={3}
       borderBottom="1px solid"
       sx={{borderBottomColor: 'text.secondary'}}
     >
