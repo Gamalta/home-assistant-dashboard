@@ -17,6 +17,7 @@ export type PickerProps = {
   entities: FilterByDomain<EntityName, 'light'>[];
   hovered?: boolean;
   active?: boolean;
+  display?: boolean;
   lightColors: ReturnType<typeof useLightColor>;
   onClick?: (entities: HassEntityWithService<'light'>[]) => void;
   onChangeApplied?: (
@@ -41,7 +42,15 @@ export function Picker(props: PickerProps) {
     onChangeApplied,
   } = props;
 
-  const lights = entities.map(entity => useEntity(entity));
+  console.log('entities', entities);
+  const lights =
+    entities &&
+    entities.map(entity => {
+      console.log('getEntity started', entity);
+      const test = useEntity(entity);
+      console.log('getEntity passed', test);
+      return test;
+    });
   const [color, setColor] = useState<[number, number, number]>(
     lights[0]?.attributes.rgb_color ?? [255, 255, 255]
   );
@@ -141,12 +150,14 @@ export function Picker(props: PickerProps) {
       {active ? (
         <ActivePickerMark
           style={{
+            border: hovered ? '2px solid white' : '2px solid black',
             backgroundColor: `rgb(${color.join(',')})`,
           }}
         ></ActivePickerMark>
       ) : (
         <PickerMark
           style={{
+            border: hovered ? '2px solid white' : '2px solid black',
             backgroundColor: `rgb(${color.join(',')})`,
           }}
         />

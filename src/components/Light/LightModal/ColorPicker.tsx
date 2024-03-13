@@ -67,12 +67,16 @@ export function ColorPicker(props: ColorPickerProps) {
     generateColorWheel();
   }, [generateColorWheel]);
 
+  //let renderActive = false;
+
   return (
     <Container>
       <Canvas ref={canvasRef} width="400px" height="400px" />
-      {entities
-        .filter(entity => !activeEntities.includes(entity))
-        .map(entity => (
+      {entities.map(entity => {
+        const active = activeEntities.includes(entity);
+        //if (!renderActive) renderActive = true;
+
+        return (
           <Picker
             key={entity}
             canvasRef={canvasRef}
@@ -82,18 +86,10 @@ export function ColorPicker(props: ColorPickerProps) {
             onClick={onEntitiesClick}
             onChange={onEntitiesChange}
             onChangeApplied={onEntitiesChangeApplied}
+            active={active}
           />
-        ))}
-      <Picker
-        key={activeEntities[0]}
-        canvasRef={canvasRef}
-        entities={activeEntities}
-        active={true}
-        lightColors={lightColors}
-        onClick={onEntitiesClick}
-        onChange={onEntitiesChange}
-        onChangeApplied={onEntitiesChangeApplied}
-      />
+        );
+      })}
     </Container>
   );
 }

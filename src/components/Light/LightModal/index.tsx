@@ -127,6 +127,7 @@ export function LightModal(props: LightModalProps) {
                     !entityIds.has(entityId) &&
                     getColorDistance(color, light.custom.color) < 0.25
                   ) {
+                    console.log('fusion');
                     newActiveIds.push(entityId);
                     lightsToTurnOn.push(light);
                   }

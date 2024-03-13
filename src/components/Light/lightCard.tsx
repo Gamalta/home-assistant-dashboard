@@ -113,7 +113,7 @@ export function LightCard(props: LightCardProps) {
             color: textColor,
           }}
         />
-        {variant === 'normal' && (
+        {/*variant === 'normal' && (
           <Box px={2}>
             <Slider
               value={brightness}
@@ -128,7 +128,7 @@ export function LightCard(props: LightCardProps) {
               }
             />
           </Box>
-        )}
+            )*/}
       </CardActionArea>
     </Card>
   );
