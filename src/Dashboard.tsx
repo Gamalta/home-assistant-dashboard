@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {Header} from './components/Header';
-import {House} from './components/House';
+import {House} from './components/3d/House';
 
 export default function Dashboard() {
   return (
