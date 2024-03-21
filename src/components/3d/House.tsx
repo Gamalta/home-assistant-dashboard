@@ -1,16 +1,19 @@
-import {Canvas, Vector3, useLoader, useThree} from '@react-three/fiber';
-import {useEffect, useRef, useState} from 'react';
+import {Canvas, Vector3, useLoader} from '@react-three/fiber';
+import {useEffect, useRef} from 'react';
 import {OrbitControls, PerspectiveCamera} from '@react-three/drei';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {useEntity} from '@hakit/core';
 import {Bloom, EffectComposer} from '@react-three/postprocessing';
+import {HouseConfig} from './config';
+import {Room} from './Room';
 //1170*1027
 export function House() {
   const HouseModel = useLoader(
     GLTFLoader,
     process.env.PUBLIC_URL + 'model.glb'
   );
+  const config = HouseConfig;
   const light = useEntity('light.sejour');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -39,7 +42,7 @@ export function House() {
       const fov = camera.fov * (Math.PI / 180);
       const cameraY = (maxDim / 2 / Math.tan(fov / 2)) * aspect;
 
-      camera.position.set(0, cameraY, 0);
+      //camera.position.set(0, cameraY, 0);
     };
 
     calculateCameraY();
@@ -52,14 +55,8 @@ export function House() {
 
   return (
     <Canvas shadows flat ref={canvasRef}>
-      {/**<OrbitControls target={[0, 0.35, 0]} maxPolarAngle={1.45} /> */}
       <OrbitControls target={[0, 0.35, 0]} maxPolarAngle={Math.PI / 2} />
-      <PerspectiveCamera
-        makeDefault
-        fov={50}
-        position={[0, 12, 0]}
-        ref={cameraRef}
-      />
+      <PerspectiveCamera fov={50} position={[0, 12, 0]} />
       <ambientLight intensity={1} />
       <OutsideLight position={[0, 5, 4]} />
       <OutsideLight position={[0, 5, -4]} />
@@ -87,6 +84,15 @@ export function House() {
         <boxGeometry args={[10, 0.1, 9]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
+      {config.room.map(room => (
+        <Room
+          key={room.name}
+          name={room.name}
+          camera={room.camera}
+          position={room.position}
+          size={room.size}
+        />
+      ))}
 
       {/* Test */}
       <EffectComposer>
