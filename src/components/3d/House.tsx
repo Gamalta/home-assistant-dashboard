@@ -1,6 +1,5 @@
 import {Canvas, Vector3, useLoader} from '@react-three/fiber';
 import {useEffect, useRef, useState} from 'react';
-import {OrbitControls} from '@react-three/drei';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {useEntity} from '@hakit/core';
@@ -72,6 +71,7 @@ export function House() {
               camera={room.camera}
               position={room.position}
               size={room.size}
+              debug={room.debug}
               active={activeRoom === room.name}
               onClick={() => setActiveRoom(room.name)}
             />

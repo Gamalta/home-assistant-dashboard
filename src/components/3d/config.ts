@@ -27,6 +27,7 @@ export type HouseConfig = {
     camera: CameraConfig;
     position: [number, number, number];
     size: [number, number];
+    debug?: boolean;
   }[];
 };
 

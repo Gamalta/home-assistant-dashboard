@@ -8,11 +8,12 @@ type RoomProps = {
   position: [number, number, number];
   size: [number, number];
   active: boolean;
+  debug?: boolean;
   onClick: () => void;
 };
 
 export function Room(props: RoomProps) {
-  const {name, camera, position, size, active, onClick} = props;
+  const {name, camera, position, size, debug, active, onClick} = props;
 
   useFrame(state => {
     if (!active) return;
@@ -32,7 +33,7 @@ export function Room(props: RoomProps) {
       onPointerLeave={() => console.log('leave')}
     >
       <boxGeometry args={[size[0], 0.1, size[1]]} />
-      <meshBasicMaterial transparent opacity={0.5} />
+      <meshBasicMaterial transparent opacity={debug ? 0.5 : 0} />
     </mesh>
   );
 }
