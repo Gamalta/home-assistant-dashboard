@@ -1,40 +1,35 @@
 import {useFrame} from '@react-three/fiber';
 import {CameraConfig} from './config';
 import * as THREE from 'three';
-import {useState} from 'react';
 
 type RoomProps = {
   name: string;
   camera: CameraConfig;
   position: [number, number, number];
   size: [number, number];
+  active: boolean;
+  onClick: () => void;
 };
 
 export function Room(props: RoomProps) {
-  const {name, camera, position, size} = props;
-  const [clicked, setClicked] = useState(false);
+  const {name, camera, position, size, active, onClick} = props;
 
   useFrame(state => {
-    if (!clicked) return;
+    if (!active) return;
     const cameraPosition = new THREE.Vector3(...camera.position);
     const cameraLookAt = new THREE.Vector3(...camera.lookAt);
 
     state.camera.position.lerp(cameraPosition, 0.05);
     state.camera.lookAt(cameraLookAt);
-    state.camera.updateProjectionMatrix();
-
-    if (state.camera.position.distanceTo(cameraPosition) < 0.01) {
-      //setClicked(false);
-    }
   });
 
   return (
     <mesh
       position={position}
       castShadow
-      onClick={() => setClicked(!clicked)}
-      onPointerEnter={e => console.log('enter')}
-      onPointerLeave={e => console.log('leave')}
+      onClick={onClick}
+      onPointerEnter={() => console.log('enter')}
+      onPointerLeave={() => console.log('leave')}
     >
       <boxGeometry args={[size[0], 0.1, size[1]]} />
       <meshBasicMaterial transparent opacity={0.5} />
