@@ -37,7 +37,6 @@ export function House() {
     <Stack position="relative" height="100%">
       <Stack position="absolute" height="100%" width="100%">
         <Canvas shadows flat ref={canvasRef}>
-          <OrbitControls target={[0, 0.35, 0]} maxPolarAngle={Math.PI / 2} />
           <Camera globalView={!activeRoom} />
           <ambientLight intensity={1} />
           <OutsideLight position={[0, 5, 4]} />

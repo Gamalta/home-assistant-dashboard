@@ -12,9 +12,9 @@ export function Camera(props: CameraProps) {
 
   useFrame(state => {
     if (!globalView) return;
-    state.camera.position.lerp(new THREE.Vector3(0, 12, 0), 0.05);
+    state.camera.position.lerp(new THREE.Vector3(0, 10, 0), 0.05);
     state.camera.lookAt(0, 0, 0);
     state.camera.rotation.z = 0;
   });
-  return <perspectiveCamera ref={camera} fov={50} position={[0, 12, 0]} />;
+  return <perspectiveCamera ref={camera} fov={50} position={[0, 10, 0]} />;
 }
