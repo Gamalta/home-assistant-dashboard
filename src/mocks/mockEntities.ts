@@ -61,6 +61,28 @@ export const entities: HassEntities = {
       color_temp_kelvin: 3000,
     },
   }),
+  ...createLight('light.desktop'),
+  ...createSensor('sensor.temperature_desktop', {
+    state: '20',
+    attributes: {
+      unit_of_measurement: '°C',
+      friendly_name: 'Température bureau',
+    },
+  }),
+  ...createSensor('sensor.temperature_salon', {
+    state: '20.2',
+    attributes: {
+      unit_of_measurement: '°C',
+      friendly_name: 'Température salon',
+    },
+  }),
+  ...createSensor('sensor.temperature_bedroom', {
+    state: '19.5',
+    attributes: {
+      unit_of_measurement: '°C',
+      friendly_name: 'Température chambre',
+    },
+  }),
   ...createCover('cover.cover_with_tilt'),
   ...createCover('cover.cover_position_only', {
     attributes: {
@@ -161,13 +183,6 @@ export const entities: HassEntities = {
     attributes: {
       icon: 'mdi:calendar',
       friendly_name: 'Date',
-    },
-  }),
-  ...createSensor('sensor.air_conditioner_inside_temperature', {
-    state: '21',
-    attributes: {
-      unit_of_measurement: '°C',
-      friendly_name: 'Air Conditioner Inside Temperature',
     },
   }),
   ...createSensor('sensor.openweathermap_uv_index', {
