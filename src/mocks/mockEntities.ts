@@ -15,54 +15,52 @@ import {createClimate} from './createClimate';
 import {createVacuum} from './createVacuum';
 
 export const entities: HassEntities = {
-  ...createLight('light.unavailable', {
-    state: 'unavailable',
-    attributes: {
-      friendly_name: 'Unavailable light demo',
-    },
-  }),
-  ...createLight('light.sejour', {
-    attributes: {
-      friendly_name: 'Dining room light',
-    },
-  }),
-  ...createLight('light.cuisine', {
-    attributes: {
-      friendly_name: 'Office Down light',
-      hs_color: undefined,
-      rgb_color: undefined,
-      color_mode: 'color_temp',
-      color_temp_kelvin: 3000,
-    },
-  }),
-  ...createLight('light.hue_iris', {
-    attributes: {
-      friendly_name: 'Office striplight light',
-      icon: 'mdi:led-strip-variant',
-      hs_color: [131, 100],
-      rgb_color: [64, 255, 112],
-    },
-  }),
   ...createLight('light.salon', {
     attributes: {
-      friendly_name: 'Office Down light',
+      friendly_name: 'Lumière du séjour',
       hs_color: undefined,
       rgb_color: undefined,
       color_mode: 'color_temp',
       color_temp_kelvin: 3000,
     },
   }),
-  ...createLight('light.hue_play_1', {
+  ...createLight('light.kitchen', {
     attributes: {
-      friendly_name: 'Office Down light',
+      friendly_name: 'Lumière de la cuisine',
       hs_color: undefined,
       rgb_color: undefined,
       color_mode: 'color_temp',
       color_temp_kelvin: 3000,
     },
   }),
-  ...createLight('light.desktop'),
-  ...createSensor('sensor.temperature_desktop', {
+  ...createLight('light.bedroom', {
+    attributes: {
+      friendly_name: 'Lumière de la chambre',
+      hs_color: undefined,
+      rgb_color: undefined,
+      color_mode: 'color_temp',
+      color_temp_kelvin: 3000,
+    },
+  }),
+  ...createLight('light.bedroom_2', {
+    attributes: {
+      friendly_name: "Lumière de la chambre d'ami",
+      hs_color: undefined,
+      rgb_color: undefined,
+      color_mode: 'color_temp',
+      color_temp_kelvin: 3000,
+    },
+  }),
+  ...createLight('light.office', {
+    attributes: {
+      friendly_name: 'Lumière du bureau',
+      hs_color: undefined,
+      rgb_color: undefined,
+      color_mode: 'color_temp',
+      color_temp_kelvin: 3000,
+    },
+  }),
+  ...createSensor('sensor.temperature_office', {
     state: '20',
     attributes: {
       unit_of_measurement: '°C',
@@ -83,6 +81,17 @@ export const entities: HassEntities = {
       friendly_name: 'Température chambre',
     },
   }),
+
+  /**
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   */
   ...createCover('cover.cover_with_tilt'),
   ...createCover('cover.cover_position_only', {
     attributes: {
