@@ -1,4 +1,7 @@
+import {EntityName, FilterByDomain} from '@hakit/core';
+
 export const HouseConfig: HouseConfig = {
+  model: process.env.PUBLIC_URL + 'model.glb',
   room: [
     {
       name: 'Séjour',
@@ -8,6 +11,8 @@ export const HouseConfig: HouseConfig = {
       },
       position: [0.05, 2.6, -1.7],
       size: [4.1, 5.25],
+      temperature: 'sensor.temperature_salon',
+      light: 'light.salon',
     },
     {
       name: 'Bureau',
@@ -17,18 +22,25 @@ export const HouseConfig: HouseConfig = {
       },
       position: [-4.06, 2.6, 2.7],
       size: [1.6, 3.2],
+      temperature: 'sensor.temperature_desktop',
+      light: 'light.desktop',
     },
   ],
 };
 
 export type HouseConfig = {
-  room: {
-    name: string;
-    camera: CameraConfig;
-    position: [number, number, number];
-    size: [number, number];
-    debug?: boolean;
-  }[];
+  model: string;
+  room: RoomConfig[];
+};
+
+export type RoomConfig = {
+  name: string;
+  camera: CameraConfig;
+  position: [number, number, number];
+  size: [number, number];
+  temperature?: FilterByDomain<EntityName, 'sensor'>;
+  light?: FilterByDomain<EntityName, 'light'>;
+  debug?: boolean;
 };
 
 export type CameraConfig = {
