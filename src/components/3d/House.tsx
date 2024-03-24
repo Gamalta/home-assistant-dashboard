@@ -35,7 +35,7 @@ export function House() {
       <Stack position="absolute" height="100%" width="100%">
         <Canvas shadows flat ref={canvasRef}>
           <Camera globalView={!activeRoom} />
-          <ambientLight intensity={1} />
+          <AmbientLight />
           <OutsideLight position={[0, 5, 4]} />
           <OutsideLight position={[0, 5, -4]} />
           <OutsideLight position={[4, 5, 0]} />
