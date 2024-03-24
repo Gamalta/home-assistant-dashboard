@@ -10,11 +10,9 @@ import {Camera} from './Camera';
 import {Button, Stack} from '@mui/material';
 
 export function House() {
-  const HouseModel = useLoader(
-    GLTFLoader,
-    process.env.PUBLIC_URL + 'model.glb'
-  );
   const config = HouseConfig;
+
+  const HouseModel = useLoader(GLTFLoader, config.model);
   const light = useEntity('light.sejour');
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -67,10 +65,7 @@ export function House() {
           {config.room.map(room => (
             <Room
               key={room.name}
-              name={room.name}
-              camera={room.camera}
-              position={room.position}
-              size={room.size}
+              room={room}
               debug={room.debug}
               active={activeRoom === room.name}
               onClick={() => setActiveRoom(room.name)}
