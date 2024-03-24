@@ -2,18 +2,16 @@ import {Canvas, Vector3, useLoader} from '@react-three/fiber';
 import {useEffect, useRef, useState} from 'react';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import {useEntity} from '@hakit/core';
-import {Bloom, EffectComposer} from '@react-three/postprocessing';
 import {HouseConfig} from './config';
 import {Room} from './Room';
 import {Camera} from './Camera';
 import {Button, Stack} from '@mui/material';
+import {AmbientLight} from './AmbientLight';
 
 export function House() {
   const config = HouseConfig;
 
   const HouseModel = useLoader(GLTFLoader, config.model);
-  const light = useEntity('light.sejour');
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -40,20 +38,6 @@ export function House() {
           <OutsideLight position={[0, 5, -4]} />
           <OutsideLight position={[4, 5, 0]} />
 
-          {/* Work in progress */}
-          {light.state === 'on' && (
-            <pointLight
-              castShadow
-              position={[0, 2, -2]}
-              color={light.custom.color}
-              intensity={0.5}
-              distance={5}
-              shadow-bias={-0.0001}
-              shadow-normalBias={0.05}
-            />
-          )}
-          {/* End work in progress */}
-
           {/* House model */}
           <primitive object={HouseModel.scene} />
 
@@ -71,11 +55,6 @@ export function House() {
               onClick={() => setActiveRoom(room.name)}
             />
           ))}
-
-          {/* Test */}
-          <EffectComposer>
-            <Bloom luminanceThreshold={2} />
-          </EffectComposer>
         </Canvas>
       </Stack>
       {activeRoom && (
@@ -94,7 +73,7 @@ const OutsideLight = ({position}: {position: Vector3}) => (
   <directionalLight
     castShadow
     position={position}
-    intensity={0.5}
+    intensity={0.05}
     shadow-mapSize-width={1024}
     shadow-mapSize-height={1024}
     shadow-camera-left={-7}
