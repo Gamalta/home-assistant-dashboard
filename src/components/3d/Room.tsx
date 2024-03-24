@@ -1,11 +1,12 @@
 import {useFrame} from '@react-three/fiber';
 import {RoomConfig} from './config';
 import * as THREE from 'three';
-import {useEntity} from '@hakit/core';
+import {HassEntityWithService, useEntity} from '@hakit/core';
 import {Html} from './Html';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import {PendantRound} from '../Icons/PendantRound';
+import {alpha} from '@mui/material';
 
 type RoomProps = {
   room: RoomConfig;
@@ -16,7 +17,10 @@ type RoomProps = {
 
 export function Room(props: RoomProps) {
   const {room, active, onClick, debug} = props;
-  const {camera, position, size, temperature, light} = room;
+  const {camera, position, size} = room;
+
+  const temperature = room.temperature && useEntity(room.temperature);
+  const light = room.light && useEntity(room.light);
 
   useFrame(state => {
     if (!active) return;
@@ -38,18 +42,29 @@ export function Room(props: RoomProps) {
       <boxGeometry args={[size[0], 0.1, size[1]]} />
       <meshBasicMaterial transparent opacity={debug ? 0.5 : 0} />
       <RoomAction temperature={temperature} light={light} />
+      {light?.state === 'on' && (
+        <pointLight
+          castShadow
+          position={[0, -0.1, 0]}
+          color={light.custom.color}
+          //TODO link intensity to light brightness
+          intensity={0.05}
+          distance={5}
+          shadow-bias={-0.0001}
+          shadow-normalBias={0.05}
+        />
+      )}
     </mesh>
   );
 }
 
 type RoomActionProps = {
-  temperature?: RoomConfig['temperature'];
-  light?: RoomConfig['light'];
+  temperature?: HassEntityWithService<'sensor'>;
+  light?: HassEntityWithService<'light'>;
 };
 
 function RoomAction(props: RoomActionProps) {
-  const temperature = props.temperature && useEntity(props.temperature);
-  const light = props.light && useEntity(props.light);
+  const {temperature, light} = props;
   return (
     <Html distanceFactor={10}>
       <Stack
@@ -63,7 +78,17 @@ function RoomAction(props: RoomActionProps) {
         {light && (
           <Chip
             icon={<PendantRound />}
-            sx={{p: 1, '& .MuiChip-label': {pr: 0}}}
+            sx={{
+              bgcolor: light.state === 'on' ? light.custom.hexColor : undefined,
+              p: 1,
+              '& .MuiChip-label': {pr: 0},
+              '&:hover': {
+                bgcolor:
+                  light.state === 'on'
+                    ? alpha(light.custom.hexColor, 0.8)
+                    : undefined,
+              },
+            }}
             onClick={event => {
               event.stopPropagation();
               light.service.toggle();
