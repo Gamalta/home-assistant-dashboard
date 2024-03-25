@@ -3,8 +3,6 @@ import Switch from '@mui/material/Switch';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import Slider from '@mui/material/Slider';
-import Box from '@mui/material/Box';
 import CardActionArea from '@mui/material/CardActionArea';
 import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
 
@@ -113,7 +111,7 @@ export function LightCard(props: LightCardProps) {
             color: textColor,
           }}
         />
-        {variant === 'normal' && (
+        {/*variant === 'normal' && (
           <Box px={2}>
             <Slider
               value={brightness}
@@ -128,7 +126,7 @@ export function LightCard(props: LightCardProps) {
               }
             />
           </Box>
-        )}
+            )*/}
       </CardActionArea>
     </Card>
   );

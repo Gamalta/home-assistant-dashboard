@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {Header} from './components/Header';
-import {HouseModel} from './components/HouseModel';
+import {House} from './components/3d/House';
 
 export default function Dashboard() {
   return (
@@ -14,7 +14,7 @@ export default function Dashboard() {
         <Header />
       </Stack>
       <Stack position="relative" width="70%" height="100%">
-        <HouseModel />
+        <House />
       </Stack>
       {/*<LightGroupCard
           entityGroup="light.sejour"

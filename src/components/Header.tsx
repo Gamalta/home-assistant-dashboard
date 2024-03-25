@@ -1,3 +1,4 @@
+import {ButtonCard} from '@hakit/components';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {useEffect, useState} from 'react';
@@ -39,6 +40,7 @@ export function Header() {
       <Typography variant="h4" textAlign="center" color="text.secondary">
         {time}
       </Typography>
+      <ButtonCard entity="light.sejour" />
     </Stack>
   );
 }
