@@ -7,6 +7,7 @@ import {Room} from './Room';
 import {Camera} from './Camera';
 import {Button, Stack} from '@mui/material';
 import {AmbientLight} from './AmbientLight';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 export function House() {
   const config = HouseConfig;
@@ -32,7 +33,7 @@ export function House() {
     <Stack position="relative" height="100%">
       <Stack position="absolute" height="100%" width="100%">
         <Canvas shadows flat ref={canvasRef}>
-          <Camera globalView={!activeRoom} />
+          <Camera />
           <AmbientLight />
           <OutsideLight position={[0, 5, 4]} />
           <OutsideLight position={[0, 5, -4]} />
@@ -62,7 +63,7 @@ export function House() {
           onClick={() => setActiveRoom(null)}
           sx={{position: 'absolute', top: 0, left: 0}}
         >
-          Back
+          <ArrowBackRoundedIcon />
         </Button>
       )}
     </Stack>
