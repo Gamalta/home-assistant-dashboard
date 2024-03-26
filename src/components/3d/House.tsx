@@ -1,5 +1,5 @@
 import {Canvas, Vector3, useLoader} from '@react-three/fiber';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {HouseConfig} from './config';
@@ -8,13 +8,14 @@ import {Camera} from './Camera';
 import {Button, Stack} from '@mui/material';
 import {AmbientLight} from './AmbientLight';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import {useHouseContext} from '../../context/House';
 
 export function House() {
   const config = HouseConfig;
 
   const HouseModel = useLoader(GLTFLoader, config.model);
-  const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const {room, setRoom} = useHouseContext();
 
   useEffect(() => {
     const box = new THREE.Box3().setFromObject(HouseModel.scene);
@@ -48,19 +49,13 @@ export function House() {
             <meshBasicMaterial transparent opacity={0} />
           </mesh>
           {config.room.map(room => (
-            <Room
-              key={room.name}
-              room={room}
-              debug={room.debug}
-              active={activeRoom === room.name}
-              onClick={() => setActiveRoom(room.name)}
-            />
+            <Room key={room.name} room={room} debug={room.debug} />
           ))}
         </Canvas>
       </Stack>
-      {activeRoom && (
+      {room && (
         <Button
-          onClick={() => setActiveRoom(null)}
+          onClick={() => setRoom(null)}
           sx={{position: 'absolute', top: 0, left: 0}}
         >
           <ArrowBackRoundedIcon />
