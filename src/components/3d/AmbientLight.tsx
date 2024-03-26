@@ -8,7 +8,7 @@ export function AmbientLight() {
       const now = new Date();
       const hour = now.getHours() ?? 12;
 
-      let intensity = 0.5; //day
+      let intensity = 0.7; //day
       if (hour >= 19 || hour < 6) {
         intensity = 0.05; //night
       } else if (hour >= 6 && hour < 8) {
