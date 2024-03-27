@@ -11,7 +11,7 @@ export type HtmlProps = DreiHtmlProps & {
 
 export function Html({children}: HtmlProps) {
   return (
-    <DreiHtml center>
+    <DreiHtml center zIndexRange={[0]}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Stack>{children}</Stack>
