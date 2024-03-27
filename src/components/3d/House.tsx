@@ -8,7 +8,7 @@ import {Camera} from './Camera';
 import {Button, Stack} from '@mui/material';
 import {AmbientLight} from './AmbientLight';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import {useHouseContext} from '../../context/House';
+import {useHouseContext} from '../../contexts/House';
 
 export function House() {
   const config = HouseConfig;
