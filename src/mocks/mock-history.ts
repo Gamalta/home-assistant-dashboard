@@ -23,7 +23,7 @@ const mockHistoryData = generateMockHistory(100);
 
 export default {
   states: {
-    'sensor.air_conditioner_inside_temperature': mockHistoryData,
+    'sensor.temperature_salon': mockHistoryData,
   },
   start_time: mockHistoryData[0]?.lu ?? Date.now() / 1000,
   end_time:
