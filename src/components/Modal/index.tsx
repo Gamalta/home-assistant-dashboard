@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import {Backdrop} from './Base/Backdrop';
+import {Container} from './Base/Container';
 
 export interface ModalProps {
   open: boolean;
@@ -59,24 +60,8 @@ export function Modal(props: ModalProps) {
       {open && (
         <>
           <Backdrop />
-          <Stack
-            component={motion.div}
-            transition={{
-              duration: 1,
-              type: 'spring',
-              damping: 7.5,
-              mass: 0.55,
-              stiffness: 100,
-            }}
-            layoutId={id}
-            direction="column"
-            position="absolute"
-            top="5rem"
-            left="50%"
-            zIndex={2}
-            boxShadow="0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)"
-          >
-            <Stack direction="row" justifyContent="flex-end">
+          <Container id={id}>
+            <Stack direction="row" justifyContent="space-between">
               <Typography variant="h5">Modal Title</Typography>
               <IconButton onClick={onClose}>
                 <CloseIcon />
@@ -93,7 +78,7 @@ export function Modal(props: ModalProps) {
                 {ready && children}
               </AnimatePresence>
             </Stack>
-          </Stack>
+          </Container>
         </>
       )}
     </AnimatePresence>,
