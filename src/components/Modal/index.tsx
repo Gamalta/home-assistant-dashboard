@@ -1,25 +1,43 @@
-import styled from '@emotion/styled';
-import {IconButton, Stack} from '@mui/material';
+import {IconButton, Stack, Typography} from '@mui/material';
 import {AnimatePresence, motion} from 'framer-motion';
 import {useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
-import {Backdrop} from './Backdrop';
+import {Backdrop} from './Base/Backdrop';
 
 export interface ModalProps {
   open: boolean;
-  id: string;
+  id?: string;
   children: React.ReactNode;
   onClose: () => void;
 }
-export function Modal({open, id, children, onClose}: ModalProps) {
+
+const variants = {
+  hidden: {
+    scale: 0.9,
+    y: '-10%',
+    opacity: 0,
+    transition: {
+      duration: 1,
+      ease: [0.42, 0, 0.58, 1],
+    },
+  },
+  show: {
+    scale: 1,
+    y: 0,
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 1,
+      ease: [0.42, 0, 0.58, 1],
+    },
+  },
+};
+
+export function Modal(props: ModalProps) {
+  const {open, id, children, onClose} = props;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [ready, setReady] = useState(false);
-
-  const transition = {
-    duration: 1,
-    ease: [0.42, 0, 0.58, 1],
-  };
 
   useEffect(() => {
     if (!open) {
@@ -37,13 +55,7 @@ export function Modal({open, id, children, onClose}: ModalProps) {
   }, [open]);
 
   return createPortal(
-    <AnimatePresence
-      initial={false}
-      mode="wait"
-      onExitComplete={() => {
-        setReady(false);
-      }}
-    >
+    <AnimatePresence mode="wait" initial={false}>
       {open && (
         <>
           <Backdrop />
@@ -65,6 +77,7 @@ export function Modal({open, id, children, onClose}: ModalProps) {
             boxShadow="0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)"
           >
             <Stack direction="row" justifyContent="flex-end">
+              <Typography variant="h5">Modal Title</Typography>
               <IconButton onClick={onClose}>
                 <CloseIcon />
               </IconButton>
@@ -74,16 +87,7 @@ export function Modal({open, id, children, onClose}: ModalProps) {
               initial="hidden"
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
-              variants={{
-                hidden: {y: '-10%', opacity: 0, transition, scale: 0.9},
-                show: {
-                  scale: 1,
-                  y: 0,
-                  x: 0,
-                  opacity: 1,
-                  transition,
-                },
-              }}
+              variants={variants}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}
