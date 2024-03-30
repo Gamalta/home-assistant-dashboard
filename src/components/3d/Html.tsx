@@ -9,9 +9,9 @@ export type HtmlProps = DreiHtmlProps & {
   children: React.ReactNode;
 };
 
-export function Html({children}: HtmlProps) {
+export function Html({children, ...dreiProps}: HtmlProps) {
   return (
-    <DreiHtml center zIndexRange={[0]}>
+    <DreiHtml center zIndexRange={[0]} {...dreiProps}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Stack>{children}</Stack>

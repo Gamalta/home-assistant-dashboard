@@ -4,10 +4,16 @@ import * as THREE from 'three';
 import {HassEntityWithService, useEntity} from '@hakit/core';
 import {Html} from './Html';
 import Stack from '@mui/material/Stack';
+import Fab from '@mui/material/Fab';
+import {PendantRoundIcon} from '../Icons/PendantRoundIcon';
+import {useHouseContext} from '../../contexts/HouseContext';
+import {ThermostatIcon} from '../Icons/ThermostatIcon';
+import {useState} from 'react';
+import {useLongPress} from '../../hooks/LongPress';
+import {alpha} from '@mui/material/styles';
+import {motion} from 'framer-motion';
 import Chip from '@mui/material/Chip';
-import {PendantRound} from '../Icons/PendantRound';
-import {alpha} from '@mui/material';
-import {useHouseContext} from '../../context/House';
+import {Modal} from '../Modal';
 
 type RoomProps = {
   room: RoomConfig;
@@ -44,7 +50,12 @@ export function Room(props: RoomProps) {
       <boxGeometry args={[size[0], 0.1, size[1]]} />
       <meshBasicMaterial transparent opacity={debug ? 0.5 : 0} />
       {(!activeRoom || isActive) && (
-        <RoomAction temperature={temperature} light={light} />
+        <RoomAction
+          key={room.name}
+          id={`action-${room.name}`}
+          temperature={temperature}
+          light={light}
+        />
       )}
       {light?.state === 'on' && (
         <pointLight
@@ -63,42 +74,82 @@ export function Room(props: RoomProps) {
 }
 
 type RoomActionProps = {
+  id: string;
   temperature?: HassEntityWithService<'sensor'>;
   light?: HassEntityWithService<'light'>;
 };
 
 function RoomAction(props: RoomActionProps) {
-  const {temperature, light} = props;
+  const {id, temperature, light} = props;
+  const [lightModlOpen, setLightModalOpen] = useState(false);
+  const [tempModalOpen, setTempModalOpen] = useState(false);
+
+  const lightLongPress = useLongPress(
+    () => setLightModalOpen(true),
+    () => light?.service.toggle()
+  );
+  const tempLongPress = useLongPress(
+    () => setTempModalOpen(true),
+    () => {}
+  );
+
   return (
-    <Html distanceFactor={10}>
+    <Html>
       <Stack
+        component={motion.div}
+        layoutId={id + 'test'}
         bgcolor="background.default"
         direction="row"
         borderRadius="50px"
-        spacing={1}
+        spacing={2}
         p={1}
       >
-        {temperature && <Chip label={`${temperature.state}°C`} />}
-        {light && (
-          <Chip
-            icon={<PendantRound />}
-            sx={{
-              bgcolor: light.state === 'on' ? light.custom.hexColor : undefined,
-              p: 1,
-              '& .MuiChip-label': {pr: 0},
-              '&:hover': {
-                bgcolor:
-                  light.state === 'on'
-                    ? alpha(light.custom.hexColor, 0.8)
-                    : undefined,
-              },
-            }}
-            onClick={event => {
-              event.stopPropagation();
-              light.service.toggle();
-            }}
-          />
+        {temperature && (
+          <motion.div layoutId={`${id}-temp`}>
+            <Fab variant="extended" {...tempLongPress}>
+              <ThermostatIcon />
+              {`${temperature.state}°C`}
+            </Fab>
+          </motion.div>
         )}
+        {light && (
+          <motion.div layoutId={`${id}-light`}>
+            <Fab
+              variant="extended"
+              sx={{
+                bgcolor:
+                  light.state === 'on' ? light.custom.hexColor : undefined,
+                '&:hover': {
+                  bgcolor:
+                    light.state === 'on'
+                      ? alpha(light.custom.hexColor, 0.8)
+                      : undefined,
+                },
+              }}
+              {...lightLongPress}
+            >
+              <PendantRoundIcon />
+            </Fab>
+          </motion.div>
+        )}
+        <Modal
+          id={`${id}-light`}
+          open={lightModlOpen}
+          onClose={() => setLightModalOpen(false)}
+        >
+          <Stack bgcolor="red" width="200px" height="200px">
+            Hello
+          </Stack>
+        </Modal>
+        <Modal
+          id={`${id}-temp`}
+          open={tempModalOpen}
+          onClose={() => setTempModalOpen(false)}
+        >
+          <Stack bgcolor="red" width="200px" height="200px">
+            Hello
+          </Stack>
+        </Modal>
       </Stack>
     </Html>
   );
