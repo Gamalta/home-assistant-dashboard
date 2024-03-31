@@ -1,6 +1,6 @@
 import SvgIcon, {SvgIconProps} from '@mui/material/SvgIcon';
 
-export function TemperatureWheelIcon(props: SvgIconProps) {
+export function ColorTempWheelIcon(props: SvgIconProps) {
   return (
     <SvgIcon
       viewBox="0 0 24 24"
