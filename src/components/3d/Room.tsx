@@ -12,8 +12,8 @@ import {useState} from 'react';
 import {useLongPress} from '../../hooks/LongPress';
 import {alpha} from '@mui/material/styles';
 import {motion} from 'framer-motion';
-import Chip from '@mui/material/Chip';
-import {Modal} from '../Modal';
+import {TemperatureModal} from '../Modal/Type/TemperatureModal';
+import {LightModal} from '../Modal/Type/LightModal';
 
 type RoomProps = {
   room: RoomConfig;
@@ -81,7 +81,7 @@ type RoomActionProps = {
 
 function RoomAction(props: RoomActionProps) {
   const {id, temperature, light} = props;
-  const [lightModlOpen, setLightModalOpen] = useState(false);
+  const [lightModalOpen, setLightModalOpen] = useState(false);
   const [tempModalOpen, setTempModalOpen] = useState(false);
 
   const lightLongPress = useLongPress(
@@ -97,7 +97,6 @@ function RoomAction(props: RoomActionProps) {
     <Html>
       <Stack
         component={motion.div}
-        layoutId={id + 'test'}
         bgcolor="background.default"
         direction="row"
         borderRadius="50px"
@@ -105,51 +104,49 @@ function RoomAction(props: RoomActionProps) {
         p={1}
       >
         {temperature && (
-          <motion.div layoutId={`${id}-temp`}>
-            <Fab variant="extended" {...tempLongPress}>
-              <ThermostatIcon />
-              {`${temperature.state}°C`}
-            </Fab>
-          </motion.div>
+          <>
+            <motion.div layoutId={`${id}-temp`}>
+              <Fab variant="extended" {...tempLongPress}>
+                <ThermostatIcon />
+                {`${temperature.state}°C`}
+              </Fab>
+            </motion.div>
+            <TemperatureModal
+              id={`${id}-temp`}
+              open={tempModalOpen}
+              onClose={() => setTempModalOpen(false)}
+              entity={temperature}
+            />
+          </>
         )}
         {light && (
-          <motion.div layoutId={`${id}-light`}>
-            <Fab
-              variant="extended"
-              sx={{
-                bgcolor:
-                  light.state === 'on' ? light.custom.hexColor : undefined,
-                '&:hover': {
+          <>
+            <motion.div layoutId={`${id}-light`}>
+              <Fab
+                variant="extended"
+                sx={{
                   bgcolor:
-                    light.state === 'on'
-                      ? alpha(light.custom.hexColor, 0.8)
-                      : undefined,
-                },
-              }}
-              {...lightLongPress}
-            >
-              <PendantRoundIcon />
-            </Fab>
-          </motion.div>
+                    light.state === 'on' ? light.custom.hexColor : undefined,
+                  '&:hover': {
+                    bgcolor:
+                      light.state === 'on'
+                        ? alpha(light.custom.hexColor, 0.8)
+                        : undefined,
+                  },
+                }}
+                {...lightLongPress}
+              >
+                <PendantRoundIcon />
+              </Fab>
+            </motion.div>
+            <LightModal
+              id={`${id}-light`}
+              open={lightModalOpen}
+              onClose={() => setLightModalOpen(false)}
+              entity=""
+            />
+          </>
         )}
-        <Modal
-          id={`${id}-light`}
-          open={lightModlOpen}
-          onClose={() => setLightModalOpen(false)}
-        >
-          <Stack bgcolor="red" width="200px" height="200px">
-            Hello
-          </Stack>
-        </Modal>
-        <Modal
-          id={`${id}-temp`}
-          open={tempModalOpen}
-          onClose={() => setTempModalOpen(false)}
-        >
-          <Stack bgcolor="red" width="200px" height="200px">
-            Hello
-          </Stack>
-        </Modal>
       </Stack>
     </Html>
   );
