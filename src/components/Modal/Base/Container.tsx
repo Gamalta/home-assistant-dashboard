@@ -20,11 +20,12 @@ export function Container(props: ContainerProps) {
         mass: 0.55,
         stiffness: 100,
       }}
+      transformTemplate={(_, generated) => `translate(-50%, -50%) ${generated}`}
       layoutId={id}
       position="absolute"
       justifyContent="space-between"
       zIndex={2}
-      top="50%"
+      top="30%"
       left="50%"
       maxHeight="calc(100% - 4rem)"
       alignItems="stretch"

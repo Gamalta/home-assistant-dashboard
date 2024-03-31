@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import {Header} from './components/Header';
 import {House} from './components/3d/House';
-import {HouseProvider} from './contexts/House';
+import {HouseProvider} from './contexts/HouseContext';
 
 export default function Dashboard() {
   return (
