@@ -143,7 +143,7 @@ function RoomAction(props: RoomActionProps) {
               id={`${id}-light`}
               open={lightModalOpen}
               onClose={() => setLightModalOpen(false)}
-              entity=""
+              entity={light}
             />
           </>
         )}
