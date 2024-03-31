@@ -9,6 +9,7 @@ import {Container} from './Base/Container';
 export interface ModalProps {
   open: boolean;
   id?: string;
+  title?: string;
   children: React.ReactNode;
   onClose: () => void;
 }
@@ -36,7 +37,7 @@ const variants = {
 };
 
 export function Modal(props: ModalProps) {
-  const {open, id, children, onClose} = props;
+  const {open, id, title = '', children, onClose} = props;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -62,7 +63,7 @@ export function Modal(props: ModalProps) {
           <Backdrop />
           <Container id={id}>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="h5">Modal Title</Typography>
+              <Typography variant="h5">{title}</Typography>
               <IconButton onClick={onClose}>
                 <CloseIcon />
               </IconButton>
