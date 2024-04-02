@@ -24,6 +24,24 @@ export const entities: HassEntities = {
       color_temp_kelvin: 3000,
     },
   }),
+  ...createLight('light.salon_strip', {
+    attributes: {
+      friendly_name: 'Ruban led séjour',
+      hs_color: undefined,
+      rgb_color: undefined,
+      color_mode: 'color_temp',
+      color_temp_kelvin: 3000,
+    },
+  }),
+  ...createLight('light.hue_play', {
+    attributes: {
+      friendly_name: 'Hue Play séjour',
+      hs_color: undefined,
+      rgb_color: undefined,
+      color_mode: 'color_temp',
+      color_temp_kelvin: 3000,
+    },
+  }),
   ...createLight('light.kitchen', {
     attributes: {
       friendly_name: 'Lumière de la cuisine',
