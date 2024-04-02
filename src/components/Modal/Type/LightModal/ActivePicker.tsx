@@ -1,13 +1,25 @@
 import Stack from '@mui/material/Stack';
 import {motion, useDragControls} from 'framer-motion';
+import {useColorPicker} from '../../../../hooks/ColorPicker';
+import {useEffect} from 'react';
 
-export function ActivePicker() {
+type ActivePickerProps = {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+};
+
+export function ActivePicker(props: ActivePickerProps) {
+  const {canvasRef} = props;
   const dragControls = useDragControls();
+  const {color, onDrag} = useColorPicker(canvasRef.current, dragControls);
   //const {activeEntities} = useLightModalContext(); if marker display number of active entities
+
+  useEffect(() => {}, []);
+
   return (
     <Stack
       component={motion.div}
       drag
+      onDrag={onDrag}
       dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
@@ -25,7 +37,7 @@ export function ActivePicker() {
         border="2px solid black"
         boxSizing="border-box"
         boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-        //backgroundColor: `rgb(${color.join(',')})`,
+        bgcolor={`rgb(${color.join(',')})`}
         sx={{
           transform: 'rotate(45deg) translate(-50%, -50%)',
           borderBottomRightRadius: 0,
