@@ -1,9 +1,54 @@
 import Stack from '@mui/material/Stack';
+import {useCallback, useEffect, useRef} from 'react';
+import {drawColorWheel} from '../../../Light/LightModal/utils';
+import {motion} from 'framer-motion';
+import styled from '@emotion/styled';
+import {useLightModalContext} from '../../../../contexts/LightModalContext';
+import {Picker} from './Picker';
+import {ActivePicker} from './ActivePicker';
 
 export function ColorTab() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const {entities, activeEntities, setActiveEntities} = useLightModalContext();
+
+  const generateColorWheel = useCallback(() => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d')!;
+    drawColorWheel(ctx);
+  }, []);
+
+  useEffect(() => {
+    generateColorWheel();
+    setActiveEntities([entities[0].entity_id]);
+  }, []);
+
   return (
-    <Stack maxWidth="500px" minWidth="500px">
-      color tab
+    <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
+      <Stack
+        component={motion.div}
+        position="relative"
+        height="45vh"
+        maxHeight="320px"
+        maxWidth="320px"
+        minHeight="200px"
+        minWidth="200px"
+      >
+        <Canvas ref={canvasRef} width="400px" height="400px" />
+        {/**active entities mark */}
+        {/**other entities mark entities.filter(activeEntities) */}
+        {entities.map(entity => (
+          <Picker key={entity.entity_id} />
+        ))}
+        <ActivePicker />
+      </Stack>
     </Stack>
   );
 }
+
+const Canvas = styled.canvas`
+  object-fit: contain;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+`;
