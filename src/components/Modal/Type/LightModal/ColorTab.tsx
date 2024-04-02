@@ -39,7 +39,7 @@ export function ColorTab() {
         {entities.map(entity => (
           <Picker key={entity.entity_id} />
         ))}
-        <ActivePicker />
+        <ActivePicker canvasRef={canvasRef} />
       </Stack>
     </Stack>
   );

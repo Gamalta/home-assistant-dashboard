@@ -1,5 +1,4 @@
 import {hsv2rgb, rgb2hex, temperature2rgb} from '@hakit/core';
-import {RefObject} from 'react';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;
@@ -67,12 +66,11 @@ export function degToRad(deg: number) {
 }
 
 export const getRelativePosition = (
-  canvasRef: RefObject<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement | null,
   x: number,
   y: number
 ) => {
-  if (!canvasRef.current) return {x: 0, y: 0};
-  const canvas = canvasRef.current;
+  if (!canvas) return {x: 0, y: 0};
   const {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
   const xRel = (2 * (x - canvasX)) / canvas.clientWidth - 1;
   const yRel = (2 * (y - canvasY)) / canvas.clientHeight - 1;

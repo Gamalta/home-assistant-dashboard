@@ -28,7 +28,11 @@ export function Room(props: RoomProps) {
   const isActive = activeRoom === room.name;
 
   const temperature = room.temperature && useEntity(room.temperature);
-  const light = room.light && useEntity(room.light);
+  const mainLight = room.light && useEntity(room.light);
+  const lights = room.lights?.map(light => ({
+    entity: useEntity(light.entity),
+    position: light.position,
+  }));
 
   useFrame(state => {
     if (!isActive) return;
@@ -54,14 +58,15 @@ export function Room(props: RoomProps) {
           key={room.name}
           id={`action-${room.name}`}
           temperature={temperature}
-          light={light}
+          mainLight={mainLight}
+          lights={lights?.map(light => light.entity)}
         />
       )}
-      {light?.state === 'on' && (
+      {mainLight?.state === 'on' && (
         <pointLight
           castShadow
           position={[0, -0.1, 0]}
-          color={light.custom.color}
+          color={mainLight.custom.color}
           //TODO link intensity to light brightness
           intensity={0.05}
           distance={5}
@@ -76,17 +81,18 @@ export function Room(props: RoomProps) {
 type RoomActionProps = {
   id: string;
   temperature?: HassEntityWithService<'sensor'>;
-  light?: HassEntityWithService<'light'>;
+  mainLight?: HassEntityWithService<'light'>;
+  lights?: HassEntityWithService<'light'>[];
 };
 
 function RoomAction(props: RoomActionProps) {
-  const {id, temperature, light} = props;
+  const {id, temperature, mainLight, lights} = props;
   const [lightModalOpen, setLightModalOpen] = useState(false);
   const [tempModalOpen, setTempModalOpen] = useState(false);
 
   const lightLongPress = useLongPress(
     () => setLightModalOpen(true),
-    () => light?.service.toggle()
+    () => mainLight?.service.toggle()
   );
   const tempLongPress = useLongPress(
     () => setTempModalOpen(true),
@@ -119,18 +125,20 @@ function RoomAction(props: RoomActionProps) {
             />
           </>
         )}
-        {light && (
+        {mainLight && (
           <>
             <motion.div layoutId={`${id}-light`}>
               <Fab
                 variant="extended"
                 sx={{
                   bgcolor:
-                    light.state === 'on' ? light.custom.hexColor : undefined,
+                    mainLight.state === 'on'
+                      ? mainLight.custom.hexColor
+                      : undefined,
                   '&:hover': {
                     bgcolor:
-                      light.state === 'on'
-                        ? alpha(light.custom.hexColor, 0.8)
+                      mainLight.state === 'on'
+                        ? alpha(mainLight.custom.hexColor, 0.8)
                         : undefined,
                   },
                 }}
@@ -143,7 +151,8 @@ function RoomAction(props: RoomActionProps) {
               id={`${id}-light`}
               open={lightModalOpen}
               onClose={() => setLightModalOpen(false)}
-              entity={light}
+              mainEntity={mainLight}
+              entities={lights}
             />
           </>
         )}

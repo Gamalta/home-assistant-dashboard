@@ -13,6 +13,16 @@ export const HouseConfig: HouseConfig = {
       size: [4.1, 5.25],
       temperature: 'sensor.temperature_salon',
       light: 'light.salon',
+      lights: [
+        {
+          entity: 'light.salon_strip',
+          position: [-1.5, 2.6, -2.2],
+        },
+        {
+          entity: 'light.hue_play',
+          position: [-1.5, 2.6, -2.2],
+        },
+      ],
     },
     {
       name: 'Cuisine',
@@ -71,6 +81,10 @@ export type RoomConfig = {
   size: [number, number];
   temperature?: FilterByDomain<EntityName, 'sensor'>;
   light?: FilterByDomain<EntityName, 'light'>;
+  lights?: {
+    entity: FilterByDomain<EntityName, 'light'>;
+    position: [number, number, number];
+  }[];
   debug?: boolean;
 };
 
