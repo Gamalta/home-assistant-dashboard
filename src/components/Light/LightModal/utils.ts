@@ -1,21 +1,8 @@
-import {
-  hsv2rgb,
-  rgb2hex,
-  rgbw2rgb,
-  rgbww2rgb,
-  temperature2rgb,
-} from '@hakit/core';
+import {hsv2rgb, rgb2hex, temperature2rgb} from '@hakit/core';
 import {RefObject} from 'react';
 
-export function drawColorWheel(
-  ctx: CanvasRenderingContext2D,
-  colorBrightness = 255,
-  wv?: number,
-  cw?: number,
-  ww?: number,
-  minKelvin?: number,
-  maxKelvin?: number
-) {
+export function drawColorWheel(ctx: CanvasRenderingContext2D) {
+  const colorBrightness = 255;
   const radius = ctx.canvas.width / 2;
   const cX = ctx.canvas.width / 2;
   const cY = ctx.canvas.width / 2;
@@ -35,16 +22,7 @@ export function drawColorWheel(
     const gradient = ctx.createRadialGradient(cX, cY, 0, cX, cY, radius);
 
     const createGradientColor = (saturation: number) =>
-      rgb2hex(
-        adjustRgb(
-          hsv2rgb([angle, saturation, colorBrightness]),
-          wv,
-          cw,
-          ww,
-          minKelvin,
-          maxKelvin
-        )
-      );
+      rgb2hex(hsv2rgb([angle, saturation, colorBrightness]));
     const start = createGradientColor(0);
     const end = createGradientColor(1);
 
@@ -86,27 +64,6 @@ export function drawColorTempWheel(
 
 export function degToRad(deg: number) {
   return (deg / 360) * 2 * Math.PI;
-}
-
-export function adjustRgb(
-  rgb: [number, number, number],
-  wv?: number,
-  cw?: number,
-  ww?: number,
-  minKelvin?: number,
-  maxKelvin?: number
-) {
-  if (wv != null) {
-    return rgbw2rgb([...rgb, wv] as [number, number, number, number]);
-  }
-  if (cw != null && ww !== null) {
-    return rgbww2rgb(
-      [...rgb, cw, ww] as [number, number, number, number, number],
-      minKelvin,
-      maxKelvin
-    );
-  }
-  return rgb;
 }
 
 export const getRelativePosition = (
