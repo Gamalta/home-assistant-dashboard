@@ -8,7 +8,7 @@ import {
 } from '@hakit/core';
 import {drawColorWheel} from './utils';
 import {motion} from 'framer-motion';
-import {Picker} from './Picker';
+import {Picker} from '../../Modal/Type/LightModal/Picker';
 
 export type ColorPickerProps = {
   entities: FilterByDomain<EntityName, 'light'>[];
@@ -37,31 +37,13 @@ export function ColorPicker(props: ColorPickerProps) {
     onEntitiesChangeApplied,
   } = props;
 
-  const minKelvin = 2000;
-  const maxKelvin = 10000;
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d')!;
-    drawColorWheel(
-      ctx,
-      lightColors.colorBrightness,
-      lightColors.white,
-      lightColors.coolWhite,
-      lightColors.warmWhite,
-      minKelvin,
-      maxKelvin
-    );
-  }, [
-    lightColors.colorBrightness,
-    lightColors.white,
-    lightColors.coolWhite,
-    lightColors.warmWhite,
-    minKelvin,
-    maxKelvin,
-  ]);
+    drawColorWheel(ctx);
+  }, []);
 
   useEffect(() => {
     generateColorWheel();
@@ -76,19 +58,7 @@ export function ColorPicker(props: ColorPickerProps) {
         const active = activeEntities.includes(entity);
         //if (!renderActive) renderActive = true;
 
-        return (
-          <Picker
-            key={entity}
-            canvasRef={canvasRef}
-            entities={[entity]}
-            hovered={hoverEntities.includes(entity)}
-            lightColors={lightColors}
-            onClick={onEntitiesClick}
-            onChange={onEntitiesChange}
-            onChangeApplied={onEntitiesChangeApplied}
-            active={active}
-          />
-        );
+        return <Picker key={entity} canvasRef={canvasRef} />;
       })}
     </Container>
   );
