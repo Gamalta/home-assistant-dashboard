@@ -23,6 +23,9 @@ export function ActivePicker(props: ActivePickerProps) {
       component={motion.div}
       drag
       onDrag={onDrag}
+      onDragEnd={() =>
+        entities.map(entity => entity.service.turnOn({rgb_color: color}))
+      }
       dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
