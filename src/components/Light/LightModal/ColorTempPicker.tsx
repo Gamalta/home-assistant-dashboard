@@ -68,7 +68,11 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
     ) => {
       if (!canvasRef.current) return;
 
-      const {x, y} = getRelativePosition(canvasRef, info.point.x, info.point.y);
+      const {x, y} = getRelativePosition(
+        canvasRef.current,
+        info.point.x,
+        info.point.y
+      );
       const radius = canvasRef.current.clientWidth / 2;
       const distanceFromMiddle = Math.hypot(x, y);
 
@@ -88,14 +92,17 @@ export function ColorTempPicker(props: ColorTempPickerProps) {
   useEffect(() => {
     generateColorWheel();
     const pos = getCoordsFromTemperature(2000); //TODO
-    console.log('set pos', pos);
     setPosition(pos);
   }, [generateColorWheel]);
 
   useEffect(() => {
     if (position.x === -1 || position.y === -1 || !canvasRef.current) return;
 
-    const {x, y} = getRelativePosition(canvasRef, position.x, position.y);
+    const {x, y} = getRelativePosition(
+      canvasRef.current,
+      position.x,
+      position.y
+    );
     const temperature = getTemperatureFromCoord(x, y);
     setColor(temperature);
     onChange && onChange(temperature, rgb2hex(temperature2rgb(temperature)));
