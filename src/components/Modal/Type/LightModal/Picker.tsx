@@ -1,13 +1,19 @@
 import Stack from '@mui/material/Stack';
-import {motion, useDragControls} from 'framer-motion';
+import {motion} from 'framer-motion';
 
-export function Picker() {
-  const dragControls = useDragControls();
+type PickerProps = {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+};
+
+export function Picker(props: PickerProps) {
+  const {canvasRef} = props;
+  //const dragControls = useDragControls();
+
   return (
     <Stack
       component={motion.div}
       drag
-      dragControls={dragControls}
+      //dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
       whileHover={{scale: 1.2, zIndex: 10, cursor: 'grab'}}
