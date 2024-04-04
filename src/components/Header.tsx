@@ -1,7 +1,10 @@
-import {ButtonCard} from '@hakit/components';
+import Fab from '@mui/material/Fab';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {useEffect, useState} from 'react';
+import {PendantRoundIcon} from './Icons/PendantRoundIcon';
+import {ThermostatIcon} from './Icons/ThermostatIcon';
+import {ButtonCard} from '@hakit/components';
 
 export function Header() {
   const [now, setNow] = useState(new Date());
@@ -40,7 +43,22 @@ export function Header() {
       <Typography variant="h4" textAlign="center" color="text.secondary">
         {time}
       </Typography>
-      <ButtonCard entity="light.sejour" />
+      <Stack justifyContent="space-evenly" direction="row">
+        <Fab variant="extended">
+          <ThermostatIcon />
+          20.1°C
+        </Fab>
+        <Fab variant="extended">
+          <PendantRoundIcon />
+        </Fab>
+        <Fab variant="extended">
+          <PendantRoundIcon />
+        </Fab>
+        <Fab variant="extended">
+          <PendantRoundIcon />
+        </Fab>
+      </Stack>
+      <ButtonCard entity="light.salon" />
     </Stack>
   );
 }
