@@ -15,7 +15,7 @@ export const useColorPicker = (
   mode: 'color' | 'temperature' = 'color'
 ) => {
   const [position, setPosition] = useState({x: 0, y: 0});
-  const [color, setColor] = useState([0, 0, 0]);
+  const [color, setColor] = useState<[number, number, number]>([0, 0, 0]);
 
   const handleMove = (
     _: MouseEvent | TouchEvent | PointerEvent | null,
