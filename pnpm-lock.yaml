@@ -12,11 +12,11 @@ dependencies:
     specifier: ^11.11.0
     version: 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.42)(react@18.2.0)
   '@hakit/components':
-    specifier: ^3.1.0
-    version: 3.1.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@fullcalendar/react@6.1.11)(@hakit/core@3.1.0)(@use-gesture/react@10.3.1)(autolinker@4.0.0)(framer-motion@11.0.24)(fullcalendar@6.1.11)(hls.js@1.5.7)(lodash@4.17.21)(react-dom@18.2.0)(react-error-boundary@4.0.13)(react-resize-detector@10.0.1)(react-thermostat@2.0.2)(react-use@17.5.0)(react@18.2.0)(use-debounce@10.0.0)(use-long-press@3.2.0)
+    specifier: ^3.1.4
+    version: 3.1.4(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@fullcalendar/react@6.1.11)(@hakit/core@3.1.4)(@use-gesture/react@10.3.1)(autolinker@4.0.0)(framer-motion@11.0.24)(fullcalendar@6.1.11)(hls.js@1.5.7)(leaflet@1.9.4)(lodash@4.17.21)(react-dom@18.2.0)(react-error-boundary@4.0.13)(react-leaflet@4.2.1)(react-resize-detector@10.0.1)(react-use@17.5.0)(react@18.2.0)(use-debounce@10.0.0)(use-long-press@3.2.0)
   '@hakit/core':
-    specifier: ^3.1.0
-    version: 3.1.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2)
+    specifier: ^3.1.4
+    version: 3.1.4(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2)
   '@mui/icons-material':
     specifier: ^5.15.0
     version: 5.15.0(@mui/material@5.14.20)(@types/react@18.2.42)(react@18.2.0)
@@ -44,9 +44,6 @@ dependencies:
   framer-motion:
     specifier: ^11.0.24
     version: 11.0.24(react-dom@18.2.0)(react@18.2.0)
-  home-assistant-js-websocket:
-    specifier: ^9.1.0
-    version: 9.1.0
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -2035,25 +2032,26 @@ packages:
       '@fullcalendar/daygrid': 6.1.11(@fullcalendar/core@6.1.11)
     dev: false
 
-  /@hakit/components@3.1.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@fullcalendar/react@6.1.11)(@hakit/core@3.1.0)(@use-gesture/react@10.3.1)(autolinker@4.0.0)(framer-motion@11.0.24)(fullcalendar@6.1.11)(hls.js@1.5.7)(lodash@4.17.21)(react-dom@18.2.0)(react-error-boundary@4.0.13)(react-resize-detector@10.0.1)(react-thermostat@2.0.2)(react-use@17.5.0)(react@18.2.0)(use-debounce@10.0.0)(use-long-press@3.2.0):
-    resolution: {integrity: sha512-Un4OJGodfqz59iNHBOFOFtmWigWlMlDIQxexB5eUjx34uxvE9XaDatozNMLvmO3uzRBS9uSmjTE6uht9PsQ5xw==}
+  /@hakit/components@3.1.4(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@fullcalendar/react@6.1.11)(@hakit/core@3.1.4)(@use-gesture/react@10.3.1)(autolinker@4.0.0)(framer-motion@11.0.24)(fullcalendar@6.1.11)(hls.js@1.5.7)(leaflet@1.9.4)(lodash@4.17.21)(react-dom@18.2.0)(react-error-boundary@4.0.13)(react-leaflet@4.2.1)(react-resize-detector@10.0.1)(react-use@17.5.0)(react@18.2.0)(use-debounce@10.0.0)(use-long-press@3.2.0):
+    resolution: {integrity: sha512-fk6YUNXvqUlt0yiLcf6okgcqG9iMzyHYe4lVfgyla6FA4LFvuyBOMACNp8aTPokVSLfqDLDdPsJDM/738y3WQw==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     peerDependencies:
-      '@emotion/react': '>=10.x'
-      '@emotion/styled': '>=10.x'
+      '@emotion/react': '>=11.x'
+      '@emotion/styled': '>=11.x'
       '@fullcalendar/react': '>=6.x.x'
-      '@hakit/core': ^3.0.5
+      '@hakit/core': ^3.1.4
       '@use-gesture/react': '>=10.x'
       autolinker: '>=4.x'
       framer-motion: '>=10.x'
       fullcalendar: '>=6.x.x'
       hls.js: '>=1.x.x'
+      leaflet: '>=1.x.x'
       lodash: '>=4.x'
       react: '>=16.x'
       react-dom: '>=16.x'
       react-error-boundary: ^4.x
+      react-leaflet: '>=4.x.x'
       react-resize-detector: '>=9.x.x'
-      react-thermostat: ^2.x.x
       react-use: '>=17.x'
       use-debounce: '>=9.x'
       use-long-press: '>=3.x.x'
@@ -2061,25 +2059,26 @@ packages:
       '@emotion/react': 11.11.1(@types/react@18.2.42)(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.42)(react@18.2.0)
       '@fullcalendar/react': 6.1.11(@fullcalendar/core@6.1.11)(react-dom@18.2.0)(react@18.2.0)
-      '@hakit/core': 3.1.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2)
+      '@hakit/core': 3.1.4(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2)
       '@use-gesture/react': 10.3.1(react@18.2.0)
       autolinker: 4.0.0
       framer-motion: 11.0.24(react-dom@18.2.0)(react@18.2.0)
       fullcalendar: 6.1.11
       hls.js: 1.5.7
+      leaflet: 1.9.4
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-error-boundary: 4.0.13(react@18.2.0)
+      react-leaflet: 4.2.1(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0)
       react-resize-detector: 10.0.1(react-dom@18.2.0)(react@18.2.0)
-      react-thermostat: 2.0.2(@emotion/babel-plugin@11.11.0)(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@use-gesture/react@10.3.1)(react-dom@18.2.0)(react@18.2.0)
       react-use: 17.5.0(react-dom@18.2.0)(react@18.2.0)
       use-debounce: 10.0.0(react@18.2.0)
       use-long-press: 3.2.0(react@18.2.0)
     dev: false
 
-  /@hakit/core@3.1.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2):
-    resolution: {integrity: sha512-qdUA/xhlIRwVl4q72pTqxka6yIc9mkDBXUdGBV0PlD019onQlYdyXhC/idb7g+9wLqnUdtyyRe/Dv/RuO6oD7A==}
+  /@hakit/core@3.1.4(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@iconify/react@4.1.1)(deep-object-diff@1.1.9)(framer-motion@11.0.24)(home-assistant-js-websocket@9.1.0)(javascript-time-ago@2.5.9)(lodash@4.17.21)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(use-debounce@10.0.0)(ws@8.16.0)(yargs@17.7.2)(zustand@4.5.2):
+    resolution: {integrity: sha512-mFOjbfCO0Z9RoAj3yqM5VeVqQAKmFYfVq4YStJ/vlBgKUt/8iRv1wvGVEalAq/HeM4uC/Zro4IdynOef2tqk8A==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -2088,7 +2087,7 @@ packages:
       '@iconify/react': '>=4.x'
       deep-object-diff: '>=1.x.x'
       framer-motion: '>=10.x.x'
-      home-assistant-js-websocket: '>=8.x'
+      home-assistant-js-websocket: '>=9.x'
       javascript-time-ago: '>=2.x'
       lodash: '>=4.x'
       prettier: '>=3.x.x'
@@ -2872,6 +2871,18 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@react-leaflet/core@2.1.0(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Qk7Pfu8BSarKGqILj4x7bCSZ1pjuAPZ+qmRwH5S7mDS91VSbVVsJSrW4qA+GPrro8t69gFYVMWb1Zc4yFmPiVg==}
+    peerDependencies:
+      leaflet: ^1.9.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      leaflet: 1.9.4
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@react-spring/animated@9.6.1(react@18.2.0):
@@ -8516,6 +8527,10 @@ packages:
       shell-quote: 1.8.1
     dev: false
 
+  /leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
+    dev: false
+
   /leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
@@ -10375,6 +10390,19 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
+  /react-leaflet@4.2.1(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-p9chkvhcKrWn/H/1FFeVSqLdReGwn2qmiobOQGO3BifX+/vV/39qhY8dGqbdcPh1e6jxh/QHriLXr7a4eLFK4Q==}
+    peerDependencies:
+      leaflet: ^1.9.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@react-leaflet/core': 2.1.0(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0)
+      leaflet: 1.9.4
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-reconciler@0.27.0(react@18.2.0):
     resolution: {integrity: sha512-HmMDKciQjYmBRGuuhIaKA1ba/7a+UsM5FzOZsMO2JYHt9Jh8reCb7j1eDC95NOyUlKM9KRyvdx0flBuDvYSBoA==}
     engines: {node: '>=0.10.0'}
@@ -10498,24 +10526,6 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
-    dev: false
-
-  /react-thermostat@2.0.2(@emotion/babel-plugin@11.11.0)(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@use-gesture/react@10.3.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-bhls+Cwe9hTVw+OynU4QoXT/nOdoMz2VBS0XxFfrTliWO02KJYmfLG3kYKgK32/bDfTrzFLsLHtJ3gUaxzd1Ng==}
-    peerDependencies:
-      '@emotion/babel-plugin': '>=10.x'
-      '@emotion/react': '>=10.x'
-      '@emotion/styled': '>=10.x'
-      '@use-gesture/react': '>=10.x'
-      react: '>=16.x'
-      react-dom: '>=16.x'
-    dependencies:
-      '@emotion/babel-plugin': 11.11.0
-      '@emotion/react': 11.11.1(@types/react@18.2.42)(react@18.2.0)
-      '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.42)(react@18.2.0)
-      '@use-gesture/react': 10.3.1(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
