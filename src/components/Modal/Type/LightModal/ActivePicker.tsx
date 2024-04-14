@@ -17,6 +17,7 @@ export function ActivePicker(props: ActivePickerProps) {
     entities
   );
   //const {activeEntities} = useLightModalContext(); if marker display number of active entities
+  if (entities.length === 0) return null;
 
   return (
     <Stack
