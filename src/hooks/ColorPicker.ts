@@ -1,12 +1,10 @@
 import {DragControls, Point} from 'framer-motion';
-import {getRelativePosition} from '../components/Light/LightModal/utils';
-import {useEffect, useState} from 'react';
 import {
-  HassEntityWithService,
-  hsv2rgb,
-  rgb2hs,
-  temperature2rgb,
-} from '@hakit/core';
+  getCoordFromColor,
+  getRelativePosition,
+} from '../components/Light/LightModal/utils';
+import {useEffect, useState} from 'react';
+import {HassEntityWithService, hsv2rgb, temperature2rgb} from '@hakit/core';
 
 export const useColorPicker = (
   canvas: HTMLCanvasElement | null,
@@ -47,23 +45,6 @@ export const useColorPicker = (
     return hsv2rgb([hue, saturation, 255]);
   };
 
-  const getCoordFromColor = (color: [number, number, number]) => {
-    if (!canvas) return {x: 0, y: 0};
-    const [hue, saturation] = rgb2hs(color);
-    const phi = (hue / 360) * 2 * Math.PI;
-    const sat = Math.min(saturation, 1);
-    const x = Math.cos(phi) * sat;
-    const y = Math.sin(phi) * sat;
-    const {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
-    const halfWidth = canvas.clientWidth / 2;
-    const halfHeight = canvas.clientHeight / 2;
-
-    return {
-      x: canvasX + halfWidth + halfWidth * x,
-      y: canvasY + halfHeight + halfHeight * y,
-    };
-  };
-
   const getTemperatureFromCoord = (y: number): number => {
     const minKelvin = 2000;
     const maxKelvin = 10000;
@@ -93,8 +74,7 @@ export const useColorPicker = (
   useEffect(() => {
     if (!entities[0] || !canvas) return;
     const color = entities[0].attributes.rgb_color ?? [255, 255, 255];
-    const coord = getCoordFromColor(color);
-    const {x, y} = getRelativePosition(canvas, coord.x, coord.y);
+    const {x, y} = getCoordFromColor(color);
     const {clientWidth, clientHeight} = canvas;
     setPosition({x, y});
     movePicker(x * (clientWidth / 2), y * (clientHeight / 2));

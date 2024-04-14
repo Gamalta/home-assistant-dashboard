@@ -1,14 +1,14 @@
 import {useRef, useCallback, useEffect} from 'react';
 import styled from '@emotion/styled';
-import {
-  EntityName,
-  FilterByDomain,
-  HassEntityWithService,
-  useLightColor,
-} from '@hakit/core';
+import {useEntity, useLightColor} from '@hakit/core';
 import {drawColorWheel} from './utils';
 import {motion} from 'framer-motion';
 import {Picker} from '../../Modal/Type/LightModal/Picker';
+import type {
+  EntityName,
+  FilterByDomain,
+  HassEntityWithService,
+} from '@hakit/core';
 
 export type ColorPickerProps = {
   entities: FilterByDomain<EntityName, 'light'>[];
@@ -58,7 +58,13 @@ export function ColorPicker(props: ColorPickerProps) {
         const active = activeEntities.includes(entity);
         //if (!renderActive) renderActive = true;
 
-        return <Picker key={entity} canvasRef={canvasRef} />;
+        return (
+          <Picker
+            key={entity}
+            canvasRef={canvasRef}
+            entity={useEntity(entity)}
+          />
+        );
       })}
     </Container>
   );
