@@ -1,11 +1,11 @@
 import Stack from '@mui/material/Stack';
 import {useCallback, useEffect, useRef} from 'react';
-import {drawColorWheel} from '../../../Light/LightModal/utils';
+import {drawColorWheel} from '../../../../Light/LightModal/utils';
 import {motion} from 'framer-motion';
 import styled from '@emotion/styled';
-import {useLightModalContext} from '../../../../contexts/LightModalContext';
-import {Picker} from './Picker';
-import {ActivePicker} from './ActivePicker';
+import {useLightModalContext} from '../../../../../contexts/LightModalContext';
+import {Picker} from '../components/Picker';
+import {ActivePicker} from '../components/ActivePicker';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
