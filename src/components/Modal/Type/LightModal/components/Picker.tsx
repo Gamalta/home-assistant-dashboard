@@ -1,9 +1,9 @@
 import Stack from '@mui/material/Stack';
 import {motion} from 'framer-motion';
-import {useLightModalContext} from '../../../../contexts/LightModalContext';
+import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {HassEntityWithService} from '@hakit/core';
-import {useEffect, useRef} from 'react';
-import {getCoordFromColor} from '../../../Light/LightModal/utils';
+import {getCoordFromColor} from '../../../../Light/LightModal/utils';
+import {useEffect, useState} from 'react';
 
 type PickerProps = {
   entity: HassEntityWithService<'light'>;
@@ -12,29 +12,28 @@ type PickerProps = {
 
 export function Picker(props: PickerProps) {
   const {entity, canvasRef} = props;
-  const {setActiveEntities} = useLightModalContext();
-  const pickerRef = useRef<HTMLDivElement>(null);
-  const color = entity.attributes.rgb_color ?? [255, 255, 255];
   const canvas = canvasRef.current;
-  const picker = pickerRef.current;
+  const {setActiveEntities} = useLightModalContext();
+  const [position, setPosition] = useState({x: 0, y: 0});
+  const color = entity.attributes.rgb_color ?? [255, 255, 255];
 
   useEffect(() => {
-    if (!picker || !canvas) return;
+    if (!entity || !canvas) return;
     const {x, y} = getCoordFromColor(color);
-    picker.style.top = `calc(${50 + y * 50}% - 12px)`;
-    picker.style.left = `calc(${50 + x * 50}% - 12px)`;
-  }, [canvas]);
+    setPosition({x, y});
+  }, [entity, canvas]);
 
   return (
     <Stack
-      ref={pickerRef}
       component={motion.div}
-      whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
-      whileHover={{scale: 1.2, zIndex: 10, cursor: 'grab'}}
+      whileTap={{scale: 1.5, zIndex: 10}}
+      whileHover={{scale: 1.2, zIndex: 10}}
       onClick={() => setActiveEntities([entity.entity_id])}
       position="absolute"
       width="32px"
       height="32px"
+      top={`calc(${50 + position.y * 50}% - 12px)`}
+      left={`calc(${50 + position.x * 50}% - 12px)`}
     >
       <Stack
         m="4px"
