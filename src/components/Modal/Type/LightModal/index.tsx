@@ -9,11 +9,13 @@ import {motion} from 'framer-motion';
 import {ColorWheelIcon} from '../../../Icons/ColorWheelIcon';
 import {Modal, ModalProps} from '../..';
 import {ColorTempWheelIcon} from '../../../Icons/ColorTempWheelIcon';
-import {ColorTempTab} from './ColorTempTab';
-import {EffectTab} from './EffectTab';
+import {ColorTempTab} from './Tabs/ColorTempTab';
+import {EffectTab} from './Tabs/EffectTab';
 import {HassEntityWithService} from '@hakit/core';
-import {ColorTab} from './ColorTab';
+import {ColorTab} from './Tabs/ColorTab';
 import {LightModalProvider} from '../../../../contexts/LightModalContext';
+import {LightCard} from './components/LightCard';
+import Typography from '@mui/material/Typography';
 
 type LightModalProps = Omit<ModalProps, 'children'> & {
   mainEntity: HassEntityWithService<'light'>;
@@ -68,6 +70,14 @@ export function LightModal(props: LightModalProps) {
               <AutoAwesomeIcon />
             </ToggleButton>
           </ToggleButtonGroup>
+          <Stack spacing={1}>
+            <Typography variant="h6">Lumières</Typography>
+            <Stack direction="row" gap={2} p={1}>
+              {[mainEntity, ...entities].map(entity => (
+                <LightCard key={entity.entity_id} entity={entity} />
+              ))}
+            </Stack>
+          </Stack>
         </Stack>
       </LightModalProvider>
     </Modal>
