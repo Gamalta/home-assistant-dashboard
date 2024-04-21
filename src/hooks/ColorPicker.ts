@@ -5,20 +5,24 @@ import {
 } from '../components/Light/LightModal/utils';
 import {useEffect, useState} from 'react';
 import {HassEntityWithService, hsv2rgb, temperature2rgb} from '@hakit/core';
+import {useLightModalContext} from '../contexts/LightModalContext';
 
 export const useColorPicker = (
   canvas: HTMLCanvasElement | null,
   dragControls: DragControls,
   entities: HassEntityWithService<'light'>[],
+  dragEnd: () => void,
   mode: 'color' | 'temperature' = 'color'
 ) => {
   const [position, setPosition] = useState({x: 0, y: 0});
   const [color, setColor] = useState<[number, number, number]>([0, 0, 0]);
+  const {
+    entities: inactiveEntites,
+    setActiveEntities,
+    setHoverEntity,
+  } = useLightModalContext();
 
-  const handleMove = (
-    _: MouseEvent | TouchEvent | PointerEvent | null,
-    info: {point: Point}
-  ) => {
+  const handleMove = (_: unknown, info: {point: Point}) => {
     if (!canvas) return;
     const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
     const radius = canvas.clientWidth / 2;
@@ -29,6 +33,40 @@ export const useColorPicker = (
       movePicker(radius * Math.cos(angle), radius * Math.sin(angle));
     }
     setPosition({x, y});
+
+    const neerEntity = getNeerEntity({x, y}, inactiveEntites);
+    setHoverEntity(neerEntity?.entity_id);
+  };
+
+  const onDragEnd = (_: unknown, info: {point: Point}) => {
+    if (!canvas) return;
+    const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
+    const neerEntity = getNeerEntity({x, y}, inactiveEntites);
+    if (!neerEntity) return;
+    setActiveEntities(activeEntities => [
+      neerEntity.entity_id,
+      ...activeEntities,
+    ]);
+    //TODO link entity
+    dragEnd();
+  };
+
+  const getNeerEntity = (
+    {x, y}: {x: number; y: number},
+    entities: HassEntityWithService<'light'>[]
+  ): HassEntityWithService<'light'> | undefined => {
+    let bestDistance = 999;
+    let neerEntity;
+
+    entities.map(entity => {
+      const coord = getCoordFromColor(entity.custom.color);
+      const distance = Math.hypot(coord.x - x, coord.y - y);
+      if (distance < 0.3 && distance < bestDistance) {
+        bestDistance = distance;
+        neerEntity = entity;
+      }
+    });
+    return neerEntity;
   };
 
   const movePicker = (x: number, y: number) => {
@@ -74,14 +112,31 @@ export const useColorPicker = (
   useEffect(() => {
     if (!entities[0] || !canvas) return;
     const color = entities[0].attributes.rgb_color ?? [255, 255, 255];
-    const {x, y} = getCoordFromColor(color);
-    const {clientWidth, clientHeight} = canvas;
-    setPosition({x, y});
-    movePicker(x * (clientWidth / 2), y * (clientHeight / 2));
+
+    const moveColorPicker = ({x, y}: {x: number; y: number}) => {
+      const {clientWidth, clientHeight} = canvas;
+      setPosition({x, y});
+      movePicker(x * (clientWidth / 2), y * (clientHeight / 2));
+    };
+
+    const coord = getCoordFromColor(color);
+    moveColorPicker(coord);
+
+    const onClick = ({clientX, clientY}: MouseEvent) => {
+      const coord = getRelativePosition(canvas, clientX, clientY);
+      moveColorPicker(coord);
+    };
+
+    canvas.addEventListener('click', onClick);
+
+    return () => {
+      canvas.removeEventListener('click', onClick);
+    };
   }, [entities, canvas]);
 
   return {
     color,
     onDrag: handleMove,
+    ondragEnd: onDragEnd,
   };
 };
