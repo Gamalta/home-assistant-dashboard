@@ -13,9 +13,10 @@ type PickerProps = {
 export function Picker(props: PickerProps) {
   const {entity, canvasRef} = props;
   const canvas = canvasRef.current;
-  const {setActiveEntities} = useLightModalContext();
+  const {setActiveEntities, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
   const color = entity.attributes.rgb_color ?? [255, 255, 255];
+  const hovered = hoverEntity === entity.entity_id;
 
   useEffect(() => {
     if (!entity || !canvas) return;
@@ -44,6 +45,7 @@ export function Picker(props: PickerProps) {
         boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
         bgcolor={`rgb(${color.join(',')})`}
         sx={{
+          border: hovered ? '2px solid red' : undefined,
           '&:hover': {
             border: '2px solid white',
           },

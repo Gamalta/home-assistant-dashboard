@@ -2,7 +2,6 @@ import Stack from '@mui/material/Stack';
 import {motion, useDragControls} from 'framer-motion';
 import {useColorPicker} from '../../../../../hooks/ColorPicker';
 import {HassEntityWithService} from '@hakit/core';
-import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 
 type ActivePickerProps = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -11,12 +10,14 @@ type ActivePickerProps = {
 
 export function ActivePicker(props: ActivePickerProps) {
   const {canvasRef, entities} = props;
-  const {activeEntities} = useLightModalContext();
   const dragControls = useDragControls();
-  const {color, onDrag} = useColorPicker(
+  const {color, onDrag, ondragEnd} = useColorPicker(
     canvasRef.current,
     dragControls,
-    entities
+    entities,
+    () => {
+      entities.map(entity => entity.service.turnOn({rgb_color: color}));
+    }
   );
   if (entities.length === 0) return null;
 
@@ -25,9 +26,7 @@ export function ActivePicker(props: ActivePickerProps) {
       component={motion.div}
       drag
       onDrag={onDrag}
-      onDragEnd={() =>
-        entities.map(entity => entity.service.turnOn({rgb_color: color}))
-      }
+      onDragEnd={ondragEnd}
       dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}

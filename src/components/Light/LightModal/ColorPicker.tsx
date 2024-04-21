@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import {useEntity, useLightColor} from '@hakit/core';
 import {drawColorWheel} from './utils';
 import {motion} from 'framer-motion';
-import {Picker} from '../../Modal/Type/LightModal/Picker';
+import {Picker} from '../../Modal/Type/LightModal/components/Picker';
 import type {
   EntityName,
   FilterByDomain,
