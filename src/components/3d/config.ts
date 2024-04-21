@@ -1,4 +1,4 @@
-import {EntityName, FilterByDomain} from '@hakit/core';
+import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const HouseConfig: HouseConfig = {
   model: process.env.PUBLIC_URL + 'model.glb',
@@ -11,20 +11,20 @@ export const HouseConfig: HouseConfig = {
       },
       position: [0.05, 2.6, -1.7],
       size: [4.1, 5.25],
-      temperature: 'sensor.temperature_salon',
-      light: 'light.salon',
+      //temperature: 'sensor.temperature_salon',
+      light: 'light.salon_main',
       lights: [
         {
-          entity: 'light.salon_strip',
-          position: [-1.5, 2.6, -2.2],
+          entity: 'light.salon_hue_play',
+          position: [-1.5, -1, 0],
         },
         {
-          entity: 'light.hue_play',
-          position: [-1.5, 2.6, -2.2],
+          entity: 'light.desktop_hue_iris',
+          position: [1.5, -1.4, -1.5],
         },
       ],
     },
-    {
+    /*{
       name: 'Cuisine',
       camera: {
         position: [-0.07, 5, 1.6],
@@ -33,7 +33,7 @@ export const HouseConfig: HouseConfig = {
       position: [-0.07, 2.6, 2.6],
       size: [2.6, 3.35],
       light: 'light.kitchen',
-    },
+    },*/
     {
       name: 'Bureau',
       camera: {
@@ -42,8 +42,8 @@ export const HouseConfig: HouseConfig = {
       },
       position: [-4.06, 2.6, 2.7],
       size: [1.6, 3.2],
-      temperature: 'sensor.temperature_office',
-      light: 'light.office',
+      //temperature: 'sensor.temperature_office',
+      light: 'light.desktop_main',
     },
     {
       name: 'Chambre',
@@ -53,8 +53,8 @@ export const HouseConfig: HouseConfig = {
       },
       position: [3.06, 2.6, 2.6],
       size: [3.6, 3.35],
-      temperature: 'sensor.temperature_bedroom',
-      light: 'light.bedroom',
+      //temperature: 'sensor.temperature_bedroom',
+      light: 'light.bedroom_main',
     },
     {
       name: 'Chambre 2',
@@ -64,7 +64,7 @@ export const HouseConfig: HouseConfig = {
       },
       position: [3.47, 2.6, -2.15],
       size: [2.77, 4.3],
-      light: 'light.bedroom_2',
+      light: 'light.bedroom_2_main',
     },
   ],
 };
