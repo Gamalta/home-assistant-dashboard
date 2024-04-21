@@ -74,6 +74,7 @@ export function Modal(props: ModalProps) {
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
               variants={variants}
+              p={2}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}
