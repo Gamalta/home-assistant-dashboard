@@ -11,13 +11,13 @@ export const useColorPicker = (
   canvas: HTMLCanvasElement | null,
   dragControls: DragControls,
   entities: HassEntityWithService<'light'>[],
-  dragEnd: () => void,
   mode: 'color' | 'temperature' = 'color'
 ) => {
   const [position, setPosition] = useState({x: 0, y: 0});
   const [color, setColor] = useState<[number, number, number]>([0, 0, 0]);
   const {
     entities: inactiveEntites,
+    activeEntities,
     setActiveEntities,
     setHoverEntity,
   } = useLightModalContext();
@@ -47,8 +47,6 @@ export const useColorPicker = (
       neerEntity.entity_id,
       ...activeEntities,
     ]);
-    //TODO link entity
-    dragEnd();
   };
 
   const getNeerEntity = (
@@ -125,6 +123,9 @@ export const useColorPicker = (
     const onClick = ({clientX, clientY}: MouseEvent) => {
       const coord = getRelativePosition(canvas, clientX, clientY);
       moveColorPicker(coord);
+      entities
+        .filter(entity => activeEntities.includes(entity.entity_id))
+        .map(entity => entity.service.turnOn({rgb_color: color}));
     };
 
     canvas.addEventListener('click', onClick);

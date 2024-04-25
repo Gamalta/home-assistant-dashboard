@@ -34,13 +34,11 @@ export function ColorTab() {
         minWidth="200px"
       >
         <Canvas ref={canvasRef} width="400px" height="400px" />
-        {/**active entities mark */}
-        {/**other entities mark entities.filter(activeEntities) */}
         {entities
           .filter(
             entity =>
               !activeEntities.includes(entity.entity_id) &&
-              entity.state !== 'unavailable'
+              entity.state === 'on'
           )
           .map(entity => (
             <Picker
@@ -53,8 +51,7 @@ export function ColorTab() {
           canvasRef={canvasRef}
           entities={entities.filter(
             entity =>
-              activeEntities.includes(entity.entity_id) &&
-              entity.state !== 'unavailable'
+              activeEntities.includes(entity.entity_id) && entity.state === 'on'
           )}
         />
       </Stack>
