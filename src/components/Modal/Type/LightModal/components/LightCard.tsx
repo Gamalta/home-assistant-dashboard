@@ -6,6 +6,12 @@ import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {useEffect, useRef} from 'react';
 import {motion} from 'framer-motion';
 import {PendantRoundIcon} from '../../../../Icons/PendantRoundIcon';
+import {useTheme} from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import LinkIcon from '@mui/icons-material/LinkRounded';
+import LinkOffIcon from '@mui/icons-material/LinkOffRounded';
+import Chip from '@mui/material/Chip';
+import {useIcon} from '../../../../../hooks/Icon';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;
@@ -15,18 +21,29 @@ export function LightCard(props: LightCardProps) {
   const {entity} = props;
   const {activeEntities, setActiveEntities} = useLightModalContext();
   const cardRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
 
+  const rgbColor = entity.attributes.rgb_color;
+  const hexColor = rgbColor
+    ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
+    : undefined;
+  const textColor = theme.palette.getContrastText(hexColor ?? '#000');
   const color = `rgb(${
     entity.attributes.rgb_color ?? [255, 255, 255].join(',')
   })`;
   const brightness = entity.attributes.brightness ?? 255;
+  const icon = useIcon(entity.attributes.icon);
+  const lightOn = entity.state === 'on';
   const activeEntity = activeEntities.includes(entity.entity_id);
 
   useEffect(() => {
     if (!cardRef.current) return;
-    //if (unavailable) return 'inset 0px 0px 10px rgba(0,0,0,0.2)';
-
     const card = cardRef.current;
+
+    if (!lightOn) {
+      card.style.boxShadow = 'inset 0px 0px 10px rgba(0,0,0,0.2)';
+    }
+
     const darkness = 255 - brightness;
     const coef = card.clientHeight / 255;
     const spread = 20;
@@ -44,12 +61,20 @@ export function LightCard(props: LightCardProps) {
 
   return (
     <Stack
-      border={activeEntity ? `2px solid ${color}` : undefined}
+      border={
+        activeEntity
+          ? `2px solid ${lightOn ? color : 'rgba(102, 102, 102, 0.6)'}`
+          : undefined
+      }
       borderRadius={
         activeEntity ? theme => `${theme.shape.borderRadius + 4}px` : 1
       }
       p={activeEntity ? '2px' : 0}
       m={activeEntity ? '-4px' : 0}
+      sx={{
+        transition: 'all 0.3s ease-out 0s, transform .15s',
+      }}
+      onClick={() => setActiveEntities([entity.entity_id])}
     >
       <Stack
         ref={cardRef}
@@ -58,14 +83,43 @@ export function LightCard(props: LightCardProps) {
         whileHover={{scale: 0.95}}
         borderRadius={1}
         sx={{
-          background: color,
+          background: lightOn ? color : 'rgba(102, 102, 102, 0.6)',
           transition: 'all 0.3s ease-out 0s, transform .15s',
         }}
-        onClick={() => setActiveEntities([entity.entity_id])}
       >
+        <Stack direction="row-reverse" justifyContent="space-between" p={1}>
+          <IconButton
+            size="small"
+            sx={{
+              opacity: activeEntity ? 0.8 : 0.3,
+              background: 'rgba(0,0,0,0.2)',
+            }}
+            color={activeEntity ? 'primary' : 'inherit'}
+            onClick={event => {
+              setActiveEntities(
+                activeEntity
+                  ? activeEntities.filter(
+                      entityId => entityId !== entity.entity_id
+                    )
+                  : [entity.entity_id, ...activeEntities]
+              );
+              event.stopPropagation();
+            }}
+          >
+            {activeEntity ? <LinkIcon /> : <LinkOffIcon />}
+          </IconButton>
+          {entity.state === 'unavailable' && (
+            <Chip
+              sx={{height: '12px', width: '12px', opacity: 0.3}}
+              color="error"
+            />
+          )}
+        </Stack>
         <Stack p={2} spacing={1} alignItems="center">
-          <PendantRoundIcon />
-          <Typography>{entity.attributes.friendly_name}</Typography>
+          {icon}
+          <Typography sx={{color: textColor}}>
+            {entity.attributes.friendly_name}
+          </Typography>
         </Stack>
         <Stack
           alignItems="center"
@@ -77,16 +131,11 @@ export function LightCard(props: LightCardProps) {
           }}
         >
           <Switch
-            checked={activeEntity}
-            onChange={event => {
-              setActiveEntities(
-                event.target.checked
-                  ? [entity.entity_id, ...activeEntities]
-                  : activeEntities.filter(
-                      entityId => entityId !== entity.entity_id
-                    )
-              );
-            }}
+            checked={lightOn}
+            onClick={event => event.stopPropagation()}
+            onChange={() =>
+              lightOn ? entity.service.turnOff() : entity.service.turnOn()
+            }
           />
         </Stack>
       </Stack>
