@@ -14,10 +14,7 @@ export function ActivePicker(props: ActivePickerProps) {
   const {color, onDrag, ondragEnd} = useColorPicker(
     canvasRef.current,
     dragControls,
-    entities,
-    () => {
-      entities.map(entity => entity.service.turnOn({rgb_color: color}));
-    }
+    entities
   );
   if (entities.length === 0) return null;
 
@@ -26,7 +23,10 @@ export function ActivePicker(props: ActivePickerProps) {
       component={motion.div}
       drag
       onDrag={onDrag}
-      onDragEnd={ondragEnd}
+      onDragEnd={(event, point) => {
+        ondragEnd(event, point);
+        entities.map(entity => entity.service.turnOn({rgb_color: color}));
+      }}
       dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
@@ -48,9 +48,6 @@ export function ActivePicker(props: ActivePickerProps) {
         sx={{
           transform: 'rotate(45deg) translate(-50%, -50%)',
           borderBottomRightRadius: 0,
-          '&:hover': {
-            border: '2px solid white',
-          },
         }}
       />
     </Stack>
