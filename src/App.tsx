@@ -1,9 +1,10 @@
+import React from 'react';
 //import {HassConnect} from '@hakit/core';
 import Dashboard from './Dashboard';
 import CssBaseline from '@mui/material/CssBaseline';
 import {theme} from './theme/theme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import {HassConnect} from './mocks/hass-connect';
+import {HassConnect} from '@hakit/core';
 
 function App() {
   return (

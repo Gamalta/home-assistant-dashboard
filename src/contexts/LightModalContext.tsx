@@ -1,3 +1,4 @@
+import React from 'react';
 import {HassEntityWithService} from '@hakit/core';
 import {
   Dispatch,
@@ -18,9 +19,9 @@ type LightModalType = {
 const LightModalContext = createContext<LightModalType>({
   entities: [],
   activeEntities: [],
-  setActiveEntities: () => {},
+  setActiveEntities: () => undefined,
   hoverEntity: undefined,
-  setHoverEntity: () => {},
+  setHoverEntity: () => undefined,
 });
 
 export const useLightModalContext = () => useContext(LightModalContext);

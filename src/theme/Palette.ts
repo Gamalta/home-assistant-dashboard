@@ -3,7 +3,7 @@ import {PaletteOptions} from '@mui/material/styles/createPalette';
 export const Palette: PaletteOptions = {
   mode: 'dark',
   primary: {
-    main: '#ffc815',
+  main: '#ffc815',
   },
   secondary: {
     main: '#585858',

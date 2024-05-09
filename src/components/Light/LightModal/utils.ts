@@ -1,5 +1,4 @@
 import {hsv2rgb, rgb2hex, rgb2hs, temperature2rgb} from '@hakit/core';
-import {useTheme} from '@mui/material/styles';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;
@@ -87,11 +86,11 @@ export const getCoordFromColor = (color: [number, number, number]) => {
   const y = Math.sin(phi) * sat;
   return {x, y};
 };
-
-function getContrastColor([r, g, b]: [number, number, number]) {
+/*
+function useContrastColor([r, g, b]: [number, number, number]) {
   const theme = useTheme();
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness >= 128
     ? theme.palette.text.primary
     : theme.palette.text.secondary;
-}
+}*/
