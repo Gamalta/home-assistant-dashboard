@@ -1,4 +1,3 @@
-import React from 'react';
 //import {HassConnect} from '@hakit/core';
 import Dashboard from './Dashboard';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,7 +9,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <HassConnect hassUrl={process.env.REACT_APP_HASS_URL!}>
+      <HassConnect hassUrl={import.meta.env.VITE_HA_URL}>
         <Dashboard />
       </HassConnect>
     </ThemeProvider>

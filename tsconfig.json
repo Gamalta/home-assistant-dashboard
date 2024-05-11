@@ -1,29 +1,27 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "skipLibCheck": true,
-    "target": "ES2020",
     "useDefineForClassFields": true,
+    "target": "ES2020",
     "lib": ["es2020", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
     "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundle mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "emitDeclarationOnly": false,
     "isolatedModules": true,
     "noEmit": true,
-    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "declaration": true,
+
+    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "preserveConstEnums": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src", "vite.config.ts"]
+
 }

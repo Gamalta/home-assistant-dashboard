@@ -1,6 +1,7 @@
 {
   "name": "home-assistant-dashboard",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -14,21 +15,6 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@hakit/components": "^3.1.4",
-    "@hakit/core": "^3.1.4",
-    "@iconify/react": "^4.1.1",
-    "@mui/icons-material": "^5.15.0",
-    "@mui/material": "^5.14.20",
-    "@mui/x-charts": "^7.1.0",
-    "@react-three/drei": "^9.102.3",
-    "@react-three/fiber": "^8.15.19",
-    "@types/lodash": "^4.14.202",
-    "@types/three": "^0.162.0",
-    "dayjs": "^1.11.10",
-    "framer-motion": "^11.0.24",
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@emotion/react": "^11.11.1",
