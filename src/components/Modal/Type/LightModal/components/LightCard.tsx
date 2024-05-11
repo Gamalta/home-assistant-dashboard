@@ -5,13 +5,12 @@ import Switch from '@mui/material/Switch';
 import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {useEffect, useRef} from 'react';
 import {motion} from 'framer-motion';
-import {PendantRoundIcon} from '../../../../Icons/PendantRoundIcon';
 import {useTheme} from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import LinkIcon from '@mui/icons-material/LinkRounded';
 import LinkOffIcon from '@mui/icons-material/LinkOffRounded';
 import Chip from '@mui/material/Chip';
-import {useIcon} from '../../../../../hooks/Icon';
+import {useIcon} from '../../../../../hooks/useIcon';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;
@@ -57,7 +56,7 @@ export function LightCard(props: LightCardProps) {
       shadowDensity -= ((shadowDensity - 0.5) * (darkness - 153)) / 102;
     }
     card.style.boxShadow = `0px 2px 3px rgba(0,0,0,0.4), inset 0px -${position}px ${width}px -${spread}px rgba(0,0,0,${shadowDensity})`;
-  }, [brightness, cardRef.current, cardRef.current?.clientHeight]);
+  }, [brightness, cardRef.current?.clientHeight, lightOn]);
 
   return (
     <Stack

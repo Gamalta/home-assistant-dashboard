@@ -3,7 +3,7 @@ import {motion} from 'framer-motion';
 import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {HassEntityWithService} from '@hakit/core';
 import {getCoordFromColor} from '../../../../Light/LightModal/utils';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 type PickerProps = {
   entity: HassEntityWithService<'light'>;
@@ -15,14 +15,17 @@ export function Picker(props: PickerProps) {
   const canvas = canvasRef.current;
   const {setActiveEntities, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
-  const color = entity.attributes.rgb_color ?? [255, 255, 255];
   const hovered = hoverEntity === entity.entity_id;
+  const color = useMemo<[number, number, number]>(
+    () => entity.attributes.rgb_color ?? [255, 255, 255],
+    [entity]
+  );
 
   useEffect(() => {
     if (!entity || !canvas) return;
     const {x, y} = getCoordFromColor(color);
     setPosition({x, y});
-  }, [entity, canvas]);
+  }, [color, entity, canvas]);
 
   return (
     <Stack

@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {motion, useDragControls} from 'framer-motion';
-import {useColorPicker} from '../../../../../hooks/ColorPicker';
+import {useColorPicker} from '../../../../../hooks/useColorPicker';
 import {HassEntityWithService} from '@hakit/core';
 
 type ActivePickerProps = {

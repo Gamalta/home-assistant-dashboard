@@ -20,7 +20,7 @@ export function ColorTab() {
   useEffect(() => {
     generateColorWheel();
     setActiveEntities([entities[0].entity_id]);
-  }, []);
+  }, [entities, generateColorWheel, setActiveEntities]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
