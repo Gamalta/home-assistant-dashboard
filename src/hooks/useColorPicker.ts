@@ -3,7 +3,7 @@ import {
   getCoordFromColor,
   getRelativePosition,
 } from '../components/Light/LightModal/utils';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {HassEntityWithService, hsv2rgb, temperature2rgb} from '@hakit/core';
 import {useLightModalContext} from '../contexts/LightModalContext';
 
@@ -67,13 +67,16 @@ export const useColorPicker = (
     return neerEntity;
   };
 
-  const movePicker = (x: number, y: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (dragControls as any).componentControls.forEach((entry: any) => {
-      entry.getAxisMotionValue('x').set(x);
-      entry.getAxisMotionValue('y').set(y);
-    });
-  };
+  const movePicker = useCallback(
+    (x: number, y: number) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (dragControls as any).componentControls.forEach((entry: any) => {
+        entry.getAxisMotionValue('x').set(x);
+        entry.getAxisMotionValue('y').set(y);
+      });
+    },
+    [dragControls]
+  );
 
   const getColorFromCoord = (x: number, y: number) => {
     const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
@@ -105,7 +108,7 @@ export const useColorPicker = (
         break;
       }
     }
-  }, [position]);
+  }, [mode, position]);
 
   useEffect(() => {
     if (!entities[0] || !canvas) return;
@@ -133,7 +136,7 @@ export const useColorPicker = (
     return () => {
       canvas.removeEventListener('click', onClick);
     };
-  }, [entities, canvas]);
+  }, [entities, canvas, movePicker, activeEntities]);
 
   return {
     color,
