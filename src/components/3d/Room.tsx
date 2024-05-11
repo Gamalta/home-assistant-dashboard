@@ -9,7 +9,7 @@ import {PendantRoundIcon} from '../Icons/PendantRoundIcon';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {ThermostatIcon} from '../Icons/ThermostatIcon';
 import {useState} from 'react';
-import {useLongPress} from '../../hooks/LongPress';
+import {useLongPress} from '../../hooks/useLongPress';
 import {alpha} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import {TemperatureModal} from '../Modal/Type/TemperatureModal';
@@ -27,12 +27,15 @@ export function Room(props: RoomProps) {
   const {room: activeRoom, setRoom} = useHouseContext();
   const isActive = activeRoom === room.name;
 
-  const temperature = room.temperature && useEntity(room.temperature);
-  const mainLight = room.light && useEntity(room.light);
-  const lights = room.lights?.map(light => ({
-    entity: useEntity(light.entity),
-    position: light.position,
-  }));
+  const temperature = useEntity(room.temperature ?? 'unknown', {
+    returnNullIfNotFound: true,
+  });
+  const mainLight = useEntity(room.light ?? 'unknown', {
+    returnNullIfNotFound: true,
+  });
+  // TODO fix later
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const lights = room.lights?.map(light => useEntity(light.entity));
 
   useFrame(state => {
     if (!isActive) return;
@@ -57,9 +60,9 @@ export function Room(props: RoomProps) {
         <RoomAction
           key={room.name}
           id={`action-${room.name}`}
-          temperature={temperature}
-          mainLight={mainLight}
-          lights={lights?.map(light => light.entity)}
+          temperature={temperature ?? undefined}
+          mainLight={mainLight ?? undefined}
+          lights={lights}
         />
       )}
       {mainLight?.state === 'on' && (
