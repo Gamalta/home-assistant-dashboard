@@ -2,8 +2,8 @@ import Stack from '@mui/material/Stack';
 import {motion} from 'framer-motion';
 import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {HassEntityWithService} from '@hakit/core';
-import {getCoordFromColor} from '../../../../Light/LightModal/utils';
 import {useEffect, useMemo, useState} from 'react';
+import {getCoordFromColor} from '../../../../../utils/color';
 
 type PickerProps = {
   entity: HassEntityWithService<'light'>;

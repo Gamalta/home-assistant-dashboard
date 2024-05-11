@@ -1,11 +1,8 @@
 import {DragControls, Point} from 'framer-motion';
-import {
-  getCoordFromColor,
-  getRelativePosition,
-} from '../components/Light/LightModal/utils';
 import {useCallback, useEffect, useState} from 'react';
 import {HassEntityWithService, hsv2rgb, temperature2rgb} from '@hakit/core';
 import {useLightModalContext} from '../contexts/LightModalContext';
+import {getCoordFromColor, getRelativePosition} from '../utils/color';
 
 export const useColorPicker = (
   canvas: HTMLCanvasElement | null,
