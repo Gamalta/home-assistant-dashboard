@@ -1,43 +1,78 @@
-name: Node.js CI
+name: Lint, build and deploy
 
 on:
   push:
 
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Install pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 9
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Install Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+        run_install: false
+
     - name: Install dependencies
       run: pnpm install
 
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
   test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: install
 
     steps:
-    - name: Test
-      run: pnpm run lint
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Test
+        run: pnpm run lint
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: install
 
     steps:
-    - name: Build and deploy
-      run: |
-        pnpm run build
-        pnpm run deploy
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Build and deploy
+        run: |
+          pnpm run build
+          pnpm run deploy
