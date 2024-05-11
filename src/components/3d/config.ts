@@ -1,7 +1,7 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const HouseConfig: HouseConfig = {
-  model: process.env.PUBLIC_URL + 'model.glb',
+  model: 'model.glb',
   room: [
     {
       name: 'Séjour',
