@@ -37,12 +37,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-  lint:
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Lint
         run: pnpm run lint
