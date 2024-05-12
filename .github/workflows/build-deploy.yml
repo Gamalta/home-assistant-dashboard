@@ -67,4 +67,5 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "dist/*"
           target: /usr/share/hassio/homeassistant/www/dashboard/
+          strip_components: 1
           rm: true
