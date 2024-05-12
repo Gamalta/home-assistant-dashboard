@@ -57,6 +57,9 @@ jobs:
           name: dist
           path: dist
 
+      - name: Debug
+        run: ls -al
+
       - name: Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
