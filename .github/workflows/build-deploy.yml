@@ -65,5 +65,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "dist/*"
-          target: /usr/share/hassio/homeassistant/www/dashboard/
+          #target: /usr/share/hassio/homeassistant/www/dashboard/
+          target: /home/github-actions/dashboard/
           overwrite: true
