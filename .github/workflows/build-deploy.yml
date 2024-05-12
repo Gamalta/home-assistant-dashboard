@@ -5,7 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
+    env:
+      VITE_HA_URL: ${{ secrets.VITE_HA_URL }}
 
     steps:
       - name: Checkout
