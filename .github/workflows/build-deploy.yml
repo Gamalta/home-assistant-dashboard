@@ -40,6 +40,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Echo
+        run: echo "Deploying to ${{ secrets.TEST_SSH_HOST }}, ${{ secrets.TEST_SSH_USERNAME }}"
+
       - name: Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
