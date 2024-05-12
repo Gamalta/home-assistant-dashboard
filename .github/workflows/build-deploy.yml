@@ -39,15 +39,12 @@ jobs:
 
       - name: Build
         run: pnpm run build
-
-      - name: Echo
-        run: echo "Deploying to ${{ secrets.TEST_SSH_HOST }}, ${{ secrets.TEST_SSH_USERNAME }}"
-
+        
       - name: Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: "host"
-          username: "test"
-          key: "b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACBxHV+4bNJ+6gfCtIrPpQJpNkckxO93R6qzUsjITe7FhAAAAJiuCTk4rgk5OAAAAAtzc2gtZWQyNTUxOQAAACBxHV+4bNJ+6gfCtIrPpQJpNkckxO93R6qzUsjITe7FhAAAAEDBvMyeHE93kPFU1pZ85hxnOr3Tn0JdhR6f0tD0ehb0knEdX7hs0n7qB8K0is+lAmk2RyTE73dHqrNSyMhN7sWEAAAADmdpdGh1Yi1hY3Rpb25zAQIDBAUGBw=="
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           source: "dist/*"
           target: /usr/share/hassio/homeassistant/www/dashboard/
