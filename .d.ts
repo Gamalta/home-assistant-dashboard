@@ -1,6 +1,5 @@
 interface CustomEnv {
   VITE_HA_URL: string;
-  VITE_HA_TOKEN: string;
   [key: string]: unknown;
 }
 

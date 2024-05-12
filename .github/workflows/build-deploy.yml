@@ -65,6 +65,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "dist"
+          source: "dist/*"
           target: /usr/share/hassio/homeassistant/www/dashboard/
           rm: true
