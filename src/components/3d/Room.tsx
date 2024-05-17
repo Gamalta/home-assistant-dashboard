@@ -67,7 +67,7 @@ export function Room(props: RoomProps) {
       )}
       {mainLight?.state === 'on' && (
         <pointLight
-          //castShadow
+          castShadow
           position={[0, -0.1, 0]}
           color={mainLight.custom.color}
           //TODO link intensity to light brightness

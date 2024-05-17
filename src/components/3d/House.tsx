@@ -25,6 +25,11 @@ export function House() {
     scene.rotation.set(0, degToRad(-90), 0);
     scene.traverse(object => {
       if (object instanceof THREE.Mesh) {
+        object.material = new THREE.MeshStandardMaterial({
+          color: 'white',
+          roughness: 0.5,
+          metalness: 0.5,
+        });
         object.castShadow = true;
         object.receiveShadow = true;
       }
@@ -39,6 +44,7 @@ export function House() {
             <Stats />
             <Camera />
             <AmbientLight />
+
             <OutsideLight position={[0, 5, 4]} />
             <OutsideLight position={[0, 5, -4]} />
             <OutsideLight position={[4, 5, 0]} />
@@ -51,6 +57,7 @@ export function House() {
               <boxGeometry args={[10, 0.1, 9]} />
               <meshBasicMaterial transparent opacity={0} />
             </mesh>
+
             {config.room.map(room => (
               <Room key={room.name} room={room} debug={room.debug} />
             ))}
