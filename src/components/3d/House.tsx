@@ -10,6 +10,7 @@ import {AmbientLight} from './AmbientLight';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Loader} from './Loader';
+import {degToRad} from 'three/src/math/MathUtils.js';
 
 export function House() {
   const config = HouseConfig;
@@ -18,14 +19,14 @@ export function House() {
   const {room, setRoom} = useHouseContext();
 
   useEffect(() => {
-    const box = new THREE.Box3().setFromObject(scene);
-    const size = box.getSize(new THREE.Vector3());
-    scene.position.set(-size.x / 2, 0, size.z / 2);
+    //const box = new THREE.Box3().setFromObject(scene);
+    //const size = box.getSize(new THREE.Vector3());
+    scene.position.set(-2.5, 0, 0);
+    scene.rotation.set(0, degToRad(-90), 0);
     scene.traverse(object => {
       if (object instanceof THREE.Mesh) {
         object.castShadow = true;
         object.receiveShadow = true;
-        object.material.envMapIntensity = 20;
       }
     });
   }, [scene]);
@@ -69,7 +70,19 @@ export function House() {
 }
 
 const OutsideLight = ({position}: {position: Vector3}) => (
-  <directionalLight castShadow position={position} intensity={0.05} />
+  <directionalLight
+    //castShadow
+    position={position}
+    intensity={0.05}
+    shadow-mapSize-width={1024}
+    shadow-mapSize-height={1024}
+    shadow-camera-left={-7}
+    shadow-camera-right={7}
+    shadow-camera-top={7}
+    shadow-camera-bottom={-7}
+    shadow-bias={-0.0001}
+    shadow-normalBias={0.05}
+  />
 );
 
 useGLTF.preload(HouseConfig.model);

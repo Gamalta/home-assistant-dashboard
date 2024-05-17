@@ -49,7 +49,7 @@ export function Room(props: RoomProps) {
   return (
     <mesh
       position={position}
-      castShadow
+      //castShadow
       onClick={() => setRoom(room.name)}
       onPointerEnter={() => console.log('enter')}
       onPointerLeave={() => console.log('leave')}
@@ -67,7 +67,7 @@ export function Room(props: RoomProps) {
       )}
       {mainLight?.state === 'on' && (
         <pointLight
-          castShadow
+          //castShadow
           position={[0, -0.1, 0]}
           color={mainLight.custom.color}
           //TODO link intensity to light brightness
