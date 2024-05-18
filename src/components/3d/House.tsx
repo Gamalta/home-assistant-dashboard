@@ -41,7 +41,15 @@ export function House() {
     <Stack position="relative" height="100%">
       <Stack position="absolute" height="100%" width="100%">
         <Suspense fallback={<Loader />}>
-          <Canvas shadows flat ref={canvasRef}>
+          <Canvas
+            shadows
+            flat
+            ref={canvasRef}
+            performance={{
+              min: 0.8,
+              max: 1,
+            }}
+          >
             <Stats />
             <Camera />
             <AmbientLight />
