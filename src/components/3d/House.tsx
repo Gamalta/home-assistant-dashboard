@@ -11,7 +11,7 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Loader} from './Loader';
 import {degToRad} from 'three/src/math/MathUtils.js';
-import { AdaptivePixelRatio } from './AdaptivePixelRatio';
+import {AdaptivePixelRatio} from './AdaptivePixelRatio';
 
 export function House() {
   const config = HouseConfig;
