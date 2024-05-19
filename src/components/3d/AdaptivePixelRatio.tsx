@@ -5,7 +5,8 @@ export function AdaptivePixelRatio() {
   const current = useThree(state => state.performance.current);
   const setPixelRatio = useThree(state => state.setDpr);
   useEffect(() => {
-    setPixelRatio(window.devicePixelRatio * current);
+    console.log('current', current);
+    setPixelRatio(window.devicePixelRatio * 0.1);
   }, [current, setPixelRatio]);
   return null;
 }

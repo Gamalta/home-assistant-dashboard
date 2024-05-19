@@ -8,12 +8,12 @@ import Fab from '@mui/material/Fab';
 import {PendantRoundIcon} from '../Icons/PendantRoundIcon';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {ThermostatIcon} from '../Icons/ThermostatIcon';
-import {useState} from 'react';
 import {useLongPress} from '../../hooks/useLongPress';
 import {alpha} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import {TemperatureModal} from '../Modal/Type/TemperatureModal';
 import {LightModal} from '../Modal/Type/LightModal';
+import {useRef, useState} from 'react';
 
 type RoomProps = {
   room: RoomConfig;
@@ -36,20 +36,37 @@ export function Room(props: RoomProps) {
   // TODO fix later
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const lights = room.lights?.map(light => useEntity(light.entity));
+  const light = useRef<THREE.PointLight>(null);
+
+  const cameraPosition = new THREE.Vector3(...camera.position);
+  const cameraLookAt = new THREE.Vector3(...camera.lookAt);
+
+  /*useFrame(state => {
+    //Performance
+    if (light.current) {
+      if (state.performance.current < 0.5) {
+        light.current.castShadow = false;
+      } else {
+        light.current.castShadow = true;
+      }
+    }
+  });*/
 
   useFrame(state => {
-    if (!isActive) return;
-    const cameraPosition = new THREE.Vector3(...camera.position);
-    const cameraLookAt = new THREE.Vector3(...camera.lookAt);
+    /**Camera position */
+    if (!isActive || state.camera.position.equals(cameraPosition)) return;
 
-    state.camera.position.lerp(cameraPosition, 0.05);
+    if (state.camera.position.distanceTo(cameraPosition) < 0.01) {
+      state.camera.position.copy(cameraPosition);
+    } else {
+      state.camera.position.lerp(cameraPosition, 0.05);
+    }
     state.camera.lookAt(cameraLookAt);
   });
 
   return (
     <mesh
       position={position}
-      //castShadow
       onClick={() => setRoom(room.name)}
       onPointerEnter={() => console.log('enter')}
       onPointerLeave={() => console.log('leave')}
@@ -67,6 +84,7 @@ export function Room(props: RoomProps) {
       )}
       {mainLight?.state === 'on' && (
         <pointLight
+          ref={light}
           castShadow
           position={[0, -0.1, 0]}
           color={mainLight.custom.color}

@@ -1,27 +1,31 @@
 import {Canvas, Vector3} from '@react-three/fiber';
-import {Suspense, useEffect, useRef} from 'react';
+import {Suspense, useEffect, useRef, useState} from 'react';
 import * as THREE from 'three';
-import {Stats, useGLTF} from '@react-three/drei';
+import {
+  AdaptiveDpr,
+  PerformanceMonitor,
+  Stats,
+  useGLTF,
+} from '@react-three/drei';
 import {HouseConfig} from './config';
 import {Room} from './Room';
-import {Camera} from './Camera';
-import {Button, Stack} from '@mui/material';
-import {AmbientLight} from './AmbientLight';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Loader} from './Loader';
 import {degToRad} from 'three/src/math/MathUtils.js';
-import {AdaptivePixelRatio} from './AdaptivePixelRatio';
+import {Camera} from './Camera';
 
 export function House() {
   const config = HouseConfig;
+
+  const [dpr, setDpr] = useState(1.5);
   const {scene} = useGLTF(config.model);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {room, setRoom} = useHouseContext();
 
   useEffect(() => {
-    //const box = new THREE.Box3().setFromObject(scene);
-    //const size = box.getSize(new THREE.Vector3());
     scene.position.set(-2.5, 0, 0);
     scene.rotation.set(0, degToRad(-90), 0);
     scene.traverse(object => {
@@ -42,18 +46,21 @@ export function House() {
       <Stack position="absolute" height="100%" width="100%">
         <Suspense fallback={<Loader />}>
           <Canvas
+            dpr={dpr}
+            camera={{position: [0, 5, 10]}}
+            performance={{min: 0.1, max: 1, current: 0.5}}
+            gl={{antialias: false}}
             shadows
             flat
             ref={canvasRef}
-            performance={{
-              min: 0.8,
-              max: 1,
-            }}
           >
+            <PerformanceMonitor
+              onIncline={() => setDpr(2)}
+              onDecline={() => setDpr(0.5)}
+            />
+
             <Stats />
             <Camera />
-            <AmbientLight />
-            <AdaptivePixelRatio />
 
             <OutsideLight position={[0, 5, 4]} />
             <OutsideLight position={[0, 5, -4]} />
@@ -71,6 +78,7 @@ export function House() {
             {config.room.map(room => (
               <Room key={room.name} room={room} debug={room.debug} />
             ))}
+            <AdaptiveDpr pixelated />
           </Canvas>
         </Suspense>
       </Stack>
