@@ -1,4 +1,3 @@
-import {useFrame} from '@react-three/fiber';
 import {RoomConfig} from './config';
 import * as THREE from 'three';
 import {HassEntityWithService, useEntity} from '@hakit/core';
@@ -8,12 +7,12 @@ import Fab from '@mui/material/Fab';
 import {PendantRoundIcon} from '../Icons/PendantRoundIcon';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {ThermostatIcon} from '../Icons/ThermostatIcon';
-import {useState} from 'react';
 import {useLongPress} from '../../hooks/useLongPress';
 import {alpha} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import {TemperatureModal} from '../Modal/Type/TemperatureModal';
 import {LightModal} from '../Modal/Type/LightModal';
+import {useRef, useState} from 'react';
 
 type RoomProps = {
   room: RoomConfig;
@@ -22,10 +21,10 @@ type RoomProps = {
 
 export function Room(props: RoomProps) {
   const {room, debug} = props;
-  const {camera, position, size} = room;
+  const {position, size} = room;
 
   const {room: activeRoom, setRoom} = useHouseContext();
-  const isActive = activeRoom === room.name;
+  const isActive = activeRoom?.name === room.name;
 
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
@@ -36,21 +35,12 @@ export function Room(props: RoomProps) {
   // TODO fix later
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const lights = room.lights?.map(light => useEntity(light.entity));
-
-  useFrame(state => {
-    if (!isActive) return;
-    const cameraPosition = new THREE.Vector3(...camera.position);
-    const cameraLookAt = new THREE.Vector3(...camera.lookAt);
-
-    state.camera.position.lerp(cameraPosition, 0.05);
-    state.camera.lookAt(cameraLookAt);
-  });
+  const light = useRef<THREE.PointLight>(null);
 
   return (
     <mesh
       position={position}
-      castShadow
-      onClick={() => setRoom(room.name)}
+      onClick={() => setRoom(room)}
       onPointerEnter={() => console.log('enter')}
       onPointerLeave={() => console.log('leave')}
     >
@@ -67,6 +57,7 @@ export function Room(props: RoomProps) {
       )}
       {mainLight?.state === 'on' && (
         <pointLight
+          ref={light}
           castShadow
           position={[0, -0.1, 0]}
           color={mainLight.custom.color}
