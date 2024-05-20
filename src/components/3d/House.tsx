@@ -9,19 +9,16 @@ import Stack from '@mui/material/Stack';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Loader} from './Loader';
-import {degToRad} from 'three/src/math/MathUtils.js';
 import {Camera} from './Camera';
 
 export function House() {
   const config = HouseConfig;
 
-  const {scene} = useGLTF(config.model);
+  const {scene, cameras} = useGLTF(config.model);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {room, setRoom} = useHouseContext();
 
   useEffect(() => {
-    scene.position.set(-2.5, 0, 0);
-    scene.rotation.set(0, degToRad(-90), 0);
     scene.traverse(object => {
       if (object instanceof THREE.Mesh) {
         object.material = new THREE.MeshStandardMaterial({
@@ -54,7 +51,7 @@ export function House() {
               factor={0.5}
             >
               <Stats />
-              <Camera />
+              <Camera cameras={cameras} />
 
               <OutsideLight position={[0, 5, 4]} />
               <OutsideLight position={[0, 5, -4]} />

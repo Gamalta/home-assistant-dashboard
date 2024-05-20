@@ -1,34 +1,30 @@
 import {useFrame, useThree} from '@react-three/fiber';
 import {useHouseContext} from '../../contexts/HouseContext';
-import * as THREE from 'three';
-import {HouseConfig} from './config';
 import {useState} from 'react';
 import {usePerformanceMonitor} from '@react-three/drei';
+import * as THREE from 'three';
 
-const DEFAULT_CAMERA_POSITION = HouseConfig.camera.position;
-const DEFAULT_CAMERA_LOOKAT = HouseConfig.camera.lookAt;
-
-export function Camera() {
+export function Camera({cameras}: {cameras: THREE.Camera[]}) {
   const {room} = useHouseContext();
   const [dpr, _setDpr] = useState(1);
   const [factor, setFactor] = useState(0.5);
   const {invalidate, setDpr: setThreeDpr} = useThree();
-
-  const cameraPosition = new THREE.Vector3(
-    ...(room ? room.camera.position : DEFAULT_CAMERA_POSITION)
-  );
-  const cameraLookAt = new THREE.Vector3(
-    ...(room ? room.camera.lookAt : DEFAULT_CAMERA_LOOKAT)
-  );
 
   const setDpr = (dpr: number) => {
     _setDpr(dpr);
     setThreeDpr(dpr);
   };
 
+  const camera = cameras.find(
+    camera => camera.name === (room ? room.camera : 'Default')
+  );
+  const cameraPosition = camera?.position;
+  const cameraLookAt = camera?.rotation;
+
   usePerformanceMonitor({onChange: ({factor}) => setFactor(factor)});
 
   useFrame(state => {
+    if (!camera || !cameraPosition || !cameraLookAt) return;
     if (state.camera.position.equals(cameraPosition)) {
       /** Increase DPR */
       if (dpr < 1) {
@@ -42,7 +38,7 @@ export function Camera() {
       } else {
         state.camera.position.lerp(cameraPosition, 0.05);
       }
-      state.camera.lookAt(cameraLookAt);
+      state.camera.rotation.copy(cameraLookAt);
       setDpr(Math.round(Math.max(factor, 0.1) * 10) / 10);
       invalidate();
     }
