@@ -2,6 +2,10 @@ import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const HouseConfig: HouseConfig = {
   model: 'model.glb',
+  camera: {
+    position: [0, 8.2, 0],
+    lookAt: [0, 0, -0.05],
+  },
   room: [
     {
       name: 'Séjour',
@@ -71,6 +75,7 @@ export const HouseConfig: HouseConfig = {
 
 export type HouseConfig = {
   model: string;
+  camera: CameraConfig;
   room: RoomConfig[];
 };
 

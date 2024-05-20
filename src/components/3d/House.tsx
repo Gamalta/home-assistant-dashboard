@@ -1,5 +1,5 @@
 import {Canvas, Vector3} from '@react-three/fiber';
-import {Suspense, useEffect, useRef, useState} from 'react';
+import {Suspense, useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import {PerformanceMonitor, Stats, useGLTF} from '@react-three/drei';
 import {HouseConfig} from './config';
@@ -15,7 +15,6 @@ import {Camera} from './Camera';
 export function House() {
   const config = HouseConfig;
 
-  const [dpr, setDpr] = useState(1);
   const {scene} = useGLTF(config.model);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {room, setRoom} = useHouseContext();
@@ -42,9 +41,7 @@ export function House() {
         <Suspense fallback={<Loader />}>
           <Canvas
             frameloop="demand"
-            dpr={dpr}
             camera={{position: [0, 5, 10]}}
-            performance={{min: 0.1, max: 1, current: 0.5}}
             gl={{antialias: false}}
             shadows
             flat
@@ -52,29 +49,30 @@ export function House() {
           >
             <PerformanceMonitor
               ms={100}
-              iterations={2}
-              onChange={({factor}) => setDpr(Math.round(factor * 20) / 10)}
-            />
+              iterations={3}
+              threshold={0.5}
+              factor={0.5}
+            >
+              <Stats />
+              <Camera />
 
-            <Stats />
-            <Camera />
+              <OutsideLight position={[0, 5, 4]} />
+              <OutsideLight position={[0, 5, -4]} />
+              <OutsideLight position={[4, 5, 0]} />
 
-            <OutsideLight position={[0, 5, 4]} />
-            <OutsideLight position={[0, 5, -4]} />
-            <OutsideLight position={[4, 5, 0]} />
+              {/* House model */}
+              <primitive object={scene} />
 
-            {/* House model */}
-            <primitive object={scene} />
+              {/* Transparent ceiling for lock light */}
+              <mesh position={[0, 2.55, 0]} castShadow>
+                <boxGeometry args={[10, 0.1, 9]} />
+                <meshBasicMaterial transparent opacity={0} />
+              </mesh>
 
-            {/* Transparent ceiling for lock light */}
-            <mesh position={[0, 2.55, 0]} castShadow>
-              <boxGeometry args={[10, 0.1, 9]} />
-              <meshBasicMaterial transparent opacity={0} />
-            </mesh>
-
-            {config.room.map(room => (
-              <Room key={room.name} room={room} debug={room.debug} />
-            ))}
+              {config.room.map(room => (
+                <Room key={room.name} room={room} debug={room.debug} />
+              ))}
+            </PerformanceMonitor>
           </Canvas>
         </Suspense>
       </Stack>
