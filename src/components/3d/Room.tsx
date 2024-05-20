@@ -1,4 +1,3 @@
-import {useFrame, useThree} from '@react-three/fiber';
 import {RoomConfig} from './config';
 import * as THREE from 'three';
 import {HassEntityWithService, useEntity} from '@hakit/core';
@@ -22,11 +21,10 @@ type RoomProps = {
 
 export function Room(props: RoomProps) {
   const {room, debug} = props;
-  const {camera, position, size} = room;
+  const {position, size} = room;
 
   const {room: activeRoom, setRoom} = useHouseContext();
-  const {invalidate} = useThree();
-  const isActive = activeRoom === room.name;
+  const isActive = activeRoom?.name === room.name;
 
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
@@ -39,38 +37,10 @@ export function Room(props: RoomProps) {
   const lights = room.lights?.map(light => useEntity(light.entity));
   const light = useRef<THREE.PointLight>(null);
 
-  const cameraPosition = new THREE.Vector3(...camera.position);
-  const cameraLookAt = new THREE.Vector3(...camera.lookAt);
-
-  /*useFrame(state => {
-    //Performance
-    if (light.current) {
-      if (state.performance.current < 0.5) {
-        light.current.castShadow = false;
-      } else {
-        light.current.castShadow = true;
-      }
-    }
-  });*/
-
-  useFrame(state => {
-    /**Camera position */
-    if (!isActive || state.camera.position.equals(cameraPosition)) return;
-
-    console.log('rerender');
-    invalidate();
-    if (state.camera.position.distanceTo(cameraPosition) < 0.01) {
-      state.camera.position.copy(cameraPosition);
-    } else {
-      state.camera.position.lerp(cameraPosition, 0.05);
-    }
-    state.camera.lookAt(cameraLookAt);
-  });
-
   return (
     <mesh
       position={position}
-      onClick={() => setRoom(room.name)}
+      onClick={() => setRoom(room)}
       onPointerEnter={() => console.log('enter')}
       onPointerLeave={() => console.log('leave')}
     >
