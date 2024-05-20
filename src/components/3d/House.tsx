@@ -1,12 +1,7 @@
 import {Canvas, Vector3} from '@react-three/fiber';
 import {Suspense, useEffect, useRef, useState} from 'react';
 import * as THREE from 'three';
-import {
-  AdaptiveDpr,
-  PerformanceMonitor,
-  Stats,
-  useGLTF,
-} from '@react-three/drei';
+import {PerformanceMonitor, Stats, useGLTF} from '@react-three/drei';
 import {HouseConfig} from './config';
 import {Room} from './Room';
 import Button from '@mui/material/Button';
@@ -20,7 +15,7 @@ import {Camera} from './Camera';
 export function House() {
   const config = HouseConfig;
 
-  const [dpr, setDpr] = useState(1.5);
+  const [dpr, setDpr] = useState(1);
   const {scene} = useGLTF(config.model);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {room, setRoom} = useHouseContext();
@@ -46,6 +41,7 @@ export function House() {
       <Stack position="absolute" height="100%" width="100%">
         <Suspense fallback={<Loader />}>
           <Canvas
+            frameloop="demand"
             dpr={dpr}
             camera={{position: [0, 5, 10]}}
             performance={{min: 0.1, max: 1, current: 0.5}}
@@ -55,8 +51,9 @@ export function House() {
             ref={canvasRef}
           >
             <PerformanceMonitor
-              onIncline={() => setDpr(2)}
-              onDecline={() => setDpr(0.5)}
+              ms={100}
+              iterations={2}
+              onChange={({factor}) => setDpr(Math.round(factor * 20) / 10)}
             />
 
             <Stats />
@@ -78,7 +75,6 @@ export function House() {
             {config.room.map(room => (
               <Room key={room.name} room={room} debug={room.debug} />
             ))}
-            <AdaptiveDpr pixelated />
           </Canvas>
         </Suspense>
       </Stack>

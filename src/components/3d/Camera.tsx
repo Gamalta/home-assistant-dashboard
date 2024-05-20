@@ -1,9 +1,10 @@
-import {useFrame} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {useHouseContext} from '../../contexts/HouseContext';
 import * as THREE from 'three';
 
 export function Camera() {
   const {room} = useHouseContext();
+  const {invalidate} = useThree();
   const cameraPosition = new THREE.Vector3(0, 8.2, 0);
   const cameraLookAt = new THREE.Vector3(0, 0, -0.05);
 
@@ -19,6 +20,7 @@ export function Camera() {
     /**Camera position */
     if (room || state.camera.position.equals(cameraPosition)) return;
 
+    invalidate();
     if (state.camera.position.distanceTo(cameraPosition) < 0.01) {
       state.camera.position.copy(cameraPosition);
     } else {

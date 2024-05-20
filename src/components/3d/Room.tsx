@@ -1,4 +1,4 @@
-import {useFrame} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {RoomConfig} from './config';
 import * as THREE from 'three';
 import {HassEntityWithService, useEntity} from '@hakit/core';
@@ -25,6 +25,7 @@ export function Room(props: RoomProps) {
   const {camera, position, size} = room;
 
   const {room: activeRoom, setRoom} = useHouseContext();
+  const {invalidate} = useThree();
   const isActive = activeRoom === room.name;
 
   const temperature = useEntity(room.temperature ?? 'unknown', {
@@ -56,6 +57,8 @@ export function Room(props: RoomProps) {
     /**Camera position */
     if (!isActive || state.camera.position.equals(cameraPosition)) return;
 
+    console.log('rerender');
+    invalidate();
     if (state.camera.position.distanceTo(cameraPosition) < 0.01) {
       state.camera.position.copy(cameraPosition);
     } else {
