@@ -1,7 +1,7 @@
 import {createContext, useContext, useState} from 'react';
-import {RoomConfig} from '../components/3d/config';
+import {HouseConfig} from '../components/3d/config';
 
-type roomType = RoomConfig | null;
+type roomType = (typeof HouseConfig.rooms)[0] | null;
 
 type HouseContextType = {
   room: roomType;
