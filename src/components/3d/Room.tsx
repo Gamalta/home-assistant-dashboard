@@ -1,4 +1,3 @@
-import {RoomConfig} from './config';
 import * as THREE from 'three';
 import {HassEntityWithService, useEntity} from '@hakit/core';
 import {Html} from './Html';
@@ -12,19 +11,19 @@ import {alpha} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import {TemperatureModal} from '../Modal/Type/TemperatureModal';
 import {LightModal} from '../Modal/Type/LightModal';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {HouseConfig} from './config';
 
 type RoomProps = {
-  room: RoomConfig;
-  debug?: boolean;
+  room: (typeof HouseConfig)['rooms'][0];
+  mesh?: THREE.Object3D;
 };
 
 export function Room(props: RoomProps) {
-  const {room, debug} = props;
-  const {position, size} = room;
+  const {room, mesh} = props;
 
-  const {room: activeRoom, setRoom} = useHouseContext();
-  const isActive = activeRoom?.name === room.name;
+  const {room: activeRoom} = useHouseContext();
+  const isActive = activeRoom?.id === room.id;
 
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
@@ -37,19 +36,22 @@ export function Room(props: RoomProps) {
   const lights = room.lights?.map(light => useEntity(light.entity));
   const light = useRef<THREE.PointLight>(null);
 
+  useEffect(() => {
+    if (!mesh || !(mesh instanceof THREE.Mesh)) return;
+    mesh.material = new THREE.MeshStandardMaterial({
+      transparent: true,
+      opacity: 0,
+    });
+    mesh.castShadow = false;
+    mesh.receiveShadow = false;
+  }, [mesh]);
+
   return (
-    <mesh
-      position={position}
-      onClick={() => setRoom(room)}
-      onPointerEnter={() => console.log('enter')}
-      onPointerLeave={() => console.log('leave')}
-    >
-      <boxGeometry args={[size[0], 0.1, size[1]]} />
-      <meshBasicMaterial transparent opacity={debug ? 0.5 : 0} />
+    <group position={mesh?.position}>
       {(!activeRoom || isActive) && (
         <RoomAction
-          key={room.name}
-          id={`action-${room.name}`}
+          key={room.id}
+          id={`action-${room.id}`}
           temperature={temperature ?? undefined}
           mainLight={mainLight ?? undefined}
           lights={lights}
@@ -68,7 +70,7 @@ export function Room(props: RoomProps) {
           shadow-normalBias={0.05}
         />
       )}
-    </mesh>
+    </group>
   );
 }
 
