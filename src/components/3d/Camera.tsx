@@ -16,7 +16,7 @@ export function Camera({cameras}: {cameras: THREE.Camera[]}) {
   };
 
   const camera = cameras.find(
-    camera => camera.name === (room ? room.camera : 'Default')
+    camera => camera.name === (room ? room.camera : 'Camera_Default')
   );
   const cameraPosition = camera?.position;
   const cameraLookAt = camera?.rotation;
