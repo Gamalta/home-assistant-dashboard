@@ -15,8 +15,6 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hakit/components": "^3.1.4",
@@ -27,18 +25,21 @@
     "@mui/x-charts": "^7.1.0",
     "@react-three/drei": "^9.102.3",
     "@react-three/fiber": "^8.15.19",
+    "@react-three/postprocessing": "^2.16.2",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.24",
     "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "three": "^0.162.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20.12.11",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@types/lodash": "^4.14.202",
     "@types/three": "^0.162.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
