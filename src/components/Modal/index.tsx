@@ -75,6 +75,8 @@ export function Modal(props: ModalProps) {
               exit="hidden"
               variants={variants}
               p={2}
+              maxHeight="100%"
+              overflow="hidden"
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}
