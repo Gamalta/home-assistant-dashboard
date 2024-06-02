@@ -28,7 +28,7 @@ export function LightModal(props: LightModalProps) {
   return (
     <Modal {...modalProps} title="Light Modal Title">
       <LightModalProvider entities={[mainEntity, ...entities]}>
-        <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'scroll'}}>
+        <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack
             direction="row"
             width="500px"
