@@ -7,19 +7,34 @@ import {getCoordFromColor, getRelativePosition} from '../utils/color';
 export const useColorPicker = (
   canvas: HTMLCanvasElement | null,
   dragControls: DragControls,
-  entities: HassEntityWithService<'light'>[],
+  activeEntities: HassEntityWithService<'light'>[],
   mode: 'color' | 'temperature' = 'color'
 ) => {
   const [position, setPosition] = useState({x: 0, y: 0});
   const [color, setColor] = useState<[number, number, number]>([0, 0, 0]);
-  const {
-    entities: inactiveEntites,
-    activeEntities,
-    setActiveEntities,
-    setHoverEntity,
-  } = useLightModalContext();
+  const {entities, activeEntityIds, setActiveEntityIds, setHoverEntity} =
+    useLightModalContext();
 
-  const handleMove = (_: unknown, info: {point: Point}) => {
+  const moveColorPicker = useCallback(
+    (x: number, y: number) => {
+      if (!canvas) return;
+      const {clientWidth, clientHeight} = canvas;
+      setPosition({x, y});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (dragControls as any).componentControls.forEach((entry: any) => {
+        entry.getAxisMotionValue('x').set(x * (clientWidth / 2));
+        entry.getAxisMotionValue('y').set(y * (clientHeight / 2));
+      });
+    },
+    [canvas, dragControls]
+  );
+
+  //TODO create function for update color entities.turnOn(color: color) used in onDragEnd and onClick
+  // add documentation for all functions and hooks
+  // test with different entities neer, far, click and drag
+  // bug when drag oustide the canvas
+
+  const onDrag = (_: unknown, info: {point: Point}) => {
     if (!canvas) return;
     const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
     const radius = canvas.clientWidth / 2;
@@ -27,27 +42,74 @@ export const useColorPicker = (
 
     if (distanceFromMiddle > 1 || distanceFromMiddle < 0) {
       const angle = Math.atan2(y, x);
-      movePicker(radius * Math.cos(angle), radius * Math.sin(angle));
+      moveColorPicker(radius * Math.cos(angle), radius * Math.sin(angle));
     }
     setPosition({x, y});
 
-    const neerEntity = getNeerEntity({x, y}, inactiveEntites);
+    const neerEntity = getNeerEntity(x, y, entities);
     setHoverEntity(neerEntity?.entity_id);
   };
 
   const onDragEnd = (_: unknown, info: {point: Point}) => {
     if (!canvas) return;
+
     const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
-    const neerEntity = getNeerEntity({x, y}, inactiveEntites);
-    if (!neerEntity) return;
-    setActiveEntities(activeEntities => [
-      neerEntity.entity_id,
-      ...activeEntities,
-    ]);
+    const neerEntity = getNeerEntity(x, y, entities);
+    if (neerEntity) {
+      moveColorPicker(x, y);
+      setActiveEntityIds(activeEntities => [
+        neerEntity.entity_id,
+        ...activeEntities,
+      ]);
+    }
+
+    let newColor;
+
+    switch (mode) {
+      case 'color': {
+        newColor = getColorFromCoord(x, y);
+        setColor(newColor);
+        break;
+      }
+      case 'temperature': {
+        const temp = getTemperatureFromCoord(y);
+        newColor = temperature2rgb(temp);
+        break;
+      }
+    }
+    entities
+      .filter(entity => activeEntityIds.includes(entity.entity_id))
+      .map(entity => entity.service.turnOn({rgb_color: newColor}));
   };
 
+  const onClick = useCallback(
+    ({clientX, clientY}: MouseEvent) => {
+      const coord = getRelativePosition(canvas, clientX, clientY);
+      moveColorPicker(coord.x, coord.y);
+      let newColor;
+
+      switch (mode) {
+        case 'color': {
+          newColor = getColorFromCoord(coord.x, coord.y);
+          setColor(newColor);
+          break;
+        }
+        case 'temperature': {
+          const temp = getTemperatureFromCoord(coord.y);
+          newColor = temperature2rgb(temp);
+          break;
+        }
+      }
+      entities
+        .filter(entity => activeEntityIds.includes(entity.entity_id))
+        .map(entity => entity.service.turnOn({rgb_color: newColor}));
+    },
+    [canvas, moveColorPicker]
+  );
+
   const getNeerEntity = (
-    {x, y}: {x: number; y: number},
+    x: number,
+    y: number,
     entities: HassEntityWithService<'light'>[]
   ): HassEntityWithService<'light'> | undefined => {
     let bestDistance = 999;
@@ -64,24 +126,13 @@ export const useColorPicker = (
     return neerEntity;
   };
 
-  const movePicker = useCallback(
-    (x: number, y: number) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (dragControls as any).componentControls.forEach((entry: any) => {
-        entry.getAxisMotionValue('x').set(x);
-        entry.getAxisMotionValue('y').set(y);
-      });
-    },
-    [dragControls]
-  );
-
   const getColorFromCoord = (x: number, y: number) => {
     const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
     const saturation = Math.round(Math.min(Math.hypot(x, y), 1) * 100) / 100;
     return hsv2rgb([hue, saturation, 255]);
   };
 
-  const getTemperatureFromCoord = (y: number): number => {
+  const getTemperatureFromCoord = (y: number) => {
     const minKelvin = 2000;
     const maxKelvin = 10000;
     const fraction = (y / 0.9 + 1) / 2;
@@ -108,36 +159,17 @@ export const useColorPicker = (
   }, [mode, position]);
 
   useEffect(() => {
-    if (!entities[0] || !canvas) return;
-    const color = entities[0].attributes.rgb_color ?? [255, 255, 255];
-
-    const moveColorPicker = ({x, y}: {x: number; y: number}) => {
-      const {clientWidth, clientHeight} = canvas;
-      setPosition({x, y});
-      movePicker(x * (clientWidth / 2), y * (clientHeight / 2));
-    };
-
+    if (!canvas || !entities[0]) return;
+    const color = entities[0]?.attributes.rgb_color ?? [255, 255, 255];
     const coord = getCoordFromColor(color);
-    moveColorPicker(coord);
-
-    const onClick = ({clientX, clientY}: MouseEvent) => {
-      const coord = getRelativePosition(canvas, clientX, clientY);
-      moveColorPicker(coord);
-      entities
-        .filter(entity => activeEntities.includes(entity.entity_id))
-        .map(entity => entity.service.turnOn({rgb_color: color}));
-    };
+    moveColorPicker(coord.x, coord.y);
 
     canvas.addEventListener('click', onClick);
-
     return () => {
       canvas.removeEventListener('click', onClick);
     };
-  }, [entities, canvas, movePicker, activeEntities]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvas, moveColorPicker, onClick]);
 
-  return {
-    color,
-    onDrag: handleMove,
-    ondragEnd: onDragEnd,
-  };
+  return {color, onDrag, onDragEnd};
 };
