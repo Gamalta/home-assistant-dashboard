@@ -9,7 +9,8 @@ import {drawColorWheel} from '../../../../../utils/color';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const {entities, activeEntities, setActiveEntities} = useLightModalContext();
+  const {entities, activeEntityIds, setActiveEntityIds} =
+    useLightModalContext();
 
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
@@ -19,8 +20,8 @@ export function ColorTab() {
 
   useEffect(() => {
     generateColorWheel();
-    setActiveEntities([entities[0].entity_id]);
-  }, [entities, generateColorWheel, setActiveEntities]);
+    setActiveEntityIds([entities[0].entity_id]);
+  }, [entities, generateColorWheel, setActiveEntityIds]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
@@ -37,7 +38,7 @@ export function ColorTab() {
         {entities
           .filter(
             entity =>
-              !activeEntities.includes(entity.entity_id) &&
+              !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on'
           )
           .map(entity => (
@@ -51,7 +52,8 @@ export function ColorTab() {
           canvasRef={canvasRef}
           entities={entities.filter(
             entity =>
-              activeEntities.includes(entity.entity_id) && entity.state === 'on'
+              activeEntityIds.includes(entity.entity_id) &&
+              entity.state === 'on'
           )}
         />
       </Stack>

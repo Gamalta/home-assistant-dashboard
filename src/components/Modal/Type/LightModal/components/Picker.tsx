@@ -13,7 +13,7 @@ type PickerProps = {
 export function Picker(props: PickerProps) {
   const {entity, canvasRef} = props;
   const canvas = canvasRef.current;
-  const {setActiveEntities, hoverEntity} = useLightModalContext();
+  const {setActiveEntityIds, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
   const hovered = hoverEntity === entity.entity_id;
   const color = useMemo<[number, number, number]>(
@@ -32,7 +32,7 @@ export function Picker(props: PickerProps) {
       component={motion.div}
       whileTap={{scale: 1.5, zIndex: 10}}
       whileHover={{scale: 1.2, zIndex: 10}}
-      onClick={() => setActiveEntities([entity.entity_id])}
+      onClick={() => setActiveEntityIds([entity.entity_id])}
       position="absolute"
       width="32px"
       height="32px"
