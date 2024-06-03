@@ -11,7 +11,7 @@ type ActivePickerProps = {
 export function ActivePicker(props: ActivePickerProps) {
   const {canvasRef, entities} = props;
   const dragControls = useDragControls();
-  const {color, onDrag, ondragEnd} = useColorPicker(
+  const {color, ...events} = useColorPicker(
     canvasRef.current,
     dragControls,
     entities
@@ -22,11 +22,7 @@ export function ActivePicker(props: ActivePickerProps) {
     <Stack
       component={motion.div}
       drag
-      onDrag={onDrag}
-      onDragEnd={(event, point) => {
-        ondragEnd(event, point);
-        entities.map(entity => entity.service.turnOn({rgb_color: color}));
-      }}
+      {...events}
       dragControls={dragControls}
       dragMomentum={false}
       whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
