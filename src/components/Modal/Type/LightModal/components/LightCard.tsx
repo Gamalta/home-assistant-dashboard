@@ -18,7 +18,7 @@ type LightCardProps = {
 
 export function LightCard(props: LightCardProps) {
   const {entity} = props;
-  const {activeEntities, setActiveEntities} = useLightModalContext();
+  const {activeEntityIds, setActiveEntityIds} = useLightModalContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
 
@@ -26,14 +26,14 @@ export function LightCard(props: LightCardProps) {
   const hexColor = rgbColor
     ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
     : undefined;
-  const textColor = theme.palette.getContrastText(hexColor ?? '#000');
+  const contrastColor = theme.palette.getContrastText(hexColor ?? '#000');
   const color = `rgb(${
     entity.attributes.rgb_color ?? [255, 255, 255].join(',')
   })`;
   const brightness = entity.attributes.brightness ?? 255;
   const icon = useIcon(entity.attributes.icon);
   const lightOn = entity.state === 'on';
-  const activeEntity = activeEntities.includes(entity.entity_id);
+  const activeEntity = activeEntityIds.includes(entity.entity_id);
 
   useEffect(() => {
     if (!cardRef.current) return;
@@ -73,7 +73,7 @@ export function LightCard(props: LightCardProps) {
       sx={{
         transition: 'all 0.3s ease-out 0s, transform .15s',
       }}
-      onClick={() => setActiveEntities([entity.entity_id])}
+      onClick={() => setActiveEntityIds([entity.entity_id])}
     >
       <Stack
         ref={cardRef}
@@ -95,12 +95,12 @@ export function LightCard(props: LightCardProps) {
             }}
             color={activeEntity ? 'primary' : 'inherit'}
             onClick={event => {
-              setActiveEntities(
+              setActiveEntityIds(
                 activeEntity
-                  ? activeEntities.filter(
+                  ? activeEntityIds.filter(
                       entityId => entityId !== entity.entity_id
                     )
-                  : [entity.entity_id, ...activeEntities]
+                  : [entity.entity_id, ...activeEntityIds]
               );
               event.stopPropagation();
             }}
@@ -114,9 +114,18 @@ export function LightCard(props: LightCardProps) {
             />
           )}
         </Stack>
-        <Stack p={2} spacing={1} alignItems="center">
+        <Stack
+          p={2}
+          spacing={1}
+          alignItems="center"
+          sx={{
+            '& .MuiSvgIcon-root': {
+              color: contrastColor,
+            },
+          }}
+        >
           {icon}
-          <Typography sx={{color: textColor}}>
+          <Typography sx={{color: contrastColor}}>
             {entity.attributes.friendly_name}
           </Typography>
         </Stack>

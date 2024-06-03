@@ -10,16 +10,16 @@ import {
 
 type LightModalType = {
   entities: HassEntityWithService<'light'>[];
-  activeEntities: string[];
-  setActiveEntities: Dispatch<SetStateAction<string[]>>;
+  activeEntityIds: string[];
+  setActiveEntityIds: Dispatch<SetStateAction<string[]>>;
   hoverEntity: string | undefined;
   setHoverEntity: Dispatch<SetStateAction<string | undefined>>;
 };
 
 const LightModalContext = createContext<LightModalType>({
   entities: [],
-  activeEntities: [],
-  setActiveEntities: () => undefined,
+  activeEntityIds: [],
+  setActiveEntityIds: () => undefined,
   hoverEntity: undefined,
   setHoverEntity: () => undefined,
 });
@@ -33,15 +33,15 @@ type LightModalProviderProps = {
 
 export const LightModalProvider = (props: LightModalProviderProps) => {
   const {entities, children} = props;
-  const [activeEntities, setActiveEntities] = useState<string[]>([]);
+  const [activeEntityIds, setActiveEntityIds] = useState<string[]>([]);
   const [hoverEntity, setHoverEntity] = useState<string>();
 
   return (
     <LightModalContext.Provider
       value={{
         entities,
-        activeEntities,
-        setActiveEntities,
+        activeEntityIds,
+        setActiveEntityIds,
         hoverEntity,
         setHoverEntity,
       }}
