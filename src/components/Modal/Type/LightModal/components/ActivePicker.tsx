@@ -11,12 +11,8 @@ type ActivePickerProps = {
 export function ActivePicker(props: ActivePickerProps) {
   const {canvasRef, entities} = props;
   const dragControls = useDragControls();
-  const {color, ...events} = useColorPicker(
-    canvasRef.current,
-    dragControls,
-    entities
-  );
-  if (entities.length === 0) return null;
+  const {color, ...events} = useColorPicker(canvasRef.current, dragControls);
+  if (entities.length === 0) return <></>;
 
   return (
     <Stack
