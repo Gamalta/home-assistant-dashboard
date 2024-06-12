@@ -69,6 +69,10 @@ export const useColorPicker = (
       .map(entity => entity.service.turnOn({rgb_color: newColor}));
   };
 
+  const activeEntityState = entities.find(entity =>
+    activeEntityIds.includes(entity.entity_id)
+  )?.state;
+
   useEffect(() => {
     if (!canvas || !entities[0]) return;
     const newColor = entities[0]?.attributes.rgb_color ?? [255, 255, 255];
@@ -81,7 +85,8 @@ export const useColorPicker = (
     return () => {
       canvas.removeEventListener('click', onClick);
     };
-  }, [canvas]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvas, activeEntityState]);
 
   return {color, onDrag, onDragEnd};
 };
