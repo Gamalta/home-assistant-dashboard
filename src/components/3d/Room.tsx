@@ -17,10 +17,11 @@ import {HouseConfig} from './config';
 type RoomProps = {
   room: (typeof HouseConfig)['rooms'][0];
   mesh?: THREE.Object3D;
+  lightMeshes?: THREE.Object3D[];
 };
 
 export function Room(props: RoomProps) {
-  const {room, mesh} = props;
+  const {room, mesh, lightMeshes} = props;
 
   const {room: activeRoom} = useHouseContext();
   const isActive = activeRoom?.id === room.id;
@@ -28,13 +29,26 @@ export function Room(props: RoomProps) {
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const mainLight = useEntity(room.light ?? 'unknown', {
+  const mainLight = useEntity(room.main_light ?? 'unknown', {
     returnNullIfNotFound: true,
   });
   // TODO fix later
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const lights = room.lights?.map(light => useEntity(light.entity));
+  const lights = room.lights?.map(light => useEntity(light));
   const light = useRef<THREE.PointLight>(null);
+
+  const lightsWithMesh = lights?.map(light => {
+    const lightMesh = lightMeshes?.find(
+      obj =>
+        obj.name === `Light_${room.id}-${light.entity_id.replace('light.', '')}`
+    );
+    return {
+      light,
+      position: lightMesh?.position.sub(
+        mesh?.position ?? new THREE.Vector3(0, 0, 0)
+      ),
+    };
+  });
 
   useEffect(() => {
     if (!mesh || !(mesh instanceof THREE.Mesh)) return;
@@ -69,6 +83,21 @@ export function Room(props: RoomProps) {
           shadow-bias={-0.0001}
           shadow-normalBias={0.05}
         />
+      )}
+      {lightsWithMesh?.map(
+        ({light, position}) =>
+          light.state === 'on' && (
+            <pointLight
+              key={light.entity_id}
+              castShadow
+              position={position}
+              color={light.custom.color}
+              intensity={0.05}
+              distance={5}
+              shadow-bias={-0.0001}
+              shadow-normalBias={0.05}
+            />
+          )
       )}
     </group>
   );
