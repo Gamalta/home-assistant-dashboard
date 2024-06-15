@@ -8,28 +8,30 @@ export const HouseConfig: HouseConfig = {
       id: 'Salon',
       name: 'Séjour',
       camera: 'Camera_Salon',
-      light: 'light.salon_main',
+      main_light: 'light.salon_main',
+      lights: ['light.salon_hue_play'],
       //temperature: 'sensor.temperature_salon',
     },
     {
       id: 'Office',
       name: 'Bureau',
       camera: 'Camera_Office',
-      light: 'light.desktop_main',
+      main_light: 'light.office_main',
+      lights: ['light.office_hue_iris'],
       //temperature: 'sensor.temperature_office',
     },
     {
       id: 'Bedroom',
       name: 'Chambre',
       camera: 'Camera_Bedroom',
-      light: 'light.bedroom_main',
+      main_light: 'light.bedroom_main',
       //temperature: 'sensor.temperature_bedroom',
     },
     {
       id: 'Bedroom_2',
       name: 'Chambre 2',
       camera: 'Camera_Bedroom_2',
-      light: 'light.bedroom_2_main',
+      main_light: 'light.bedroom_2_main',
     },
   ],
 };
@@ -42,10 +44,7 @@ export type HouseConfig = {
     name: string;
     camera: `Camera_${string}`;
     temperature?: FilterByDomain<EntityName, 'sensor'>;
-    light?: FilterByDomain<EntityName, 'light'>;
-    lights?: {
-      entity: FilterByDomain<EntityName, 'light'>;
-      position: [number, number, number];
-    }[];
+    main_light?: FilterByDomain<EntityName, 'light'>;
+    lights?: FilterByDomain<EntityName, 'light'>[];
   }[];
 };
