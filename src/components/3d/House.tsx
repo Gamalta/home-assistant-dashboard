@@ -89,6 +89,9 @@ function Scene(props: SceneProps) {
   const roomWithMesh = config.rooms.map(room => ({
     room,
     mesh: scene.children.find(obj => obj.name === `Room_${room.id}`),
+    lightMeshes: scene.children.filter(obj =>
+      obj.name.startsWith(`Light_${room.id}`)
+    ),
   }));
 
   return (
@@ -120,8 +123,8 @@ function Scene(props: SceneProps) {
           if (room) setRoom(room.room);
         }}
       />
-      {roomWithMesh.map(({room, mesh}) => (
-        <Room key={room.id} room={room} mesh={mesh} />
+      {roomWithMesh.map(({room, mesh, lightMeshes}) => (
+        <Room key={room.id} room={room} mesh={mesh} lightMeshes={lightMeshes} />
       ))}
       <EffectComposer autoClear={false}>
         <Outline ref={outlineRef} blur edgeStrength={100} />
