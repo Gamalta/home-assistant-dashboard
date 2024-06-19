@@ -95,12 +95,10 @@ export function LightCard(props: LightCardProps) {
             }}
             color={activeEntity ? 'primary' : 'inherit'}
             onClick={event => {
-              setActiveEntityIds(
-                activeEntity
-                  ? activeEntityIds.filter(
-                      entityId => entityId !== entity.entity_id
-                    )
-                  : [entity.entity_id, ...activeEntityIds]
+              setActiveEntityIds(entities =>
+                entities.includes(entity.entity_id)
+                  ? entities.filter(entityId => entityId !== entity.entity_id)
+                  : [entity.entity_id, ...entities]
               );
               event.stopPropagation();
             }}
