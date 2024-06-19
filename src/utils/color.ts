@@ -1,4 +1,4 @@
-import {hsv2rgb, rgb2hex, rgb2hs, temperature2rgb} from '@hakit/core';
+import {hsv2rgb, rgb2hex, temperature2rgb} from '@hakit/core';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;
@@ -76,12 +76,4 @@ export const getRelativePosition = (
   const xRel = (2 * (x - canvasX)) / canvas.clientWidth - 1;
   const yRel = (2 * (y - canvasY)) / canvas.clientHeight - 1;
   return {x: xRel, y: yRel};
-};
-export const getCoordFromColor = (color: [number, number, number]) => {
-  const [hue, saturation] = rgb2hs(color);
-  const phi = (hue / 360) * 2 * Math.PI;
-  const sat = Math.min(saturation, 1);
-  const x = Math.cos(phi) * sat;
-  const y = Math.sin(phi) * sat;
-  return {x, y};
 };

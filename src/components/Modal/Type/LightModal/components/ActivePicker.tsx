@@ -4,14 +4,19 @@ import {useColorPicker} from '../../../../../hooks/useColorPicker';
 import {HassEntityWithService} from '@hakit/core';
 
 type ActivePickerProps = {
+  type: 'color' | 'temperature';
   canvasRef: React.RefObject<HTMLCanvasElement>;
   entities: HassEntityWithService<'light'>[];
 };
 
 export function ActivePicker(props: ActivePickerProps) {
-  const {canvasRef, entities} = props;
+  const {type, canvasRef, entities} = props;
   const dragControls = useDragControls();
-  const {color, ...events} = useColorPicker(canvasRef.current, dragControls);
+  const {color, ...events} = useColorPicker(
+    canvasRef.current,
+    dragControls,
+    type
+  );
   if (entities.length === 0) return <></>;
 
   return (
