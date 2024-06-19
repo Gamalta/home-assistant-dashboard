@@ -77,7 +77,10 @@ export const useColorPicker = (
 
   useEffect(() => {
     if (!canvas || !entities[0]) return;
-    const newColor = entities[0]?.attributes.rgb_color ?? [255, 255, 255];
+    const entity =
+      entities.find(entity => activeEntityIds.includes(entity.entity_id)) ??
+      entities[0];
+    const newColor = entity.attributes.rgb_color ?? [255, 255, 255];
     const {x, y} = getCoordFromColor(newColor);
     const radius = canvas.clientWidth / 2;
     moveDragControls(dragControls, x * radius, y * radius);
