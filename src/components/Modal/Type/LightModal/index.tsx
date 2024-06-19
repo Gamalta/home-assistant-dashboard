@@ -26,7 +26,7 @@ export function LightModal(props: LightModalProps) {
   const {mainEntity, entities = [], ...modalProps} = props;
   const [tab, setTab] = useState(0);
   return (
-    <Modal {...modalProps} title="Light Modal Title">
+    <Modal {...modalProps}>
       <LightModalProvider entities={[mainEntity, ...entities]}>
         <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack

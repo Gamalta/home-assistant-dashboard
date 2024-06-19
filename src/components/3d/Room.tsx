@@ -66,6 +66,7 @@ export function Room(props: RoomProps) {
         <RoomAction
           key={room.id}
           id={`action-${room.id}`}
+          name={room.name}
           temperature={temperature ?? undefined}
           mainLight={mainLight ?? undefined}
           lights={lights}
@@ -105,13 +106,14 @@ export function Room(props: RoomProps) {
 
 type RoomActionProps = {
   id: string;
+  name: string;
   temperature?: HassEntityWithService<'sensor'>;
   mainLight?: HassEntityWithService<'light'>;
   lights?: HassEntityWithService<'light'>[];
 };
 
 function RoomAction(props: RoomActionProps) {
-  const {id, temperature, mainLight, lights} = props;
+  const {id, name, temperature, mainLight, lights} = props;
   const [lightModalOpen, setLightModalOpen] = useState(false);
   const [tempModalOpen, setTempModalOpen] = useState(false);
 
@@ -178,6 +180,7 @@ function RoomAction(props: RoomActionProps) {
               onClose={() => setLightModalOpen(false)}
               mainEntity={mainLight}
               entities={lights}
+              title={name}
             />
           </>
         )}
