@@ -11,6 +11,7 @@ export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {entities, activeEntityIds, setActiveEntityIds} =
     useLightModalContext();
+  const entitiesRef = useRef(entities);
 
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
@@ -20,8 +21,8 @@ export function ColorTab() {
 
   useEffect(() => {
     generateColorWheel();
-    setActiveEntityIds([entities[0].entity_id]);
-  }, [entities, generateColorWheel, setActiveEntityIds]);
+    setActiveEntityIds([entitiesRef.current[0].entity_id]);
+  }, [generateColorWheel, setActiveEntityIds]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">

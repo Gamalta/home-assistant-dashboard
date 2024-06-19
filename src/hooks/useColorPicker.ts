@@ -1,5 +1,5 @@
 import {DragControls, Point} from 'framer-motion';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {HassEntityWithService, hsv2rgb} from '@hakit/core';
 import {useLightModalContext} from '../contexts/LightModalContext';
 import {getCoordFromColor, getRelativePosition} from '../utils/color';
@@ -17,6 +17,8 @@ export const useColorPicker = (
     hoverEntity,
     setHoverEntity,
   } = useLightModalContext();
+  const activeEntityIdsRef = useRef(activeEntityIds);
+  activeEntityIdsRef.current = activeEntityIds;
 
   const onClick = (event: MouseEvent) => {
     if (!canvas) return;
@@ -28,7 +30,7 @@ export const useColorPicker = (
     setColor(newColor);
 
     entities
-      .filter(entity => activeEntityIds.includes(entity.entity_id))
+      .filter(entity => activeEntityIdsRef.current.includes(entity.entity_id))
       .map(entity => entity.service.turnOn({rgb_color: newColor}));
   };
 
