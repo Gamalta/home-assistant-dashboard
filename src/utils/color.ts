@@ -1,4 +1,8 @@
 import {hsv2rgb, rgb2hex, temperature2rgb} from '@hakit/core';
+import {
+  MAX_KELVIN,
+  MIN_KELVIN,
+} from '../components/Modal/Type/LightModal/Tabs/ColorTempTab';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;
@@ -32,16 +36,9 @@ export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function drawColorTempWheel(
-  ctx: CanvasRenderingContext2D,
-  minTemp: number,
-  maxTemp: number
-) {
+export function drawColorTempWheel(ctx: CanvasRenderingContext2D) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   const radius = ctx.canvas.width / 2;
-
-  const min = Math.max(minTemp, 2000);
-  const max = Math.min(maxTemp, 40000);
 
   for (let y = -radius; y < radius; y += 1) {
     const x = radius * Math.sqrt(1 - (y / radius) ** 2);
@@ -49,8 +46,8 @@ export function drawColorTempWheel(
     const fraction = (y / (radius * 0.9) + 1) / 2;
 
     const temperature = Math.max(
-      Math.min(min + fraction * (max - min), max),
-      min
+      Math.min(MIN_KELVIN + fraction * (MAX_KELVIN - MIN_KELVIN), MAX_KELVIN),
+      MIN_KELVIN
     );
 
     const color = rgb2hex(temperature2rgb(temperature));
