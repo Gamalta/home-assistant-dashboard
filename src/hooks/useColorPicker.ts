@@ -138,8 +138,8 @@ export const useColorPicker = <T extends Mode>(
     if (mode === 'color') {
       color = entity.attributes.rgb_color ?? [255, 255, 255];
     } else {
+      //TODO behind don't work color_temp alaways return null
       color = entity.attributes.color_temp ?? 5000;
-      console.log('colorElise', color);
     }
     return color as UseColor<T>;
   };
