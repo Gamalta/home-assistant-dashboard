@@ -1,23 +1,33 @@
 import {DragControls, Point} from 'framer-motion';
 import {useEffect, useRef, useState} from 'react';
-import {HassEntityWithService, hsv2rgb, rgb2hs} from '@hakit/core';
+import {
+  HassEntityWithService,
+  hsv2rgb,
+  rgb2hs,
+  temperature2rgb,
+} from '@hakit/core';
 import {useLightModalContext} from '../contexts/LightModalContext';
 import {getRelativePosition} from '../utils/color';
+import {
+  MAX_KELVIN,
+  MIN_KELVIN,
+} from '../components/Modal/Type/LightModal/Tabs/ColorTempTab';
 
+//type Mode = 'color' | 'temperature';
+type Color = [number, number, number];
+type Temperature = number;
 type Mode = 'color' | 'temperature';
-type UseColor<T extends Mode> = T extends 'color'
-  ? [number, number, number]
-  : number;
+type UseColor<T extends Mode> = T extends 'color' ? Color : Temperature;
 
 export const useColorPicker = <T extends Mode>(
   canvas: HTMLCanvasElement | null,
   dragControls: DragControls,
-  type: T
-): UseColor<T> => {
+  mode: T
+) => {
   const [color, setColor] = useState<UseColor<T>>(
-    (type === 'color' ? [0, 0, 0] : 0) as UseColor<T>
+    (mode === 'color' ? [0, 0, 0] : 0) as UseColor<T>
   );
-  //const [color, setColor] = useState<[number, number, number]>([0, 0, 0]);
+
   const {
     entities,
     activeEntityIds,
@@ -32,14 +42,17 @@ export const useColorPicker = <T extends Mode>(
     if (!canvas) return;
     const radius = canvas.clientWidth / 2;
     const {x, y} = getRelativePosition(canvas, event.clientX, event.clientY);
-    const newColor = getColorFromCoordWheel<T>(x, y);
+    const newColor = getColorFromCoordWheel(x, y);
 
     moveDragControls(dragControls, x * radius, y * radius);
     setColor(newColor);
 
-    entities
-      .filter(entity => activeEntityIdsRef.current.includes(entity.entity_id))
-      .map(entity => entity.service.turnOn({rgb_color: newColor}));
+    setEntitiesColor(
+      entities.filter(entity =>
+        activeEntityIdsRef.current.includes(entity.entity_id)
+      ),
+      newColor
+    );
   };
 
   const onDrag = (_: unknown, info: {point: Point}) => {
@@ -57,7 +70,7 @@ export const useColorPicker = <T extends Mode>(
       moveDragControls(dragControls, x, y);
     }
 
-    const newColor = getColorFromCoordWheel<T>(x, y);
+    const newColor = getColorFromCoordWheel(x, y);
     setColor(newColor);
 
     const neerEntity = getNeerEntity(x, y, entities);
@@ -67,16 +80,17 @@ export const useColorPicker = <T extends Mode>(
   const onDragEnd = (_: unknown, info: {point: Point}) => {
     if (!canvas) return;
     const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
-    const newColor = getColorFromCoordWheel<T>(x, y);
+    const newColor = getColorFromCoordWheel(x, y);
     setColor(newColor);
 
     if (hoverEntity) {
       setActiveEntityIds(activeEntities => [hoverEntity, ...activeEntities]);
     }
 
-    entities
-      .filter(entity => activeEntityIds.includes(entity.entity_id))
-      .map(entity => entity.service.turnOn({rgb_color: newColor}));
+    setEntitiesColor(
+      entities.filter(entity => activeEntityIds.includes(entity.entity_id)),
+      newColor
+    );
   };
 
   const activeEntityState = entities.find(entity =>
@@ -88,10 +102,7 @@ export const useColorPicker = <T extends Mode>(
     const entity =
       entities.find(entity => activeEntityIds.includes(entity.entity_id)) ??
       entities[0];
-    const newColor =
-      type === 'color'
-        ? entity.attributes.rgb_color ?? [255, 255, 255]
-        : entity.attributes.color_temp ?? 0;
+    const newColor = getEntityColor(entity);
     const {x, y} = getCoordFromColorWheel(newColor);
     const radius = canvas.clientWidth / 2;
     moveDragControls(dragControls, x * radius, y * radius);
@@ -104,29 +115,46 @@ export const useColorPicker = <T extends Mode>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvas, activeEntityState]);
 
-  const getColorFromCoordWheel = <T extends Mode>(
-    x: number,
-    y: number
-  ): UseColor<T> => {
-    switch (type) {
-      case 'color':
-        return getColorFromCoord(x, y) as UseColor<T>;
-      case 'temperature':
-        return getTemperatureFromCoord(x, y) as UseColor<T>;
-      default:
-        return 0 as UseColor<T>;
+  const getColorFromCoordWheel = (x: number, y: number): UseColor<T> => {
+    let color: UseColor<T>;
+    if (mode === 'color') {
+      color = getColorFromCoord(x, y) as UseColor<T>;
+    } else {
+      color = getTemperatureFromCoord(x, y) as UseColor<T>;
     }
+    return color;
   };
 
   const getCoordFromColorWheel = (color: UseColor<T>) => {
-    switch (type) {
-      case 'color':
-        return getCoordFromColor(color as [number, number, number]);
-      case 'temperature':
-        return getCoordFromTemperature(color as number);
-      default:
-        return {x: 0, y: 0};
+    if (mode === 'color') {
+      return getCoordFromColor(color as UseColor<'color'>);
+    } else {
+      return getCoordFromTemperature(color as UseColor<'temperature'>);
     }
+  };
+
+  const getEntityColor = (entity: HassEntityWithService<'light'>) => {
+    let color;
+    if (mode === 'color') {
+      color = entity.attributes.rgb_color ?? [255, 255, 255];
+    } else {
+      color = entity.attributes.color_temp ?? 5000;
+      console.log('colorElise', color);
+    }
+    return color as UseColor<T>;
+  };
+
+  const setEntitiesColor = (
+    entities: HassEntityWithService<'light'>[],
+    color: UseColor<T>
+  ) => {
+    const rgb_color =
+      mode === 'color'
+        ? (color as UseColor<'color'>)
+        : temperature2rgb(color as UseColor<'temperature'>);
+    entities.map(entity => {
+      entity.service.turnOn({rgb_color});
+    });
   };
 
   const getNeerEntity = (
@@ -138,7 +166,7 @@ export const useColorPicker = <T extends Mode>(
     let neerEntity;
 
     entities.map(entity => {
-      const coord = getCoordFromColorWheel(entity.custom.color);
+      const coord = getCoordFromColorWheel(getEntityColor(entity));
       const distance = Math.hypot(coord.x - x, coord.y - y);
       if (distance < 0.3 && distance < bestDistance) {
         bestDistance = distance;
@@ -148,7 +176,11 @@ export const useColorPicker = <T extends Mode>(
     return neerEntity;
   };
 
-  return {color, onDrag, onDragEnd};
+  const rgbColor =
+    mode === 'color'
+      ? (color as UseColor<'color'>)
+      : temperature2rgb(color as UseColor<'temperature'>);
+  return {color: rgbColor, onDrag, onDragEnd};
 };
 
 const moveDragControls = (dragControls: DragControls, x: number, y: number) => {
@@ -165,10 +197,23 @@ export const getColorFromCoord = (x: number, y: number) => {
   return hsv2rgb([hue, saturation, 255]);
 };
 
-export const getTemperatureFromCoord = (x: number, y: number) => {
-  const temp = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 100) % 100;
+export const getTemperatureFromCoord = (_: number, y: number) => {
+  const fraction = (y / 0.9 + 1) / 2;
+
+  // Calculer la température
+  const temp = Math.max(
+    Math.min(MIN_KELVIN + fraction * (MAX_KELVIN - MIN_KELVIN), MAX_KELVIN),
+    MIN_KELVIN
+  );
   return temp;
 };
+
+/**
+ * color const fraction = (y / SAFE_ZONE_FACTOR + 1) / 2;
+      const temperature = Math.max(Math.min(min + fraction * (max - min), max), min);
+      return Math.round(temperature);
+ *
+ */
 
 export const getCoordFromColor = (color: [number, number, number]) => {
   const [hue, saturation] = rgb2hs(color);
