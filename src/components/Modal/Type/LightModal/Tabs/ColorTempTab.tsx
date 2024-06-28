@@ -7,6 +7,9 @@ import {Picker} from '../components/Picker';
 import {ActivePicker} from '../components/ActivePicker';
 import {drawColorTempWheel} from '../../../../../utils/color';
 
+export const MIN_KELVIN = 2000;
+export const MAX_KELVIN = 10000;
+
 export function ColorTempTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {entities, activeEntityIds, setActiveEntityIds} =
@@ -16,7 +19,7 @@ export function ColorTempTab() {
   const generateColorTempWheel = useCallback(() => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d')!;
-    drawColorTempWheel(ctx, 2000, 10000);
+    drawColorTempWheel(ctx);
   }, []);
 
   useEffect(() => {
@@ -51,7 +54,7 @@ export function ColorTempTab() {
             />
           ))}
         <ActivePicker
-          type="temperature"
+          mode="temperature"
           canvasRef={canvasRef}
           entities={entities.filter(
             entity =>

@@ -1,22 +1,23 @@
 import Stack from '@mui/material/Stack';
 import {motion, useDragControls} from 'framer-motion';
-import {useColorPicker} from '../../../../../hooks/useColorPicker';
 import {HassEntityWithService} from '@hakit/core';
+import {useColorPicker} from '../../../../../hooks/useColorPicker';
 
 type ActivePickerProps = {
-  type: 'color' | 'temperature';
+  mode: 'color' | 'temperature';
   canvasRef: React.RefObject<HTMLCanvasElement>;
   entities: HassEntityWithService<'light'>[];
 };
 
 export function ActivePicker(props: ActivePickerProps) {
-  const {type, canvasRef, entities} = props;
+  const {mode, canvasRef, entities} = props;
   const dragControls = useDragControls();
   const {color, ...events} = useColorPicker(
     canvasRef.current,
     dragControls,
-    type
+    mode
   );
+
   if (entities.length === 0) return <></>;
 
   return (

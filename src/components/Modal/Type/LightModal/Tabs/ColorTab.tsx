@@ -51,7 +51,7 @@ export function ColorTab() {
             />
           ))}
         <ActivePicker
-          type="color"
+          mode="color"
           canvasRef={canvasRef}
           entities={entities.filter(
             entity =>

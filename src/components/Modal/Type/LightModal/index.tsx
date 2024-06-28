@@ -54,7 +54,15 @@ export function LightModal(props: LightModalProps) {
               value=""
               onClick={event => {
                 event.preventDefault();
-                mainEntity.service.toggle();
+                const allEntities = [mainEntity, ...entities];
+                const oneWasEnable = allEntities.find(
+                  entity => entity.state === 'on'
+                );
+                allEntities.map(entity => {
+                  oneWasEnable
+                    ? entity.service.turnOff()
+                    : entity.service.turnOn();
+                });
               }}
             >
               <PowerSettingsNewIcon />
@@ -66,7 +74,7 @@ export function LightModal(props: LightModalProps) {
             <ToggleButton value={1} key="buttonTemp">
               <ColorTempWheelIcon />
             </ToggleButton>
-            <ToggleButton value={2} key="buttonEffect">
+            <ToggleButton value={2} key="buttonEffect" disabled>
               <AutoAwesomeIcon />
             </ToggleButton>
           </ToggleButtonGroup>
