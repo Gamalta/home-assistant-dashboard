@@ -1,11 +1,17 @@
-import {createContext, useContext, useState} from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useState,
+} from 'react';
 import {HouseConfig} from '../components/3d/config';
 
 type roomType = (typeof HouseConfig.rooms)[0] | null;
 
 type HouseContextType = {
   room: roomType;
-  setRoom: (room: roomType) => void;
+  setRoom: Dispatch<SetStateAction<roomType>>;
 };
 
 const HouseContext = createContext<HouseContextType>({
