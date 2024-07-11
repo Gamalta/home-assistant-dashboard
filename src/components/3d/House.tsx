@@ -13,6 +13,7 @@ import {Camera} from './Camera';
 import {OutlineEffect} from 'postprocessing';
 import {EffectComposer, Outline} from '@react-three/postprocessing';
 import {OutsideLight} from './OutsideLight';
+import {AmbientLight} from './AmbientLight';
 
 export function House() {
   const config = HouseConfig;
@@ -41,6 +42,7 @@ export function House() {
               <Stats />
               <Camera cameras={cameras} />
               <Scene scene={scene} />
+              <AmbientLight />
 
               <OutsideLight position={[0, 5, 4]} />
               <OutsideLight position={[0, 5, -4]} />
@@ -75,13 +77,25 @@ function Scene(props: SceneProps) {
   useEffect(() => {
     scene.traverse(object => {
       if (object instanceof THREE.Mesh) {
-        /*object.material = new THREE.MeshStandardMaterial({
-          color: 'white',
-          roughness: 0.5,
-          metalness: 0.5,
-        });*/
         object.castShadow = true;
         object.receiveShadow = true;
+
+        switch (object.name) {
+          case 'Walls':
+            object.material = new THREE.MeshStandardMaterial({
+              color: 'white',
+              roughness: 0.9,
+              metalness: 0.0,
+            });
+            break;
+          case 'Floor':
+            object.material = new THREE.MeshStandardMaterial({
+              color: 'gray',
+              roughness: 0.6,
+              metalness: 0.1,
+            });
+            break;
+        }
       }
     });
   }, [scene]);
