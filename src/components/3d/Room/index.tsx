@@ -80,11 +80,10 @@ export function Room(props: RoomProps) {
           />
         )}
         {lightsWithMesh?.map(({light, position}) => (
-          <group position={position}>
+          <group position={position} key={light.entity_id}>
             <RoomLightHtml light={light} />
             {light.state === 'on' && (
               <pointLight
-                key={light.entity_id}
                 castShadow
                 color={light.custom.color}
                 intensity={0.05}
