@@ -3,9 +3,10 @@ import {motion} from 'framer-motion';
 import {useLightModalContext} from '../../../../../contexts/LightModalContext';
 import {HassEntityWithService} from '@hakit/core';
 import {useEffect, useMemo, useState} from 'react';
-import {getCoordFromColor} from '../../../../../utils/color';
+import {getCoordFromColor} from '../../../../../hooks/useColorPicker';
 
 type PickerProps = {
+  type: 'color' | 'temperature';
   entity: HassEntityWithService<'light'>;
   canvasRef: React.RefObject<HTMLCanvasElement>;
 };

@@ -44,12 +44,14 @@ export function ColorTab() {
           )
           .map(entity => (
             <Picker
-              key={entity.entity_id}
+              key={`color-${entity.entity_id}`}
+              type="color"
               canvasRef={canvasRef}
               entity={entity}
             />
           ))}
         <ActivePicker
+          mode="color"
           canvasRef={canvasRef}
           entities={entities.filter(
             entity =>
