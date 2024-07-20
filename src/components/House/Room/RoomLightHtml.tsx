@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import {Html} from '../Html';
 import {alpha} from '@mui/material/styles';
 import {PendantRoundIcon} from '../../Icons/PendantRoundIcon';
 import {HassEntityWithService} from '@hakit/core';
@@ -20,21 +19,19 @@ export function RoomLightHtml(props: RoomLightHtmlProps) {
   );
 
   return (
-    <Html>
-      <Button
-        sx={{
-          bgcolor: light.state === 'on' ? light.custom.hexColor : undefined,
-          '&:hover': {
-            bgcolor:
-              light.state === 'on'
-                ? alpha(light.custom.hexColor, 0.8)
-                : undefined,
-          },
-        }}
-        {...lightLongPress}
-      >
-        <PendantRoundIcon />
-      </Button>
-    </Html>
+    <Button
+      sx={{
+        bgcolor: light.state === 'on' ? light.custom.hexColor : undefined,
+        '&:hover': {
+          bgcolor:
+            light.state === 'on'
+              ? alpha(light.custom.hexColor, 0.8)
+              : undefined,
+        },
+      }}
+      {...lightLongPress}
+    >
+      <PendantRoundIcon />
+    </Button>
   );
 }

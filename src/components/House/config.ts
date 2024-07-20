@@ -11,7 +11,7 @@ export const HouseConfig: HouseConfig = {
         layer: `${import.meta.env.BASE_URL}/layout/light/salon_layer.png`,
         position: {x: 54, y: 35},
       },
-      //temperature: 'sensor.temperature_salon',
+      temperature: 'sensor.temperature_salon',
     },
     {
       id: 'Office',
@@ -21,7 +21,7 @@ export const HouseConfig: HouseConfig = {
         layer: `${import.meta.env.BASE_URL}/layout/light/office_layer.png`,
         position: {x: 24, y: 77},
       },
-      //temperature: 'sensor.temperature_office',
+      temperature: 'sensor.temperature_office',
     },
     {
       id: 'Bedroom',
@@ -31,7 +31,7 @@ export const HouseConfig: HouseConfig = {
         layer: `${import.meta.env.BASE_URL}/layout/light/bedroom_layer.png`,
         position: {x: 72, y: 75},
       },
-      //temperature: 'sensor.temperature_bedroom',
+      temperature: 'sensor.temperature_bedroom',
     },
     {
       id: 'Bedroom_2',
