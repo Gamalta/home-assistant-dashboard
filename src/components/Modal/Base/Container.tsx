@@ -24,7 +24,7 @@ export function Container(props: ContainerProps) {
       layoutId={id}
       position="absolute"
       justifyContent="space-between"
-      zIndex={2}
+      zIndex={100}
       top="50%"
       left="50%"
       maxHeight="calc(100% - 4rem)"
