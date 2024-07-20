@@ -42,7 +42,6 @@ export function RoomAction(props: RoomActionProps) {
       borderRadius="50px"
       spacing={2}
       p={1}
-      zIndex={10}
     >
       {temperature && (
         <>
@@ -65,6 +64,7 @@ export function RoomAction(props: RoomActionProps) {
           <motion.div layoutId={`${id}-light`}>
             <Fab
               variant="extended"
+              size="small"
               sx={{
                 bgcolor:
                   mainLight.state === 'on'
