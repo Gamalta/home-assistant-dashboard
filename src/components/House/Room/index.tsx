@@ -41,12 +41,9 @@ export function Room(props: RoomProps) {
         <img
           src={room.main_light?.layer}
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            objectFit: 'cover',
-            height: '100%',
-            width: '100%',
+            filter: `hue-rotate(${
+              mainLight.attributes.hs_color?.[0] ?? 0
+            }deg) saturate(${mainLight.attributes.hs_color?.[1] ?? 100}%)`,
           }}
         />
       )}

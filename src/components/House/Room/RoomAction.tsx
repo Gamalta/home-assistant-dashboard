@@ -40,13 +40,13 @@ export function RoomAction(props: RoomActionProps) {
       bgcolor="background.default"
       direction="row"
       borderRadius="50px"
-      spacing={2}
+      spacing={1}
       p={1}
     >
       {temperature && (
         <>
           <motion.div layoutId={`${id}-temp`}>
-            <Fab variant="extended" {...tempLongPress}>
+            <Fab size="small" variant="extended" {...tempLongPress}>
               <ThermostatIcon />
               {`${temperature.state}°C`}
             </Fab>
