@@ -1,9 +1,12 @@
 import Stack from '@mui/material/Stack';
 import {Header} from './components/Header';
-import {House} from './components/3d/House';
+import {House} from './components/House';
 import {HouseProvider} from './contexts/HouseContext';
+import {useRef} from 'react';
+import {FloatingActionProvider} from './contexts/FloatingAction';
 
 export default function Dashboard() {
+  const HouseContainerRef = useRef<HTMLDivElement>(null);
   return (
     <HouseProvider>
       <Stack direction="row" height="100vh">
@@ -15,9 +18,16 @@ export default function Dashboard() {
         >
           <Header />
         </Stack>
-        <Stack position="relative" width="70%" height="100%">
-          <House />
-        </Stack>
+        <FloatingActionProvider containerRef={HouseContainerRef}>
+          <Stack
+            ref={HouseContainerRef}
+            position="relative"
+            width="70%"
+            height="100%"
+          >
+            <House />
+          </Stack>
+        </FloatingActionProvider>
         {/*<LightGroupCard
           entityGroup="light.sejour"
           entities={['light.hue_iris', 'light.salon']}

@@ -1,11 +1,12 @@
 import {
   Dispatch,
+  ReactNode,
   SetStateAction,
   createContext,
   useContext,
   useState,
 } from 'react';
-import {HouseConfig} from '../components/3d/config';
+import {HouseConfig} from '../components/House/config';
 
 type roomType = (typeof HouseConfig.rooms)[0] | null;
 
@@ -21,7 +22,12 @@ const HouseContext = createContext<HouseContextType>({
 
 export const useHouseContext = () => useContext(HouseContext);
 
-export const HouseProvider = ({children}: {children: React.ReactNode}) => {
+type HouseProviderProps = {
+  children: ReactNode;
+};
+
+export const HouseProvider = (props: HouseProviderProps) => {
+  const {children} = props;
   const [room, setRoom] = useState<roomType>(null);
 
   return (
