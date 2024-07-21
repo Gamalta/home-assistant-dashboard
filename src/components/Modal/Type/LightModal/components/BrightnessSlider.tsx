@@ -85,6 +85,9 @@ export function BrightnessSlider() {
               '& .MuiSlider-thumb, .MuiSlider-rail': {
                 opacity: 0,
               },
+              '@media (pointer: coarse)': {
+                padding: '0',
+              },
             }}
           />
         </Stack>
