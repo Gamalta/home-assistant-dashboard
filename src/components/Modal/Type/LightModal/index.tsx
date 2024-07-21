@@ -16,6 +16,7 @@ import {ColorTab} from './Tabs/ColorTab';
 import {LightModalProvider} from '../../../../contexts/LightModalContext';
 import {LightCard} from './components/LightCard';
 import Typography from '@mui/material/Typography';
+import {BrightnessSlider} from './components/BrightnessSlider';
 
 type LightModalProps = Omit<ModalProps, 'children'> & {
   mainEntity: HassEntityWithService<'light'>;
@@ -45,39 +46,42 @@ export function LightModal(props: LightModalProps) {
             <ColorTempTab />
             <EffectTab />
           </Stack>
-          <ToggleButtonGroup
-            exclusive
-            value={tab}
-            onChange={(_, newTab) => setTab(newTab)}
-          >
-            <ToggleButton
-              value=""
-              onClick={event => {
-                event.preventDefault();
-                const allEntities = [mainEntity, ...entities];
-                const oneWasEnable = allEntities.find(
-                  entity => entity.state === 'on'
-                );
-                allEntities.map(entity => {
-                  oneWasEnable
-                    ? entity.service.turnOff()
-                    : entity.service.turnOn();
-                });
-              }}
+          <Stack direction="row" justifyContent="space-between">
+            <ToggleButtonGroup
+              exclusive
+              value={tab}
+              onChange={(_, newTab) => setTab(newTab)}
             >
-              <PowerSettingsNewIcon />
-            </ToggleButton>
-            <Divider />
-            <ToggleButton value={0} key="buttonColor">
-              <ColorWheelIcon />
-            </ToggleButton>
-            <ToggleButton value={1} key="buttonTemp">
-              <ColorTempWheelIcon />
-            </ToggleButton>
-            <ToggleButton value={2} key="buttonEffect" disabled>
-              <AutoAwesomeIcon />
-            </ToggleButton>
-          </ToggleButtonGroup>
+              <ToggleButton
+                value=""
+                onClick={event => {
+                  event.preventDefault();
+                  const allEntities = [mainEntity, ...entities];
+                  const oneWasEnable = allEntities.find(
+                    entity => entity.state === 'on'
+                  );
+                  allEntities.map(entity => {
+                    oneWasEnable
+                      ? entity.service.turnOff()
+                      : entity.service.turnOn();
+                  });
+                }}
+              >
+                <PowerSettingsNewIcon />
+              </ToggleButton>
+              <Divider />
+              <ToggleButton value={0} key="buttonColor">
+                <ColorWheelIcon />
+              </ToggleButton>
+              <ToggleButton value={1} key="buttonTemp">
+                <ColorTempWheelIcon />
+              </ToggleButton>
+              <ToggleButton value={2} key="buttonEffect" disabled>
+                <AutoAwesomeIcon />
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <BrightnessSlider />
+          </Stack>
           <Stack spacing={1}>
             <Typography variant="h6">Lumières</Typography>
             <Stack direction="row" gap={2} p={1}>
