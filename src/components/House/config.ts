@@ -1,7 +1,8 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const HouseConfig: HouseConfig = {
-  floor_plan: `${import.meta.env.BASE_URL}/base_night.png`,
+  night_floor_plan: `${import.meta.env.BASE_URL}/base_night.png`,
+  day_floor_plan: `${import.meta.env.BASE_URL}/base_day.png`,
   rooms: [
     {
       id: 'Salon',
@@ -16,6 +17,17 @@ export const HouseConfig: HouseConfig = {
         position: {x: 54, y: 35},
       },
       temperature: 'sensor.temperature_salon',
+      lights: [
+        {
+          entity_id: 'light.salon_hue_play',
+          layer: {
+            red: `${import.meta.env.BASE_URL}/light/salon_play_red.png`,
+            green: `${import.meta.env.BASE_URL}/light/salon_play_green.png`,
+            blue: `${import.meta.env.BASE_URL}/light/salon_play_blue.png`,
+          },
+          position: {x: 22, y: 70},
+        },
+      ],
     },
     {
       id: 'Office',
@@ -30,6 +42,17 @@ export const HouseConfig: HouseConfig = {
         position: {x: 24, y: 77},
       },
       temperature: 'sensor.temperature_office',
+      lights: [
+        {
+          entity_id: 'light.office_hue_iris',
+          layer: {
+            red: `${import.meta.env.BASE_URL}/light/office_iris_red.png`,
+            green: `${import.meta.env.BASE_URL}/light/office_iris_green.png`,
+            blue: `${import.meta.env.BASE_URL}/light/office_iris_blue.png`,
+          },
+          position: {x: 22, y: 70},
+        },
+      ],
     },
     {
       id: 'Bedroom',
@@ -63,7 +86,8 @@ export const HouseConfig: HouseConfig = {
 };
 
 export type HouseConfig = {
-  floor_plan: string;
+  night_floor_plan: string;
+  day_floor_plan: string;
   rooms: {
     id: string;
     name: string;

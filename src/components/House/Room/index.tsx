@@ -17,12 +17,18 @@ export function Room(props: RoomProps) {
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const mainLight = useEntity(room.main_light?.entity_id ?? 'unknown', {
-    returnNullIfNotFound: true,
-  });
-  // TODO fix later
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const lights = room.lights?.map(light => useEntity(light.entity_id));
+  const mainLight = {
+    light: useEntity(room.main_light?.entity_id ?? 'unknown', {
+      returnNullIfNotFound: true,
+    }),
+    config: room.main_light,
+  };
+  const lights = room.lights?.map(light => ({
+    // TODO fix later
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    light: useEntity(light.entity_id),
+    config: light,
+  }));
 
   return (
     <RoomProvider>
@@ -33,39 +39,27 @@ export function Room(props: RoomProps) {
           name={room.name}
           position={room.main_light?.position ?? {x: 0, y: 0}}
           temperature={temperature ?? undefined}
-          mainLight={mainLight ?? undefined}
-          lights={lights}
+          mainLight={mainLight.light ?? undefined}
+          lights={lights?.map(entity => entity.light)}
         />
       )}
-      {mainLight &&
-        mainLight.state === 'on' &&
-        ['red', 'green', 'blue'].map((color, index) => (
-          <img
-            key={color}
-            src={room.main_light?.layer[color as 'red' | 'green' | 'blue']}
-            style={{
-              mixBlendMode: 'lighten',
-              opacity:
-                ((mainLight.attributes.rgb_color?.[index] ?? 0) / 255) *
-                ((mainLight.attributes.brightness ?? 255) / 255),
-            }}
-          />
-        ))}
-      {/*lightsWithMesh?.map(({light, position}) => (
-        <group position={position} key={light.entity_id}>
-          <RoomLightHtml light={light} />
-          {light.state === 'on' && (
-            <pointLight
-              castShadow
-              color={light.custom.color}
-              intensity={0.05}
-              distance={5}
-              shadow-bias={-0.0001}
-              shadow-normalBias={0.05}
+      {[mainLight ?? [], lights ?? []].flat().map(
+        ({light, config}) =>
+          light &&
+          light.state === 'on' &&
+          ['red', 'green', 'blue'].map((color, index) => (
+            <img
+              key={color}
+              src={config?.layer[color as 'red' | 'green' | 'blue']}
+              style={{
+                mixBlendMode: 'lighten',
+                opacity:
+                  ((light.attributes.rgb_color?.[index] ?? 0) / 255) *
+                  ((light.attributes.brightness ?? 255) / 255),
+              }}
             />
-          )}
-        </group>
-      ))*/}
+          ))
+      )}
     </RoomProvider>
   );
 }
