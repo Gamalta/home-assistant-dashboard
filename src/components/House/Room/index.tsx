@@ -37,16 +37,20 @@ export function Room(props: RoomProps) {
           lights={lights}
         />
       )}
-      {mainLight?.state === 'on' && (
-        <img
-          src={room.main_light?.layer}
-          style={{
-            filter: `hue-rotate(${
-              mainLight.attributes.hs_color?.[0] ?? 0
-            }deg) saturate(${mainLight.attributes.hs_color?.[1] ?? 100}%)`,
-          }}
-        />
-      )}
+      {mainLight &&
+        mainLight.state === 'on' &&
+        ['red', 'green', 'blue'].map((color, index) => (
+          <img
+            key={color}
+            src={room.main_light?.layer[color as 'red' | 'green' | 'blue']}
+            style={{
+              mixBlendMode: 'lighten',
+              opacity:
+                ((mainLight.attributes.rgb_color?.[index] ?? 0) / 255) *
+                ((mainLight.attributes.brightness ?? 255) / 255),
+            }}
+          />
+        ))}
       {/*lightsWithMesh?.map(({light, position}) => (
         <group position={position} key={light.entity_id}>
           <RoomLightHtml light={light} />

@@ -8,7 +8,11 @@ export const HouseConfig: HouseConfig = {
       name: 'Séjour',
       main_light: {
         entity_id: 'light.salon_main',
-        layer: `${import.meta.env.BASE_URL}/layout/light/salon_layer.png`,
+        layer: {
+          red: `${import.meta.env.BASE_URL}/light/salon_red.png`,
+          green: `${import.meta.env.BASE_URL}/light/salon_green.png`,
+          blue: `${import.meta.env.BASE_URL}/light/salon_blue.png`,
+        },
         position: {x: 54, y: 35},
       },
       temperature: 'sensor.temperature_salon',
@@ -18,7 +22,11 @@ export const HouseConfig: HouseConfig = {
       name: 'Bureau',
       main_light: {
         entity_id: 'light.office_main',
-        layer: `${import.meta.env.BASE_URL}/layout/light/office_layer.png`,
+        layer: {
+          red: `${import.meta.env.BASE_URL}/light/office_red.png`,
+          green: `${import.meta.env.BASE_URL}/light/office_green.png`,
+          blue: `${import.meta.env.BASE_URL}/light/office_blue.png`,
+        },
         position: {x: 24, y: 77},
       },
       temperature: 'sensor.temperature_office',
@@ -28,7 +36,11 @@ export const HouseConfig: HouseConfig = {
       name: 'Chambre',
       main_light: {
         entity_id: 'light.bedroom_main',
-        layer: `${import.meta.env.BASE_URL}/layout/light/bedroom_layer.png`,
+        layer: {
+          red: `${import.meta.env.BASE_URL}/light/bedroom_red.png`,
+          green: `${import.meta.env.BASE_URL}/light/bedroom_green.png`,
+          blue: `${import.meta.env.BASE_URL}/light/bedroom_blue.png`,
+        },
         position: {x: 72, y: 75},
       },
       temperature: 'sensor.temperature_bedroom',
@@ -38,7 +50,11 @@ export const HouseConfig: HouseConfig = {
       name: 'Chambre 2',
       main_light: {
         entity_id: 'light.bedroom_2_main',
-        layer: `${import.meta.env.BASE_URL}/layout/light/bedroom2_layer.png`,
+        layer: {
+          red: `${import.meta.env.BASE_URL}/light/bedroom_2_red.png`,
+          green: `${import.meta.env.BASE_URL}/light/bedroom_2_green.png`,
+          blue: `${import.meta.env.BASE_URL}/light/bedroom_2_blue.png`,
+        },
         position: {x: 75, y: 30},
       },
     },
@@ -58,6 +74,10 @@ export type HouseConfig = {
 
 type LightConfig = {
   entity_id: FilterByDomain<EntityName, 'light'>;
-  layer: string;
+  layer: {
+    red: string;
+    green: string;
+    blue: string;
+  };
   position: {x: number; y: number};
 };
