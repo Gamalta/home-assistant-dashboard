@@ -57,6 +57,7 @@ export const HouseConfig: HouseConfig = {
         },
         position: {x: 75, y: 30},
       },
+      temperature: 'sensor.temperature_bedroom2',
     },
   ],
 };
