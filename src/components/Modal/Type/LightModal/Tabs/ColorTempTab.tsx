@@ -32,7 +32,7 @@ export function ColorTempTab() {
       <Stack
         component={motion.div}
         position="relative"
-        height="45vh"
+        height="30vh"
         maxHeight="320px"
         maxWidth="320px"
         minHeight="200px"
