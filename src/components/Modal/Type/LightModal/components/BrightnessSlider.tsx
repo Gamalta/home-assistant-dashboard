@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import {BrightnessIcon} from '../../../../Icons/BrightnessIcon';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Popover from '@mui/material/Popover';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
@@ -15,12 +15,21 @@ export function BrightnessSlider() {
   const activeEntities = entities.filter(entity =>
     activeEntityIds.includes(entity.entity_id)
   );
-  const [brightness, setBrightness] = useState(
-    activeEntities.length > 0 ? activeEntities[0].custom.brightnessValue : 100
-  );
+
+  const [brightness, setBrightness] = useState(255);
 
   const handleSliderMove = (_: Event, newBrightness: number | number[]) =>
     setBrightness(newBrightness as number);
+
+  useEffect(() => {
+    if (activeEntities.length === 0) return;
+    setBrightness(
+      Math.round(
+        ((activeEntities[0]?.attributes.brightness ?? 255) / 255) * 100
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEntities.length]);
 
   return (
     <>
