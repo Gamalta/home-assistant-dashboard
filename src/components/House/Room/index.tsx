@@ -16,6 +16,10 @@ export function Room(props: RoomProps) {
 
   const temperature = useEntity(room.temperature ?? 'unknown', {
     returnNullIfNotFound: true,
+    historyOptions: {
+      disable: false,
+      hoursToShow: 24,
+    },
   });
   const mainLight = {
     light: useEntity(room.main_light?.entity_id ?? 'unknown', {
