@@ -1,5 +1,6 @@
 import {
   AreaPlot,
+  ChartsClipPath,
   ChartsTooltip,
   ChartsXAxis,
   ChartsYAxis,
@@ -77,11 +78,14 @@ export function TemperatureModal(props: TemperatureModalProps) {
             },
           ]}
         >
-          <LinePlot />
-          <AreaPlot />
+          <g clipPath="url(#clip-path)">
+            <LinePlot />
+            <AreaPlot />
+          </g>
           <ChartsXAxis position="bottom" axisId="time" />
           <ChartsYAxis position="left" axisId="temperature" />
           <ChartsTooltip />
+          <ChartsClipPath id="clip-path" />
         </ResponsiveChartContainer>
       </Stack>
     </Modal>
