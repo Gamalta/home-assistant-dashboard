@@ -32,6 +32,7 @@ export function Container(props: ContainerProps) {
       boxShadow="0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)"
       bgcolor="background.default"
       borderRadius={1}
+      overflow="hidden"
       p={2}
       spacing={2}
     >
