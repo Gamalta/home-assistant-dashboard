@@ -56,6 +56,7 @@ export function RoomAction(props: RoomActionProps) {
             open={tempModalOpen}
             onClose={() => setTempModalOpen(false)}
             entity={temperature}
+            title={`Température ${name}`}
           />
         </>
       )}
@@ -88,7 +89,7 @@ export function RoomAction(props: RoomActionProps) {
             onClose={() => setLightModalOpen(false)}
             mainEntity={mainLight}
             entities={lights}
-            title={name}
+            title={`Lumière ${name}`}
           />
         </>
       )}
