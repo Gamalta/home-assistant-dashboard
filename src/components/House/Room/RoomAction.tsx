@@ -15,12 +15,13 @@ type RoomActionProps = {
   name: string;
   position: {x: number; y: number};
   temperature?: HassEntityWithService<'sensor'>;
+  humidity?: HassEntityWithService<'sensor'>;
   mainLight?: HassEntityWithService<'light'>;
   lights?: HassEntityWithService<'light'>[];
 };
 
 export function RoomAction(props: RoomActionProps) {
-  const {id, name, position, temperature, mainLight, lights} = props;
+  const {id, name, position, temperature, humidity, mainLight, lights} = props;
   const {lightModalOpen, setLightModalOpen, tempModalOpen, setTempModalOpen} =
     useRoomContext();
 
@@ -55,7 +56,8 @@ export function RoomAction(props: RoomActionProps) {
             id={`${id}-temp`}
             open={tempModalOpen}
             onClose={() => setTempModalOpen(false)}
-            entity={temperature}
+            temperatureEntity={temperature}
+            humidityEntity={humidity}
             title={`Température ${name}`}
           />
         </>

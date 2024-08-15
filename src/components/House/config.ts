@@ -17,6 +17,7 @@ export const HouseConfig: HouseConfig = {
         position: {x: 54, y: 35},
       },
       temperature: 'sensor.temperature_salon',
+      humidity: 'sensor.humidity_salon',
       lights: [
         {
           entity_id: 'light.salon_hue_play',
@@ -42,6 +43,7 @@ export const HouseConfig: HouseConfig = {
         position: {x: 24, y: 77},
       },
       temperature: 'sensor.temperature_office',
+      humidity: 'sensor.humidity_office',
       lights: [
         {
           entity_id: 'light.office_hue_iris',
@@ -67,6 +69,7 @@ export const HouseConfig: HouseConfig = {
         position: {x: 72, y: 75},
       },
       temperature: 'sensor.temperature_bedroom',
+      humidity: 'sensor.humidity_bedroom',
     },
     {
       id: 'Bedroom_2',
@@ -81,6 +84,7 @@ export const HouseConfig: HouseConfig = {
         position: {x: 75, y: 30},
       },
       temperature: 'sensor.temperature_bedroom2',
+      humidity: 'sensor.humidity_bedroom2',
     },
   ],
 };
@@ -92,6 +96,7 @@ export type HouseConfig = {
     id: string;
     name: string;
     temperature?: FilterByDomain<EntityName, 'sensor'>;
+    humidity?: FilterByDomain<EntityName, 'sensor'>;
     main_light?: LightConfig;
     lights?: LightConfig[];
   }[];

@@ -21,6 +21,13 @@ export function Room(props: RoomProps) {
       hoursToShow: 24,
     },
   });
+  const humidity = useEntity(room.humidity ?? 'unknown', {
+    returnNullIfNotFound: true,
+    historyOptions: {
+      disable: false,
+      hoursToShow: 24,
+    },
+  });
   const mainLight = {
     light: useEntity(room.main_light?.entity_id ?? 'unknown', {
       returnNullIfNotFound: true,
@@ -43,6 +50,7 @@ export function Room(props: RoomProps) {
           name={room.name}
           position={room.main_light?.position ?? {x: 0, y: 0}}
           temperature={temperature ?? undefined}
+          humidity={humidity ?? undefined}
           mainLight={mainLight.light ?? undefined}
           lights={lights?.map(entity => entity.light)}
         />
