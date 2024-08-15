@@ -24,7 +24,6 @@ import Battery0BarIcon from '@mui/icons-material/Battery0Bar';
 import WifiIcon from '@mui/icons-material/Wifi';
 import Wifi2BarIcon from '@mui/icons-material/Wifi2Bar';
 import Wifi1BarIcon from '@mui/icons-material/Wifi1Bar';
-import IconButton from '@mui/material/IconButton';
 
 type TemperatureModalProps = Omit<ModalProps, 'children'> & {
   temperatureEntity: HassEntityWithService<'sensor'>;
@@ -54,7 +53,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
   );
   const tempTimestamps = Object.keys(temperatureMap);
   const temperatures = Object.values(temperatureMap).filter(
-    data => data !== null
+    (data): data is number => data !== null
   );
   const maxTemp = Math.max(...temperatures);
   const minTemp = Math.min(...temperatures);
