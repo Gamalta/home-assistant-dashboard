@@ -16,8 +16,12 @@ export const HouseConfig: HouseConfig = {
         },
         position: {x: 54, y: 35},
       },
-      temperature: 'sensor.temperature_salon',
-      humidity: 'sensor.humidity_salon',
+      temperature: {
+        entity: 'sensor.temperature_salon',
+        humidity: 'sensor.humidity_salon',
+        battery: 'sensor.battery_level_atc_salon',
+        signal: 'sensor.signal_atc_salon',
+      },
       lights: [
         {
           entity_id: 'light.salon_hue_play',
@@ -42,8 +46,12 @@ export const HouseConfig: HouseConfig = {
         },
         position: {x: 24, y: 77},
       },
-      temperature: 'sensor.temperature_office',
-      humidity: 'sensor.humidity_office',
+      temperature: {
+        entity: 'sensor.temperature_office',
+        humidity: 'sensor.humidity_office',
+        battery: 'sensor.battery_level_atc_office',
+        signal: 'sensor.signal_atc_office',
+      },
       lights: [
         {
           entity_id: 'light.office_hue_iris',
@@ -68,8 +76,12 @@ export const HouseConfig: HouseConfig = {
         },
         position: {x: 72, y: 75},
       },
-      temperature: 'sensor.temperature_bedroom',
-      humidity: 'sensor.humidity_bedroom',
+      temperature: {
+        entity: 'sensor.temperature_bedroom',
+        humidity: 'sensor.humidity_bedroom',
+        battery: 'sensor.battery_level_atc_bedroom',
+        signal: 'sensor.signal_atc_bedroom',
+      },
     },
     {
       id: 'Bedroom_2',
@@ -83,8 +95,12 @@ export const HouseConfig: HouseConfig = {
         },
         position: {x: 75, y: 30},
       },
-      temperature: 'sensor.temperature_bedroom2',
-      humidity: 'sensor.humidity_bedroom2',
+      temperature: {
+        entity: 'sensor.temperature_bedroom2',
+        humidity: 'sensor.humidity_bedroom2',
+        battery: 'sensor.battery_level_atc_bedroom2',
+        signal: 'sensor.signal_atc_bedroom2',
+      },
     },
   ],
 };
@@ -95,8 +111,12 @@ export type HouseConfig = {
   rooms: {
     id: string;
     name: string;
-    temperature?: FilterByDomain<EntityName, 'sensor'>;
-    humidity?: FilterByDomain<EntityName, 'sensor'>;
+    temperature?: {
+      entity: FilterByDomain<EntityName, 'sensor'>;
+      humidity?: FilterByDomain<EntityName, 'sensor'>;
+      battery?: FilterByDomain<EntityName, 'sensor'>;
+      signal?: FilterByDomain<EntityName, 'sensor'>;
+    };
     main_light?: LightConfig;
     lights?: LightConfig[];
   }[];
