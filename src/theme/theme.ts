@@ -4,6 +4,7 @@ import {Palette} from './Palette';
 import {MuiFab} from './components/Fab';
 import {MuiButton} from './components/Button';
 import {MuiToggleButton} from './components/ToggleButton';
+import {MuiTooltip} from './components/Tooltip';
 
 // Base theme constants
 export const theme = responsiveFontSizes(
@@ -15,6 +16,7 @@ export const theme = responsiveFontSizes(
       MuiToggleButton,
       MuiButton,
       MuiFab,
+      MuiTooltip,
     },
     shape: {
       borderRadius: 12,

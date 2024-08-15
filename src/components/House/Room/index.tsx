@@ -13,10 +13,6 @@ export function Room(props: RoomProps) {
 
   const {room: activeRoom} = useHouseContext();
   const isActive = activeRoom?.id === room.id;
-
-  const temperature = useEntity(room.temperature ?? 'unknown', {
-    returnNullIfNotFound: true,
-  });
   const mainLight = {
     light: useEntity(room.main_light?.entity_id ?? 'unknown', {
       returnNullIfNotFound: true,
@@ -36,9 +32,8 @@ export function Room(props: RoomProps) {
         <RoomAction
           key={room.id}
           id={`action-${room.id}`}
-          name={room.name}
+          room={room}
           position={room.main_light?.position ?? {x: 0, y: 0}}
-          temperature={temperature ?? undefined}
           mainLight={mainLight.light ?? undefined}
           lights={lights?.map(entity => entity.light)}
         />
