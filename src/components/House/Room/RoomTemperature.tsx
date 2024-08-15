@@ -62,7 +62,7 @@ export function RoomTemperature(props: RoomTemperature) {
         humidityEntity={humidity ?? undefined}
         batteryEntity={battery ?? undefined}
         signalEntity={signal ?? undefined}
-        title={`Température ${room.name}`}
+        title={`Thermomètre ${room.name}`}
       />
     </>
   );
