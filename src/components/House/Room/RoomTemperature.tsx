@@ -36,6 +36,14 @@ export function RoomTemperature(props: RoomTemperature) {
     },
   });
 
+  const battery = useEntity(room.temperature?.battery ?? 'unknown', {
+    returnNullIfNotFound: true,
+  });
+
+  const signal = useEntity(room.temperature?.signal ?? 'unknown', {
+    returnNullIfNotFound: true,
+  });
+
   if (!temperature) return;
 
   return (
@@ -52,6 +60,8 @@ export function RoomTemperature(props: RoomTemperature) {
         onClose={() => setTempModalOpen(false)}
         temperatureEntity={temperature}
         humidityEntity={humidity ?? undefined}
+        batteryEntity={battery ?? undefined}
+        signalEntity={signal ?? undefined}
         title={`Température ${room.name}`}
       />
     </>

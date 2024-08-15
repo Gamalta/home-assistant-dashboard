@@ -13,14 +13,34 @@ import Typography from '@mui/material/Typography';
 import {ThermostatIcon} from '../../../Icons/ThermostatIcon';
 import Tooltip from '@mui/material/Tooltip';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import BatteryFullIcon from '@mui/icons-material/BatteryFull';
+import Battery6BarIcon from '@mui/icons-material/Battery6Bar';
+import Battery5BarIcon from '@mui/icons-material/Battery5Bar';
+import Battery4BarIcon from '@mui/icons-material/Battery4Bar';
+import Battery3BarIcon from '@mui/icons-material/Battery3Bar';
+import Battery2BarIcon from '@mui/icons-material/Battery2Bar';
+import Battery1BarIcon from '@mui/icons-material/Battery1Bar';
+import Battery0BarIcon from '@mui/icons-material/Battery0Bar';
+import WifiIcon from '@mui/icons-material/Wifi';
+import Wifi2BarIcon from '@mui/icons-material/Wifi2Bar';
+import Wifi1BarIcon from '@mui/icons-material/Wifi1Bar';
+import IconButton from '@mui/material/IconButton';
 
 type TemperatureModalProps = Omit<ModalProps, 'children'> & {
   temperatureEntity: HassEntityWithService<'sensor'>;
   humidityEntity?: HassEntityWithService<'sensor'>;
+  batteryEntity?: HassEntityWithService<'sensor'>;
+  signalEntity?: HassEntityWithService<'sensor'>;
 };
 
 export function TemperatureModal(props: TemperatureModalProps) {
-  const {temperatureEntity, humidityEntity, ...modalProps} = props;
+  const {
+    temperatureEntity,
+    humidityEntity,
+    batteryEntity,
+    signalEntity,
+    ...modalProps
+  } = props;
 
   const roundToNearest5Minutes = (timestamp: number) => {
     return Math.floor(timestamp / (15 * 60 * 1000)) * (15 * 60 * 1000);
@@ -65,7 +85,6 @@ export function TemperatureModal(props: TemperatureModalProps) {
   const timestamps = Array.from(
     new Set([...Object.keys(temperatureMap), ...Object.keys(humidityMap)])
   ).sort((a, b) => Number(a) - Number(b));
-  console.log(timestamps);
 
   let lastTemp = 0;
   let lastHum = 0;
@@ -82,8 +101,66 @@ export function TemperatureModal(props: TemperatureModalProps) {
   });
   const lastTime = dataset[dataset.length - 1]?.timestamp;
 
+  const getBatteryIcon = () => {
+    const batteryIcons = [
+      <Battery0BarIcon />, // 0% to 12.5%
+      <Battery1BarIcon />, // 12.5% to 25%
+      <Battery2BarIcon />, // 25% to 37.5%
+      <Battery3BarIcon />, // 37.5% to 50%
+      <Battery4BarIcon />, // 50% to 62.5%
+      <Battery5BarIcon />, // 62.5% to 75%
+      <Battery6BarIcon />, // 75% to 87.5%
+      <BatteryFullIcon />, // 87.5% to 100%
+    ];
+
+    const batteryRange = Math.min(
+      Math.floor((Number(batteryEntity?.state) ?? 100) / 12.5),
+      7
+    );
+    return batteryIcons[batteryRange];
+  };
+
+  const getSignalIcon = () => {
+    const signalStrength = Number(signalEntity?.state) ?? -100;
+    if (signalStrength <= -90) {
+      return <WifiIcon />; // good signal (<= -90 dBm)
+    } else if (signalStrength <= -70) {
+      return <Wifi2BarIcon />; // medium signal (> -90, <= -70 dBm)
+    } else {
+      return <Wifi1BarIcon />; // bad signal (> -70 dBm)
+    }
+  };
+
   return (
-    <Modal {...modalProps}>
+    <Modal
+      {...modalProps}
+      action={
+        <Stack
+          direction="row"
+          borderRadius={1}
+          border={theme => `1px solid ${theme.palette.divider}`}
+          spacing={1}
+          p={1}
+        >
+          {signalEntity && (
+            <Stack position="relative">
+              <WifiIcon sx={{opacity: 0.3}} />
+              <Tooltip
+                title={`${signalEntity.state} dBm`}
+                sx={{position: 'absolute'}}
+              >
+                {getSignalIcon()}
+              </Tooltip>
+            </Stack>
+          )}
+          {batteryEntity && (
+            <Tooltip title={`${batteryEntity.state}%`}>
+              {getBatteryIcon()}
+            </Tooltip>
+          )}
+        </Stack>
+      }
+    >
       <Stack width="500px" height="300px" position="relative">
         <Stack justifyContent="space-between" height="100%" width="fit-content">
           <Stack spacing={1}>

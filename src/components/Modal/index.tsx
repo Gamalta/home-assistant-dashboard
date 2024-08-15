@@ -11,6 +11,7 @@ export interface ModalProps {
   id?: string;
   title?: string;
   children: React.ReactNode;
+  action?: React.ReactNode;
   onClose: () => void;
 }
 
@@ -37,7 +38,7 @@ const variants = {
 };
 
 export function Modal(props: ModalProps) {
-  const {open, id, title = '', children, onClose} = props;
+  const {open, id, title = '', children, action, onClose} = props;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -64,9 +65,12 @@ export function Modal(props: ModalProps) {
           <Container id={id}>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="h5">{title}</Typography>
-              <IconButton onClick={onClose}>
-                <CloseIcon />
-              </IconButton>
+              <Stack direction="row" spacing={1} alignItems="center">
+                {action}
+                <IconButton onClick={onClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Stack>
             </Stack>
             <Stack
               component={motion.div}
