@@ -88,7 +88,9 @@ export function TemperatureModal(props: TemperatureModalProps) {
         <Stack justifyContent="space-between" height="100%" width="fit-content">
           <Stack spacing={1}>
             <Stack direction="row" width="fit-content" zIndex={102}>
-              <ThermostatIcon sx={{fontSize: '48px'}} />
+              <ThermostatIcon
+                sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
+              />
               <Tooltip title={`mis à jour: ${tempFormatedLastTimestamp}`}>
                 <Typography variant="h4">{`${temperatureEntity.state}°C`}</Typography>
               </Tooltip>
@@ -103,7 +105,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
               >
                 <WaterDropIcon
                   fontSize="large"
-                  sx={theme => ({color: theme.palette.text.secondary})}
+                  sx={{color: 'blue', opacity: 0.6}}
                 />
                 <Tooltip title={`mis à jour: ${formatedLastTimeHumidity}`}>
                   <Typography
@@ -114,8 +116,10 @@ export function TemperatureModal(props: TemperatureModalProps) {
               </Stack>
             )}
           </Stack>
-          <Chip label={`${maxTemp}°C`} sx={{width: 'fit-content'}} />
-          <Chip label={`${minTemp}°C`} sx={{width: 'fit-content'}} />
+          <Stack spacing={2} direction="row" ml={-2} mb={-2}>
+            <Chip label={`min: ${minTemp}°C`} />
+            <Chip label={`max: ${maxTemp}°C`} />
+          </Stack>
         </Stack>
         <Stack
           margin="-32px"
@@ -129,13 +133,18 @@ export function TemperatureModal(props: TemperatureModalProps) {
           <ResponsiveChartContainer
             margin={{bottom: 0, right: 0, top: 0, left: 0}}
             sx={{
-              '& .MuiLineElement-root': {
+              '& .MuiLineElement-series-temperature': {
                 strokeWidth: 3,
+              },
+              '& .MuiLineElement-series-humidity': {
+                strokeWidth: 2,
+                opacity: 0.5,
               },
             }}
             dataset={dataset}
             series={[
               {
+                id: 'temperature',
                 type: 'line',
                 dataKey: 'temperature',
                 label: 'Température: ',
@@ -146,6 +155,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
                 valueFormatter: value => `${value}°C`,
               },
               {
+                id: 'humidity',
                 type: 'line',
                 dataKey: 'humidity',
                 label: 'Humidité: ',
