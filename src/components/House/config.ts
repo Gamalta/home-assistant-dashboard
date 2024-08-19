@@ -122,7 +122,7 @@ export type HouseConfig = {
   }[];
 };
 
-type LightConfig = {
+export type LightConfig = {
   entity_id: FilterByDomain<EntityName, 'light'>;
   layer: {
     red: string;
