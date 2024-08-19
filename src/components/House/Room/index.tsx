@@ -3,6 +3,8 @@ import {useHouseContext} from '../../../contexts/HouseContext';
 import {HouseConfig} from '../config';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
+import {RoomLightImage} from './RoomLightImage';
+import {RoomLight} from './RoomLight';
 
 type RoomProps = {
   room: (typeof HouseConfig)['rooms'][0];
@@ -38,23 +40,12 @@ export function Room(props: RoomProps) {
           lights={lights?.map(entity => entity.light)}
         />
       )}
-      {[mainLight ?? [], lights ?? []].flat().map(
-        ({light, config}) =>
-          light &&
-          light.state === 'on' &&
-          ['red', 'green', 'blue'].map((color, index) => (
-            <img
-              key={color}
-              src={config?.layer[color as 'red' | 'green' | 'blue']}
-              style={{
-                mixBlendMode: 'lighten',
-                opacity:
-                  ((light.attributes.rgb_color?.[index] ?? 0) / 255) *
-                  ((light.attributes.brightness ?? 255) / 255),
-              }}
-            />
-          ))
-      )}
+      {[...(lights ?? [])].map(light => (
+        <RoomLight parameters={light} />
+      ))}
+      {[mainLight ?? [], lights ?? []].flat().map(light => (
+        <RoomLightImage parameters={light} />
+      ))}
     </RoomProvider>
   );
 }
