@@ -19,6 +19,7 @@ export function RoomLight(props: RoomLightProps) {
   } = props;
 
   const {setLightModalOpen} = useRoomContext();
+  const unavailable = light?.state === 'unavailable';
 
   const lightLongPress = useLongPress(
     () => setLightModalOpen(true),
@@ -39,7 +40,8 @@ export function RoomLight(props: RoomLightProps) {
         boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
         bgcolor="rgba(255, 255, 255, 0.3)"
         sx={{
-          cursor: 'pointer',
+          cursor: unavailable ? 'not-allowed' : 'pointer',
+          opacity: unavailable ? 0.5 : 1,
           '&:hover': {
             border: '2px solid white',
           },
@@ -50,7 +52,7 @@ export function RoomLight(props: RoomLightProps) {
             )})`,
           },
         }}
-        {...lightLongPress}
+        {...(!unavailable && lightLongPress)}
       >
         {icon}
       </Stack>
