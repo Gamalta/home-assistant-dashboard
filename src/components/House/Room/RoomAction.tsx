@@ -2,8 +2,8 @@ import {HassEntityWithService} from '@hakit/core';
 import {motion} from 'framer-motion';
 import {FloatingAction} from '../FloatingAction';
 import {HouseConfig} from '../config';
-import {RoomTemperature} from './RoomTemperature';
-import {RoomLights} from './RoomLights';
+import {RoomActionTemperature} from './RoomActionTemperature';
+import {RoomActionMainLight} from './RoomActionMainLight';
 
 type RoomActionProps = {
   id: string;
@@ -26,8 +26,13 @@ export function RoomAction(props: RoomActionProps) {
       spacing={1}
       p={1}
     >
-      <RoomTemperature id={id} room={room} />
-      <RoomLights id={id} room={room} mainLight={mainLight} lights={lights} />
+      <RoomActionTemperature id={id} room={room} />
+      <RoomActionMainLight
+        id={id}
+        room={room}
+        mainLight={mainLight}
+        lights={lights}
+      />
     </FloatingAction>
   );
 }

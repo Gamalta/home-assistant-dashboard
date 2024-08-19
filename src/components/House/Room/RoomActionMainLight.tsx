@@ -8,14 +8,14 @@ import {useRoomContext} from '../../../contexts/RoomContext';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {HassEntityWithService} from '@hakit/core';
 
-type RoomLightsProps = {
+type RoomActionMainLightProps = {
   id: string;
   room: (typeof HouseConfig)['rooms'][0];
   mainLight?: HassEntityWithService<'light'>;
   lights?: HassEntityWithService<'light'>[];
 };
 
-export function RoomLights(props: RoomLightsProps) {
+export function RoomActionMainLight(props: RoomActionMainLightProps) {
   const {id, room, mainLight, lights} = props;
   const {lightModalOpen, setLightModalOpen} = useRoomContext();
 
