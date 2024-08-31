@@ -1,8 +1,9 @@
 import Stack from '@mui/material/Stack';
 import {HeaderCard} from './HeaderCard';
-import {WeatherCard} from '@hakit/components';
+import {SideBarConfig} from '../House/config';
 
 export function SideBar() {
+  const siderBarConfig = SideBarConfig;
   return (
     <Stack
       direction="column"
@@ -11,8 +12,7 @@ export function SideBar() {
       spacing={2}
       p={theme => theme.spacing(4, 2)}
     >
-      <HeaderCard />
-      <WeatherCard entity="weather.weather" />
+      <HeaderCard weather={siderBarConfig.weather} />
     </Stack>
   );
 }

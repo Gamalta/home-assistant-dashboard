@@ -1,8 +1,14 @@
 import Stack from '@mui/material/Stack';
 import {DateTime} from './DateTime';
 import {WeatherDisplay} from './WeatherDisplay';
+import {SideBarConfig} from '../../House/config';
 
-export function HeaderCard() {
+type HeaderCardProps = {
+  weather: SideBarConfig['weather'];
+};
+
+export function HeaderCard(props: HeaderCardProps) {
+  const {weather} = props;
   return (
     <Stack
       component="header"
@@ -13,7 +19,7 @@ export function HeaderCard() {
       justifyContent="space-between"
     >
       <DateTime />
-      <WeatherDisplay />
+      <WeatherDisplay weather={weather} />
     </Stack>
   );
 }

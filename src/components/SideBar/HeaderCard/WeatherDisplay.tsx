@@ -7,9 +7,13 @@ import {keyframes} from '@mui/material/styles';
 
 const WEATHER_ICONS_PATH = 'weather/';
 
-export function WeatherDisplay() {
-  const weatherConfig = SideBarConfig.weather;
-  const weather = useWeather(weatherConfig.condition, {type: 'daily'});
+type WeatherDisplayProps = {
+  weather: SideBarConfig['weather'];
+};
+
+export function WeatherDisplay(props: WeatherDisplayProps) {
+  const {weather: weatherEntity} = props;
+  const weather = useWeather(weatherEntity, {type: 'daily'});
   console.log(weather);
 
   const temperature = 27;

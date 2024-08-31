@@ -112,9 +112,7 @@ export const HouseConfig: HouseConfig = {
 };
 
 export type SideBarConfig = {
-  weather: {
-    condition: FilterByDomain<EntityName, 'weather'>;
-  };
+  weather: FilterByDomain<EntityName, 'weather'>;
 };
 
 export type HouseConfig = {
