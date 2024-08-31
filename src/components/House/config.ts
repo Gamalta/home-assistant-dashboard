@@ -1,5 +1,11 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
+export const SideBarConfig: SideBarConfig = {
+  weather: {
+    condition: 'weather.weather',
+  },
+};
+
 export const HouseConfig: HouseConfig = {
   night_floor_plan: `${import.meta.env.BASE_URL}/base_night.png`,
   day_floor_plan: `${import.meta.env.BASE_URL}/base_day.png`,
@@ -103,6 +109,12 @@ export const HouseConfig: HouseConfig = {
       },
     },
   ],
+};
+
+export type SideBarConfig = {
+  weather: {
+    condition: FilterByDomain<EntityName, 'weather'>;
+  };
 };
 
 export type HouseConfig = {
