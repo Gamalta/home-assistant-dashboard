@@ -1,20 +1,13 @@
+import {amber} from '@mui/material/colors';
 import {PaletteOptions} from '@mui/material/styles/createPalette';
 
 export const Palette: PaletteOptions = {
   mode: 'dark',
   primary: {
-    main: '#ffc815',
-  },
-  secondary: {
-    main: '#585858',
-  },
-  text: {
-    primary: '#e3e3e3',
-    secondary: '#B2AEAA',
+    main: amber[700],
   },
   background: {
-    default: '#26282A',
-    paper: '#1D2022',
+    default: '#1C1C1E',
+    paper: '#2C2C2E',
   },
-  divider: '#585858',
 };
