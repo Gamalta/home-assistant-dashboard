@@ -1,9 +1,7 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const SideBarConfig: SideBarConfig = {
-  weather: {
-    condition: 'weather.weather',
-  },
+  weather: 'weather.weather',
 };
 
 export const HouseConfig: HouseConfig = {
