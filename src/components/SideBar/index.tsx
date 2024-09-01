@@ -6,6 +6,7 @@ import {PetCard} from './PetCard';
 
 export function SideBar() {
   const siderBarConfig = SideBarConfig;
+  console.log('sodenar', siderBarConfig);
   return (
     <Stack
       direction="column"
@@ -17,8 +18,8 @@ export function SideBar() {
       <HeaderCard weather={siderBarConfig.weather} />
       <Stack spacing={2} p={2} bgcolor="background.paper" borderRadius={2}>
         <Stack direction="row" spacing={2}>
-          <PersonCard person={siderBarConfig.persons[0]} />
-          <PersonCard person={siderBarConfig.persons[1]} />
+          <PersonCard person={siderBarConfig.persons?.[0]} />
+          <PersonCard person={siderBarConfig.persons?.[1]} />
         </Stack>
         <PetCard />
       </Stack>
