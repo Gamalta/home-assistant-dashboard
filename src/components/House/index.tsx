@@ -15,11 +15,11 @@ export function House() {
     const updateOpacity = () => {
       const hour = new Date().getHours();
       if (hour >= 6 && hour < 8) {
-        setNightOpacity((hour - 6) / 2);
+        setNightOpacity(1 - (hour - 6) / 2);
       } else if (hour >= 8 && hour < 16) {
         setNightOpacity(0);
       } else if (hour >= 16 && hour < 18) {
-        setNightOpacity((18 - hour) / 2);
+        setNightOpacity((hour - 16) / 2);
       } else if (hour >= 18 || hour < 6) {
         setNightOpacity(1);
       }
