@@ -6,7 +6,6 @@ import {PetCard} from './PetCard';
 
 export function SideBar() {
   const siderBarConfig = SideBarConfig;
-  console.log('sodenar', siderBarConfig);
   return (
     <Stack
       direction="column"

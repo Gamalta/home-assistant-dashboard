@@ -14,7 +14,6 @@ type WeatherDisplayProps = {
 export function WeatherDisplay(props: WeatherDisplayProps) {
   const {weather: weatherEntity} = props;
   const weather = useWeather(weatherEntity, {type: 'daily'});
-  console.log(weather);
 
   const temperature = 27;
   let condition = weather?.state;
