@@ -137,7 +137,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
                 <Tooltip title={`mis à jour: ${formatedLastTimeHumidity}`}>
                   <Typography
                     variant="h5"
-                    color={theme => theme.palette.text.secondary}
+                    color="text.secondary"
                   >{`${humidityEntity.state}%`}</Typography>
                 </Tooltip>
               </Stack>
