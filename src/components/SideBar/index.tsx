@@ -22,6 +22,13 @@ export function SideBar() {
         </Stack>
         <PetCard />
       </Stack>
+      <Stack
+        p={2}
+        bgcolor="background.paper"
+        borderRadius={2}
+        width="100%"
+        height="100%"
+      />
     </Stack>
   );
 }
