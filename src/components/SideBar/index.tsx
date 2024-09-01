@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import {HeaderCard} from './HeaderCard';
 import {SideBarConfig} from '../House/config';
 import {PersonCard} from './PersonCard';
+import {PetCard} from './PetCard';
 
 export function SideBar() {
   const siderBarConfig = SideBarConfig;
@@ -19,6 +20,7 @@ export function SideBar() {
           <PersonCard person={siderBarConfig.persons[0]} />
           <PersonCard person={siderBarConfig.persons[1]} />
         </Stack>
+        <PetCard />
       </Stack>
     </Stack>
   );
