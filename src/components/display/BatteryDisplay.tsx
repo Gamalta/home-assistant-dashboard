@@ -28,7 +28,7 @@ export function BatteryDisplay(props: BatteryDisplayProps) {
   const {type = 'icon', batteryLevel, batteryState = 'Not Charging'} = props;
 
   const getBatteryIcon = () => {
-    if (batteryState === 'Not Charging') {
+    if (batteryState === 'Not Charging' || batteryState === 'Full') {
       if (batteryLevel >= 90) return <BatteryFullIcon />;
       if (batteryLevel >= 80) return <Battery90Icon />;
       if (batteryLevel >= 60) return <Battery80Icon />;
