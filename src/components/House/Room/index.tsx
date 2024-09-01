@@ -40,11 +40,14 @@ export function Room(props: RoomProps) {
           lights={lights?.map(entity => entity.light)}
         />
       )}
-      {[...(lights ?? [])].map(light => (
-        <RoomLight parameters={light} />
+      {[...(lights ?? [])].map((light, index) => (
+        <RoomLight parameters={light} key={`room-${room.id}-light-${index}`} />
       ))}
-      {[mainLight ?? [], lights ?? []].flat().map(light => (
-        <RoomLightImage parameters={light} />
+      {[mainLight ?? [], lights ?? []].flat().map((light, index) => (
+        <RoomLightImage
+          parameters={light}
+          key={`room-${room.id}-light-image-${index}`}
+        />
       ))}
     </RoomProvider>
   );
