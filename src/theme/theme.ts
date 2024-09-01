@@ -1,6 +1,6 @@
 import {createTheme, responsiveFontSizes} from '@mui/material/styles';
 import {Typography} from './Typography';
-import {Palette} from './Palette';
+import {DarkPalette} from './Palette';
 import {MuiFab} from './components/Fab';
 import {MuiButton} from './components/Button';
 import {MuiToggleButton} from './components/ToggleButton';
@@ -9,8 +9,12 @@ import {MuiTooltip} from './components/Tooltip';
 // Base theme constants
 export const theme = responsiveFontSizes(
   createTheme({
+    cssVariables: true,
+    colorSchemes: {
+      dark: DarkPalette,
+      light: DarkPalette, //LightPalette, TODO bug remove when @mui/material 6.0.2 is released
+    },
     spacing: 8,
-    palette: Palette,
     typography: Typography,
     components: {
       MuiToggleButton,
@@ -23,3 +27,9 @@ export const theme = responsiveFontSizes(
     },
   })
 );
+
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    tertiary: string;
+  }
+}
