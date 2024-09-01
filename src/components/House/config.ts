@@ -2,6 +2,30 @@ import {FilterByDomain, EntityName} from '@hakit/core';
 
 export const SideBarConfig: SideBarConfig = {
   weather: 'weather.weather',
+  persons: [
+    {
+      name: 'Elise',
+      entity: 'person.elise',
+      avatar: 'person/Elise.png',
+      home_zone: 'zone.home',
+      home_distance: 'sensor.home_iphone_de_elise_distance',
+      work_zone: 'zone.elio_work',
+      focus: 'binary_sensor.iphone_de_elise_focus',
+      battery_level: 'sensor.iphone_de_elise_battery_level',
+      battery_state: 'sensor.iphone_de_elise_battery_state',
+    },
+    {
+      name: 'Elio',
+      entity: 'person.home',
+      avatar: 'person/Elio.png',
+      home_zone: 'zone.home',
+      home_distance: 'sensor.home_3eur_la_minute_distance',
+      work_zone: 'zone.elio_work',
+      focus: 'binary_sensor.3eur_la_minute_focus',
+      battery_level: 'sensor.3eur_la_minute_battery_level',
+      battery_state: 'sensor.3eur_la_minute_battery_state',
+    },
+  ],
 };
 
 export const HouseConfig: HouseConfig = {
@@ -111,6 +135,19 @@ export const HouseConfig: HouseConfig = {
 
 export type SideBarConfig = {
   weather: FilterByDomain<EntityName, 'weather'>;
+  persons: [PersonConfig, PersonConfig];
+};
+
+export type PersonConfig = {
+  name: string;
+  avatar: string;
+  entity: string;
+  home_zone?: FilterByDomain<EntityName, 'zone'>;
+  home_distance?: FilterByDomain<EntityName, 'sensor'>;
+  work_zone?: FilterByDomain<EntityName, 'zone'>;
+  focus?: FilterByDomain<EntityName, 'binary_sensor'>;
+  battery_level?: FilterByDomain<EntityName, 'sensor'>;
+  battery_state?: FilterByDomain<EntityName, 'sensor'>;
 };
 
 export type HouseConfig = {
