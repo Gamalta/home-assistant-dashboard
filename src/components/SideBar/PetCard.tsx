@@ -7,7 +7,7 @@ export function PetCard() {
     <Stack
       direction="row"
       spacing={2}
-      bgcolor="#3A3A3C"
+      bgcolor="background.tertiary"
       borderRadius={1}
       p={1}
       alignItems="center"

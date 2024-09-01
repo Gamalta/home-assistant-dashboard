@@ -5,23 +5,31 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Room} from './Room';
 import {useEffect, useState} from 'react';
+import {useThemeMode} from '../../hooks/useThemeMode';
+import {useColorScheme} from '@mui/material/styles';
 
 export function House() {
   const config = HouseConfig;
   const {room, setRoom} = useHouseContext();
   const [nightOpacity, setNightOpacity] = useState(0);
+  const {mode: customMode} = useThemeMode();
+  const {mode: themeMode, setMode} = useColorScheme();
 
   useEffect(() => {
     const updateOpacity = () => {
       const hour = new Date().getHours();
       if (hour >= 6 && hour < 8) {
         setNightOpacity(1 - (hour - 6) / 2);
+        if (customMode === 'auto' && themeMode !== 'dark') setMode('dark');
       } else if (hour >= 8 && hour < 16) {
         setNightOpacity(0);
+        if (customMode === 'auto' && themeMode !== 'dark') setMode('dark');
       } else if (hour >= 16 && hour < 18) {
         setNightOpacity((hour - 16) / 2);
+        if (customMode === 'auto' && themeMode !== 'light') setMode('light');
       } else if (hour >= 18 || hour < 6) {
         setNightOpacity(1);
+        if (customMode === 'auto' && themeMode !== 'light') setMode('light');
       }
     };
 
@@ -29,7 +37,7 @@ export function House() {
     const interval = setInterval(updateOpacity, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [customMode, themeMode, setMode]);
 
   return (
     <Stack

@@ -4,6 +4,7 @@ export const MuiButton: Components['MuiButton'] = {
   styleOverrides: {
     root: () => ({
       borderRadius: 50,
+      textTransform: 'none',
     }),
   },
 };
