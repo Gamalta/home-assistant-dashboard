@@ -4,6 +4,8 @@ import {FloatingAction} from '../FloatingAction';
 import {HouseConfig} from '../config';
 import {RoomActionTemperature} from './RoomActionTemperature';
 import {RoomActionMainLight} from './RoomActionMainLight';
+import Divider from '@mui/material/Divider';
+import {Stack} from '@mui/material';
 
 type RoomActionProps = {
   id: string;
@@ -20,13 +22,16 @@ export function RoomAction(props: RoomActionProps) {
     <FloatingAction
       component={motion.div}
       pos={position}
-      bgcolor="background.default"
+      bgcolor="background.paper"
       direction="row"
       borderRadius="50px"
-      spacing={1}
-      p={1}
     >
       <RoomActionTemperature id={id} room={room} />
+      {room.temperature && room.main_light && (
+        <Stack py={1}>
+          <Divider orientation="vertical" />
+        </Stack>
+      )}
       <RoomActionMainLight
         id={id}
         room={room}

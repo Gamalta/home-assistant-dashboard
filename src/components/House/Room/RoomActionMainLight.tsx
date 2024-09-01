@@ -1,12 +1,12 @@
 import {HouseConfig} from '../config';
 import {motion} from 'framer-motion';
-import Fab from '@mui/material/Fab';
 import {alpha} from '@mui/material/styles';
 import {PendantRoundIcon} from '../../Icons/PendantRoundIcon';
 import {LightModal} from '../../Modal/Type/LightModal';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {HassEntityWithService} from '@hakit/core';
+import Button from '@mui/material/Button';
 
 type RoomActionMainLightProps = {
   id: string;
@@ -29,12 +29,15 @@ export function RoomActionMainLight(props: RoomActionMainLightProps) {
   return (
     <>
       <motion.div layoutId={`${id}-light`}>
-        <Fab
-          variant="extended"
-          size="small"
+        <Button
+          variant="text"
           sx={{
-            bgcolor:
-              mainLight.state === 'on' ? mainLight.custom.hexColor : undefined,
+            minWidth: 0,
+            bgcolor: 'transparent',
+            color:
+              mainLight.state === 'on'
+                ? mainLight.custom.hexColor
+                : 'text.secondary',
             '&:hover': {
               bgcolor:
                 mainLight.state === 'on'
@@ -45,7 +48,7 @@ export function RoomActionMainLight(props: RoomActionMainLightProps) {
           {...lightLongPress}
         >
           <PendantRoundIcon />
-        </Fab>
+        </Button>
       </motion.div>
       <LightModal
         id={`${id}-light`}
