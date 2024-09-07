@@ -6,7 +6,7 @@ import {ThemeIcon} from '../Icons/ThemeIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
-import {themeType, useThemeMode} from '../../hooks/useThemeMode';
+import {themeType, useThemeContext} from '../../contexts/ThemeProvider';
 
 type SideBarDockProps = {
   sideBarRef: React.RefObject<HTMLDivElement>;
@@ -17,7 +17,7 @@ export function SideBarDock(props: SideBarDockProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
-  const {mode, handleThemeChange} = useThemeMode();
+  const {themeMode, setTheme} = useThemeContext();
 
   useEffect(() => {
     if (!sideBarRef?.current) return;
@@ -56,7 +56,7 @@ export function SideBarDock(props: SideBarDockProps) {
   }, [isVisible, sideBarRef, startY]);
 
   const handleMenuClick = (newTheme: themeType) => {
-    handleThemeChange(newTheme);
+    setTheme(newTheme);
     setThemeAnchor(null);
     setIsVisible(false);
   };
@@ -75,12 +75,12 @@ export function SideBarDock(props: SideBarDockProps) {
           borderRadius="50px"
           p={theme => theme.spacing(1, 2)}
         >
-          {mode && (
+          {themeMode && (
             <>
               <IconButton
                 onClick={event => setThemeAnchor(event.currentTarget)}
               >
-                <ThemeIcon /> {mode}
+                <ThemeIcon />
               </IconButton>
               <Menu
                 anchorEl={themeAnchor}
@@ -98,7 +98,7 @@ export function SideBarDock(props: SideBarDockProps) {
                   <MenuItem
                     key={option.value}
                     onClick={() => handleMenuClick(option.value as themeType)}
-                    selected={mode === option.value}
+                    selected={themeMode === option.value}
                   >
                     {option.name}
                   </MenuItem>
