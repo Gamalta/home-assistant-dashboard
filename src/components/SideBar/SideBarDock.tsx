@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import {themeType, useThemeContext} from '../../contexts/ThemeProvider';
+import {AnimatePresence, motion} from 'framer-motion';
 
 type SideBarDockProps = {
   sideBarRef: React.RefObject<HTMLDivElement>;
@@ -56,24 +57,31 @@ export function SideBarDock(props: SideBarDockProps) {
   }, [isVisible, sideBarRef, startY]);
 
   const handleMenuClick = (newTheme: themeType) => {
-    setTheme(newTheme);
     setThemeAnchor(null);
-    setIsVisible(false);
+    setTheme(newTheme);
+
+    setTimeout(() => {
+      setIsVisible(false);
+    }, 250);
   };
 
   return (
-    <>
+    <AnimatePresence>
       {isVisible && (
         <Stack
+          component={motion.div}
           position="absolute"
           direction="row"
           bottom={theme => theme.spacing(2)}
           right="50%"
           justifyContent="center"
-          sx={{transform: 'translateX(50%)'}}
           bgcolor="background.tertiary"
           borderRadius="50px"
           p={theme => theme.spacing(1, 2)}
+          initial={{opacity: 0, x: '50%', y: 50}}
+          animate={{opacity: 1, y: 0}}
+          exit={{opacity: 0, y: 50}}
+          transition={{duration: 0.5}}
         >
           {themeMode && (
             <>
@@ -113,6 +121,6 @@ export function SideBarDock(props: SideBarDockProps) {
           <Button>settings</Button>
         </Stack>
       )}
-    </>
+    </AnimatePresence>
   );
 }
