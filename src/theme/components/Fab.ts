@@ -2,8 +2,8 @@ import {Components} from '@mui/material/styles';
 
 export const MuiFab: Components['MuiFab'] = {
   styleOverrides: {
-    root: () => ({
+    root: {
       zIndex: 1,
-    }),
+    },
   },
 };

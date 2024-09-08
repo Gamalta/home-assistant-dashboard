@@ -5,6 +5,7 @@ import {MuiFab} from './components/Fab';
 import {MuiButton} from './components/Button';
 import {MuiToggleButton} from './components/ToggleButton';
 import {MuiTooltip} from './components/Tooltip';
+import {MuiCssBaseline} from './components/MuiCssBaseline';
 
 // Base theme constants
 export const theme = responsiveFontSizes(
@@ -19,6 +20,7 @@ export const theme = responsiveFontSizes(
     spacing: 8,
     typography: Typography,
     components: {
+      MuiCssBaseline,
       MuiToggleButton,
       MuiButton,
       MuiFab,
