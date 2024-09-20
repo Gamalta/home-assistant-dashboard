@@ -14,13 +14,15 @@ type WeatherDisplayProps = {
 export function WeatherDisplay(props: WeatherDisplayProps) {
   const {weather: weatherEntity} = props;
   const weather = useWeather(weatherEntity, {type: 'daily'});
-
-  const temperature = 27;
   let condition = weather?.state;
 
   if (!condition || condition === 'unknown') condition = 'sunny';
   if (condition === 'execptional') condition = 'lightning-rainy';
   if (condition === 'windy-variant') condition = 'windy';
+
+  const date = new Date();
+  if ((condition === 'sunny' && date.getHours() > 19) || date.getHours() < 7)
+    condition = 'clear-night';
 
   return (
     <Stack justifyContent="end" spacing={1}>
@@ -39,7 +41,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
       />
       {}
       <Typography variant="h6" color="text.secondary" textAlign="center">
-        {temperature}°
+        {weather.attributes.temperature ?? '--'}°
       </Typography>
     </Stack>
   );
