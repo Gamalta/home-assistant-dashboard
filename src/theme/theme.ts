@@ -1,18 +1,26 @@
 import {createTheme, responsiveFontSizes} from '@mui/material/styles';
 import {Typography} from './Typography';
-import {Palette} from './Palette';
+import {DarkPalette, LightPalette} from './Palette';
 import {MuiFab} from './components/Fab';
 import {MuiButton} from './components/Button';
 import {MuiToggleButton} from './components/ToggleButton';
 import {MuiTooltip} from './components/Tooltip';
+import {MuiCssBaseline} from './components/MuiCssBaseline';
 
 // Base theme constants
 export const theme = responsiveFontSizes(
   createTheme({
+    cssVariables: {
+      colorSchemeSelector: 'class',
+    },
+    colorSchemes: {
+      dark: DarkPalette,
+      light: LightPalette,
+    },
     spacing: 8,
-    palette: Palette,
     typography: Typography,
     components: {
+      MuiCssBaseline,
       MuiToggleButton,
       MuiButton,
       MuiFab,
@@ -23,3 +31,9 @@ export const theme = responsiveFontSizes(
     },
   })
 );
+
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    tertiary: string;
+  }
+}

@@ -31,7 +31,7 @@ export function DistanceDisplay(props: DistanceDisplayProps) {
     } else if (atWork) {
       return 'Au travail';
     } else {
-      return `${distance} Km`;
+      return `${(distance / 1000).toFixed(2)} Km`;
     }
   };
 

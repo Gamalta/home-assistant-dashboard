@@ -29,7 +29,7 @@ export function House() {
     const interval = setInterval(updateOpacity, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return (
     <Stack

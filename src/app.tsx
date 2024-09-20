@@ -1,14 +1,11 @@
 //import {HassConnect} from '@hakit/core';
 import Dashboard from './Dashboard';
-import CssBaseline from '@mui/material/CssBaseline';
-import {theme} from './theme/theme';
-import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import {HassConnect} from '@hakit/core';
+import {ThemeProvider} from './contexts/ThemeProvider';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <ThemeProvider>
       <HassConnect hassUrl={import.meta.env.VITE_HA_URL}>
         <Dashboard />
       </HassConnect>

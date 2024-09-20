@@ -45,8 +45,8 @@ export function PersonCard(props: PersonCardProps) {
     <Stack
       alignItems="center"
       width="100%"
-      bgcolor="#3A3A3C"
       borderRadius={1}
+      bgcolor="background.tertiary"
       p={theme => theme.spacing(1, 2)}
     >
       <Stack position="relative">
