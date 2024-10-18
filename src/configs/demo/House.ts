@@ -1,7 +1,9 @@
-import {FilterByDomain, EntityName} from '@hakit/core';
+import {HouseConfigType, SideBarConfigType} from '../house';
 
-export const SideBarConfig: SideBarConfig = {
-  weather: 'weather.weather',
+export const ConfigName = 'Démo';
+
+export const SideBarConfig: SideBarConfigType = {
+  weather: 'weather.home',
   persons: [
     {
       name: 'Elise',
@@ -28,7 +30,7 @@ export const SideBarConfig: SideBarConfig = {
   ],
 };
 
-export const HouseConfig: HouseConfig = {
+export const HouseConfig: HouseConfigType = {
   night_floor_plan: `${import.meta.env.BASE_URL}/base_night.png`,
   day_floor_plan: `${import.meta.env.BASE_URL}/base_day.png`,
   rooms: [
@@ -131,48 +133,4 @@ export const HouseConfig: HouseConfig = {
       },
     },
   ],
-};
-
-export type SideBarConfig = {
-  weather: FilterByDomain<EntityName, 'weather'>;
-  persons: [PersonConfig, PersonConfig];
-};
-
-export type PersonConfig = {
-  name: string;
-  avatar: string;
-  entity: string;
-  home_zone?: FilterByDomain<EntityName, 'zone'>;
-  home_distance?: FilterByDomain<EntityName, 'sensor'>;
-  work_zone?: FilterByDomain<EntityName, 'zone'>;
-  focus?: FilterByDomain<EntityName, 'binary_sensor'>;
-  battery_level?: FilterByDomain<EntityName, 'sensor'>;
-  battery_state?: FilterByDomain<EntityName, 'sensor'>;
-};
-
-export type HouseConfig = {
-  night_floor_plan: string;
-  day_floor_plan: string;
-  rooms: {
-    id: string;
-    name: string;
-    temperature?: {
-      entity: FilterByDomain<EntityName, 'sensor'>;
-      humidity?: FilterByDomain<EntityName, 'sensor'>;
-      battery?: FilterByDomain<EntityName, 'sensor'>;
-      signal?: FilterByDomain<EntityName, 'sensor'>;
-    };
-    main_light?: LightConfig;
-    lights?: LightConfig[];
-  }[];
-};
-
-export type LightConfig = {
-  entity_id: FilterByDomain<EntityName, 'light'>;
-  layer: {
-    red: string;
-    green: string;
-    blue: string;
-  };
-  position: {x: number; y: number};
 };

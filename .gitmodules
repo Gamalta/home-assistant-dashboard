@@ -1,0 +1,3 @@
+[submodule "src/configs/apartment"]
+	path = src/configs/apartment
+	url = https://github.com/Gamalta/home-assistant-dashboard-private-config.git
