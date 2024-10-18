@@ -8,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import {themeType, useThemeContext} from '../../contexts/ThemeProvider';
 import {AnimatePresence, motion} from 'framer-motion';
+import {ConfigType, HouseConfigsName, loadConfig} from '../../configs/configs';
+import {useHouseContext} from '../../contexts/HouseContext';
 
 type SideBarDockProps = {
   sideBarRef: React.RefObject<HTMLDivElement>;
@@ -18,7 +20,10 @@ export function SideBarDock(props: SideBarDockProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
+  const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
+  const [configs, setConfigs] = useState<ConfigType[]>([]);
   const {themeMode, setTheme} = useThemeContext();
+  const {config, setConfig} = useHouseContext();
 
   useEffect(() => {
     if (!sideBarRef?.current) return;
@@ -56,9 +61,27 @@ export function SideBarDock(props: SideBarDockProps) {
     };
   }, [isVisible, sideBarRef, startY]);
 
-  const handleMenuClick = (newTheme: themeType) => {
+  useEffect(() => {
+    if (!configAnchor) return;
+    async function loadConfigs() {
+      const promises = HouseConfigsName.map(name => loadConfig(name));
+      setConfigs(await Promise.all(promises));
+    }
+    loadConfigs();
+  }, [configAnchor]);
+
+  const handleThemeMenuClick = (newTheme: themeType) => {
     setThemeAnchor(null);
     setTheme(newTheme);
+
+    setTimeout(() => {
+      setIsVisible(false);
+    }, 250);
+  };
+
+  const handleConfigMenuClick = (newConfig: ConfigType) => {
+    setConfigAnchor(null);
+    setConfig(newConfig);
 
     setTimeout(() => {
       setIsVisible(false);
@@ -105,7 +128,9 @@ export function SideBarDock(props: SideBarDockProps) {
                 ].map(option => (
                   <MenuItem
                     key={option.value}
-                    onClick={() => handleMenuClick(option.value as themeType)}
+                    onClick={() =>
+                      handleThemeMenuClick(option.value as themeType)
+                    }
                     selected={themeMode === option.value}
                   >
                     {option.name}
@@ -115,6 +140,30 @@ export function SideBarDock(props: SideBarDockProps) {
               <Stack py={0.5}>
                 <Divider orientation="vertical" />
               </Stack>
+            </>
+          )}
+          {HouseConfigsName.length > 1 && (
+            <>
+              <Button onClick={event => setConfigAnchor(event.currentTarget)}>
+                Configuration
+              </Button>
+              <Menu
+                anchorEl={configAnchor}
+                open={Boolean(configAnchor)}
+                onClose={() => setConfigAnchor(null)}
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
+              >
+                {configs.map(option => (
+                  <MenuItem
+                    key={option.id}
+                    onClick={() => handleConfigMenuClick(option)}
+                    selected={config?.id === option.id}
+                  >
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Menu>
             </>
           )}
           <Button>settings</Button>
