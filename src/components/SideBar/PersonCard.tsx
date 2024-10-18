@@ -6,10 +6,10 @@ import Tooltip from '@mui/material/Tooltip';
 import NightlightIcon from '@mui/icons-material/NightlightRound';
 import {BatteryDisplay} from '../display/BatteryDisplay';
 import {DistanceDisplay} from '../display/DistanceDisplay';
-import type {PersonConfigType} from '../../configs/house';
+import {PersonConfigType} from '../../configs/house';
 
 type PersonCardProps = {
-  person?: PersonConfig;
+  person?: PersonConfigType;
 };
 
 export function PersonCard(props: PersonCardProps) {

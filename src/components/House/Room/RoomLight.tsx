@@ -1,10 +1,10 @@
 import {HassEntityWithService} from '@hakit/core';
-import {LightConfig} from '../config';
 import {FloatingAction} from '../FloatingAction';
 import {useIcon} from '../../../hooks/useIcon';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {useLongPress} from '../../../hooks/useLongPress';
 import Button from '@mui/material/Button';
+import {LightConfigType} from '../../../configs/house';
 
 type RoomLightProps = {
   parameters: {
