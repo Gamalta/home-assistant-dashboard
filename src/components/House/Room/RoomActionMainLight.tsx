@@ -1,4 +1,4 @@
-import {HouseConfig} from '../config';
+import type {HouseConfigType} from '../../../configs/house';
 import {motion} from 'framer-motion';
 import {alpha} from '@mui/material/styles';
 import {PendantRoundIcon} from '../../Icons/PendantRoundIcon';
@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 type RoomActionMainLightProps = {
   id: string;
-  room: (typeof HouseConfig)['rooms'][0];
+  room: HouseConfigType['rooms'][0];
   mainLight?: HassEntityWithService<'light'>;
   lights?: HassEntityWithService<'light'>[];
 };

@@ -1,15 +1,15 @@
-import {HouseConfig} from './config';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Room} from './Room';
 import {useEffect, useState} from 'react';
+import Alert from '@mui/material/Alert';
+import {CircularProgress} from '@mui/material';
 
 export function House() {
-  const config = HouseConfig;
-  const {room, setRoom} = useHouseContext();
+  const {config} = useHouseContext();
+  const houseConfig = config?.house;
   const [nightOpacity, setNightOpacity] = useState(0);
+  const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
     const updateOpacity = () => {
@@ -31,6 +31,32 @@ export function House() {
     return () => clearInterval(interval);
   });
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!houseConfig) {
+    if (showLoading) {
+      return (
+        <Stack height="100%" justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Stack>
+      );
+    } else {
+      return (
+        <Stack height="100%" justifyContent="center" alignItems="center">
+          <Alert severity="error" variant="filled">
+            Impossible de charger la configuration.
+          </Alert>
+        </Stack>
+      );
+    }
+  }
+
   return (
     <Stack
       position="relative"
@@ -49,19 +75,11 @@ export function House() {
         },
       }}
     >
-      <img src={config.day_floor_plan} />
-      <img src={config.night_floor_plan} style={{opacity: nightOpacity}} />
-      {config.rooms.map(room => (
+      <img src={houseConfig.day_floor_plan} />
+      <img src={houseConfig.night_floor_plan} style={{opacity: nightOpacity}} />
+      {houseConfig.rooms.map(room => (
         <Room key={room.id} room={room} />
       ))}
-      {room && (
-        <Button
-          onClick={() => setRoom(null)}
-          sx={{position: 'absolute', top: 0, left: 0}}
-        >
-          <ArrowBackRoundedIcon />
-        </Button>
-      )}
     </Stack>
   );
 }

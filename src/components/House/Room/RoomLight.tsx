@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 type RoomLightProps = {
   parameters: {
     light: HassEntityWithService<'light'> | null;
-    config?: LightConfig;
+    config?: LightConfigType;
   };
 };
 

@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography';
-import {PersonConfig} from '../House/config';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import {useEntity} from '@hakit/core';
@@ -7,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import NightlightIcon from '@mui/icons-material/NightlightRound';
 import {BatteryDisplay} from '../display/BatteryDisplay';
 import {DistanceDisplay} from '../display/DistanceDisplay';
+import type {PersonConfigType} from '../../configs/house';
 
 type PersonCardProps = {
   person?: PersonConfig;
