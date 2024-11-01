@@ -22,5 +22,6 @@ export const loadConfig = async (configId = HouseConfigsName[0]) => {
     } as ConfigType;
   } catch (error) {
     console.error(`Failed to load config: ${configId}`, error);
+    return null;
   }
 };

@@ -67,9 +67,7 @@ export function SideBarDock(props: SideBarDockProps) {
       const promises = HouseConfigsName.map(name => loadConfig(name));
       const loadedConfigs = await Promise.all(promises);
       setConfigs(
-        loadedConfigs.filter(
-          (config): config is ConfigType => config !== undefined
-        )
+        loadedConfigs.filter(config => config !== null) as ConfigType[]
       );
     }
     loadConfigs();
