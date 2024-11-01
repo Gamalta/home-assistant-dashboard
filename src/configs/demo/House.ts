@@ -1,7 +1,29 @@
-import {FilterByDomain, EntityName} from '@hakit/core';
+import {HouseConfigType, SideBarConfigType} from '../house';
+import baseDay from './assets/base_day.png';
+import baseNight from './assets/base_night.png';
+import salonRed from './assets/light/salon_red.png';
+import salonGreen from './assets/light/salon_green.png';
+import salonBlue from './assets/light/salon_blue.png';
+import salonPlayRed from './assets/light/salon_play_red.png';
+import salonPlayGreen from './assets/light/salon_play_green.png';
+import salonPlayBlue from './assets/light/salon_play_blue.png';
+import bedroomRed from './assets/light/bedroom_red.png';
+import bedroomGreen from './assets/light/bedroom_green.png';
+import bedroomBlue from './assets/light/bedroom_blue.png';
+import bedroom2Red from './assets/light/bedroom2_red.png';
+import bedroom2Green from './assets/light/bedroom2_green.png';
+import bedroom2Blue from './assets/light/bedroom2_blue.png';
+import officeRed from './assets/light/office_red.png';
+import officeGreen from './assets/light/office_green.png';
+import officeBlue from './assets/light/office_blue.png';
+import officeIrisRed from './assets/light/office_iris_red.png';
+import officeIrisGreen from './assets/light/office_iris_green.png';
+import officeIrisBlue from './assets/light/office_iris_blue.png';
 
-export const SideBarConfig: SideBarConfig = {
-  weather: 'weather.weather',
+export const ConfigName = 'Démo';
+
+export const SideBarConfig: SideBarConfigType = {
+  weather: 'weather.home',
   persons: [
     {
       name: 'Elise',
@@ -28,9 +50,9 @@ export const SideBarConfig: SideBarConfig = {
   ],
 };
 
-export const HouseConfig: HouseConfig = {
-  night_floor_plan: `${import.meta.env.BASE_URL}/base_night.png`,
-  day_floor_plan: `${import.meta.env.BASE_URL}/base_day.png`,
+export const HouseConfig: HouseConfigType = {
+  night_floor_plan: baseNight,
+  day_floor_plan: baseDay,
   rooms: [
     {
       id: 'Salon',
@@ -38,9 +60,9 @@ export const HouseConfig: HouseConfig = {
       main_light: {
         entity_id: 'light.salon_main',
         layer: {
-          red: `${import.meta.env.BASE_URL}/light/salon_red.png`,
-          green: `${import.meta.env.BASE_URL}/light/salon_green.png`,
-          blue: `${import.meta.env.BASE_URL}/light/salon_blue.png`,
+          red: salonRed,
+          green: salonGreen,
+          blue: salonBlue,
         },
         position: {x: 54, y: 35},
       },
@@ -54,9 +76,9 @@ export const HouseConfig: HouseConfig = {
         {
           entity_id: 'light.salon_hue_play',
           layer: {
-            red: `${import.meta.env.BASE_URL}/light/salon_play_red.png`,
-            green: `${import.meta.env.BASE_URL}/light/salon_play_green.png`,
-            blue: `${import.meta.env.BASE_URL}/light/salon_play_blue.png`,
+            red: salonPlayRed,
+            green: salonPlayGreen,
+            blue: salonPlayBlue,
           },
           position: {x: 61, y: 22},
         },
@@ -68,9 +90,9 @@ export const HouseConfig: HouseConfig = {
       main_light: {
         entity_id: 'light.office_main',
         layer: {
-          red: `${import.meta.env.BASE_URL}/light/office_red.png`,
-          green: `${import.meta.env.BASE_URL}/light/office_green.png`,
-          blue: `${import.meta.env.BASE_URL}/light/office_blue.png`,
+          red: officeRed,
+          green: officeGreen,
+          blue: officeBlue,
         },
         position: {x: 24, y: 77},
       },
@@ -84,9 +106,9 @@ export const HouseConfig: HouseConfig = {
         {
           entity_id: 'light.office_hue_iris',
           layer: {
-            red: `${import.meta.env.BASE_URL}/light/office_iris_red.png`,
-            green: `${import.meta.env.BASE_URL}/light/office_iris_green.png`,
-            blue: `${import.meta.env.BASE_URL}/light/office_iris_blue.png`,
+            red: officeIrisRed,
+            green: officeIrisGreen,
+            blue: officeIrisBlue,
           },
           position: {x: 21, y: 67},
         },
@@ -98,9 +120,9 @@ export const HouseConfig: HouseConfig = {
       main_light: {
         entity_id: 'light.bedroom_main',
         layer: {
-          red: `${import.meta.env.BASE_URL}/light/bedroom_red.png`,
-          green: `${import.meta.env.BASE_URL}/light/bedroom_green.png`,
-          blue: `${import.meta.env.BASE_URL}/light/bedroom_blue.png`,
+          red: bedroomRed,
+          green: bedroomGreen,
+          blue: bedroomBlue,
         },
         position: {x: 72, y: 75},
       },
@@ -117,9 +139,9 @@ export const HouseConfig: HouseConfig = {
       main_light: {
         entity_id: 'light.bedroom_2_main',
         layer: {
-          red: `${import.meta.env.BASE_URL}/light/bedroom_2_red.png`,
-          green: `${import.meta.env.BASE_URL}/light/bedroom_2_green.png`,
-          blue: `${import.meta.env.BASE_URL}/light/bedroom_2_blue.png`,
+          red: bedroom2Red,
+          green: bedroom2Green,
+          blue: bedroom2Blue,
         },
         position: {x: 75, y: 30},
       },
@@ -131,48 +153,4 @@ export const HouseConfig: HouseConfig = {
       },
     },
   ],
-};
-
-export type SideBarConfig = {
-  weather: FilterByDomain<EntityName, 'weather'>;
-  persons: [PersonConfig, PersonConfig];
-};
-
-export type PersonConfig = {
-  name: string;
-  avatar: string;
-  entity: string;
-  home_zone?: FilterByDomain<EntityName, 'zone'>;
-  home_distance?: FilterByDomain<EntityName, 'sensor'>;
-  work_zone?: FilterByDomain<EntityName, 'zone'>;
-  focus?: FilterByDomain<EntityName, 'binary_sensor'>;
-  battery_level?: FilterByDomain<EntityName, 'sensor'>;
-  battery_state?: FilterByDomain<EntityName, 'sensor'>;
-};
-
-export type HouseConfig = {
-  night_floor_plan: string;
-  day_floor_plan: string;
-  rooms: {
-    id: string;
-    name: string;
-    temperature?: {
-      entity: FilterByDomain<EntityName, 'sensor'>;
-      humidity?: FilterByDomain<EntityName, 'sensor'>;
-      battery?: FilterByDomain<EntityName, 'sensor'>;
-      signal?: FilterByDomain<EntityName, 'sensor'>;
-    };
-    main_light?: LightConfig;
-    lights?: LightConfig[];
-  }[];
-};
-
-export type LightConfig = {
-  entity_id: FilterByDomain<EntityName, 'light'>;
-  layer: {
-    red: string;
-    green: string;
-    blue: string;
-  };
-  position: {x: number; y: number};
 };

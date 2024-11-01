@@ -1,10 +1,10 @@
 import {HassEntityWithService} from '@hakit/core';
-import {LightConfig} from '../config';
+import type {LightConfigType} from '../../../configs/house';
 
 type RoomLightImage = {
   parameters: {
     light: HassEntityWithService<'light'> | null;
-    config?: LightConfig;
+    config?: LightConfigType;
   };
 };
 

@@ -21,17 +21,6 @@ export default function Dashboard() {
             <House />
           </Stack>
         </FloatingActionProvider>
-        {/*<LightGroupCard
-          entityGroup="light.sejour"
-          entities={['light.hue_iris', 'light.salon']}
-          icon={<IrisIcon />}
-          />
-          <LightGroupCard
-          entityGroup="light.cuisine"
-          entities={['light.hue_play_1']}
-          icon={<IrisIcon />}
-          />
-        <ButtonCard entity="light.sejour" /> */}
       </Stack>
     </HouseProvider>
   );

@@ -1,5 +1,6 @@
 interface CustomEnv {
   VITE_HA_URL: string;
+  VITE_HOUSE_CONFIGS: string[];
   [key: string]: unknown;
 }
 

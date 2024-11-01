@@ -30,7 +30,7 @@ export function Container(props: ContainerProps) {
       maxHeight="calc(100% - 4rem)"
       alignItems="stretch"
       boxShadow="0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)"
-      bgcolor="background.default"
+      bgcolor="background.paper"
       borderRadius={1}
       overflow="hidden"
       p={2}

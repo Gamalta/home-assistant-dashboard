@@ -2,8 +2,8 @@ import {Components} from '@mui/material/styles';
 
 export const MuiToggleButton: Components['MuiToggleButton'] = {
   styleOverrides: {
-    root: () => ({
+    root: {
       borderRadius: 50,
-    }),
+    },
   },
 };

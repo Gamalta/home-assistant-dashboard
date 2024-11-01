@@ -1,13 +1,15 @@
 import {HassEntityWithService} from '@hakit/core';
 import {motion} from 'framer-motion';
 import {FloatingAction} from '../FloatingAction';
-import {HouseConfig} from '../config';
+import type {HouseConfigType} from '../../../configs/house';
 import {RoomActionTemperature} from './RoomActionTemperature';
 import {RoomActionMainLight} from './RoomActionMainLight';
+import Divider from '@mui/material/Divider';
+import {Stack} from '@mui/material';
 
 type RoomActionProps = {
   id: string;
-  room: (typeof HouseConfig)['rooms'][0];
+  room: HouseConfigType['rooms'][0];
   position: {x: number; y: number};
   mainLight?: HassEntityWithService<'light'>;
   lights?: HassEntityWithService<'light'>[];
@@ -20,13 +22,16 @@ export function RoomAction(props: RoomActionProps) {
     <FloatingAction
       component={motion.div}
       pos={position}
-      bgcolor="background.default"
+      bgcolor="background.paper"
       direction="row"
       borderRadius="50px"
-      spacing={1}
-      p={1}
     >
       <RoomActionTemperature id={id} room={room} />
+      {room.temperature && room.main_light && (
+        <Stack py={1}>
+          <Divider orientation="vertical" />
+        </Stack>
+      )}
       <RoomActionMainLight
         id={id}
         room={room}

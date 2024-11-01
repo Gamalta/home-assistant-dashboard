@@ -1,15 +1,14 @@
 import {UNKNOWN, useEntity} from '@hakit/core';
-import {HouseConfig} from '../config';
+import type {HouseConfigType} from '../../../configs/house';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {motion} from 'framer-motion';
-import Fab from '@mui/material/Fab';
-import {ThermostatIcon} from '../../Icons/ThermostatIcon';
 import {TemperatureModal} from '../../Modal/Type/TemperatureModal';
+import Button from '@mui/material/Button';
 
 type RoomActionTemperature = {
   id: string;
-  room: (typeof HouseConfig)['rooms'][0];
+  room: HouseConfigType['rooms'][0];
 };
 
 export function RoomActionTemperature(props: RoomActionTemperature) {
@@ -49,10 +48,21 @@ export function RoomActionTemperature(props: RoomActionTemperature) {
   return (
     <>
       <motion.div layoutId={`${id}-temp`}>
-        <Fab size="small" variant="extended" {...tempLongPress}>
-          <ThermostatIcon />
-          {`${temperature.state === UNKNOWN ? '-' : temperature.state}°C`}
-        </Fab>
+        <Button
+          variant="text"
+          sx={{
+            minWidth: 0,
+            bgcolor: 'transparent',
+            color: 'text.secondary',
+          }}
+          {...tempLongPress}
+        >
+          {`${
+            temperature.state === UNKNOWN
+              ? '-'
+              : Math.floor(Number(temperature.state))
+          }°`}
+        </Button>
       </motion.div>
       <TemperatureModal
         id={`${id}-temp`}

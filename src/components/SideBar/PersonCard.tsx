@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography';
-import {PersonConfig} from '../House/config';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import {useEntity} from '@hakit/core';
@@ -7,33 +6,32 @@ import Tooltip from '@mui/material/Tooltip';
 import NightlightIcon from '@mui/icons-material/NightlightRound';
 import {BatteryDisplay} from '../display/BatteryDisplay';
 import {DistanceDisplay} from '../display/DistanceDisplay';
+import {PersonConfigType} from '../../configs/house';
 
 type PersonCardProps = {
-  person: PersonConfig;
+  person?: PersonConfigType;
 };
 
 export function PersonCard(props: PersonCardProps) {
   const {person} = props;
-  const focused = useEntity(person.focus ?? 'unknown', {
+  const focused = useEntity(person?.focus ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const homeDistance = useEntity(person.home_distance ?? 'unknown', {
+  const homeDistance = useEntity(person?.home_distance ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const batteryLevel = useEntity(person.battery_level ?? 'unknown', {
+  const batteryLevel = useEntity(person?.battery_level ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const batteryState = useEntity(person.battery_state ?? 'unknown', {
+  const batteryState = useEntity(person?.battery_state ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const homeZone = useEntity(person.home_zone ?? 'unknown', {
+  const homeZone = useEntity(person?.home_zone ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const workZone = useEntity(person.work_zone ?? 'unknown', {
+  const workZone = useEntity(person?.work_zone ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-
-  console.log('homeZone', homeZone);
 
   const toLocalTime = (date: string) => {
     const time = new Date(date);
@@ -47,15 +45,15 @@ export function PersonCard(props: PersonCardProps) {
     <Stack
       alignItems="center"
       width="100%"
-      bgcolor="#3A3A3C"
       borderRadius={1}
+      bgcolor="background.tertiary"
       p={theme => theme.spacing(1, 2)}
     >
       <Stack position="relative">
         <Box
           p={0.5}
           component="img"
-          src={person.avatar}
+          src={person?.avatar}
           height="80px"
           width="80px"
           sx={{objectFit: 'contain'}}
@@ -79,14 +77,14 @@ export function PersonCard(props: PersonCardProps) {
         )}
       </Stack>
       <Typography variant="h6" color="primary.main">
-        {person.name}
+        {person?.name}
       </Typography>
       {homeDistance && (
         <DistanceDisplay
           type="text"
           distance={Number(homeDistance.state)}
-          atHome={homeZone?.attributes.persons?.includes(person.entity)}
-          atWork={workZone?.attributes.persons?.includes(person.entity)}
+          atHome={homeZone?.attributes.persons?.includes(person?.entity)}
+          atWork={workZone?.attributes.persons?.includes(person?.entity)}
         />
       )}
       {batteryLevel && (
