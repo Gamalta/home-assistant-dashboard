@@ -12,7 +12,7 @@ export type ConfigType = {
 };
 
 export const loadConfig = async (configId = HouseConfigsName[0]) => {
-  const module = await import(`./${configId}/House`);
+  const module = await import(`./${configId}/House.ts`);
   return {
     id: configId,
     name: module.ConfigName,
