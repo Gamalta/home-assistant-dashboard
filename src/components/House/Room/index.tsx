@@ -1,4 +1,4 @@
-import {useEntity} from '@hakit/core';
+import {HassEntityWithService, useEntity, useHass} from '@hakit/core';
 import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
@@ -11,6 +11,7 @@ type RoomProps = {
 
 export function Room(props: RoomProps) {
   const {room} = props;
+  const {getAllEntities} = useHass();
 
   const mainLight = {
     light: useEntity(room.main_light?.entity_id ?? 'unknown', {
@@ -18,12 +19,16 @@ export function Room(props: RoomProps) {
     }),
     config: room.main_light,
   };
-  const lights = room.lights?.map(light => ({
-    // TODO fix later
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    light: useEntity(light.entity_id),
-    config: light,
-  }));
+
+  const lights = Object.values(getAllEntities())
+    .filter(entity => entity.entity_id.startsWith('light.'))
+    .filter(entity =>
+      room.lights?.some(light => light.entity_id === entity.entity_id)
+    )
+    .map(entity => ({
+      light: entity as HassEntityWithService<'light'>,
+      config: room.lights?.find(light => light.entity_id === entity.entity_id),
+    }));
 
   return (
     <RoomProvider>
