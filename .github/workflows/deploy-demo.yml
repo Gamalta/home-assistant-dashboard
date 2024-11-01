@@ -43,4 +43,13 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} >deployment-url.txt 2>error.txt
+          code=$?
+          if [ $code -eq 0 ]; then
+              deploymentUrl=`cat deployment-url.txt`
+              vercel alias $deploymentUrl demo-home-assistant-dashboard.vercel.app
+          else
+              errorMessage=`cat error.txt`
+              echo "There was an error: $errorMessage"
+          fi
