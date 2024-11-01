@@ -17,7 +17,6 @@ export function SideBar() {
       ref={sideBarRef}
       position="relative"
       direction="column"
-      width="30%"
       height="100%"
       spacing={2}
       overflow="hidden"
