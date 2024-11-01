@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  install:
+  install-lint:
     runs-on: ubuntu-latest
 
     steps:
