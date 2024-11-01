@@ -1,4 +1,4 @@
-name: Vercel Staging Deployment
+name: Deploy Prod
 
 on:
   workflow_dispatch:
