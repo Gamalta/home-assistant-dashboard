@@ -35,7 +35,7 @@ export const HouseProvider = (props: HouseProviderProps) => {
     async function updateConfig() {
       const configName = window.localStorage.getItem('config') || undefined;
       const config = await loadConfig(configName);
-      setConfig(config);
+      if (config) setConfig(config);
     }
     updateConfig();
   }, [setConfig]);
