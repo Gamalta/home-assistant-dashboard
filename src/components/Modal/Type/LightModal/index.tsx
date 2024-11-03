@@ -24,7 +24,7 @@ type LightModalProps = Omit<ModalProps, 'children'>;
 export function LightModal(props: LightModalProps) {
   const {...modalProps} = props;
   const [tab, setTab] = useState(0);
-  const {lightEntities, mainLightEntity} = useRoomContext();
+  const {mainLightEntity, lightEntities} = useRoomContext();
 
   const entities = [mainLightEntity, ...lightEntities].filter(
     (entity): entity is HassEntityWithService<'light'> => entity !== undefined
