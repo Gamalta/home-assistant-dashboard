@@ -20,8 +20,9 @@ export function RoomLight(props: RoomLightProps) {
   useEffect(() => {
     if (!light) return;
     setLightEntities(prev => {
-      if (prev.find(li => li.entity_id === light.entity_id)) {
-        return prev;
+      const index = prev.findIndex(li => li.entity_id === light.entity_id);
+      if (index !== -1) {
+        return prev.map((li, i) => (i === index ? light : li));
       }
       return [...prev, light];
     });

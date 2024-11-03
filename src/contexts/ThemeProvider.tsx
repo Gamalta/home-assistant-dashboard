@@ -33,7 +33,6 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   const handleThemeChange = (newTheme: themeType) => {
     window.localStorage.setItem('theme', newTheme);
     setThemeMode(newTheme);
-    console.log('handleThemeChange', newTheme);
     newTheme === 'auto' ? autoTheming() : setMode(newTheme);
   };
 
