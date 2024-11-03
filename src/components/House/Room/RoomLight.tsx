@@ -19,7 +19,7 @@ export function RoomLight(props: RoomLightProps) {
 
   useEffect(() => {
     if (light) {
-      setLightEntities(prev => ({...prev, [light.entity_id]: light}));
+      setLightEntities(prev => [...prev, light]);
     }
   }, [light, setLightEntities]);
 
