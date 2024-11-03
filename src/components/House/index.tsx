@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {Room} from './Room';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import Alert from '@mui/material/Alert';
 import {CircularProgress} from '@mui/material';
 
@@ -43,26 +43,29 @@ export function House() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleResize = useCallback(async () => {
+    if (!baseImageRef) return;
+    if (!baseImageRef.naturalWidth || !baseImageRef.naturalHeight) {
+      await new Promise(resolve => setTimeout(resolve, 250));
+    }
+    const naturalWidth = baseImageRef.naturalWidth;
+    const naturalHeight = baseImageRef.naturalHeight;
+    const aspectRatio = naturalWidth / naturalHeight;
+    const {width, height} = baseImageRef.getBoundingClientRect();
+    if (width / height > aspectRatio) {
+      setImageSize({width: height * aspectRatio, height});
+    } else {
+      setImageSize({width, height: width / aspectRatio});
+    }
+  }, [baseImageRef]);
+
   useEffect(() => {
     if (!baseImageRef) return;
-
-    const handleResize = () => {
-      const naturalWidth = baseImageRef.naturalWidth;
-      const naturalHeight = baseImageRef.naturalHeight;
-      const aspectRatio = naturalWidth / naturalHeight;
-      const {width, height} = baseImageRef.getBoundingClientRect();
-      if (width / height > aspectRatio) {
-        setImageSize({width: height * aspectRatio, height});
-      } else {
-        setImageSize({width, height: width / aspectRatio});
-      }
-    };
-
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(baseImageRef);
 
     return () => resizeObserver.unobserve(baseImageRef);
-  }, [baseImageRef]);
+  }, [baseImageRef, handleResize]);
 
   if (!houseConfig) {
     if (showLoading) {
