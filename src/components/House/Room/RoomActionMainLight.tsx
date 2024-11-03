@@ -5,26 +5,23 @@ import {PendantRoundIcon} from '../../Icons/PendantRoundIcon';
 import {LightModal} from '../../Modal/Type/LightModal';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {useLongPress} from '../../../hooks/useLongPress';
-import {HassEntityWithService} from '@hakit/core';
 import Button from '@mui/material/Button';
 
 type RoomActionMainLightProps = {
   id: string;
   room: HouseConfigType['rooms'][0];
-  mainLight?: HassEntityWithService<'light'>;
-  lights?: HassEntityWithService<'light'>[];
 };
 
 export function RoomActionMainLight(props: RoomActionMainLightProps) {
-  const {id, room, mainLight, lights} = props;
-  const {lightModalOpen, setLightModalOpen} = useRoomContext();
+  const {id, room} = props;
+  const {lightModalOpen, setLightModalOpen, mainLightEntity} = useRoomContext();
 
   const lightLongPress = useLongPress(
     () => setLightModalOpen(true),
-    () => mainLight?.service.toggle()
+    () => mainLightEntity?.service.toggle()
   );
 
-  if (!mainLight) return;
+  if (!mainLightEntity) return;
 
   return (
     <>
@@ -35,13 +32,13 @@ export function RoomActionMainLight(props: RoomActionMainLightProps) {
             minWidth: 0,
             bgcolor: 'transparent',
             color:
-              mainLight.state === 'on'
-                ? mainLight.custom.hexColor
+              mainLightEntity.state === 'on'
+                ? mainLightEntity.custom.hexColor
                 : 'text.secondary',
             '&:hover': {
               bgcolor:
-                mainLight.state === 'on'
-                  ? alpha(mainLight.custom.hexColor, 0.8)
+                mainLightEntity.state === 'on'
+                  ? alpha(mainLightEntity.custom.hexColor, 0.8)
                   : undefined,
             },
           }}
@@ -54,8 +51,6 @@ export function RoomActionMainLight(props: RoomActionMainLightProps) {
         id={`${id}-light`}
         open={lightModalOpen}
         onClose={() => setLightModalOpen(false)}
-        mainEntity={mainLight}
-        entities={lights}
         title={`Lumière ${room.name}`}
       />
     </>

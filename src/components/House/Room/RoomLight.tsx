@@ -1,24 +1,28 @@
-import {HassEntityWithService} from '@hakit/core';
+import {useEntity} from '@hakit/core';
 import {FloatingAction} from '../FloatingAction';
 import {useIcon} from '../../../hooks/useIcon';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {useLongPress} from '../../../hooks/useLongPress';
 import Button from '@mui/material/Button';
 import {LightConfigType} from '../../../configs/house';
+import {useEffect} from 'react';
 
 type RoomLightProps = {
-  parameters: {
-    light: HassEntityWithService<'light'> | null;
-    config?: LightConfigType;
-  };
+  lightConfig: LightConfigType;
 };
 
 export function RoomLight(props: RoomLightProps) {
-  const {
-    parameters: {light, config},
-  } = props;
+  const {lightConfig} = props;
 
-  const {setLightModalOpen} = useRoomContext();
+  const {setLightModalOpen, setLightEntities} = useRoomContext();
+  const light = useEntity(lightConfig.entity_id, {returnNullIfNotFound: true});
+
+  useEffect(() => {
+    if (light) {
+      setLightEntities(prev => ({...prev, [light.entity_id]: light}));
+    }
+  }, [light, setLightEntities]);
+
   const unavailable = light?.state === 'unavailable';
 
   const lightLongPress = useLongPress(
@@ -29,7 +33,7 @@ export function RoomLight(props: RoomLightProps) {
   const icon = useIcon(light?.attributes.icon);
   return (
     <FloatingAction
-      pos={config?.position ?? {x: 0, y: 0}}
+      pos={lightConfig?.position ?? {x: 0, y: 0}}
       bgcolor="background.paper"
       borderRadius="50%"
     >

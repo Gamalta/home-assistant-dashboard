@@ -11,24 +11,27 @@ import {Modal, ModalProps} from '../..';
 import {ColorTempWheelIcon} from '../../../Icons/ColorTempWheelIcon';
 import {ColorTempTab} from './Tabs/ColorTempTab';
 import {EffectTab} from './Tabs/EffectTab';
-import {HassEntityWithService} from '@hakit/core';
 import {ColorTab} from './Tabs/ColorTab';
 import {LightModalProvider} from '../../../../contexts/LightModalContext';
 import {LightCard} from './components/LightCard';
 import Typography from '@mui/material/Typography';
 import {BrightnessSlider} from './components/BrightnessSlider';
+import {useRoomContext} from '../../../../contexts/RoomContext';
+import {HassEntityWithService} from '@hakit/core';
 
-type LightModalProps = Omit<ModalProps, 'children'> & {
-  mainEntity: HassEntityWithService<'light'>;
-  entities?: HassEntityWithService<'light'>[];
-};
+type LightModalProps = Omit<ModalProps, 'children'>;
 
 export function LightModal(props: LightModalProps) {
-  const {mainEntity, entities = [], ...modalProps} = props;
+  const {...modalProps} = props;
   const [tab, setTab] = useState(0);
+  const {lightEntities, mainLightEntity} = useRoomContext();
+
+  const entities = [mainLightEntity, ...lightEntities].filter(
+    (entity): entity is HassEntityWithService<'light'> => entity !== undefined
+  );
   return (
     <Modal {...modalProps}>
-      <LightModalProvider entities={[mainEntity, ...entities]}>
+      <LightModalProvider entities={entities}>
         <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack
             direction="row"
@@ -56,11 +59,10 @@ export function LightModal(props: LightModalProps) {
                 value=""
                 onClick={event => {
                   event.preventDefault();
-                  const allEntities = [mainEntity, ...entities];
-                  const oneWasEnable = allEntities.find(
+                  const oneWasEnable = entities.find(
                     entity => entity.state === 'on'
                   );
-                  allEntities.map(entity => {
+                  entities.map(entity => {
                     oneWasEnable
                       ? entity.service.turnOff()
                       : entity.service.turnOn();
@@ -85,7 +87,7 @@ export function LightModal(props: LightModalProps) {
           <Stack spacing={1}>
             <Typography variant="h6">Lumières</Typography>
             <Stack direction="row" gap={2} p={1}>
-              {[mainEntity, ...entities].map(entity => (
+              {entities.map(entity => (
                 <LightCard key={entity.entity_id} entity={entity} />
               ))}
             </Stack>

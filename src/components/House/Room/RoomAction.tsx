@@ -5,18 +5,25 @@ import type {HouseConfigType} from '../../../configs/house';
 import {RoomActionTemperature} from './RoomActionTemperature';
 import {RoomActionMainLight} from './RoomActionMainLight';
 import Divider from '@mui/material/Divider';
-import {Stack} from '@mui/material';
+import Stack from '@mui/material/Stack';
+import {useRoomContext} from '../../../contexts/RoomContext';
+import {useEffect} from 'react';
 
 type RoomActionProps = {
   id: string;
   room: HouseConfigType['rooms'][0];
   position: {x: number; y: number};
   mainLight?: HassEntityWithService<'light'>;
-  lights?: HassEntityWithService<'light'>[];
 };
 
 export function RoomAction(props: RoomActionProps) {
-  const {id, room, position, mainLight, lights} = props;
+  const {id, room, position, mainLight} = props;
+
+  const {setMainLightEntity} = useRoomContext();
+
+  useEffect(() => {
+    setMainLightEntity(mainLight);
+  }, [setMainLightEntity, mainLight]);
 
   return (
     <FloatingAction
@@ -32,12 +39,7 @@ export function RoomAction(props: RoomActionProps) {
           <Divider orientation="vertical" />
         </Stack>
       )}
-      <RoomActionMainLight
-        id={id}
-        room={room}
-        mainLight={mainLight}
-        lights={lights}
-      />
+      <RoomActionMainLight id={id} room={room} />
     </FloatingAction>
   );
 }

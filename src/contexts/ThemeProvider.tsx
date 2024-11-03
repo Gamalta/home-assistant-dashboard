@@ -33,21 +33,19 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   const handleThemeChange = (newTheme: themeType) => {
     window.localStorage.setItem('theme', newTheme);
     setThemeMode(newTheme);
-    newTheme === 'auto' ? autoTheming(mode) : setMode(newTheme);
+    console.log('handleThemeChange', newTheme);
+    newTheme === 'auto' ? autoTheming() : setMode(newTheme);
   };
 
-  const autoTheming = useCallback(
-    (mode: string | undefined) => {
-      if (themeMode !== 'auto') return;
-      const hour = new Date().getHours();
-      if (hour >= 6 && hour < 16 && mode !== 'light') {
-        setMode('light');
-      } else if (mode !== 'dark') {
-        setMode('dark');
-      }
-    },
-    [setMode, themeMode]
-  );
+  const autoTheming = useCallback(() => {
+    if (themeMode !== 'auto') return;
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 16) {
+      if (mode !== 'light') setMode('light');
+    } else {
+      if (mode !== 'dark') setMode('dark');
+    }
+  }, [setMode, themeMode, mode]);
 
   useEffect(() => {
     const theme = (window.localStorage.getItem('theme') || 'auto') as themeType;
@@ -56,10 +54,10 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   }, [setMode]);
 
   useEffect(() => {
-    autoTheming(mode);
-    const interval = setInterval(() => autoTheming(mode), 60000);
+    autoTheming();
+    const interval = setInterval(() => autoTheming(), 60000);
     return () => clearInterval(interval);
-  }, [autoTheming, mode]);
+  }, [autoTheming]);
 
   return (
     <>
