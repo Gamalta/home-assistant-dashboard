@@ -1,13 +1,11 @@
 import Stack from '@mui/material/Stack';
 import {House} from './components/House';
 import {HouseProvider} from './contexts/HouseContext';
-import {useRef, useState} from 'react';
-import {FloatingActionProvider} from './contexts/FloatingAction';
+import {useState} from 'react';
 import {SideBar} from './components/SideBar';
 import {Panel, PanelGroup, PanelResizeHandle} from 'react-resizable-panels';
 
 export default function Dashboard() {
-  const HouseContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   return (
     <HouseProvider>
@@ -41,11 +39,7 @@ export default function Dashboard() {
           </Stack>
         </PanelResizeHandle>
         <Panel defaultSize={70}>
-          <FloatingActionProvider containerRef={HouseContainerRef}>
-            <Stack ref={HouseContainerRef} position="relative" height="100%">
-              <House />
-            </Stack>
-          </FloatingActionProvider>
+          <House />
         </Panel>
       </PanelGroup>
     </HouseProvider>
