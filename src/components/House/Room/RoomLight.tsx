@@ -18,9 +18,13 @@ export function RoomLight(props: RoomLightProps) {
   const light = useEntity(lightConfig.entity_id, {returnNullIfNotFound: true});
 
   useEffect(() => {
-    if (light) {
-      setLightEntities(prev => [...prev, light]);
-    }
+    if (!light) return;
+    setLightEntities(prev => {
+      if (prev.find(li => li.entity_id === light.entity_id)) {
+        return prev;
+      }
+      return [...prev, light];
+    });
   }, [light, setLightEntities]);
 
   const unavailable = light?.state === 'unavailable';
