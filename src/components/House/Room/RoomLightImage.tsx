@@ -1,24 +1,19 @@
-import {HassEntityWithService} from '@hakit/core';
-import {LightConfig} from '../config';
+import {useEntity} from '@hakit/core';
+import type {LightConfigType} from '../../../configs/house';
 
 type RoomLightImage = {
-  parameters: {
-    light: HassEntityWithService<'light'> | null;
-    config?: LightConfig;
-  };
+  lightConfig: LightConfigType;
 };
 
 export function RoomLightImage(props: RoomLightImage) {
-  const {
-    parameters: {light, config},
-  } = props;
+  const {lightConfig} = props;
+  const light = useEntity(lightConfig.entity_id, {returnNullIfNotFound: true});
 
   if (!light || light.state !== 'on') return;
-
   return ['red', 'green', 'blue'].map((color, index) => (
     <img
       key={color}
-      src={config?.layer[color as 'red' | 'green' | 'blue']}
+      src={lightConfig?.layer[color as 'red' | 'green' | 'blue']}
       style={{
         mixBlendMode: 'lighten',
         opacity:

@@ -1,14 +1,14 @@
 import {useWeather} from '@hakit/core';
-import {SideBarConfig} from '../../House/config';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {keyframes} from '@mui/material/styles';
+import type {SideBarConfigType} from '../../../configs/house';
 
 const WEATHER_ICONS_PATH = 'weather/';
 
 type WeatherDisplayProps = {
-  weather: SideBarConfig['weather'];
+  weather: SideBarConfigType['weather'];
 };
 
 export function WeatherDisplay(props: WeatherDisplayProps) {

@@ -1,10 +1,10 @@
 import Stack from '@mui/material/Stack';
 import {DateTime} from './DateTime';
 import {WeatherDisplay} from './WeatherDisplay';
-import {SideBarConfig} from '../../House/config';
+import type {SideBarConfigType} from '../../../configs/house';
 
 type HeaderCardProps = {
-  weather: SideBarConfig['weather'];
+  weather?: SideBarConfigType['weather'];
 };
 
 export function HeaderCard(props: HeaderCardProps) {
@@ -19,7 +19,7 @@ export function HeaderCard(props: HeaderCardProps) {
       justifyContent="space-between"
     >
       <DateTime />
-      <WeatherDisplay weather={weather} />
+      {weather && <WeatherDisplay weather={weather} />}
     </Stack>
   );
 }

@@ -4,20 +4,21 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react';
-import {HouseConfig} from '../components/House/config';
+import {ConfigType, loadConfig} from '../configs/configs';
 
-type roomType = (typeof HouseConfig.rooms)[0] | null;
+type configType = ConfigType | undefined;
 
 type HouseContextType = {
-  room: roomType;
-  setRoom: Dispatch<SetStateAction<roomType>>;
+  config: configType;
+  setConfig: Dispatch<SetStateAction<configType>>;
 };
 
 const HouseContext = createContext<HouseContextType>({
-  room: null,
-  setRoom: () => {},
+  config: undefined,
+  setConfig: () => {},
 });
 
 export const useHouseContext = () => useContext(HouseContext);
@@ -28,10 +29,28 @@ type HouseProviderProps = {
 
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
-  const [room, setRoom] = useState<roomType>(null);
+  const [config, setConfig] = useState<configType>(undefined);
+
+  useEffect(() => {
+    async function updateConfig() {
+      const configName = window.localStorage.getItem('config') || undefined;
+      const config = await loadConfig(configName);
+      if (config) setConfig(config);
+    }
+    updateConfig();
+  }, [setConfig]);
+
+  useEffect(() => {
+    if (!config) return;
+    const oldConfigName = window.localStorage.getItem('config');
+
+    if (oldConfigName !== config.name) {
+      window.localStorage.setItem('config', config.id);
+    }
+  }, [config]);
 
   return (
-    <HouseContext.Provider value={{room, setRoom}}>
+    <HouseContext.Provider value={{config, setConfig}}>
       {children}
     </HouseContext.Provider>
   );

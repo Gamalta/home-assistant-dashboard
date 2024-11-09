@@ -1,5 +1,5 @@
 import {UNKNOWN, useEntity} from '@hakit/core';
-import {HouseConfig} from '../config';
+import type {HouseConfigType} from '../../../configs/house';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {motion} from 'framer-motion';
@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 
 type RoomActionTemperature = {
   id: string;
-  room: (typeof HouseConfig)['rooms'][0];
+  room: HouseConfigType['rooms'][0];
 };
 
 export function RoomActionTemperature(props: RoomActionTemperature) {
