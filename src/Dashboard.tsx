@@ -22,16 +22,19 @@ export default function Dashboard() {
         <PanelResizeHandle onDragging={setIsDragging}>
           <Stack
             height="100vh"
-            width="10px"
+            width="26px"
             display="flex"
             justifyContent="center"
+            bgcolor="background.primary"
             sx={{
               '&:hover': {div: {height: '10%'}},
             }}
+            borderRadius="0 16px 16px 0"
           >
             <Stack
               bgcolor={isDragging ? 'cyan' : 'grey'}
               width="5px"
+              m="0 0 0 16px"
               height={isDragging ? '10%' : '5%'}
               borderRadius="50px"
               sx={{transition: '500ms', opacity: isDragging ? 0.5 : 1}}

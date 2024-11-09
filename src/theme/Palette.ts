@@ -8,8 +8,9 @@ export const DarkPalette: ColorSystemOptions = {
       main: amber[600],
     },
     background: {
-      default: '#1C1C1E',
+      default: '#232323',
       paper: '#2C2C2E',
+      primary: '#1C1C1E',
       tertiary: '#3A3A3C',
     },
   },
@@ -22,8 +23,9 @@ export const LightPalette: ColorSystemOptions = {
       main: amber[700],
     },
     background: {
-      default: '#FFFFFF',
+      default: '#232323',
       paper: '#F2F2F7',
+      primary: '#FFFFFF',
       tertiary: '#FFFFFF',
     },
   },

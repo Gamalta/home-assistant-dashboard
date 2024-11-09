@@ -20,7 +20,8 @@ export function SideBar() {
       height="100%"
       spacing={2}
       overflow="hidden"
-      p={theme => theme.spacing(4, 2)}
+      bgcolor="background.primary"
+      p={theme => theme.spacing(4, 0, 4, 2)}
     >
       <HeaderCard weather={sideBarConfig?.weather} />
       <Stack spacing={2} p={2} bgcolor="background.paper" borderRadius={2}>

@@ -34,6 +34,7 @@ export const theme = responsiveFontSizes(
 
 declare module '@mui/material/styles' {
   interface TypeBackground {
+    primary: string;
     tertiary: string;
   }
 }
