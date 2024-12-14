@@ -119,7 +119,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
                 sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
               />
               <Tooltip title={`mis à jour: ${tempFormatedLastTimestamp}`}>
-                <Typography variant="h4">{`${temperatureEntity.state}°C`}</Typography>
+                <Typography variant="h4">{`${temperatureEntity.state}${temperatureEntity.attributes.unit_of_measurement}`}</Typography>
               </Tooltip>
             </Stack>
             {humidityEntity && (
@@ -138,14 +138,18 @@ export function TemperatureModal(props: TemperatureModalProps) {
                   <Typography
                     variant="h5"
                     color="textSecondary"
-                  >{`${humidityEntity.state}%`}</Typography>
+                  >{`${humidityEntity.state}${humidityEntity.attributes.unit_of_measurement}`}</Typography>
                 </Tooltip>
               </Stack>
             )}
           </Stack>
           <Stack spacing={2} direction="row" ml={-2} mb={-2}>
-            <Chip label={`min: ${minTemp}°C`} />
-            <Chip label={`max: ${maxTemp}°C`} />
+            <Chip
+              label={`min: ${minTemp}${temperatureEntity.attributes.unit_of_measurement}`}
+            />
+            <Chip
+              label={`max: ${maxTemp}${temperatureEntity.attributes.unit_of_measurement}`}
+            />
           </Stack>
         </Stack>
         <Stack
@@ -179,7 +183,8 @@ export function TemperatureModal(props: TemperatureModalProps) {
                 color: 'orange',
 
                 area: true,
-                valueFormatter: value => `${value}°C`,
+                valueFormatter: value =>
+                  `${value}${temperatureEntity.attributes.unit_of_measurement}`,
               },
               {
                 id: 'humidity',
@@ -188,7 +193,8 @@ export function TemperatureModal(props: TemperatureModalProps) {
                 label: 'Humidité: ',
                 yAxisKey: 'humidity',
                 color: 'blue',
-                valueFormatter: value => `${value}%`,
+                valueFormatter: value =>
+                  `${value}${humidityEntity?.attributes.unit_of_measurement ?? '%'}`,
               },
             ]}
             xAxis={[

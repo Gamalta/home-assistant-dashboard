@@ -8,8 +8,7 @@ import {useState} from 'react';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {motion} from 'framer-motion';
 import {WeatherModal} from '../../Modal/Type/WeatherModal';
-
-const WEATHER_ICONS_PATH = 'weather/';
+import {getWeatherIconPath} from '../../../utils/weather';
 
 type WeatherDisplayProps = {
   weather: SideBarConfigType['weather'];
@@ -19,19 +18,11 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
   const {weather: weatherEntity} = props;
   const [weatherModalOpen, setWeatherModalOpen] = useState(false);
   const weather = useWeather(weatherEntity, {type: 'daily'});
-  let condition = weather?.state;
-
-  if (!condition || condition === 'unknown') condition = 'sunny';
-  if (condition === 'execptional') condition = 'lightning-rainy';
-  if (condition === 'windy-variant') condition = 'windy';
-
-  const date = new Date();
-  if ((condition === 'sunny' && date.getHours() > 19) || date.getHours() < 7)
-    condition = 'clear-night';
+  const condition = weather.forecast?.forecast[0].condition ?? weather?.state;
 
   const weatherLongPress = useLongPress(
     () => setWeatherModalOpen(true),
-    () => {}
+    () => setWeatherModalOpen(true)
   );
 
   return (
@@ -40,6 +31,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
         component={motion.div}
         layoutId="weather-modal"
         justifyContent="end"
+        alignItems="center"
         spacing={1}
         sx={{cursor: 'pointer'}}
         {...weatherLongPress}
@@ -48,7 +40,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
           component="img"
           height="40px"
           width="45px"
-          src={`${WEATHER_ICONS_PATH}${condition}.png`}
+          src={getWeatherIconPath(condition, true)}
           sx={{
             objectFit: 'contain',
             animation:
@@ -57,14 +49,28 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
                 : `${weatherdAnimation} 6s ease-in-out infinite`,
           }}
         />
-        <Typography variant="h6" color="text.secondary" textAlign="center">
-          {weather.attributes.temperature ?? '--'}°
-        </Typography>
+        <Stack alignItems="center">
+          <Typography variant="h6" color="text.secondary" textAlign="center">
+            {weather.attributes.temperature ?? '--'}
+            {weather.attributes.temperature_unit}
+          </Typography>
+          {weather.forecast?.forecast[0] && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              textAlign="center"
+              sx={{opacity: 0.7}}
+              mt={-0.5}
+            >
+              {weather.forecast?.forecast[0].templow}°/
+              {weather.forecast?.forecast[0].temperature}°
+            </Typography>
+          )}
+        </Stack>
       </Stack>
       <WeatherModal
         id="weather-modal"
         weather={weather}
-        icon={`${WEATHER_ICONS_PATH}${condition}.png`}
         open={weatherModalOpen}
         onClose={() => setWeatherModalOpen(false)}
         title="Météo"
