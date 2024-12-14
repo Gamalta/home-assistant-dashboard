@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import {motion} from 'framer-motion';
 import {DateTime} from './DateTime';
 import {WeatherDisplay} from './WeatherDisplay';
 import type {SideBarConfigType} from '../../../configs/house';
@@ -9,9 +10,10 @@ type HeaderCardProps = {
 
 export function HeaderCard(props: HeaderCardProps) {
   const {weather} = props;
+
   return (
     <Stack
-      component="header"
+      component={motion.header}
       direction="row"
       p={2}
       bgcolor="background.paper"
