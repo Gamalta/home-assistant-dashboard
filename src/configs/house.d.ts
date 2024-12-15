@@ -31,6 +31,7 @@ type HouseConfigType = {
     };
     main_light?: LightConfigType;
     lights?: LightConfigType[];
+    items?: RoomItem[];
   }[];
 };
 
@@ -42,4 +43,18 @@ type LightConfigType = {
     blue: string;
   };
   position: {x: number; y: number};
+};
+
+type RoomItemConfigType = DestkopConfigType;
+
+type DestkopConfigType = {
+  type: 'desktop';
+  position: {x: number; y: number};
+  options: {
+    icon?: string;
+    label?: string;
+    color?: string;
+    script: FilterByDomain<EntityName, 'script'>;
+    hide?: boolean;
+  }[];
 };

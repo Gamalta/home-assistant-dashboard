@@ -1,13 +1,13 @@
 import {HassEntityWithService} from '@hakit/core';
 import {motion} from 'framer-motion';
-import {FloatingAction} from '../FloatingAction';
-import type {HouseConfigType} from '../../../configs/house';
-import {RoomActionTemperature} from './RoomActionTemperature';
+import {FloatingAction} from '../../FloatingAction';
+import type {HouseConfigType} from '../../../../configs/house';
 import {RoomActionMainLight} from './RoomActionMainLight';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import {useRoomContext} from '../../../contexts/RoomContext';
+import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useEffect} from 'react';
+import {RoomActionTemperature} from './RoomActionTemperature';
 
 type RoomActionProps = {
   id: string;

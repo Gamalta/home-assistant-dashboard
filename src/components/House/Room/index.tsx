@@ -2,8 +2,9 @@ import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
 import {RoomLightImage} from './RoomLightImage';
-import {RoomLight} from './RoomLight';
+import {RoomLight} from './RoomItem/RoomLight';
 import {useEntity} from '@hakit/core';
+import {RoomItem} from './RoomItem';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -29,6 +30,13 @@ export function Room(props: RoomProps) {
         <RoomLight
           lightConfig={light}
           key={`room-${room.id}-light-${light.entity_id}`}
+        />
+      ))}
+      {(room.items ?? []).map(item => (
+        <RoomItem
+          key={`room-${room.id}-item-${item.type}`}
+          id={`room-${room.id}-item-${item.type}`}
+          itemConfig={item}
         />
       ))}
       {[room.main_light ?? [], room.lights ?? []].flat().map((light, index) => (
