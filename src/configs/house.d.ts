@@ -29,13 +29,13 @@ type HouseConfigType = {
       battery?: FilterByDomain<EntityName, 'sensor'>;
       signal?: FilterByDomain<EntityName, 'sensor'>;
     };
-    main_light?: LightConfigType;
-    lights?: LightConfigType[];
-    items?: RoomItem[];
+    main_light?: Omit<LightConfigType, 'type'>;
+    items?: RoomItemConfigType[];
   }[];
 };
 
 type LightConfigType = {
+  type: 'light';
   entity_id: FilterByDomain<EntityName, 'light'>;
   layer: {
     red: string;
@@ -45,7 +45,7 @@ type LightConfigType = {
   position: {x: number; y: number};
 };
 
-type RoomItemConfigType = DestkopConfigType;
+type RoomItemConfigType = LightConfigType | DestkopConfigType;
 
 type DestkopConfigType = {
   type: 'desktop';

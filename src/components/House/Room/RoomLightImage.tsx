@@ -2,7 +2,7 @@ import {useEntity} from '@hakit/core';
 import type {LightConfigType} from '../../../configs/house';
 
 type RoomLightImage = {
-  lightConfig: LightConfigType;
+  lightConfig: Omit<LightConfigType, 'type'>;
 };
 
 export function RoomLightImage(props: RoomLightImage) {

@@ -72,8 +72,9 @@ export const HouseConfig: HouseConfigType = {
         battery: 'sensor.battery_level_atc_salon',
         signal: 'sensor.signal_atc_salon',
       },
-      lights: [
+      items: [
         {
+          type: 'light',
           entity_id: 'light.salon_hue_play',
           layer: {
             red: salonPlayRed,
@@ -102,8 +103,9 @@ export const HouseConfig: HouseConfigType = {
         battery: 'sensor.battery_level_atc_office',
         signal: 'sensor.signal_atc_office',
       },
-      lights: [
+      items: [
         {
+          type: 'light',
           entity_id: 'light.office_hue_iris',
           layer: {
             red: officeIrisRed,
@@ -111,6 +113,33 @@ export const HouseConfig: HouseConfigType = {
             blue: officeIrisBlue,
           },
           position: {x: 21, y: 67},
+        },
+        {
+          type: 'desktop',
+          position: {x: 29.5, y: 83},
+          options: [
+            {
+              icon: 'windows',
+              label: 'Windows',
+              color: '#357EC7',
+              script: 'script.start_windows_desktop',
+            },
+            {
+              icon: 'power',
+              script: 'script.start_default_desktop',
+            },
+            {
+              icon: 'ubuntu',
+              label: 'Ubuntu',
+              color: '#E95420',
+              script: 'script.start_ubuntu_desktop',
+            },
+            {
+              label: 'bios',
+              script: 'script.start_bios_desktop',
+              hide: true,
+            },
+          ],
         },
       ],
     },
