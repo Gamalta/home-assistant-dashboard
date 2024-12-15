@@ -48,6 +48,27 @@ export const SideBarConfig: SideBarConfigType = {
       battery_state: 'sensor.3eur_la_minute_battery_state',
     },
   ],
+  system: {
+    uptime: 'sensor.system_monitor_last_boot',
+    powerStatus: 'binary_sensor.rpi_power_status',
+    graphs: [
+      {
+        color: 'red',
+        label: 'Mémoir:',
+        sensor: 'sensor.system_monitor_memory_usage',
+      },
+      {
+        color: 'orange',
+        label: 'Température:',
+        sensor: 'sensor.system_monitor_processor_temperature',
+      },
+      {
+        color: 'cyan',
+        label: 'Processeur:',
+        sensor: 'sensor.system_monitor_processor_use',
+      },
+    ],
+  },
 };
 
 export const HouseConfig: HouseConfigType = {

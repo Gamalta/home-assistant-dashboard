@@ -3,6 +3,17 @@ import {FilterByDomain, EntityName} from '@hakit/core';
 type SideBarConfigType = {
   weather: FilterByDomain<EntityName, 'weather'>;
   persons: [PersonConfigType, PersonConfigType];
+  system?: {
+    uptime?: FilterByDomain<EntityName, 'sensor'>;
+    powerStatus?: FilterByDomain<EntityName, 'binary_sensor'>;
+    graphs: SystemGraphConfigType[];
+  };
+};
+
+type SystemGraphConfigType = {
+  color: string;
+  label: string;
+  sensor: FilterByDomain<EntityName, 'sensor'>;
 };
 
 type PersonConfigType = {
