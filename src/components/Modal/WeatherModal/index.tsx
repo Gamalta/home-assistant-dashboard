@@ -1,7 +1,7 @@
 import {useWeather} from '@hakit/core';
-import {Modal, ModalProps} from '../..';
+import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
-import {getWeatherIcon, getWeatherIconPath} from '../../../../utils/weather';
+import {getWeatherIcon, getWeatherIconPath} from '../../../utils/weather';
 import {Typography} from '@mui/material';
 
 type WeatherModalProps = Omit<ModalProps, 'children'> & {

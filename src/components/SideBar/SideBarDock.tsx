@@ -10,6 +10,7 @@ import {themeType, useThemeContext} from '../../contexts/ThemeProvider';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ConfigType, HouseConfigsName, loadConfig} from '../../configs/configs';
 import {useHouseContext} from '../../contexts/HouseContext';
+import {SystemModal} from '../Modal/SystemModal';
 
 type SideBarDockProps = {
   sideBarRef: React.RefObject<HTMLDivElement>;
@@ -18,6 +19,7 @@ type SideBarDockProps = {
 export function SideBarDock(props: SideBarDockProps) {
   const {sideBarRef} = props;
   const [isVisible, setIsVisible] = useState(false);
+  const [systemModal, setSystemModal] = useState(false);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
@@ -169,8 +171,20 @@ export function SideBarDock(props: SideBarDockProps) {
               </Menu>
             </>
           )}
-          <Button>settings</Button>
-          <Button>settings</Button>
+          {config?.sideBar.system && (
+            <>
+              <motion.div layoutId="layoutid-system-modal">
+                <Button onClick={() => setSystemModal(true)}>Système</Button>
+              </motion.div>
+              <SystemModal
+                id="layoutid-system-modal"
+                title="Système"
+                open={systemModal}
+                onClose={() => setSystemModal(false)}
+                systemConfig={config.sideBar.system}
+              />
+            </>
+          )}
         </Stack>
       )}
     </AnimatePresence>

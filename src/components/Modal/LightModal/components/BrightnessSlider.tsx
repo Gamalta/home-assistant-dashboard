@@ -1,10 +1,10 @@
 import Button from '@mui/material/Button';
-import {BrightnessIcon} from '../../../../Icons/BrightnessIcon';
+import {BrightnessIcon} from '../../../Icons/BrightnessIcon';
 import {useEffect, useState} from 'react';
 import Popover from '@mui/material/Popover';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-import {useLightModalContext} from '../../../../../contexts/LightModalContext';
+import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import Typography from '@mui/material/Typography';
 
 export function BrightnessSlider() {

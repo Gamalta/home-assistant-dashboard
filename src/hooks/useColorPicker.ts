@@ -11,7 +11,7 @@ import {getRelativePosition} from '../utils/color';
 import {
   MAX_KELVIN,
   MIN_KELVIN,
-} from '../components/Modal/Type/LightModal/Tabs/ColorTempTab';
+} from '../components/Modal/LightModal/Tabs/ColorTempTab';
 
 //type Mode = 'color' | 'temperature';
 type Color = [number, number, number];

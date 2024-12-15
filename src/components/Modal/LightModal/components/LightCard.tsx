@@ -2,7 +2,7 @@ import {HassEntityWithService} from '@hakit/core';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
-import {useLightModalContext} from '../../../../../contexts/LightModalContext';
+import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {useEffect, useRef} from 'react';
 import {motion} from 'framer-motion';
 import {useTheme} from '@mui/material/styles';
@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import LinkIcon from '@mui/icons-material/LinkRounded';
 import LinkOffIcon from '@mui/icons-material/LinkOffRounded';
 import Chip from '@mui/material/Chip';
-import {useIcon} from '../../../../../hooks/useIcon';
+import {useIcon} from '../../../../hooks/useIcon';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;

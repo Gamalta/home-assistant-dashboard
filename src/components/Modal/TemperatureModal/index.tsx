@@ -1,3 +1,9 @@
+import {HassEntityWithService} from '@hakit/core';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import {
   AreaPlot,
   ChartsClipPath,
@@ -5,16 +11,11 @@ import {
   LinePlot,
   ResponsiveChartContainer,
 } from '@mui/x-charts';
-import {Modal, ModalProps} from '../..';
-import {HassEntityWithService} from '@hakit/core';
-import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
-import Typography from '@mui/material/Typography';
-import {ThermostatIcon} from '../../../Icons/ThermostatIcon';
-import Tooltip from '@mui/material/Tooltip';
-import WaterDropIcon from '@mui/icons-material/WaterDrop';
-import {BatteryDisplay} from '../../../display/BatteryDisplay';
-import {SignalDisplay} from '../../../display/SignalDisplay';
+import {Modal, ModalProps} from '..';
+import {roundToNearest5Minutes} from '../../../utils/graph';
+import {BatteryDisplay} from '../../display/BatteryDisplay';
+import {SignalDisplay} from '../../display/SignalDisplay';
+import {ThermostatIcon} from '../../Icons/ThermostatIcon';
 
 type TemperatureModalProps = Omit<ModalProps, 'children'> & {
   temperatureEntity: HassEntityWithService<'sensor'>;
@@ -31,10 +32,6 @@ export function TemperatureModal(props: TemperatureModalProps) {
     signalEntity,
     ...modalProps
   } = props;
-
-  const roundToNearest5Minutes = (timestamp: number) => {
-    return Math.floor(timestamp / (15 * 60 * 1000)) * (15 * 60 * 1000);
-  };
 
   const temperatureMap = Object.fromEntries(
     temperatureEntity.history.entityHistory.map(data => [

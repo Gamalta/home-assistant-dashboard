@@ -3,8 +3,8 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import Stack from '@mui/material/Stack';
 import {useState} from 'react';
-import {Modal, ModalProps} from '../..';
-import {DestkopConfigType} from '../../../../configs/house';
+import {Modal, ModalProps} from '..';
+import {DestkopConfigType} from '../../../configs/house';
 import {OptionButton} from './OptionButton';
 
 type DesktopModalProps = Omit<ModalProps, 'children'> & {

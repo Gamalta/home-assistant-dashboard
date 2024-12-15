@@ -4,7 +4,7 @@ import {motion} from 'framer-motion';
 import {DestkopConfigType} from '../../../../configs/house';
 import ComputerIcon from '@mui/icons-material/Computer';
 import {useState} from 'react';
-import {DesktopModal} from '../../../Modal/Type/DesktopModal';
+import {DesktopModal} from '../../../Modal/DesktopModal';
 
 type RoomDesktopProps = {
   id: string;

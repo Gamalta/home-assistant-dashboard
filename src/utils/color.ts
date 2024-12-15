@@ -2,7 +2,7 @@ import {hsv2rgb, rgb2hex, temperature2rgb} from '@hakit/core';
 import {
   MAX_KELVIN,
   MIN_KELVIN,
-} from '../components/Modal/Type/LightModal/Tabs/ColorTempTab';
+} from '../components/Modal/LightModal/Tabs/ColorTempTab';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;

@@ -2,7 +2,7 @@ import type {HouseConfigType} from '../../../../configs/house';
 import {motion} from 'framer-motion';
 import {alpha} from '@mui/material/styles';
 import {PendantRoundIcon} from '../../../Icons/PendantRoundIcon';
-import {LightModal} from '../../../Modal/Type/LightModal';
+import {LightModal} from '../../../Modal/LightModal';
 import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useLongPress} from '../../../../hooks/useLongPress';
 import Button from '@mui/material/Button';
