@@ -1,4 +1,4 @@
-import type {HouseConfigType, LightConfigType} from '../../../configs/house';
+import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
 import {RoomLightImage} from './RoomLightImage';
