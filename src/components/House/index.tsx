@@ -98,7 +98,7 @@ export function House() {
           left: 0,
           width: '100%',
           height: '100%',
-          transition: 'opacity 3s',
+          transition: 'opacity 1s',
           objectFit: 'contain',
         },
       }}
