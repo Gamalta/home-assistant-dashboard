@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import {HouseConfigType} from '../../../../configs/house';
 import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useLongPress} from '../../../../hooks/useLongPress';
-import {TemperatureModal} from '../../../Modal/Type/TemperatureModal';
+import {TemperatureModal} from '../../../Modal/TemperatureModal';
 
 type RoomActionTemperature = {
   id: string;
