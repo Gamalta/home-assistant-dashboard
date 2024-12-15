@@ -1,4 +1,4 @@
-import type {HouseConfigType} from '../../../configs/house';
+import type {HouseConfigType, LightConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
 import {RoomLightImage} from './RoomLightImage';
@@ -39,7 +39,7 @@ export function Room(props: RoomProps) {
         .flat()
         .map(light => (
           <RoomLightImage
-            lightConfig={light}
+            lightConfig={light as LightConfigType}
             key={`room-${room.id}-light-image-${light.position}`}
           />
         ))}

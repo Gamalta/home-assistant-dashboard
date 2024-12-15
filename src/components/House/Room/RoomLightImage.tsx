@@ -3,7 +3,7 @@ import type {LightConfigType} from '../../../configs/house';
 import Box from '@mui/material/Box';
 
 type RoomLightImage = {
-  lightConfig: LightConfigType | Omit<LightConfigType, 'type'>;
+  lightConfig: LightConfigType;
 };
 
 export function RoomLightImage(props: RoomLightImage) {
