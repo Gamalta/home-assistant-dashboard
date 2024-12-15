@@ -1,10 +1,10 @@
 import {UNKNOWN, useEntity} from '@hakit/core';
-import type {HouseConfigType} from '../../../configs/house';
-import {useLongPress} from '../../../hooks/useLongPress';
-import {useRoomContext} from '../../../contexts/RoomContext';
 import {motion} from 'framer-motion';
-import {TemperatureModal} from '../../Modal/Type/TemperatureModal';
 import Button from '@mui/material/Button';
+import {HouseConfigType} from '../../../../configs/house';
+import {useRoomContext} from '../../../../contexts/RoomContext';
+import {useLongPress} from '../../../../hooks/useLongPress';
+import {TemperatureModal} from '../../../Modal/Type/TemperatureModal';
 
 type RoomActionTemperature = {
   id: string;

@@ -1,10 +1,10 @@
 import {useEntity} from '@hakit/core';
-import {FloatingAction} from '../FloatingAction';
-import {useIcon} from '../../../hooks/useIcon';
-import {useRoomContext} from '../../../contexts/RoomContext';
-import {useLongPress} from '../../../hooks/useLongPress';
+import {FloatingAction} from '../../FloatingAction';
+import {useIcon} from '../../../../hooks/useIcon';
+import {useRoomContext} from '../../../../contexts/RoomContext';
+import {useLongPress} from '../../../../hooks/useLongPress';
 import Button from '@mui/material/Button';
-import {LightConfigType} from '../../../configs/house';
+import {LightConfigType} from '../../../../configs/house';
 import {useEffect} from 'react';
 
 type RoomLightProps = {
