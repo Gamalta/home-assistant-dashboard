@@ -7,7 +7,7 @@ import type {SideBarConfigType} from '../../../configs/house';
 import {useState} from 'react';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {motion} from 'framer-motion';
-import {WeatherModal} from '../../Modal/Type/WeatherModal';
+import {WeatherModal} from '../../Modal/WeatherModal';
 import {getWeatherIconPath} from '../../../utils/weather';
 
 type WeatherDisplayProps = {
