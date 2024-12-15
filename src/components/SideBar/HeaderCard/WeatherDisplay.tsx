@@ -8,7 +8,7 @@ import {useState} from 'react';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {motion} from 'framer-motion';
 import {WeatherModal} from '../../Modal/WeatherModal';
-import {getWeatherIconPath} from '../../../utils/weather';
+import {getWeatherIcon, getWeatherIconPath} from '../../../utils/weather';
 
 type WeatherDisplayProps = {
   weather: SideBarConfigType['weather'];
@@ -44,7 +44,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
           sx={{
             objectFit: 'contain',
             animation:
-              condition === 'sunny'
+              getWeatherIcon(condition) === 'sunny'
                 ? `${sunAnimation} 30s linear infinite`
                 : `${weatherdAnimation} 6s ease-in-out infinite`,
           }}
