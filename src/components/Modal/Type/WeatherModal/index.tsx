@@ -92,7 +92,7 @@ export function WeatherModal(props: WeatherModalProps) {
           )}
         </Stack>
         <Stack direction="row" spacing={2}>
-          {weather.forecast?.forecast.slice(0, 4).map(period => (
+          {weather.forecast?.forecast.slice(1, 5).map(period => (
             <Stack
               key={period.datetime}
               alignItems="center"
