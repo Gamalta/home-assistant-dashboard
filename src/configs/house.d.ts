@@ -64,7 +64,7 @@ type RoomItemConfigType =
 type ShutterConfigType = {
   type: 'shutter';
   position: {x: number; y: number};
-  entity: FilterByDomain<EntityName, 'cover'>;
+  entity_id: FilterByDomain<EntityName, 'cover'>;
 };
 
 type DestkopConfigType = {

@@ -5,6 +5,7 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import {useState} from 'react';
 import {ShutterConfigType} from '../../../../configs/house';
 import {ShutterModal} from '../../../Modal/ShutterModal';
+import { WindowIcon } from '../../../Icons/WindowIcon';
 
 type RoomShutterProps = {
   id: string;
@@ -31,7 +32,7 @@ export function RoomShutter(props: RoomShutterProps) {
           }}
           onClick={() => setShutterModal(true)}
         >
-          <ComputerIcon />
+          <WindowIcon />
         </Button>
       </motion.div>
       <ShutterModal

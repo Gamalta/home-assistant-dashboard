@@ -40,7 +40,7 @@ export function Room(props: RoomProps) {
         .map(light => (
           <RoomLightImage
             lightConfig={light as LightConfigType}
-            key={`room-${room.id}-light-image-${light.position}`}
+            key={`room-${room.id}-light-image-posX-${light.position.x}-poxY-${light.position.y}`}
           />
         ))}
     </RoomProvider>

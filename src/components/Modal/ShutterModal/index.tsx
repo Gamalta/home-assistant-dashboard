@@ -1,9 +1,14 @@
-import Stack from '@mui/material/Stack';
 import {Modal, ModalProps} from '..';
 import {ShutterConfigType} from '../../../configs/house';
-import Slider from '@mui/material/Slider';
 import {useState} from 'react';
-import Box from '@mui/material/Box';
+import {ShutterSlider} from './ShutterSlider';
+import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpwardRounded';
+import StopIcon from '@mui/icons-material/StopRounded';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownwardRounded';
+import Divider from '@mui/material/Divider';
+import {useEntity} from '@hakit/core';
 
 type DesktopModalProps = Omit<ModalProps, 'children'> & {
   shutterConfig: ShutterConfigType;
@@ -12,51 +17,52 @@ type DesktopModalProps = Omit<ModalProps, 'children'> & {
 export function ShutterModal(props: DesktopModalProps) {
   const {shutterConfig, onClose, ...modalProps} = props;
 
-  const [value, setValue] = useState(30);
+  const entity = useEntity(shutterConfig.entity_id, {
+    returnNullIfNotFound: true,
+  });
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number);
-  };
+  const [position, setPosition] = useState(
+    entity?.attributes.current_position ?? 0
+  );
 
   return (
     <Modal {...modalProps} onClose={onClose}>
-      <Stack position="relative" alignItems="center" mt={-2}>
-        <img
-          src="shutter/shutter_base.png"
-          style={{
-            width: '200px',
-            height: '197px',
-            objectFit: 'contain',
-          }}
+      <Stack spacing={2}>
+        <ShutterSlider
+          value={position}
+          onChange={(_, newPosition) => setPosition(newPosition as number)}
+          onChangeCommitted={(_, newPosition) =>
+            entity?.service.setCoverPosition({position: newPosition as number})
+          }
         />
-        <Slider value={value} onChange={handleChange} />
         <Stack
-          position="absolute"
-          top={0}
-          pl="11px"
-          pr="11.5px"
-          pt="22.5px"
-          pb="9px"
-          width="200px"
-          height="197px"
-          overflow="hidden"
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          bgcolor="background.default"
+          borderRadius={1}
+          spacing={1}
         >
-          <img
-            src="shutter/shutter_blind.png"
-            height={`${value}%`}
-            width="100%"
-            style={{objectFit: 'cover', objectPosition: 'bottom'}}
-          />
-          <Box
-            height={`min(15px, ${value}%)`}
-            left="11px"
-            right="11.5px"
-            position="absolute"
-            sx={{
-              background:
-                'linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.0))',
-            }}
-          />
+          <IconButton
+            sx={{borderRadius: 1}}
+            onClick={() => entity?.service.openCover()}
+          >
+            <ArrowUpwardIcon />
+          </IconButton>
+          <Divider orientation="vertical" sx={{height: '25px'}} />
+          <IconButton
+            sx={{borderRadius: 1}}
+            onClick={() => entity?.service.stopCover()}
+          >
+            <StopIcon />
+          </IconButton>
+          <Divider orientation="vertical" sx={{height: '25px'}} />
+          <IconButton
+            sx={{borderRadius: 1}}
+            onClick={() => entity?.service.closeCover()}
+          >
+            <ArrowDownwardIcon />
+          </IconButton>
         </Stack>
       </Stack>
     </Modal>
