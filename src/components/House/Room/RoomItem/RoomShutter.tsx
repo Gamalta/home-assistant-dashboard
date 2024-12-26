@@ -1,11 +1,10 @@
 import {FloatingAction} from '../../FloatingAction';
 import Button from '@mui/material/Button';
 import {motion} from 'framer-motion';
-import ComputerIcon from '@mui/icons-material/Computer';
 import {useState} from 'react';
 import {ShutterConfigType} from '../../../../configs/house';
 import {ShutterModal} from '../../../Modal/ShutterModal';
-import { WindowIcon } from '../../../Icons/WindowIcon';
+import {WindowIcon} from '../../../Icons/WindowIcon';
 
 type RoomShutterProps = {
   id: string;
