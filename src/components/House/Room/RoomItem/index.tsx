@@ -18,5 +18,7 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomShutter id={id} shutterConfig={itemConfig} />;
     case 'desktop':
       return <RoomDesktop id={id} desktopConfig={itemConfig} />;
+    default:
+      return <></>;
   }
 }
