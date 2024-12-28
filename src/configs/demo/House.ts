@@ -104,6 +104,11 @@ export const HouseConfig: HouseConfigType = {
           },
           position: {x: 61, y: 22},
         },
+        {
+          type: 'shutter',
+          entity_id: 'cover.salon',
+          position: {x: 55, y: 17},
+        },
       ],
     },
     {
@@ -162,6 +167,11 @@ export const HouseConfig: HouseConfigType = {
             },
           ],
         },
+        {
+          type: 'shutter',
+          entity_id: 'cover.office',
+          position: {x: 25.5, y: 90},
+        },
       ],
     },
     {
@@ -182,6 +192,13 @@ export const HouseConfig: HouseConfigType = {
         battery: 'sensor.battery_level_atc_bedroom',
         signal: 'sensor.signal_atc_bedroom',
       },
+      items: [
+        {
+          type: 'shutter',
+          entity_id: 'cover.bedroom',
+          position: {x: 81.5, y: 72},
+        },
+      ],
     },
     {
       id: 'Bedroom_2',
@@ -201,6 +218,13 @@ export const HouseConfig: HouseConfigType = {
         battery: 'sensor.battery_level_atc_bedroom2',
         signal: 'sensor.signal_atc_bedroom2',
       },
+      items: [
+        {
+          type: 'shutter',
+          entity_id: 'cover.bedroom2',
+          position: {x: 73, y: 17},
+        },
+      ],
     },
   ],
 };
