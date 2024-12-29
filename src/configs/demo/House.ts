@@ -1,4 +1,4 @@
-import {HouseConfigType, SideBarConfigType} from '../house';
+import {HouseConfigType} from '../house';
 import baseDay from './assets/base_day.png';
 import baseNight from './assets/base_night.png';
 import salonRed from './assets/light/salon_red.png';
@@ -19,84 +19,89 @@ import officeBlue from './assets/light/office_blue.png';
 import officeIrisRed from './assets/light/office_iris_red.png';
 import officeIrisGreen from './assets/light/office_iris_green.png';
 import officeIrisBlue from './assets/light/office_iris_blue.png';
+import {SideBarConfigType} from '../sidebar';
 
 export const ConfigName = 'Démo';
 
 export const SideBarConfig: SideBarConfigType = {
-  weather: 'weather.home',
+  weatherEntityId: 'weather.home',
   persons: [
     {
       name: 'Elise',
-      entity: 'person.elise',
+      personEntityId: 'person.elise',
       avatar: 'person/Elise.png',
-      home_zone: 'zone.home',
-      home_distance: 'sensor.home_iphone_de_elise_distance',
-      work_zone: 'zone.elio_work',
-      focus: 'binary_sensor.iphone_de_elise_focus',
-      battery_level: 'sensor.iphone_de_elise_battery_level',
-      battery_state: 'sensor.iphone_de_elise_battery_state',
+      homeZoneEntityId: 'zone.home',
+      homeDistanceEntityId: 'sensor.home_iphone_de_elise_distance',
+      workZoneEntityId: 'zone.elio_work',
+      focusEntityId: 'binary_sensor.iphone_de_elise_focus',
+      batteryLevelEntityId: 'sensor.iphone_de_elise_battery_level',
+      batteryStateEntityId: 'sensor.iphone_de_elise_battery_state',
     },
     {
       name: 'Elio',
-      entity: 'person.home',
+      personEntityId: 'person.home',
       avatar: 'person/Elio.png',
-      home_zone: 'zone.home',
-      home_distance: 'sensor.home_3eur_la_minute_distance',
-      work_zone: 'zone.elio_work',
-      focus: 'binary_sensor.3eur_la_minute_focus',
-      battery_level: 'sensor.3eur_la_minute_battery_level',
-      battery_state: 'sensor.3eur_la_minute_battery_state',
+      homeZoneEntityId: 'zone.home',
+      homeDistanceEntityId: 'sensor.home_3eur_la_minute_distance',
+      workZoneEntityId: 'zone.elio_work',
+      focusEntityId: 'binary_sensor.3eur_la_minute_focus',
+      batteryLevelEntityId: 'sensor.3eur_la_minute_battery_level',
+      batteryStateEntityId: 'sensor.3eur_la_minute_battery_state',
     },
   ],
   system: {
-    uptime: 'sensor.system_monitor_last_boot',
-    powerStatus: 'binary_sensor.rpi_power_status',
+    uptimeEntityId: 'sensor.system_monitor_last_boot',
+    powerStatusEntityId: 'binary_sensor.rpi_power_status',
     graphs: [
       {
         color: 'red',
         label: 'Mémoir:',
-        sensor: 'sensor.system_monitor_memory_usage',
+        sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
         color: 'orange',
         label: 'Température:',
-        sensor: 'sensor.system_monitor_processor_temperature',
+        sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
         color: 'cyan',
         label: 'Processeur:',
-        sensor: 'sensor.system_monitor_processor_use',
+        sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],
   },
 };
 
 export const HouseConfig: HouseConfigType = {
-  night_floor_plan: baseNight,
-  day_floor_plan: baseDay,
+  nightFloorPlan: baseNight,
+  dayFloorPlan: baseDay,
   rooms: [
     {
       id: 'Salon',
       name: 'Séjour',
-      main_light: {
-        entity_id: 'light.salon_main',
-        layer: {
-          red: salonRed,
-          green: salonGreen,
-          blue: salonBlue,
-        },
-        position: {x: 54, y: 35},
-      },
-      temperature: {
-        entity: 'sensor.temperature_salon',
-        humidity: 'sensor.humidity_salon',
-        battery: 'sensor.battery_level_atc_salon',
-        signal: 'sensor.signal_atc_salon',
-      },
+      position: {x: 54, y: 35},
       items: [
         {
           type: 'light',
-          entity_id: 'light.salon_hue_play',
+          roomDisplay: true,
+          lightEntityId: 'light.salon_main',
+          layer: {
+            red: salonRed,
+            green: salonGreen,
+            blue: salonBlue,
+          },
+        },
+        {
+          type: 'temperature',
+          roomDisplay: true,
+          temperatureEntityId: 'sensor.temperature_salon',
+          humidityEntityId: 'sensor.humidity_salon',
+          batteryEntityId: 'sensor.battery_level_atc_salon',
+          signalEntityId: 'sensor.signal_atc_salon',
+        },
+        {
+          type: 'light',
+          lightEntityId: 'light.salon_hue_play',
           layer: {
             red: salonPlayRed,
             green: salonPlayGreen,
@@ -106,7 +111,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'shutter',
-          entity_id: 'cover.salon',
+          shutterEntityId: 'cover.salon',
           position: {x: 55, y: 17},
         },
       ],
@@ -114,25 +119,29 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Office',
       name: 'Bureau',
-      main_light: {
-        entity_id: 'light.office_main',
-        layer: {
-          red: officeRed,
-          green: officeGreen,
-          blue: officeBlue,
-        },
-        position: {x: 24, y: 77},
-      },
-      temperature: {
-        entity: 'sensor.temperature_office',
-        humidity: 'sensor.humidity_office',
-        battery: 'sensor.battery_level_atc_office',
-        signal: 'sensor.signal_atc_office',
-      },
+      position: {x: 24, y: 77},
       items: [
         {
           type: 'light',
-          entity_id: 'light.office_hue_iris',
+          roomDisplay: true,
+          lightEntityId: 'light.office_main',
+          layer: {
+            red: officeRed,
+            green: officeGreen,
+            blue: officeBlue,
+          },
+        },
+        {
+          type: 'temperature',
+          roomDisplay: true,
+          temperatureEntityId: 'sensor.temperature_office',
+          humidityEntityId: 'sensor.humidity_office',
+          batteryEntityId: 'sensor.battery_level_atc_office',
+          signalEntityId: 'sensor.signal_atc_office',
+        },
+        {
+          type: 'light',
+          lightEntityId: 'light.office_hue_iris',
           layer: {
             red: officeIrisRed,
             green: officeIrisGreen,
@@ -148,28 +157,28 @@ export const HouseConfig: HouseConfigType = {
               icon: 'windows',
               label: 'Windows',
               color: '#357EC7',
-              script: 'script.start_windows_desktop',
+              scriptEntityId: 'script.start_windows_desktop',
             },
             {
               icon: 'power',
-              script: 'script.start_default_desktop',
+              scriptEntityId: 'script.start_default_desktop',
             },
             {
               icon: 'ubuntu',
               label: 'Ubuntu',
               color: '#E95420',
-              script: 'script.start_ubuntu_desktop',
+              scriptEntityId: 'script.start_ubuntu_desktop',
             },
             {
               label: 'bios',
-              script: 'script.start_bios_desktop',
+              scriptEntityId: 'script.start_bios_desktop',
               hide: true,
             },
           ],
         },
         {
           type: 'shutter',
-          entity_id: 'cover.office',
+          shutterEntityId: 'cover.office',
           position: {x: 25.5, y: 90},
         },
       ],
@@ -177,25 +186,29 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom',
       name: 'Chambre',
-      main_light: {
-        entity_id: 'light.bedroom_main',
-        layer: {
-          red: bedroomRed,
-          green: bedroomGreen,
-          blue: bedroomBlue,
-        },
-        position: {x: 72, y: 75},
-      },
-      temperature: {
-        entity: 'sensor.temperature_bedroom',
-        humidity: 'sensor.humidity_bedroom',
-        battery: 'sensor.battery_level_atc_bedroom',
-        signal: 'sensor.signal_atc_bedroom',
-      },
+      position: {x: 72, y: 75},
       items: [
         {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.bedroom_main',
+          layer: {
+            red: bedroomRed,
+            green: bedroomGreen,
+            blue: bedroomBlue,
+          },
+        },
+        {
+          type: 'temperature',
+          roomDisplay: true,
+          temperatureEntityId: 'sensor.temperature_bedroom',
+          humidityEntityId: 'sensor.humidity_bedroom',
+          batteryEntityId: 'sensor.battery_level_atc_bedroom',
+          signalEntityId: 'sensor.signal_atc_bedroom',
+        },
+        {
           type: 'shutter',
-          entity_id: 'cover.bedroom',
+          shutterEntityId: 'cover.bedroom',
           position: {x: 81.5, y: 72},
         },
       ],
@@ -203,25 +216,29 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom_2',
       name: 'Chambre 2',
-      main_light: {
-        entity_id: 'light.bedroom_2_main',
-        layer: {
-          red: bedroom2Red,
-          green: bedroom2Green,
-          blue: bedroom2Blue,
-        },
-        position: {x: 75, y: 30},
-      },
-      temperature: {
-        entity: 'sensor.temperature_bedroom2',
-        humidity: 'sensor.humidity_bedroom2',
-        battery: 'sensor.battery_level_atc_bedroom2',
-        signal: 'sensor.signal_atc_bedroom2',
-      },
+      position: {x: 75, y: 30},
       items: [
         {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.bedroom_2_main',
+          layer: {
+            red: bedroom2Red,
+            green: bedroom2Green,
+            blue: bedroom2Blue,
+          },
+        },
+        {
+          type: 'temperature',
+          roomDisplay: true,
+          temperatureEntityId: 'sensor.temperature_bedroom2',
+          humidityEntityId: 'sensor.humidity_bedroom2',
+          batteryEntityId: 'sensor.battery_level_atc_bedroom2',
+          signalEntityId: 'sensor.signal_atc_bedroom2',
+        },
+        {
           type: 'shutter',
-          entity_id: 'cover.bedroom2',
+          shutterEntityId: 'cover.bedroom2',
           position: {x: 73, y: 17},
         },
       ],

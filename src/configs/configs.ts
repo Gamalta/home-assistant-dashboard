@@ -1,4 +1,5 @@
-import {HouseConfigType, SideBarConfigType} from './house';
+import {HouseConfigType} from './house';
+import {SideBarConfigType} from './sidebar';
 
 export const HouseConfigsName: string[] = JSON.parse(
   import.meta.env.VITE_HOUSE_CONFIGS || '[]'
