@@ -43,7 +43,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
           sx={{
             objectFit: 'contain',
             animation:
-              getWeatherIcon(condition) === 'sunny'
+              getWeatherIcon(condition, true) === 'sunny'
                 ? `${sunAnimation} 30s linear infinite`
                 : `${weatherdAnimation} 6s ease-in-out infinite`,
           }}
