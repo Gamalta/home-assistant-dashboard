@@ -1,9 +1,8 @@
-import {useWeather} from '@hakit/core';
+import {EntityName, FilterByDomain, useWeather} from '@hakit/core';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {keyframes} from '@mui/material/styles';
-import type {SideBarConfigType} from '../../../configs/house';
 import {useState} from 'react';
 import {useLongPress} from '../../../hooks/useLongPress';
 import {motion} from 'framer-motion';
@@ -11,7 +10,7 @@ import {WeatherModal} from '../../Modal/WeatherModal';
 import {getWeatherIcon, getWeatherIconPath} from '../../../utils/weather';
 
 type WeatherDisplayProps = {
-  weather: SideBarConfigType['weather'];
+  weather: FilterByDomain<EntityName, 'weather'>;
 };
 
 export function WeatherDisplay(props: WeatherDisplayProps) {

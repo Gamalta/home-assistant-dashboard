@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import NightlightIcon from '@mui/icons-material/NightlightRound';
 import {BatteryDisplay} from '../display/BatteryDisplay';
 import {DistanceDisplay} from '../display/DistanceDisplay';
-import {PersonConfigType} from '../../configs/house';
+import {PersonConfigType} from '../../configs/sidebar';
 
 type PersonCardProps = {
   person?: PersonConfigType;
@@ -14,22 +14,22 @@ type PersonCardProps = {
 
 export function PersonCard(props: PersonCardProps) {
   const {person} = props;
-  const focused = useEntity(person?.focus ?? 'unknown', {
+  const focused = useEntity(person?.focusEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const homeDistance = useEntity(person?.home_distance ?? 'unknown', {
+  const homeDistance = useEntity(person?.homeDistanceEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const batteryLevel = useEntity(person?.battery_level ?? 'unknown', {
+  const batteryLevel = useEntity(person?.batteryLevelEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const batteryState = useEntity(person?.battery_state ?? 'unknown', {
+  const batteryState = useEntity(person?.batteryStateEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const homeZone = useEntity(person?.home_zone ?? 'unknown', {
+  const homeZone = useEntity(person?.homeZoneEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
-  const workZone = useEntity(person?.work_zone ?? 'unknown', {
+  const workZone = useEntity(person?.workZoneEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
 
@@ -83,8 +83,12 @@ export function PersonCard(props: PersonCardProps) {
         <DistanceDisplay
           type="text"
           distance={Number(homeDistance.state)}
-          atHome={homeZone?.attributes.persons?.includes(person?.entity)}
-          atWork={workZone?.attributes.persons?.includes(person?.entity)}
+          atHome={homeZone?.attributes.persons?.includes(
+            person?.personEntityId
+          )}
+          atWork={workZone?.attributes.persons?.includes(
+            person?.personEntityId
+          )}
         />
       )}
       {batteryLevel && (

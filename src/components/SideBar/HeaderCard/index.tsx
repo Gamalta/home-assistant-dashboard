@@ -2,10 +2,10 @@ import Stack from '@mui/material/Stack';
 import {motion} from 'framer-motion';
 import {DateTime} from './DateTime';
 import {WeatherDisplay} from './WeatherDisplay';
-import type {SideBarConfigType} from '../../../configs/house';
+import {EntityName, FilterByDomain} from '@hakit/core';
 
 type HeaderCardProps = {
-  weather?: SideBarConfigType['weather'];
+  weather?: FilterByDomain<EntityName, 'weather'>;
 };
 
 export function HeaderCard(props: HeaderCardProps) {

@@ -23,7 +23,7 @@ export function SideBar() {
       bgcolor="background.primary"
       p={theme => theme.spacing(4, 0, 4, 2)}
     >
-      <HeaderCard weather={sideBarConfig?.weather} />
+      <HeaderCard weather={sideBarConfig?.weatherEntityId} />
       <Stack spacing={2} p={2} bgcolor="background.paper" borderRadius={2}>
         {sideBarConfig?.persons && (
           <Stack direction="row" spacing={2}>
