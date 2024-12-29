@@ -56,7 +56,16 @@ type LightConfigType = {
   position: {x: number; y: number};
 };
 
-type RoomItemConfigType = LightConfigType | DestkopConfigType;
+type RoomItemConfigType =
+  | LightConfigType
+  | ShutterConfigType
+  | DestkopConfigTyp;
+
+type ShutterConfigType = {
+  type: 'shutter';
+  position: {x: number; y: number};
+  entity_id: FilterByDomain<EntityName, 'cover'>;
+};
 
 type DestkopConfigType = {
   type: 'desktop';
