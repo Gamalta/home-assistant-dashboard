@@ -1,8 +1,7 @@
-import type {HouseConfigType, LightConfigType} from '../../../configs/house';
+import {useRef} from 'react';
+import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomAction} from './RoomAction';
-import {RoomLightImage} from './RoomLightImage';
-import {useEntity} from '@hakit/core';
 import {RoomItem} from './RoomItem';
 
 type RoomProps = {
@@ -12,37 +11,31 @@ type RoomProps = {
 export function Room(props: RoomProps) {
   const {room} = props;
 
-  const mainLight = useEntity(room.main_light?.entity_id ?? 'unknown', {
-    returnNullIfNotFound: true,
-  });
+  const roomActionRef = useRef<HTMLDivElement>(null);
 
   return (
     <RoomProvider>
       <RoomAction
+        ref={roomActionRef}
         key={room.id}
-        id={`action-${room.id}`}
-        room={room}
-        position={room.main_light?.position ?? {x: 0, y: 0}}
-        mainLight={mainLight ?? undefined}
+        position={room.position ?? {x: 0, y: 0}}
       />
-      {(room.items ?? []).map(item => (
+      {(room.items ?? []).map((item, id) => (
         <RoomItem
-          key={`room-${room.id}-item-${item.type}-pos-${item.position}`}
-          id={`room-${room.id}-item-${item.type}-pos-${item.position}`}
+          key={`room-${room.id}-item-${item.type}-id-${id}`}
+          id={`room-${room.id}-item-${item.type}-id-${id}`}
           itemConfig={item}
+          parentRef={item.roomDisplay ? roomActionRef : undefined}
         />
       ))}
-      {[
-        room.main_light ?? [],
-        room.items?.filter(item => item.type === 'light') ?? [],
-      ]
-        .flat()
+      {/*(room.items ?? [])
+        .filter(item => item.type === 'light')
         .map(light => (
           <RoomLightImage
             lightConfig={light as LightConfigType}
             key={`room-${room.id}-light-image-posX-${light.position.x}-poxY-${light.position.y}`}
           />
-        ))}
+        ))*/}
     </RoomProvider>
   );
 }

@@ -1,26 +1,27 @@
 import Stack from '@mui/material/Stack';
-import {ComponentProps, ElementType, ReactNode} from 'react';
+import {ComponentProps, ElementType, forwardRef, ReactNode} from 'react';
 
 type FloatingActionProps = {
-  children: ReactNode;
+  children?: ReactNode;
   component?: ElementType;
-  pos: {x: number; y: number};
-} & ComponentProps<typeof Stack>;
+  position: {x: number; y: number};
+} & Omit<ComponentProps<typeof Stack>, 'position'>;
 
-export const FloatingAction = (props: FloatingActionProps) => {
-  const {children, component, pos, ...stackProps} = props;
-
-  return (
-    <Stack
-      component={component ?? 'div'}
-      position="absolute"
-      zIndex={10}
-      left={`${pos.x}%`}
-      top={`${pos.y}%`}
-      sx={{transform: 'translate(-50%, -50%)'}}
-      {...stackProps}
-    >
-      {children}
-    </Stack>
-  );
-};
+export const FloatingAction = forwardRef<HTMLDivElement, FloatingActionProps>(
+  ({children, component, position, ...stackProps}, ref) => {
+    return (
+      <Stack
+        ref={ref}
+        component={component ?? 'div'}
+        position="absolute"
+        zIndex={10}
+        left={`${position.x}%`}
+        top={`${position.y}%`}
+        sx={{transform: 'translate(-50%, -50%)'}}
+        {...stackProps}
+      >
+        {children}
+      </Stack>
+    );
+  }
+);

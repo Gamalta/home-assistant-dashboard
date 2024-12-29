@@ -8,7 +8,9 @@ type RoomLightImage = {
 
 export function RoomLightImage(props: RoomLightImage) {
   const {lightConfig} = props;
-  const light = useEntity(lightConfig.entity_id, {returnNullIfNotFound: true});
+  const light = useEntity(lightConfig.lightEntityId, {
+    returnNullIfNotFound: true,
+  });
 
   if (!light) return;
   return ['red', 'green', 'blue'].map((color, index) => (
