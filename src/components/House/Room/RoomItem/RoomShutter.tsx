@@ -1,4 +1,3 @@
-import {FloatingAction} from '../../FloatingAction';
 import Button from '@mui/material/Button';
 import {motion} from 'framer-motion';
 import {useState} from 'react';
@@ -16,11 +15,7 @@ export function RoomShutter(props: RoomShutterProps) {
   const [shutterModal, setShutterModal] = useState(false);
 
   return (
-    <FloatingAction
-      pos={shutterConfig?.position ?? {x: 0, y: 0}}
-      bgcolor="background.paper"
-      borderRadius="50%"
-    >
+    <>
       <motion.div layoutId={`layoutid-${id}`}>
         <Button
           variant="text"
@@ -41,6 +36,6 @@ export function RoomShutter(props: RoomShutterProps) {
         title="Volet roulant"
         shutterConfig={shutterConfig}
       />
-    </FloatingAction>
+    </>
   );
 }

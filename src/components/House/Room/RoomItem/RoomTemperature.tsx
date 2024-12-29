@@ -1,33 +1,34 @@
 import {UNKNOWN, useEntity} from '@hakit/core';
-import {motion} from 'framer-motion';
-import Button from '@mui/material/Button';
-import {HouseConfigType} from '../../../../configs/house';
-import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useLongPress} from '../../../../hooks/useLongPress';
+import Button from '@mui/material/Button';
+import {TemperatureConfigType} from '../../../../configs/house';
+import {useState} from 'react';
+import {motion} from 'framer-motion';
 import {TemperatureModal} from '../../../Modal/TemperatureModal';
 
-type RoomActionTemperature = {
+type RoomTemperatureProps = {
   id: string;
-  room: HouseConfigType['rooms'][0];
+  tempConfig: TemperatureConfigType;
 };
 
-export function RoomActionTemperature(props: RoomActionTemperature) {
-  const {id, room} = props;
-  const {tempModalOpen, setTempModalOpen} = useRoomContext();
+export function RoomTemperature(props: RoomTemperatureProps) {
+  const {id, tempConfig} = props;
+
+  const [tempModal, setTempModal] = useState(false);
 
   const tempLongPress = useLongPress(
-    () => setTempModalOpen(true),
-    () => setTempModalOpen(true)
+    () => setTempModal(true),
+    () => setTempModal(true)
   );
 
-  const temperature = useEntity(room.temperature?.entity ?? 'unknown', {
+  const temperature = useEntity(tempConfig.temperatureEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
     historyOptions: {
       disable: false,
       hoursToShow: 24,
     },
   });
-  const humidity = useEntity(room.temperature?.humidity ?? 'unknown', {
+  const humidity = useEntity(tempConfig.humidityEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
     historyOptions: {
       disable: false,
@@ -35,11 +36,11 @@ export function RoomActionTemperature(props: RoomActionTemperature) {
     },
   });
 
-  const battery = useEntity(room.temperature?.battery ?? 'unknown', {
+  const battery = useEntity(tempConfig.batteryEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
 
-  const signal = useEntity(room.temperature?.signal ?? 'unknown', {
+  const signal = useEntity(tempConfig.signalEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
 
@@ -66,13 +67,13 @@ export function RoomActionTemperature(props: RoomActionTemperature) {
       </motion.div>
       <TemperatureModal
         id={`${id}-temp`}
-        open={tempModalOpen}
-        onClose={() => setTempModalOpen(false)}
+        open={tempModal}
+        onClose={() => setTempModal(false)}
         temperatureEntity={temperature}
         humidityEntity={humidity ?? undefined}
         batteryEntity={battery ?? undefined}
         signalEntity={signal ?? undefined}
-        title={`Thermomètre ${room.name}`}
+        title="Thermomètre"
       />
     </>
   );

@@ -1,4 +1,3 @@
-import {FloatingAction} from '../../FloatingAction';
 import Button from '@mui/material/Button';
 import {motion} from 'framer-motion';
 import {DestkopConfigType} from '../../../../configs/house';
@@ -16,11 +15,7 @@ export function RoomDesktop(props: RoomDesktopProps) {
   const [desktopModal, setDesktopModal] = useState(false);
 
   return (
-    <FloatingAction
-      pos={desktopConfig?.position ?? {x: 0, y: 0}}
-      bgcolor="background.paper"
-      borderRadius="50%"
-    >
+    <>
       <motion.div layoutId={`layoutid-${id}`}>
         <Button
           variant="text"
@@ -41,6 +36,6 @@ export function RoomDesktop(props: RoomDesktopProps) {
         title="Ordinateur"
         desktopConfig={desktopConfig}
       />
-    </FloatingAction>
+    </>
   );
 }

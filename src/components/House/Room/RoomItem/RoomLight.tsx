@@ -1,21 +1,26 @@
 import {useEntity} from '@hakit/core';
-import {FloatingAction} from '../../FloatingAction';
 import {useIcon} from '../../../../hooks/useIcon';
 import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useLongPress} from '../../../../hooks/useLongPress';
 import Button from '@mui/material/Button';
 import {LightConfigType} from '../../../../configs/house';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {motion} from 'framer-motion';
+import {LightModal} from '../../../Modal/LightModal';
 
 type RoomLightProps = {
+  id: string;
   lightConfig: LightConfigType;
 };
 
 export function RoomLight(props: RoomLightProps) {
-  const {lightConfig} = props;
+  const {id, lightConfig} = props;
 
-  const {setLightModalOpen, setLightEntities} = useRoomContext();
-  const light = useEntity(lightConfig.entity_id, {returnNullIfNotFound: true});
+  const [lightModal, setLightModal] = useState(false);
+  const {setLightEntities} = useRoomContext();
+  const light = useEntity(lightConfig.lightEntityId, {
+    returnNullIfNotFound: true,
+  });
 
   useEffect(() => {
     if (!light) return;
@@ -31,36 +36,40 @@ export function RoomLight(props: RoomLightProps) {
   const unavailable = light?.state === 'unavailable';
 
   const lightLongPress = useLongPress(
-    () => setLightModalOpen(true),
+    () => setLightModal(true),
     () => light?.service.toggle()
   );
 
   const icon = useIcon(light?.attributes.icon);
   return (
-    <FloatingAction
-      pos={lightConfig?.position ?? {x: 0, y: 0}}
-      bgcolor="background.paper"
-      borderRadius="50%"
-    >
-      <Button
-        variant="text"
-        sx={{
-          minWidth: 0,
-          bgcolor: 'transparent',
-          color:
-            light?.state === 'on'
-              ? `rgb(${(light?.attributes.rgb_color ?? [255, 255, 255]).join(
-                  ','
-                )})`
-              : 'text.secondary',
+    <>
+      <motion.div layoutId={`${id}-light`}>
+        <Button
+          variant="text"
+          sx={{
+            minWidth: 0,
+            bgcolor: 'transparent',
+            color:
+              light?.state === 'on'
+                ? `rgb(${(light?.attributes.rgb_color ?? [255, 255, 255]).join(
+                    ','
+                  )})`
+                : 'text.secondary',
 
-          cursor: unavailable ? 'not-allowed' : 'pointer',
-          opacity: unavailable ? 0.5 : 1,
-        }}
-        {...(!unavailable && lightLongPress)}
-      >
-        {icon}
-      </Button>
-    </FloatingAction>
+            cursor: unavailable ? 'not-allowed' : 'pointer',
+            opacity: unavailable ? 0.5 : 1,
+          }}
+          {...(!unavailable && lightLongPress)}
+        >
+          {icon}
+        </Button>
+      </motion.div>
+      <LightModal
+        id={`${id}-light`}
+        open={lightModal}
+        onClose={() => setLightModal(false)}
+        title="Lumière"
+      />
+    </>
   );
 }
