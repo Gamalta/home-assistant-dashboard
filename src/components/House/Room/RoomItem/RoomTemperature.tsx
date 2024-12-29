@@ -50,19 +50,19 @@ export function RoomTemperature(props: RoomTemperatureProps) {
     <>
       <motion.div layoutId={`${id}-temp`}>
         <Button
-          variant="text"
+          variant="contained"
+          color="secondary"
           sx={{
+            height: '100%',
             minWidth: 0,
-            bgcolor: 'transparent',
-            color: 'text.secondary',
+            px: '6px',
           }}
           {...tempLongPress}
         >
-          {`${
-            temperature.state === UNKNOWN
-              ? '-'
-              : Math.floor(Number(temperature.state))
-          }°`}
+          {temperature.state === UNKNOWN
+            ? '-'
+            : Math.floor(Number(temperature.state))}
+          °
         </Button>
       </motion.div>
       <TemperatureModal

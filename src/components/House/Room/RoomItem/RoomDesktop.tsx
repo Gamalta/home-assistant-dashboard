@@ -1,9 +1,9 @@
-import Button from '@mui/material/Button';
 import {motion} from 'framer-motion';
 import {DestkopConfigType} from '../../../../configs/house';
 import ComputerIcon from '@mui/icons-material/Computer';
 import {useState} from 'react';
 import {DesktopModal} from '../../../Modal/DesktopModal';
+import Button from '@mui/material/Button';
 
 type RoomDesktopProps = {
   id: string;
@@ -18,11 +18,12 @@ export function RoomDesktop(props: RoomDesktopProps) {
     <>
       <motion.div layoutId={`layoutid-${id}`}>
         <Button
-          variant="text"
+          variant="contained"
+          color="secondary"
           sx={{
+            height: '100%',
             minWidth: 0,
-            bgcolor: 'transparent',
-            color: 'text.secondary',
+            px: '6px',
           }}
           onClick={() => setDesktopModal(true)}
         >

@@ -1,8 +1,8 @@
-import {useRef} from 'react';
+import Stack from '@mui/material/Stack';
 import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
-import {RoomAction} from './RoomAction';
 import {RoomItem} from './RoomItem';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -11,23 +11,47 @@ type RoomProps = {
 export function Room(props: RoomProps) {
   const {room} = props;
 
-  const roomActionRef = useRef<HTMLDivElement>(null);
-
   return (
     <RoomProvider>
-      <RoomAction
-        ref={roomActionRef}
+      <ButtonGroup
+        variant="contained"
+        size="small"
         key={room.id}
-        position={room.position ?? {x: 0, y: 0}}
-      />
-      {(room.items ?? []).map((item, id) => (
-        <RoomItem
-          key={`room-${room.id}-item-${item.type}-id-${id}`}
-          id={`room-${room.id}-item-${item.type}-id-${id}`}
-          itemConfig={item}
-          parentRef={item.roomDisplay ? roomActionRef : undefined}
-        />
-      ))}
+        sx={{
+          position: 'absolute',
+          top: `${room.position.y}%`,
+          left: `${room.position.x}%`,
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        {(room.items ?? [])
+          .filter(item => item.roomDisplay)
+          .map((item, id) => (
+            <RoomItem
+              key={`room-${room.id}-item-${item.type}-room-id-${id}`}
+              id={`room-${room.id}-item-${item.type}-room-id-${id}`}
+              itemConfig={item}
+            />
+          ))}
+      </ButtonGroup>
+      {(room.items ?? [])
+        .filter(item => !item.roomDisplay)
+        .map((item, id) => (
+          <Stack
+            key={`room-${room.id}-item-${item.type}-id-${id}`}
+            sx={{
+              position: 'absolute',
+              top: `${item.position.y}%`,
+              left: `${item.position.x}%`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <RoomItem
+              id={`room-${room.id}-item-${item.type}-id-${id}`}
+              itemConfig={item}
+            />
+          </Stack>
+        ))}
       {/*(room.items ?? [])
         .filter(item => item.type === 'light')
         .map(light => (

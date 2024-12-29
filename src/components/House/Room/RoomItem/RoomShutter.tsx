@@ -1,9 +1,9 @@
-import Button from '@mui/material/Button';
 import {motion} from 'framer-motion';
 import {useState} from 'react';
 import {ShutterConfigType} from '../../../../configs/house';
 import {ShutterModal} from '../../../Modal/ShutterModal';
 import {WindowIcon} from '../../../Icons/WindowIcon';
+import Button from '@mui/material/Button';
 
 type RoomShutterProps = {
   id: string;
@@ -18,11 +18,12 @@ export function RoomShutter(props: RoomShutterProps) {
     <>
       <motion.div layoutId={`layoutid-${id}`}>
         <Button
-          variant="text"
+          variant="contained"
+          color="secondary"
           sx={{
+            height: '100%',
             minWidth: 0,
-            bgcolor: 'transparent',
-            color: 'text.secondary',
+            px: '6px',
           }}
           onClick={() => setShutterModal(true)}
         >

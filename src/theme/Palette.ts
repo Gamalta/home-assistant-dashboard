@@ -7,6 +7,9 @@ export const DarkPalette: ColorSystemOptions = {
     primary: {
       main: amber[600],
     },
+    secondary: {
+      main: '#2C2C2E',
+    },
     background: {
       default: '#232323',
       paper: '#2C2C2E',
@@ -21,6 +24,9 @@ export const LightPalette: ColorSystemOptions = {
     mode: 'light',
     primary: {
       main: amber[700],
+    },
+    secondary: {
+      main: '#2C2C2E',
     },
     background: {
       default: '#232323',

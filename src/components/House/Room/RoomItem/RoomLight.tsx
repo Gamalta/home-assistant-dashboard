@@ -2,11 +2,11 @@ import {useEntity} from '@hakit/core';
 import {useIcon} from '../../../../hooks/useIcon';
 import {useRoomContext} from '../../../../contexts/RoomContext';
 import {useLongPress} from '../../../../hooks/useLongPress';
-import Button from '@mui/material/Button';
 import {LightConfigType} from '../../../../configs/house';
 import {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 import {LightModal} from '../../../Modal/LightModal';
+import Button from '@mui/material/Button';
 
 type RoomLightProps = {
   id: string;
@@ -45,16 +45,17 @@ export function RoomLight(props: RoomLightProps) {
     <>
       <motion.div layoutId={`${id}-light`}>
         <Button
-          variant="text"
+          variant="contained"
+          color="secondary"
           sx={{
+            height: '100%',
             minWidth: 0,
-            bgcolor: 'transparent',
-            color:
-              light?.state === 'on'
-                ? `rgb(${(light?.attributes.rgb_color ?? [255, 255, 255]).join(
-                    ','
-                  )})`
-                : 'text.secondary',
+            px: '6px',
+            ...(light?.state === 'on' && {
+              color: `rgb(${(
+                light?.attributes.rgb_color ?? [255, 255, 255]
+              ).join(',')})`,
+            }),
 
             cursor: unavailable ? 'not-allowed' : 'pointer',
             opacity: unavailable ? 0.5 : 1,
