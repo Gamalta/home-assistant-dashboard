@@ -49,11 +49,7 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   useEffect(() => {
     const theme = (window.localStorage.getItem('theme') || 'auto') as themeType;
     setThemeMode(theme);
-    if (theme !== 'auto') {
-      const interval = setInterval(() => setMode(theme), 500);
-      return () => clearInterval(interval);
-    }
-    return () => {};
+    if (theme !== 'auto') setMode(theme);
   }, [setMode]);
 
   useEffect(() => {

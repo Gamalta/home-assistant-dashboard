@@ -39,7 +39,7 @@ export function ShutterModal(props: DesktopModalProps) {
           direction="row"
           justifyContent="center"
           alignItems="center"
-          bgcolor="background.default"
+          bgcolor="background.tertiary"
           borderRadius={1}
           spacing={1}
         >
