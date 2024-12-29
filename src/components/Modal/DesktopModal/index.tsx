@@ -33,7 +33,7 @@ export function DesktopModal(props: DesktopModalProps) {
               .filter(option => option.hide)
               .map(option => (
                 <OptionButton
-                  key={`option-hide-${option.label}-${option.script}`}
+                  key={`option-hide-${option.label}-${option.scriptEntityId}`}
                   option={option}
                   onClose={() => (onClose(), setAnchorEl(null))}
                 />
@@ -56,7 +56,7 @@ export function DesktopModal(props: DesktopModalProps) {
             .filter(option => !option.hide)
             .map(option => (
               <OptionButton
-                key={`option-${option.label}-${option.script}`}
+                key={`option-${option.label}-${option.scriptEntityId}`}
                 option={option}
                 onClose={() => onClose()}
               />

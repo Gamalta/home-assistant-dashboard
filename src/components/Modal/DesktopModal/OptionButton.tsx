@@ -34,7 +34,7 @@ function getIcon(entity: HassEntityWithService<'script'>, icon?: string) {
 export function OptionButton(props: OptionButtonProps) {
   const {option, onClose} = props;
 
-  const entity = useEntity(option.script);
+  const entity = useEntity(option.scriptEntityId);
 
   if (option.hide) {
     return (

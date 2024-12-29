@@ -1,13 +1,13 @@
 import {useEntity} from '@hakit/core';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {SystemGraphConfigType} from '../../../configs/house';
 import {roundToNearest5Minutes} from '../../../utils/graph';
 import {ChartsTooltip} from '@mui/x-charts/ChartsTooltip';
 import {ResponsiveChartContainer} from '@mui/x-charts/ResponsiveChartContainer';
 import {ChartsClipPath} from '@mui/x-charts/ChartsClipPath';
 import {LinePlot} from '@mui/x-charts/LineChart';
 import {AreaPlot} from '@mui/x-charts/LineChart';
+import {SystemGraphConfigType} from '../../../configs/sidebar';
 
 type SystemGraphDisplayProps = {
   graphConfig: SystemGraphConfigType;
@@ -16,7 +16,7 @@ type SystemGraphDisplayProps = {
 export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   const {graphConfig} = props;
 
-  const entity = useEntity(graphConfig.sensor ?? 'unknown', {
+  const entity = useEntity(graphConfig.sensorEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
     historyOptions: {
       disable: false,

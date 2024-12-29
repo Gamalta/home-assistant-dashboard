@@ -1,8 +1,8 @@
 import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
-import {SideBarConfigType} from '../../../configs/house';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
 import {SystemGraphDisplay} from './SystemGraphDisplay';
+import {SideBarConfigType} from '../../../configs/sidebar';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -22,12 +22,12 @@ export function SystemModal(props: SystemModalProps) {
         <Stack spacing={1}>
           <SystemInfoDisplay
             label="Lancé depuis:"
-            sensor={systemConfig?.uptime}
+            sensor={systemConfig?.uptimeEntityId}
             formatEntity={entity => entity.custom.relativeTime}
           />
           <SystemInfoDisplay
             label="Alimentation:"
-            sensor={systemConfig?.powerStatus}
+            sensor={systemConfig?.powerStatusEntityId}
             formatEntity={entity =>
               entity.state === 'off' ? 'Ok' : 'Insuffisante'
             }

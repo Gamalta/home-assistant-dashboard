@@ -17,7 +17,7 @@ type DesktopModalProps = Omit<ModalProps, 'children'> & {
 export function ShutterModal(props: DesktopModalProps) {
   const {shutterConfig, onClose, ...modalProps} = props;
 
-  const entity = useEntity(shutterConfig.entity_id, {
+  const entity = useEntity(shutterConfig.shutterEntityId, {
     returnNullIfNotFound: true,
   });
 
