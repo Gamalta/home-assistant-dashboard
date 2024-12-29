@@ -53,6 +53,7 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
       const interval = setInterval(() => setMode(theme), 500);
       return () => clearInterval(interval);
     }
+    return () => {};
   }, [setMode]);
 
   useEffect(() => {
