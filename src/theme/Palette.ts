@@ -26,7 +26,7 @@ export const LightPalette: ColorSystemOptions = {
       main: amber[700],
     },
     secondary: {
-      main: '#2C2C2E',
+      main: '#F2F2F7',
     },
     background: {
       default: '#232323',
