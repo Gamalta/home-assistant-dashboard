@@ -1,6 +1,6 @@
 import {Modal, ModalProps} from '..';
 import {ShutterConfigType} from '../../../configs/house';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ShutterSlider} from './ShutterSlider';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -24,6 +24,10 @@ export function ShutterModal(props: DesktopModalProps) {
   const [position, setPosition] = useState(
     entity?.attributes.current_position ?? 0
   );
+
+  useEffect(() => {
+    setPosition(entity?.attributes.current_position ?? 0);
+  }, [entity?.attributes.current_position]);
 
   return (
     <Modal {...modalProps} onClose={onClose}>
