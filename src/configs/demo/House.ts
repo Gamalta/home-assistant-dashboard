@@ -111,7 +111,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.salon',
+          shutterEntityId: 'cover.salon_shutter',
           position: {x: 55, y: 17},
         },
       ],
@@ -178,7 +178,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.office',
+          shutterEntityId: 'cover.office_shutter',
           position: {x: 25.5, y: 90},
         },
       ],
@@ -208,7 +208,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.bedroom',
+          shutterEntityId: 'cover.bedroom_shutter',
           position: {x: 81.5, y: 72},
         },
       ],
@@ -238,7 +238,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.bedroom2',
+          shutterEntityId: 'cover.bedroom_2_shutter',
           position: {x: 73, y: 17},
         },
       ],
