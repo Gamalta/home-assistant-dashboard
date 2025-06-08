@@ -19,8 +19,6 @@ export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
   const entity = useEntity(sensor ?? 'unknown', {returnNullIfNotFound: true});
   if (!entity) return null;
 
-  console.log(entity);
-
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Typography>{label}</Typography>
