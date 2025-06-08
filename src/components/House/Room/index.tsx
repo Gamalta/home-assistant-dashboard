@@ -1,8 +1,9 @@
 import Stack from '@mui/material/Stack';
-import type {HouseConfigType} from '../../../configs/house';
+import type {HouseConfigType, LightConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import {RoomLightImage} from './RoomLightImage';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -18,6 +19,7 @@ export function Room(props: RoomProps) {
         size="small"
         key={room.id}
         sx={{
+          zIndex: 100,
           position: 'absolute',
           top: `${room.position.y}%`,
           left: `${room.position.x}%`,
@@ -40,6 +42,7 @@ export function Room(props: RoomProps) {
           <Stack
             key={`room-${room.id}-item-${item.type}-id-${id}`}
             sx={{
+              zIndex: 100,
               position: 'absolute',
               top: `${item.position.y}%`,
               left: `${item.position.x}%`,
@@ -52,14 +55,15 @@ export function Room(props: RoomProps) {
             />
           </Stack>
         ))}
-      {/*(room.items ?? [])
+      {(room.items ?? [])
         .filter(item => item.type === 'light')
         .map(light => (
           <RoomLightImage
+            //TODO move into LightItem
             lightConfig={light as LightConfigType}
-            key={`room-${room.id}-light-image-posX-${light.position.x}-poxY-${light.position.y}`}
+            key={`room-${room.id}-light-${light.lightEntityId}`}
           />
-        ))*/}
+        ))}
     </RoomProvider>
   );
 }

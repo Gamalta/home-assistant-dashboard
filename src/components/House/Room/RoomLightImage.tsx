@@ -19,6 +19,7 @@ export function RoomLightImage(props: RoomLightImage) {
       key={color}
       src={lightConfig?.layer[color as 'red' | 'green' | 'blue']}
       sx={{
+        zIndex: 10,
         mixBlendMode: 'lighten',
         opacity:
           light.state === 'on'

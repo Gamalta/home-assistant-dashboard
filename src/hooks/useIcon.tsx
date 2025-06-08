@@ -25,7 +25,7 @@ export function useIcon(
 
     return (
       <Icon {...iconProps}>
-        <Iconify icon={icon || 'mdi:person'} />
+        <Iconify icon={icon || 'mdi:person'} width="24px" height="24px" />
       </Icon>
     );
   }, [icon, iconProps]);
