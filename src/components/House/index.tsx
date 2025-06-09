@@ -108,7 +108,10 @@ export function House() {
         src={houseConfig.dayFloorPlan}
       />
       {/**TODO remove / 100 */}
-      <img src={houseConfig.nightFloorPlan} style={{opacity: nightOpacity / 100}} />
+      <img
+        src={houseConfig.nightFloorPlan}
+        style={{opacity: nightOpacity / 100}}
+      />
       <Stack
         position="relative"
         top="50%"
