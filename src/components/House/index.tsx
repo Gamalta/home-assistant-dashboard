@@ -8,7 +8,7 @@ import {CircularProgress} from '@mui/material';
 export function House() {
   const {config} = useHouseContext();
   const houseConfig = config?.house;
-  const [nightOpacity, setNightOpacity] = useState(0);
+  const [_nightOpacity, setNightOpacity] = useState(0);
   const [showLoading, setShowLoading] = useState(true);
   const [baseImageRef, setBaseImageRef] = useState<HTMLImageElement | null>(
     null
