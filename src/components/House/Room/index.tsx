@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type {HouseConfigType, LightConfigType} from '../../../configs/house';
+import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -60,7 +60,7 @@ export function Room(props: RoomProps) {
         .map(light => (
           <RoomLightImage
             //TODO move into LightItem
-            lightConfig={light as LightConfigType}
+            lightConfig={light}
             key={`room-${room.id}-light-${light.lightEntityId}`}
           />
         ))}
