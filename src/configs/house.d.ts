@@ -31,7 +31,7 @@ type BaseItemConfigType =
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
-  layer: {
+  layer?: {
     red: string;
     green: string;
     blue: string;

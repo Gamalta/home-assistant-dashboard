@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {Icon as Iconify} from '@iconify/react';
 import {IrisIcon} from '../components/Icons/IrisIcon';
 import {PlayBarIcon} from '../components/Icons/PlayBarIcon';
-import {PendantRoundIcon} from '../components/Icons/PendantRoundIcon';
+import {BulbSultanIcon} from '../components/Icons/BulbSultanIconIcon';
 import Icon, {IconProps} from '@mui/material/Icon';
 
 export function useIcon(
@@ -11,11 +11,10 @@ export function useIcon(
 ) {
   const HaIcon = useMemo(() => {
     if (icon === null) return null;
-
     if (icon?.startsWith('hue:')) {
       switch (icon) {
         case 'hue:bulb-sultan':
-          return <PendantRoundIcon />;
+          return <BulbSultanIcon />;
         case 'hue:iris':
           return <IrisIcon />;
         case 'hue:play-bar-v':
