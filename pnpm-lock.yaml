@@ -16,10 +16,10 @@ importers:
         version: 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)
       '@hakit/components':
         specifier: ^4.0.3
-        version: 4.0.3(6vchunegqisc6iuuf7cqou6t5i)
+        version: 4.0.3(l66gsv4dijpccnwkua2ppubkyi)
       '@hakit/core':
         specifier: ^4.0.3
-        version: 4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))
+        version: 4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))
       '@iconify/react':
         specifier: ^4.1.1
         version: 4.1.1(react@18.3.1)
@@ -48,8 +48,8 @@ importers:
         specifier: ^1.11.10
         version: 1.11.13
       framer-motion:
-        specifier: ^11.0.24
-        version: 11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^12.18.1
+        version: 12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -3718,12 +3718,12 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@11.3.31:
-    resolution: {integrity: sha512-Xmxs08WBXnc2tNzNZbFSpquI33lvleJg4Y+hmZ+vFkn+laN9ZnR3gbZnNGKDtuz7c/x3u8dLg05OU3EhLobCsg==}
+  framer-motion@12.18.1:
+    resolution: {integrity: sha512-6o4EDuRPLk4LSZ1kRnnEOurbQ86MklVk+Y1rFBUKiF+d2pCdvMjWVu0ZkyMVCTwl5UyTH2n/zJEJx+jvTYuxow==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       '@emotion/is-prop-valid':
         optional: true
@@ -4792,6 +4792,12 @@ packages:
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
     hasBin: true
+
+  motion-dom@12.18.1:
+    resolution: {integrity: sha512-dR/4EYT23Snd+eUSLrde63Ws3oXQtJNw/krgautvTfwrN/2cHfCZMdu6CeTxVfRRWREW3Fy1f5vobRDiBb/q+w==}
+
+  motion-utils@12.18.1:
+    resolution: {integrity: sha512-az26YDU4WoDP0ueAkUtABLk2BIxe28d8NH1qWT8jPGhPyf44XTdDUh8pDk9OPphaSrR9McgpcJlgwSOIw/sfkA==}
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
@@ -8248,16 +8254,16 @@ snapshots:
       '@fullcalendar/core': 6.1.15
       '@fullcalendar/daygrid': 6.1.15(@fullcalendar/core@6.1.15)
 
-  '@hakit/components@4.0.3(6vchunegqisc6iuuf7cqou6t5i)':
+  '@hakit/components@4.0.3(l66gsv4dijpccnwkua2ppubkyi)':
     dependencies:
       '@emotion/is-prop-valid': 1.3.0
       '@emotion/react': 11.13.3(@types/react@18.3.5)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)
       '@fullcalendar/react': 6.1.15(@fullcalendar/core@6.1.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@hakit/core': 4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))
+      '@hakit/core': 4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))
       '@use-gesture/react': 10.3.1(react@18.3.1)
       autolinker: 4.0.0
-      framer-motion: 11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      framer-motion: 12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       fullcalendar: 6.1.15
       hls.js: 1.3.5
       leaflet: 1.9.4
@@ -8273,13 +8279,13 @@ snapshots:
       use-long-press: 3.2.0(react@18.3.1)
       zustand: 4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)
 
-  '@hakit/core@4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))':
+  '@hakit/core@4.0.3(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1))(@iconify/react@4.1.1(react@18.3.1))(deep-object-diff@1.1.9)(framer-motion@12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-debounce@10.0.3(react@18.3.1))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1))':
     dependencies:
       '@emotion/react': 11.13.3(@types/react@18.3.5)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)
       '@iconify/react': 4.1.1(react@18.3.1)
       deep-object-diff: 1.1.9
-      framer-motion: 11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      framer-motion: 12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       home-assistant-js-websocket: 9.4.0
       lodash: 4.17.21
       prettier: 3.3.3
@@ -11259,8 +11265,10 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.3.31(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  framer-motion@12.18.1(@emotion/is-prop-valid@1.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
+      motion-dom: 12.18.1
+      motion-utils: 12.18.1
       tslib: 2.7.0
     optionalDependencies:
       '@emotion/is-prop-valid': 1.3.0
@@ -12577,6 +12585,12 @@ snapshots:
   mkdirp@0.5.6:
     dependencies:
       minimist: 1.2.8
+
+  motion-dom@12.18.1:
+    dependencies:
+      motion-utils: 12.18.1
+
+  motion-utils@12.18.1: {}
 
   ms@2.0.0: {}
 

@@ -29,7 +29,7 @@ export function SystemModal(props: SystemModalProps) {
             label="Alimentation:"
             sensor={systemConfig?.powerStatusEntityId}
             formatEntity={entity =>
-              entity.state === 'off' ? 'Ok' : 'Insuffisante'
+              entity.state === 'off' ? 'Suffisant' : 'Insuffisante'
             }
           />
         </Stack>

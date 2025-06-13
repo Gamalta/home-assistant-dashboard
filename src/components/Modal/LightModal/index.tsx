@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import {BrightnessSlider} from './components/BrightnessSlider';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {HassEntityWithService} from '@hakit/core';
+import {AttributesDisplay} from '../../display/AttributesDisplay';
 
 type LightModalProps = Omit<ModalProps, 'children'>;
 
@@ -29,8 +30,26 @@ export function LightModal(props: LightModalProps) {
   const entities = lightEntities.filter(
     (entity): entity is HassEntityWithService<'light'> => entity !== undefined
   );
+
+  //TODO adapt modal to supported_feature
+
   return (
-    <Modal {...modalProps}>
+    <Modal
+      {...modalProps}
+      action={
+        <Stack
+          direction="row"
+          borderRadius={1}
+          border={theme => `1px solid ${theme.palette.divider}`}
+          spacing={1}
+          p={1}
+        >
+          <AttributesDisplay
+            attributes={entities.map(entity => entity.attributes)}
+          />
+        </Stack>
+      }
+    >
       <LightModalProvider entities={entities}>
         <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack

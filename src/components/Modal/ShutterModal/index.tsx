@@ -14,6 +14,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
+import {AttributesDisplay} from '../../display/AttributesDisplay';
 
 type DesktopModalProps = Omit<ModalProps, 'children'> & {
   shutterConfig: ShutterConfigType;
@@ -25,7 +26,7 @@ export function ShutterModal(props: DesktopModalProps) {
   const entity = useEntity(shutterConfig.shutterEntityId, {
     returnNullIfNotFound: true,
   });
-  const position = entity?.attributes.current_position ?? 0;
+  const position = 100 - (entity?.attributes.current_position ?? 0);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controls = useDragControls();
@@ -69,9 +70,25 @@ export function ShutterModal(props: DesktopModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetPosition]);
 
+  //TODO adapt modal to supported_feature
+
   return (
-    <Modal {...modalProps} onClose={onClose}>
-      <Stack spacing={3}>
+    <Modal
+      {...modalProps}
+      onClose={onClose}
+      action={
+        <Stack
+          direction="row"
+          borderRadius={1}
+          border={theme => `1px solid ${theme.palette.divider}`}
+          spacing={1}
+          p={1}
+        >
+          <AttributesDisplay attributes={[entity?.attributes ?? {}]} />
+        </Stack>
+      }
+    >
+      <Stack spacing={3} px={1}>
         <Stack
           width="200px"
           height="197px"

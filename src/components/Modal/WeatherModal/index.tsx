@@ -3,6 +3,7 @@ import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
 import {getWeatherIcon, getWeatherIconPath} from '../../../utils/weather';
 import {Typography} from '@mui/material';
+import {AttributesDisplay} from '../../display/AttributesDisplay';
 
 type WeatherModalProps = Omit<ModalProps, 'children'> & {
   weather: ReturnType<typeof useWeather>;
@@ -33,7 +34,20 @@ export function WeatherModal(props: WeatherModalProps) {
   const {weather, ...modalProps} = props;
 
   return (
-    <Modal {...modalProps}>
+    <Modal
+      {...modalProps}
+      action={
+        <Stack
+          direction="row"
+          borderRadius={1}
+          border={theme => `1px solid ${theme.palette.divider}`}
+          spacing={1}
+          p={1}
+        >
+          <AttributesDisplay attributes={[weather.attributes ?? {}]} />
+        </Stack>
+      }
+    >
       <Stack spacing={2}>
         <Stack
           direction="row"
