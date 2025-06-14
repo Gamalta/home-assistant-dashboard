@@ -173,9 +173,8 @@ export function SideBarDock(props: SideBarDockProps) {
           )}
           {config?.sideBar.system && (
             <>
-              <motion.div layoutId="layoutid-system-modal">
-                <Button onClick={() => setSystemModal(true)}>Système</Button>
-              </motion.div>
+              <Button onClick={() => setSystemModal(true)}>Système</Button>
+              <motion.div layoutId="layoutid-system-modal" />
               <SystemModal
                 id="layoutid-system-modal"
                 title="Système"
