@@ -24,6 +24,8 @@ export function Room(props: RoomProps) {
           top: `${room.position.y}%`,
           left: `${room.position.x}%`,
           transform: 'translate(-50%, -50%)',
+          border: 0,
+          boxShadow: 0,
         }}
       >
         {(room.items ?? [])

@@ -48,9 +48,10 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
 
   useEffect(() => {
     const theme = (window.localStorage.getItem('theme') || 'auto') as themeType;
+    if (theme === mode) return;
     setThemeMode(theme);
     if (theme !== 'auto') setMode(theme);
-  }, [setMode]);
+  }, [mode, setMode]);
 
   useEffect(() => {
     autoTheming();
