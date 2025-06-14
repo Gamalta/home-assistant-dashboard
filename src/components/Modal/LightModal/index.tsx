@@ -1,6 +1,6 @@
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNewRounded';
 import Divider from '@mui/material/Divider';
@@ -12,6 +12,7 @@ import {ColorTempWheelIcon} from '../../Icons/ColorTempWheelIcon';
 import {ColorTempTab} from './Tabs/ColorTempTab';
 import {EffectTab} from './Tabs/EffectTab';
 import {ColorTab} from './Tabs/ColorTab';
+import {OnOffTab} from './Tabs/OnOffTab';
 import {LightModalProvider} from '../../../contexts/LightModalContext';
 import {LightCard} from './components/LightCard';
 import Typography from '@mui/material/Typography';
@@ -19,19 +20,61 @@ import {BrightnessSlider} from './components/BrightnessSlider';
 import {useRoomContext} from '../../../contexts/RoomContext';
 import {HassEntityWithService} from '@hakit/core';
 import {AttributesDisplay} from '../../display/AttributesDisplay';
+import {
+  lightHasColor,
+  lightHasColorTemp,
+  lightHasEffect,
+  lightsHasBrightness,
+  lightsHasColor,
+  lightsHasColorTemp,
+  lightsHasEffect,
+} from '../../../utils/entity/light';
 
 type LightModalProps = Omit<ModalProps, 'children'>;
 
+enum LightTab {
+  ON_OFF = 'on-off',
+  COLOR = 'color',
+  COLOR_TEMP = 'color_temp',
+  EFFECT = 'effect',
+}
+
 export function LightModal(props: LightModalProps) {
   const {...modalProps} = props;
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(LightTab.COLOR);
   const {lightEntities} = useRoomContext();
 
   const entities = lightEntities.filter(
     (entity): entity is HassEntityWithService<'light'> => entity !== undefined
   );
 
-  //TODO adapt modal to supported_feature
+  const hasEffect = lightsHasEffect(entities);
+  const hasBrightness = lightsHasBrightness(entities);
+  const hasColorTemp = lightsHasColorTemp(entities);
+  const hasColor = lightsHasColor(entities);
+
+  //TODO only onoff light
+
+  function moveToSupportedTab(entities: HassEntityWithService<'light'>[]) {
+    if (lightsHasColor(entities)) {
+      setTab(LightTab.COLOR);
+      return;
+    }
+    if (lightsHasColorTemp(entities)) {
+      setTab(LightTab.COLOR_TEMP);
+      return;
+    }
+    if (lightsHasEffect(entities)) {
+      setTab(LightTab.EFFECT);
+      return;
+    }
+    setTab(LightTab.ON_OFF);
+  }
+
+  useEffect(() => {
+    moveToSupportedTab(entities);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasColor, hasColorTemp, hasEffect]);
 
   return (
     <Modal
@@ -57,57 +100,89 @@ export function LightModal(props: LightModalProps) {
             width="500px"
             component={motion.div}
             transition={{
-              tension: 190,
-              friction: 70,
               mass: 0.4,
             }}
             initial={false}
-            animate={{x: tab * -100 + '%'}}
+            animate={{
+              x:
+                {
+                  [LightTab.ON_OFF]: 0,
+                  [LightTab.COLOR]: 1,
+                  [LightTab.COLOR_TEMP]: hasColor ? 2 : 1,
+                  [LightTab.EFFECT]:
+                    (hasColor ? 2 : 1) + (hasColorTemp ? 1 : 0),
+                }[tab] *
+                  -100 +
+                '%',
+            }}
           >
-            <ColorTab />
-            <ColorTempTab />
-            <EffectTab />
+            <OnOffTab />
+            {hasColor && <ColorTab />}
+            {hasColorTemp && <ColorTempTab />}
+            {hasEffect && <EffectTab />}
           </Stack>
-          <Stack direction="row" justifyContent="space-between">
-            <ToggleButtonGroup
-              exclusive
-              value={tab}
-              onChange={(_, newTab) => setTab(newTab)}
-            >
-              <ToggleButton
-                value=""
-                onClick={event => {
-                  event.preventDefault();
-                  const oneWasEnable = entities.find(
-                    entity => entity.state === 'on'
-                  );
-                  entities.map(entity => {
-                    oneWasEnable
-                      ? entity.service.turnOff()
-                      : entity.service.turnOn();
-                  });
-                }}
+          {(hasColor || hasColorTemp || hasEffect) && (
+            <Stack direction="row" justifyContent="space-between">
+              <ToggleButtonGroup
+                exclusive
+                value={tab}
+                onChange={(_, newTab) => setTab(newTab)}
               >
-                <PowerSettingsNewIcon />
-              </ToggleButton>
-              <Divider />
-              <ToggleButton value={0} key="buttonColor">
-                <ColorWheelIcon />
-              </ToggleButton>
-              <ToggleButton value={1} key="buttonTemp">
-                <ColorTempWheelIcon />
-              </ToggleButton>
-              <ToggleButton value={2} key="buttonEffect" disabled>
-                <AutoAwesomeIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-            <BrightnessSlider />
-          </Stack>
+                <ToggleButton
+                  value=""
+                  onClick={event => {
+                    event.preventDefault();
+                    const oneWasEnable = entities.find(
+                      entity => entity.state === 'on'
+                    );
+                    entities.map(entity => {
+                      oneWasEnable
+                        ? entity.service.turnOff()
+                        : entity.service.turnOn();
+                    });
+                  }}
+                >
+                  <PowerSettingsNewIcon />
+                </ToggleButton>
+                <Divider />
+                {hasColor && (
+                  <ToggleButton value={LightTab.COLOR} key="buttonColor">
+                    <ColorWheelIcon />
+                  </ToggleButton>
+                )}
+                {hasColorTemp && (
+                  <ToggleButton value={LightTab.COLOR_TEMP} key="buttonTemp">
+                    <ColorTempWheelIcon />
+                  </ToggleButton>
+                )}
+                {hasEffect && (
+                  <ToggleButton
+                    value={LightTab.EFFECT}
+                    key="buttonEffect"
+                    disabled
+                  >
+                    <AutoAwesomeIcon />
+                  </ToggleButton>
+                )}
+              </ToggleButtonGroup>
+              {hasBrightness && <BrightnessSlider />}
+            </Stack>
+          )}
           <Stack spacing={1}>
             <Typography variant="h6">Lumières</Typography>
             <Stack direction="row" gap={2} p={1}>
               {entities.map(entity => (
-                <LightCard key={entity.entity_id} entity={entity} />
+                <LightCard
+                  key={entity.entity_id}
+                  entity={entity}
+                  controllableByCurrentTab={{
+                    [LightTab.ON_OFF]: () => true,
+                    [LightTab.COLOR]: lightHasColor,
+                    [LightTab.COLOR_TEMP]: lightHasColorTemp,
+                    [LightTab.EFFECT]: lightHasEffect,
+                  }[tab](entity)}
+                  onMoveToControllerTab={() => moveToSupportedTab([entity])}
+                />
               ))}
             </Stack>
           </Stack>
