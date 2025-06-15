@@ -1,53 +1,120 @@
 import Stack from '@mui/material/Stack';
-import {motion, useDragControls} from 'framer-motion';
+import {motion, useMotionValue} from 'framer-motion';
 import {HassEntityWithService} from '@hakit/core';
-import {useColorPicker} from '../../../../hooks/useColorPicker';
+import {getContainerPosition, getWheelPosition} from '../../../../utils/color';
+import {useLightModalContext} from '../../../../contexts/LightModalContext';
+import {useColorPicker, WheelMode} from '../../../../hooks/useColorPicker';
 
 type ActivePickerProps = {
-  mode: 'color' | 'temperature';
+  mode: WheelMode;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   entities: HassEntityWithService<'light'>[];
 };
 
 export function ActivePicker(props: ActivePickerProps) {
   const {mode, canvasRef, entities} = props;
-  const dragControls = useDragControls();
-  const {color, ...events} = useColorPicker(
-    canvasRef.current,
-    dragControls,
-    mode
-  );
+
+  const {activeEntityIds, setActiveEntityIds, hoverEntity, setHoverEntity} =
+    useLightModalContext();
+  const {
+    color,
+    setColor,
+    getNeerEntity,
+    getColorFromCoordWheel,
+    setEntitiesColor,
+  } = useColorPicker(mode);
+
+  const motionXValue = useMotionValue(0);
+  const motionYValue = useMotionValue(0);
 
   if (entities.length === 0) return <></>;
 
+  const handleDrag = () => {
+    if (!canvasRef.current) return;
+    const {x, y} = getWheelPosition(
+      canvasRef.current,
+      motionXValue.get(),
+      motionYValue.get()
+    );
+
+    let newX = x;
+    let newY = y;
+
+    const distance = Math.hypot(x, y);
+    if (Math.abs(distance) > 1) {
+      const angle = Math.atan2(y, x);
+      const constrainedX = Math.cos(angle);
+      const constrainedY = Math.sin(angle);
+      const {x: containerX, y: containerY} = getContainerPosition(
+        canvasRef.current,
+        constrainedX,
+        constrainedY
+      );
+      newX = constrainedX;
+      newY = constrainedY;
+      motionXValue.set(containerX);
+      motionYValue.set(containerY);
+    }
+
+    const newColor = getColorFromCoordWheel(newX, newY);
+    setColor(newColor);
+
+    const neerEntity = getNeerEntity(newX, newY, entities);
+    setHoverEntity(neerEntity?.entity_id);
+  };
+
+  const handleDragEnd = () => {
+    if (!canvasRef.current) return;
+    const {x, y} = getWheelPosition(
+      canvasRef.current,
+      motionXValue.get(),
+      motionYValue.get()
+    );
+    const newColor = getColorFromCoordWheel(x, y);
+    setColor(newColor);
+
+    if (hoverEntity) {
+      setActiveEntityIds(activeEntities => [hoverEntity, ...activeEntities]);
+    }
+
+    setEntitiesColor(
+      entities.filter(entity => activeEntityIds.includes(entity.entity_id)),
+      newColor
+    );
+  };
+
   return (
-    <Stack
-      component={motion.div}
-      drag
-      {...events}
-      dragControls={dragControls}
+    <motion.div
+      whileTap={{scale: 1.1, zIndex: 10, cursor: 'grabbing'}}
+      whileHover={{scale: 0.9, zIndex: 10, cursor: 'grab'}}
+      style={{
+        x: motionXValue,
+        y: motionYValue,
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '0',
+        height: '0',
+        transform: 'translate(-50%, -50%)',
+      }}
+      onDrag={handleDrag}
+      onDragEnd={handleDragEnd}
+      drag={true}
       dragMomentum={false}
-      whileTap={{scale: 1.5, zIndex: 10, cursor: 'grabbing'}}
-      whileHover={{scale: 1.2, zIndex: 10, cursor: 'grab'}}
-      position="absolute"
-      top="calc(50% - 12px)"
-      left="calc(50% - 12px)"
-      width="32px"
-      height="32px"
     >
       <Stack
-        width="100%"
-        height="100%"
+        width="32px"
+        height="32px"
         borderRadius="50%"
         border="2px solid black"
         boxSizing="border-box"
         boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-        bgcolor={`rgb(${color.join(',')})`}
         sx={{
-          transform: 'rotate(45deg) translate(-50%, -50%)',
+          backgroundColor: `rgb(${color.join(',')})`,
+          transform: 'translate(-16px, -38px) rotate(45deg)',
           borderBottomRightRadius: 0,
         }}
       />
-    </Stack>
+    </motion.div>
   );
 }
