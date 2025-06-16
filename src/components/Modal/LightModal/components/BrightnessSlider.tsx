@@ -39,7 +39,11 @@ export function BrightnessSlider() {
           variant="outlined"
           color="inherit"
           onClick={event => setSliderAnchor(event.currentTarget)}
-          sx={{height: '100%', overflow: 'hidden', border: '0px'}}
+          sx={{
+            height: '100%',
+            overflow: 'hidden',
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
         >
           <BrightnessIcon />
           <Stack
@@ -88,6 +92,7 @@ export function BrightnessSlider() {
               '& .MuiSlider-track': {
                 width: '100%',
                 color: 'transparent',
+                border: 0,
                 background:
                   'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
               },

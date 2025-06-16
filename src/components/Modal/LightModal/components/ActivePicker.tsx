@@ -1,9 +1,14 @@
 import Stack from '@mui/material/Stack';
-import {motion, useMotionValue} from 'framer-motion';
+import {AnimatePresence, motion, useMotionValue} from 'framer-motion';
 import {HassEntityWithService} from '@hakit/core';
 import {getContainerPosition, getWheelPosition} from '../../../../utils/color';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
-import {useColorPicker, WheelMode} from '../../../../hooks/useColorPicker';
+import {
+  ColorWheel,
+  useColorPicker,
+  WheelMode,
+} from '../../../../hooks/useColorPicker';
+import {useEffect} from 'react';
 
 type ActivePickerProps = {
   mode: WheelMode;
@@ -20,14 +25,17 @@ export function ActivePicker(props: ActivePickerProps) {
     color,
     setColor,
     getNeerEntity,
+    getCoordFromColorWheel,
     getColorFromCoordWheel,
     setEntitiesColor,
-  } = useColorPicker(mode);
+  } = useColorPicker(canvasRef.current, mode);
 
   const motionXValue = useMotionValue(0);
   const motionYValue = useMotionValue(0);
-
-  if (entities.length === 0) return <></>;
+  const activeEntities = entities.filter(entity =>
+    activeEntityIds.includes(entity.entity_id)
+  );
+  //TODO remove entity has no color (onoff, brightness, color_temp)
 
   const handleDrag = () => {
     if (!canvasRef.current) return;
@@ -77,44 +85,65 @@ export function ActivePicker(props: ActivePickerProps) {
       setActiveEntityIds(activeEntities => [hoverEntity, ...activeEntities]);
     }
 
-    setEntitiesColor(
-      entities.filter(entity => activeEntityIds.includes(entity.entity_id)),
-      newColor
-    );
+    setEntitiesColor(activeEntities, newColor);
   };
 
+  useEffect(() => {
+    if (activeEntities.length === 0) return;
+    let color: ColorWheel<WheelMode> | undefined;
+    if (mode === 'color') {
+      color = activeEntities[0].attributes.rgb_color;
+    } else {
+      color = activeEntities[0].attributes.color_temp_kelvin;
+    }
+    if (color) {
+      const {x, y} = getCoordFromColorWheel(color);
+      setColor(color);
+      motionXValue.set(x);
+      motionYValue.set(y);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEntities]);
+
   return (
-    <motion.div
-      whileTap={{scale: 1.1, zIndex: 10, cursor: 'grabbing'}}
-      whileHover={{scale: 0.9, zIndex: 10, cursor: 'grab'}}
-      style={{
-        x: motionXValue,
-        y: motionYValue,
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '0',
-        height: '0',
-        transform: 'translate(-50%, -50%)',
-      }}
-      onDrag={handleDrag}
-      onDragEnd={handleDragEnd}
-      drag={true}
-      dragMomentum={false}
-    >
-      <Stack
-        width="32px"
-        height="32px"
-        borderRadius="50%"
-        border="2px solid black"
-        boxSizing="border-box"
-        boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-        sx={{
-          backgroundColor: `rgb(${color.join(',')})`,
-          transform: 'translate(-16px, -38px) rotate(45deg)',
-          borderBottomRightRadius: 0,
-        }}
-      />
-    </motion.div>
+    <AnimatePresence>
+      {entities.length > 0 && (
+        <motion.div
+          exit={{opacity: 0}}
+          animate={{opacity: 1}}
+          initial={{opacity: 0}}
+          whileTap={{scale: 1.1, zIndex: 10, cursor: 'grabbing'}}
+          whileHover={{scale: 0.9, zIndex: 10, cursor: 'grab'}}
+          style={{
+            x: motionXValue,
+            y: motionYValue,
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '0',
+            height: '0',
+            transform: 'translate(-50%, -50%)',
+          }}
+          onDrag={handleDrag}
+          onDragEnd={handleDragEnd}
+          drag={true}
+          dragMomentum={false}
+        >
+          <Stack
+            width="32px"
+            height="32px"
+            borderRadius="50%"
+            border="2px solid black"
+            boxSizing="border-box"
+            boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
+            sx={{
+              backgroundColor: `rgb(${color.join(',')})`,
+              transform: 'translate(-16px, -38px) rotate(45deg)',
+              borderBottomRightRadius: 0,
+            }}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

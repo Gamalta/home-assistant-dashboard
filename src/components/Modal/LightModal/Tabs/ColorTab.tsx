@@ -5,7 +5,11 @@ import styled from '@emotion/styled';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {Picker} from '../components/Picker';
 import {ActivePicker} from '../components/ActivePicker';
-import {drawColorWheel} from '../../../../utils/color';
+import {
+  drawColorWheel,
+  getColorFromCoord,
+  getRelativePosition,
+} from '../../../../utils/color';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,6 +22,22 @@ export function ColorTab() {
     const ctx = canvasRef.current.getContext('2d')!;
     drawColorWheel(ctx);
   }, []);
+
+  const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!canvasRef.current) return;
+    const {x, y} = getRelativePosition(
+      canvasRef.current,
+      event.clientX,
+      event.clientY
+    );
+    const newColor = getColorFromCoord(x, y);
+
+    entities
+      .filter(entity => activeEntityIds.includes(entity.entity_id))
+      .map(entity => {
+        entity.service.turnOn({rgb_color: newColor});
+      });
+  };
 
   useEffect(() => {
     generateColorWheel();
@@ -35,7 +55,12 @@ export function ColorTab() {
         minHeight="200px"
         minWidth="200px"
       >
-        <Canvas ref={canvasRef} width="400px" height="400px" />
+        <Canvas
+          ref={canvasRef}
+          width="400px"
+          height="400px"
+          onClick={onClick}
+        />
         {entities
           .filter(
             entity =>

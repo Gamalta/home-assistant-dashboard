@@ -15,7 +15,10 @@ export type ColorWheel<T extends WheelMode> = T extends 'color'
   ? Color
   : Temperature;
 
-export const useColorPicker = <T extends WheelMode>(mode: T) => {
+export const useColorPicker = <T extends WheelMode>(
+  canvas: HTMLCanvasElement | null,
+  mode: T
+) => {
   const [color, setColor] = useState<ColorWheel<T>>(
     (mode === 'color' ? [0, 0, 0] : 0) as ColorWheel<T>
   );
@@ -34,9 +37,6 @@ export const useColorPicker = <T extends WheelMode>(mode: T) => {
       entities.find(entity => activeEntityIds.includes(entity.entity_id)) ??
       entities[0];
     const newColor = getEntityColor(entity);
-    //const {x, y} = getCoordFromColorWheel(newColor);
-    //const radius = canvas.clientWidth / 2;
-    //moveDragControls(dragControls, x * radius, y * radius);
     setColor(newColor);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEntityState]);
@@ -56,14 +56,11 @@ export const useColorPicker = <T extends WheelMode>(mode: T) => {
     return color;
   };
 
-  const getCoordFromColorWheel = <T extends WheelMode>(
-    mode: T,
-    color: ColorWheel<T>
-  ) => {
+  const getCoordFromColorWheel = (color: ColorWheel<T>) => {
     if (mode === 'color') {
-      return getCoordFromColor(color as ColorWheel<'color'>);
+      return getCoordFromColor(canvas, color as ColorWheel<'color'>);
     } else {
-      return getCoordFromColorTemp(color as ColorWheel<'temperature'>);
+      return getCoordFromColorTemp(canvas, color as ColorWheel<'temperature'>);
     }
   };
 
@@ -76,7 +73,7 @@ export const useColorPicker = <T extends WheelMode>(mode: T) => {
     let neerEntity;
 
     entities.map(entity => {
-      const coord = getCoordFromColorWheel(mode, getEntityColor(entity));
+      const coord = getCoordFromColorWheel(getEntityColor(entity));
       const distance = Math.hypot(coord.x - x, coord.y - y);
       if (distance < 0.3 && distance < bestDistance) {
         bestDistance = distance;
@@ -114,6 +111,7 @@ export const useColorPicker = <T extends WheelMode>(mode: T) => {
     color: rgbColor,
     setColor,
     getNeerEntity,
+    getCoordFromColorWheel,
     getColorFromCoordWheel,
     getEntityColor,
     setEntitiesColor,

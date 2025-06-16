@@ -100,20 +100,30 @@ export const getContainerPosition = (
   return {x: xRel, y: yRel};
 };
 
-export const getCoordFromColor = (color: [number, number, number]) => {
+export const getCoordFromColor = (
+  canvas: HTMLCanvasElement | null,
+  color: [number, number, number]
+) => {
+  if (!canvas) return {x: 0, y: 0};
+  const radius = canvas.clientWidth;
   const [hue, saturation] = rgb2hs(color);
   const phi = (hue / 360) * 2 * Math.PI;
   const sat = Math.min(saturation, 1);
-  const x = Math.cos(phi) * sat;
-  const y = Math.sin(phi) * sat;
+  const x = ((Math.cos(phi) * sat + 1) / 2) * radius;
+  const y = ((Math.sin(phi) * sat + 1) / 2) * radius;
   return {x, y};
 };
 
-export const getCoordFromColorTemp = (temperature: number) => {
+export const getCoordFromColorTemp = (
+  canvas: HTMLCanvasElement | null,
+  temperature: number
+) => {
+  if (!canvas) return {x: 0, y: 0};
   const minKelvin = 2000;
   const maxKelvin = 10000;
+  const radius = canvas.clientWidth;
   const fraction = (temperature - minKelvin) / (maxKelvin - minKelvin);
-  return {x: 0, y: 2 * fraction - 1};
+  return {x: 0, y: fraction * radius};
 };
 
 export const getColorFromCoord = (x: number, y: number) => {

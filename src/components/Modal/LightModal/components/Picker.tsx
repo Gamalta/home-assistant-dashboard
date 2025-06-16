@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import {motion} from 'framer-motion';
+import {AnimatePresence, motion} from 'framer-motion';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {HassEntityWithService} from '@hakit/core';
 import {useEffect, useMemo, useState} from 'react';
@@ -24,36 +24,39 @@ export function Picker(props: PickerProps) {
 
   useEffect(() => {
     if (!entity || !canvas) return;
-    const {x, y} = getCoordFromColor(color);
+    const {x, y} = getCoordFromColor(canvas, color);
     setPosition({x, y});
   }, [color, entity, canvas]);
 
   return (
-    <Stack
-      component={motion.div}
-      whileTap={{scale: 1.5, zIndex: 10}}
-      whileHover={{scale: 1.2, zIndex: 10}}
-      onClick={() => setActiveEntityIds([entity.entity_id])}
-      position="absolute"
-      width="32px"
-      height="32px"
-      top={`calc(${50 + position.y * 50}% - 12px)`}
-      left={`calc(${50 + position.x * 50}% - 12px)`}
-    >
+    <AnimatePresence>
       <Stack
-        m="4px"
-        width="24px"
-        height="24px"
-        borderRadius="50%"
-        border={`${hovered ? '3px' : '2px'} solid black`}
-        boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-        bgcolor={`rgb(${color.join(',')})`}
-        sx={{
-          '&:hover': {
-            border: '2px solid white',
-          },
-        }}
-      />
-    </Stack>
+        component={motion.div}
+        exit={{opacity: 0}}
+        animate={{opacity: 1}}
+        initial={{opacity: 0, transform: 'translate(-50%, -50%)'}}
+        onClick={() => setActiveEntityIds([entity.entity_id])}
+        position="absolute"
+        width="32px"
+        height="32px"
+        top={position.y}
+        left={position.x}
+      >
+        <Stack
+          m="4px"
+          width="24px"
+          height="24px"
+          borderRadius="50%"
+          border={`${hovered ? '3px' : '2px'} solid black`}
+          boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
+          bgcolor={`rgb(${color.join(',')})`}
+          sx={{
+            '&:hover': {
+              border: '2px solid white',
+            },
+          }}
+        />
+      </Stack>
+    </AnimatePresence>
   );
 }
