@@ -9,6 +9,7 @@ import {
   WheelMode,
 } from '../../../../hooks/useColorPicker';
 import {useEffect} from 'react';
+import {Typography} from '@mui/material';
 
 type ActivePickerProps = {
   mode: WheelMode;
@@ -19,8 +20,13 @@ type ActivePickerProps = {
 export function ActivePicker(props: ActivePickerProps) {
   const {mode, canvasRef, entities} = props;
 
-  const {activeEntityIds, setActiveEntityIds, hoverEntity, setHoverEntity} =
-    useLightModalContext();
+  const {
+    entities: allEntities,
+    activeEntityIds,
+    setActiveEntityIds,
+    hoverEntity,
+    setHoverEntity,
+  } = useLightModalContext();
   const {
     color,
     setColor,
@@ -36,6 +42,7 @@ export function ActivePicker(props: ActivePickerProps) {
     activeEntityIds.includes(entity.entity_id)
   );
   //TODO remove entity has no color (onoff, brightness, color_temp)
+  //TODO link entities with same color
 
   const handleDrag = () => {
     if (!canvasRef.current) return;
@@ -67,7 +74,11 @@ export function ActivePicker(props: ActivePickerProps) {
     const newColor = getColorFromCoordWheel(newX, newY);
     setColor(newColor);
 
-    const neerEntity = getNeerEntity(newX, newY, entities);
+    const neerEntity = getNeerEntity(
+      motionXValue.get(),
+      motionYValue.get(),
+      allEntities.filter(entity => !activeEntityIds.includes(entity.entity_id))
+    );
     setHoverEntity(neerEntity?.entity_id);
   };
 
@@ -135,13 +146,26 @@ export function ActivePicker(props: ActivePickerProps) {
             borderRadius="50%"
             border="2px solid black"
             boxSizing="border-box"
+            justifyContent="center"
+            alignItems="center"
             boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
             sx={{
               backgroundColor: `rgb(${color.join(',')})`,
               transform: 'translate(-16px, -38px) rotate(45deg)',
               borderBottomRightRadius: 0,
             }}
-          />
+          >
+            {activeEntities.length > 1 && (
+              <Typography
+                sx={{
+                  color: 'black',
+                  transform: 'rotate(-45deg)',
+                }}
+              >
+                {activeEntities.length}
+              </Typography>
+            )}
+          </Stack>
         </motion.div>
       )}
     </AnimatePresence>

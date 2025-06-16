@@ -75,7 +75,7 @@ export const useColorPicker = <T extends WheelMode>(
     entities.map(entity => {
       const coord = getCoordFromColorWheel(getEntityColor(entity));
       const distance = Math.hypot(coord.x - x, coord.y - y);
-      if (distance < 0.3 && distance < bestDistance) {
+      if (distance < 10 && distance < bestDistance) {
         bestDistance = distance;
         neerEntity = entity;
       }
