@@ -114,7 +114,7 @@ export function ActivePicker(props: ActivePickerProps) {
       motionYValue.set(y);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeEntities]);
+  }, [activeEntities.length > 0]);
 
   return (
     <AnimatePresence>
@@ -149,8 +149,8 @@ export function ActivePicker(props: ActivePickerProps) {
             justifyContent="center"
             alignItems="center"
             boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
+            bgcolor={`rgb(${color.join(',')})`}
             sx={{
-              backgroundColor: `rgb(${color.join(',')})`,
               transform: 'translate(-16px, -38px) rotate(45deg)',
               borderBottomRightRadius: 0,
             }}

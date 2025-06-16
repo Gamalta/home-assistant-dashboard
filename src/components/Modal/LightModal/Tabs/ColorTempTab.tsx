@@ -6,6 +6,7 @@ import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {Picker} from '../components/Picker';
 import {ActivePicker} from '../components/ActivePicker';
 import {drawColorTempWheel} from '../../../../utils/color';
+import {lightHasColorTemp} from '../../../../utils/entity/light';
 
 export const MIN_KELVIN = 2000;
 export const MAX_KELVIN = 10000;
@@ -43,7 +44,8 @@ export function ColorTempTab() {
           .filter(
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              lightHasColorTemp(entity)
           )
           .map(entity => (
             <Picker
@@ -59,7 +61,8 @@ export function ColorTempTab() {
           entities={entities.filter(
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              lightHasColorTemp(entity)
           )}
         />
       </Stack>

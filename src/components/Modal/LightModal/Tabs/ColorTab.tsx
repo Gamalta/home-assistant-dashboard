@@ -10,6 +10,7 @@ import {
   getColorFromCoord,
   getRelativePosition,
 } from '../../../../utils/color';
+import {lightHasColor} from '../../../../utils/entity/light';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -65,7 +66,8 @@ export function ColorTab() {
           .filter(
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              lightHasColor(entity)
           )
           .map(entity => (
             <Picker
@@ -81,7 +83,8 @@ export function ColorTab() {
           entities={entities.filter(
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              lightHasColor(entity)
           )}
         />
       </Stack>
