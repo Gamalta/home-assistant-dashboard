@@ -47,7 +47,7 @@ export function ShutterModal(props: DesktopModalProps) {
     setCoverPosition(position);
     setTargetPosition(position);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entity]);
+  }, []);
 
   useEffect(() => {
     if (coverPosition === targetPosition) return;
