@@ -114,7 +114,7 @@ export function ActivePicker(props: ActivePickerProps) {
       motionYValue.set(y);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeEntities.length > 0]);
+  }, [activeEntities.length > 0, activeEntities[0]]);
 
   return (
     <AnimatePresence>

@@ -5,7 +5,11 @@ import styled from '@emotion/styled';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {Picker} from '../components/Picker';
 import {ActivePicker} from '../components/ActivePicker';
-import {drawColorTempWheel} from '../../../../utils/color';
+import {
+  drawColorTempWheel,
+  getColorTempFromCoord,
+  getRelativePosition,
+} from '../../../../utils/color';
 import {lightHasColorTemp} from '../../../../utils/entity/light';
 
 export const MIN_KELVIN = 2000;
@@ -23,6 +27,26 @@ export function ColorTempTab() {
     drawColorTempWheel(ctx);
   }, []);
 
+  const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!canvasRef.current) return;
+    const {x, y} = getRelativePosition(
+      canvasRef.current,
+      event.clientX,
+      event.clientY
+    );
+    const newColor = getColorTempFromCoord(x, y);
+
+    entities
+      .filter(entity => activeEntityIds.includes(entity.entity_id))
+      .map(entity => {
+        entity.service.turnOn({
+          serviceData: {
+            kelvin: Math.round(newColor),
+          },
+        });
+      });
+  };
+
   useEffect(() => {
     generateColorTempWheel();
     setActiveEntityIds([entitiesRef.current[0].entity_id]);
@@ -39,18 +63,24 @@ export function ColorTempTab() {
         minHeight="200px"
         minWidth="200px"
       >
-        <Canvas ref={canvasRef} width="400px" height="400px" />
+        <Canvas
+          ref={canvasRef}
+          width="400px"
+          height="400px"
+          onClick={onClick}
+        />
         {entities
           .filter(
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
+              entity.attributes.color_temp_kelvin &&
               lightHasColorTemp(entity)
           )
           .map(entity => (
             <Picker
               key={`temp-${entity.entity_id}`}
-              type="temperature"
+              mode="temperature"
               canvasRef={canvasRef}
               entity={entity}
             />
@@ -62,6 +92,7 @@ export function ColorTempTab() {
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
+              entity.attributes.color_temp_kelvin &&
               lightHasColorTemp(entity)
           )}
         />

@@ -79,7 +79,9 @@ export function BrightnessSlider() {
             onChangeCommitted={(_, value) => {
               activeEntities.forEach(entity =>
                 entity.service.turnOn({
-                  brightness: Math.round(((value as number) * 255) / 100),
+                  serviceData: {
+                    brightness: Math.round(((value as number) * 255) / 100),
+                  },
                 })
               );
             }}

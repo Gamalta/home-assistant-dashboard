@@ -18,6 +18,9 @@ export function ColorTab() {
     useLightModalContext();
   const entitiesRef = useRef(entities);
 
+  //TODO brightness bug
+  //TODO color temp
+
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d')!;
@@ -36,7 +39,7 @@ export function ColorTab() {
     entities
       .filter(entity => activeEntityIds.includes(entity.entity_id))
       .map(entity => {
-        entity.service.turnOn({rgb_color: newColor});
+        entity.service.turnOn({serviceData: {rgb_color: newColor}});
       });
   };
 
@@ -67,12 +70,13 @@ export function ColorTab() {
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
+              entity.attributes.rgb_color &&
               lightHasColor(entity)
           )
           .map(entity => (
             <Picker
               key={`color-${entity.entity_id}`}
-              type="color"
+              mode="color"
               canvasRef={canvasRef}
               entity={entity}
             />
@@ -84,6 +88,7 @@ export function ColorTab() {
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
+              entity.attributes.rgb_color &&
               lightHasColor(entity)
           )}
         />

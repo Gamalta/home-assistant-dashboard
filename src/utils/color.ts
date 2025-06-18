@@ -105,12 +105,12 @@ export const getCoordFromColor = (
   color: [number, number, number]
 ) => {
   if (!canvas) return {x: 0, y: 0};
-  const radius = canvas.clientWidth;
+  const diameter = canvas.clientWidth;
   const [hue, saturation] = rgb2hs(color);
   const phi = (hue / 360) * 2 * Math.PI;
   const sat = Math.min(saturation, 1);
-  const x = ((Math.cos(phi) * sat + 1) / 2) * radius;
-  const y = ((Math.sin(phi) * sat + 1) / 2) * radius;
+  const x = ((Math.cos(phi) * sat + 1) / 2) * diameter;
+  const y = ((Math.sin(phi) * sat + 1) / 2) * diameter;
   return {x, y};
 };
 
@@ -121,9 +121,9 @@ export const getCoordFromColorTemp = (
   if (!canvas) return {x: 0, y: 0};
   const minKelvin = 2000;
   const maxKelvin = 10000;
-  const radius = canvas.clientWidth;
+  const diameter = canvas.clientWidth;
   const fraction = (temperature - minKelvin) / (maxKelvin - minKelvin);
-  return {x: 0, y: fraction * radius};
+  return {x: diameter / 2, y: fraction * diameter};
 };
 
 export const getColorFromCoord = (x: number, y: number) => {

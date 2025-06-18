@@ -44,10 +44,11 @@ export function ShutterModal(props: DesktopModalProps) {
 
   useEffect(() => {
     if (!entity) return;
+    if (coverPosition !== targetPosition) return;
     setCoverPosition(position);
     setTargetPosition(position);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [entity]);
 
   useEffect(() => {
     if (coverPosition === targetPosition) return;
@@ -107,7 +108,7 @@ export function ShutterModal(props: DesktopModalProps) {
             setDragging(false);
             setTargetPosition(percent.get());
             entity?.service.setCoverPosition({
-              position: Math.abs(100 - percent.get()),
+              serviceData: {position: Math.abs(100 - percent.get())},
             });
           }}
         >
@@ -185,7 +186,9 @@ export function ShutterModal(props: DesktopModalProps) {
                 setDragging(false);
                 setTargetPosition(percent.get());
                 entity?.service.setCoverPosition({
-                  position: Math.abs(100 - percent.get()),
+                  serviceData: {
+                    position: Math.abs(100 - percent.get()),
+                  },
                 });
               }}
             />

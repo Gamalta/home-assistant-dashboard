@@ -103,7 +103,7 @@ export const useColorPicker = <T extends WheelMode>(
         ? (color as ColorWheel<'color'>)
         : temperature2rgb(color as ColorWheel<'temperature'>);
     entities.map(entity => {
-      entity.service.turnOn({rgb_color});
+      entity.service.turnOn({serviceData: {rgb_color}});
     });
   };
 

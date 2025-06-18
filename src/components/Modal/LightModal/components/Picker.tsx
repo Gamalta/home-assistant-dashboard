@@ -1,26 +1,56 @@
 import Stack from '@mui/material/Stack';
 import {AnimatePresence, motion} from 'framer-motion';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
-import {HassEntityWithService} from '@hakit/core';
+import {HassEntityWithService, temperature2rgb} from '@hakit/core';
 import {useEffect, useMemo, useState} from 'react';
-import {getCoordFromColor} from '../../../../utils/color';
+import {
+  getCoordFromColor,
+  getCoordFromColorTemp,
+} from '../../../../utils/color';
+import {ColorWheel, WheelMode} from '../../../../hooks/useColorPicker';
 
 type PickerProps = {
-  type: 'color' | 'temperature';
-  entity: HassEntityWithService<'light'>;
+  mode: WheelMode;
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  entity: HassEntityWithService<'light'>;
 };
 
 export function Picker(props: PickerProps) {
-  const {entity, canvasRef} = props;
+  const {mode, canvasRef, entity} = props;
   const canvas = canvasRef.current;
   const {setActiveEntityIds, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
   const hovered = hoverEntity === entity.entity_id;
   const color = useMemo<[number, number, number]>(
-    () => entity.attributes.rgb_color ?? [255, 255, 255],
-    [entity]
+    () =>
+      mode === 'color'
+        ? entity.attributes.rgb_color ?? [255, 255, 255]
+        : temperature2rgb(entity.attributes.color_temp_kelvin ?? 4333),
+    [mode, entity]
   );
+
+  useEffect(() => {
+    let color: ColorWheel<WheelMode> | undefined;
+    if (mode === 'color') {
+      color = entity.attributes.rgb_color;
+    } else {
+      color = entity.attributes.color_temp_kelvin;
+    }
+    if (color) {
+      let position = {x: 0, y: 0};
+      if (mode === 'color') {
+        position = getCoordFromColor(canvas, color as ColorWheel<'color'>);
+      } else {
+        position = getCoordFromColorTemp(
+          canvas,
+          color as ColorWheel<'temperature'>
+        );
+      }
+      setPosition(position);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entity]);
 
   useEffect(() => {
     if (!entity || !canvas) return;
