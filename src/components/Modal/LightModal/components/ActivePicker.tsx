@@ -15,10 +15,12 @@ type ActivePickerProps = {
   mode: WheelMode;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   entities: HassEntityWithService<'light'>[];
+  minKelvin?: number;
+  maxKelvin?: number;
 };
 
 export function ActivePicker(props: ActivePickerProps) {
-  const {mode, canvasRef, entities} = props;
+  const {mode, canvasRef, entities, minKelvin = 0, maxKelvin = 0} = props;
 
   const {
     entities: allEntities,
@@ -34,7 +36,7 @@ export function ActivePicker(props: ActivePickerProps) {
     getCoordFromColorWheel,
     getColorFromCoordWheel,
     setEntitiesColor,
-  } = useColorPicker(canvasRef.current, mode);
+  } = useColorPicker(canvasRef.current, mode, minKelvin, maxKelvin);
 
   const motionXValue = useMotionValue(0);
   const motionYValue = useMotionValue(0);

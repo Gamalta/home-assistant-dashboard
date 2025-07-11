@@ -17,7 +17,9 @@ export type ColorWheel<T extends WheelMode> = T extends 'color'
 
 export const useColorPicker = <T extends WheelMode>(
   canvas: HTMLCanvasElement | null,
-  mode: T
+  mode: T,
+  minKelvin = 0,
+  maxKelvin = 0
 ) => {
   const [color, setColor] = useState<ColorWheel<T>>(
     (mode === 'color' ? [0, 0, 0] : 0) as ColorWheel<T>
@@ -51,7 +53,12 @@ export const useColorPicker = <T extends WheelMode>(
     if (mode === 'color') {
       color = getColorFromCoord(x, y) as ColorWheel<T>;
     } else {
-      color = getColorTempFromCoord(x, y) as ColorWheel<T>;
+      color = getColorTempFromCoord(
+        x,
+        y,
+        minKelvin,
+        maxKelvin
+      ) as ColorWheel<T>;
     }
     return color;
   };
@@ -60,7 +67,12 @@ export const useColorPicker = <T extends WheelMode>(
     if (mode === 'color') {
       return getCoordFromColor(canvas, color as ColorWheel<'color'>);
     } else {
-      return getCoordFromColorTemp(canvas, color as ColorWheel<'temperature'>);
+      return getCoordFromColorTemp(
+        canvas,
+        color as ColorWheel<'temperature'>,
+        minKelvin,
+        maxKelvin
+      );
     }
   };
 

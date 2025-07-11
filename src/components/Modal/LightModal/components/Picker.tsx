@@ -13,10 +13,12 @@ type PickerProps = {
   mode: WheelMode;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   entity: HassEntityWithService<'light'>;
+  minKelvin?: number;
+  maxKelvin?: number;
 };
 
 export function Picker(props: PickerProps) {
-  const {mode, canvasRef, entity} = props;
+  const {mode, canvasRef, entity, minKelvin = 0, maxKelvin = 0} = props;
   const canvas = canvasRef.current;
   const {setActiveEntityIds, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
@@ -43,7 +45,9 @@ export function Picker(props: PickerProps) {
       } else {
         position = getCoordFromColorTemp(
           canvas,
-          color as ColorWheel<'temperature'>
+          color as ColorWheel<'temperature'>,
+          minKelvin,
+          maxKelvin
         );
       }
       setPosition(position);
@@ -58,7 +62,12 @@ export function Picker(props: PickerProps) {
     if (mode === 'color') {
       coord = getCoordFromColor(canvas, color as ColorWheel<'color'>);
     } else {
-      coord = getCoordFromColorTemp(canvas, color as ColorWheel<'temperature'>);
+      coord = getCoordFromColorTemp(
+        canvas,
+        color as ColorWheel<'temperature'>,
+        minKelvin,
+        maxKelvin
+      );
     }
     setPosition(coord);
   }, [mode, color, entity, canvas]);

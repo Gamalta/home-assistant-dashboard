@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useMemo, useRef} from 'react';
 import {motion} from 'framer-motion';
 import styled from '@emotion/styled';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
@@ -12,20 +12,41 @@ import {
 } from '../../../../utils/color';
 import {lightHasColorTemp} from '../../../../utils/entity/light';
 
-export const MIN_KELVIN = 2000;
-export const MAX_KELVIN = 10000;
-
 export function ColorTempTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {entities, activeEntityIds, setActiveEntityIds} =
     useLightModalContext();
   const entitiesRef = useRef(entities);
+  const entitiesMaxSupportedKelvin = useMemo(
+    () =>
+      Math.max(
+        0,
+        ...entities
+          .map(entity => entity.attributes.max_color_temp_kelvin)
+          .filter(temp => temp !== undefined)
+      ),
+    [entities]
+  );
+  const entitiesMinSupportedKelvin = useMemo(
+    () =>
+      Math.max(
+        0,
+        ...entities
+          .map(entity => entity.attributes.min_color_temp_kelvin)
+          .filter(temp => temp !== undefined)
+      ),
+    [entities]
+  );
 
   const generateColorTempWheel = useCallback(() => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d')!;
-    drawColorTempWheel(ctx);
-  }, []);
+    drawColorTempWheel(
+      ctx,
+      entitiesMinSupportedKelvin,
+      entitiesMaxSupportedKelvin
+    );
+  }, [entitiesMinSupportedKelvin, entitiesMaxSupportedKelvin]);
 
   const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!canvasRef.current) return;
@@ -34,7 +55,12 @@ export function ColorTempTab() {
       event.clientX,
       event.clientY
     );
-    const newColor = getColorTempFromCoord(x, y);
+    const newColor = getColorTempFromCoord(
+      x,
+      y,
+      entitiesMinSupportedKelvin,
+      entitiesMaxSupportedKelvin
+    );
 
     entities
       .filter(entity => activeEntityIds.includes(entity.entity_id))
@@ -98,6 +124,8 @@ export function ColorTempTab() {
               entity.attributes.color_temp_kelvin &&
               lightHasColorTemp(entity)
           )}
+          minKelvin={entitiesMinSupportedKelvin}
+          maxKelvin={entitiesMaxSupportedKelvin}
         />
       </Stack>
     </Stack>

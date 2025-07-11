@@ -1,8 +1,4 @@
 import {hsv2rgb, rgb2hex, rgb2hs, temperature2rgb} from '@hakit/core';
-import {
-  MAX_KELVIN,
-  MIN_KELVIN,
-} from '../components/Modal/LightModal/Tabs/ColorTempTab';
 
 export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   const colorBrightness = 255;
@@ -36,7 +32,11 @@ export function drawColorWheel(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function drawColorTempWheel(ctx: CanvasRenderingContext2D) {
+export function drawColorTempWheel(
+  ctx: CanvasRenderingContext2D,
+  minKelvin: number,
+  maxKelvin: number
+) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   const radius = ctx.canvas.width / 2;
 
@@ -46,8 +46,8 @@ export function drawColorTempWheel(ctx: CanvasRenderingContext2D) {
     const fraction = (y / (radius * 0.9) + 1) / 2;
 
     const temperature = Math.max(
-      Math.min(MIN_KELVIN + fraction * (MAX_KELVIN - MIN_KELVIN), MAX_KELVIN),
-      MIN_KELVIN
+      Math.min(minKelvin + fraction * (maxKelvin - minKelvin), maxKelvin),
+      minKelvin
     );
 
     const color = rgb2hex(temperature2rgb(temperature));
@@ -116,11 +116,11 @@ export const getCoordFromColor = (
 
 export const getCoordFromColorTemp = (
   canvas: HTMLCanvasElement | null,
-  temperature: number
+  temperature: number,
+  minKelvin: number,
+  maxKelvin: number
 ) => {
   if (!canvas) return {x: 0, y: 0};
-  const minKelvin = 2000;
-  const maxKelvin = 10000;
   const diameter = canvas.clientWidth;
   const fraction = (temperature - minKelvin) / (maxKelvin - minKelvin);
   return {x: diameter / 2, y: fraction * diameter};
@@ -132,11 +132,16 @@ export const getColorFromCoord = (x: number, y: number) => {
   return hsv2rgb([hue, saturation, 255]);
 };
 
-export const getColorTempFromCoord = (_x: number, y: number) => {
+export const getColorTempFromCoord = (
+  _x: number,
+  y: number,
+  minKelvin: number,
+  maxKelvin: number
+) => {
   const fraction = (y / 0.9 + 1) / 2;
   const temp = Math.max(
-    Math.min(MIN_KELVIN + fraction * (MAX_KELVIN - MIN_KELVIN), MAX_KELVIN),
-    MIN_KELVIN
+    Math.min(minKelvin + fraction * (maxKelvin - minKelvin), maxKelvin),
+    minKelvin
   );
   return temp;
 };
