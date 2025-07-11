@@ -30,7 +30,6 @@ import {
   lightsHasEffect,
 } from '../../../utils/entity/light';
 import Box from '@mui/material/Box';
-import {useTheme} from '@mui/material/styles';
 
 type LightModalProps = Omit<ModalProps, 'children'>;
 
@@ -45,7 +44,6 @@ export function LightModal(props: LightModalProps) {
   const {...modalProps} = props;
   const [tab, setTab] = useState(LightTab.COLOR);
   const {lightEntities} = useRoomContext();
-  const theme = useTheme();
 
   const entities = lightEntities.filter(
     (entity): entity is HassEntityWithService<'light'> => entity !== undefined
