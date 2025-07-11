@@ -29,7 +29,7 @@ export function AttributesDisplay(props: AttributesDisplayProps) {
                       key={`${index}-${key}`}
                     >
                       <Typography>{key}:</Typography>
-                      <Typography color="textSecondary">{value}</Typography>
+                      <Typography color="text.secondary">{value}</Typography>
                     </Stack>
                   ))}
                   {index + 1 !== attributes.length && <Divider sx={{my: 1}} />}
@@ -55,7 +55,7 @@ export function AttributesDisplay(props: AttributesDisplayProps) {
                 key={`${index}-${key}`}
               >
                 <Typography>{key}:</Typography>
-                <Typography color="textSecondary">{value}</Typography>
+                <Typography color="text.secondary">{value}</Typography>
               </Stack>
             ))}
             {index + 1 !== attributes.length && <Divider sx={{my: 1}} />}

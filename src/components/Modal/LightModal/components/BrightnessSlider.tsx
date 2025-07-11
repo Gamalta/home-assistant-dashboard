@@ -33,7 +33,12 @@ export function BrightnessSlider() {
 
   return (
     <>
-      <Stack position="relative">
+      <Stack
+        position="relative"
+        border="1px solid"
+        borderColor="divider"
+        borderRadius="100px"
+      >
         <BrightnessDisplay brightness={brightness} />
         <Button
           variant="outlined"

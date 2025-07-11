@@ -58,6 +58,9 @@ export function ColorTab() {
         maxWidth="320px"
         minHeight="200px"
         minWidth="200px"
+        borderRadius="50%"
+        border="3px solid"
+        borderColor="divider"
       >
         <Canvas
           ref={canvasRef}
