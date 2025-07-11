@@ -170,7 +170,13 @@ export function LightModal(props: LightModalProps) {
           )}
           <Stack spacing={1}>
             <Typography variant="h6">Lumières</Typography>
-            <Stack direction="row" gap={2} p={1}>
+            <Stack
+              direction="row"
+              gap={2}
+              p={1}
+              overflow="auto"
+              maxWidth="500px"
+            >
               {entities.map(entity => (
                 <LightCard
                   key={entity.entity_id}
