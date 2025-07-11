@@ -72,6 +72,7 @@ export function RoomLight(props: RoomLightProps) {
       <LightModal
         id={`${id}-light`}
         open={lightModal}
+        originLight={light}
         onClose={() => setLightModal(false)}
         title="Lumière"
       />

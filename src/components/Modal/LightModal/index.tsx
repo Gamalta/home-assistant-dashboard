@@ -31,7 +31,9 @@ import {
 } from '../../../utils/entity/light';
 import Box from '@mui/material/Box';
 
-type LightModalProps = Omit<ModalProps, 'children'>;
+type LightModalProps = Omit<ModalProps, 'children'> & {
+  originLight: HassEntityWithService<'light'> | null;
+};
 
 enum LightTab {
   ON_OFF = 'on-off',
@@ -41,7 +43,7 @@ enum LightTab {
 }
 
 export function LightModal(props: LightModalProps) {
-  const {...modalProps} = props;
+  const {originLight, ...modalProps} = props;
   const [tab, setTab] = useState(LightTab.COLOR);
   const {lightEntities} = useRoomContext();
 
@@ -94,7 +96,7 @@ export function LightModal(props: LightModalProps) {
         </Stack>
       }
     >
-      <LightModalProvider entities={entities}>
+      <LightModalProvider entities={entities} originLight={originLight}>
         <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack
             direction="row"

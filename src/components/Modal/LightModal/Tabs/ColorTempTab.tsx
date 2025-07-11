@@ -14,9 +14,7 @@ import {lightHasColorTemp} from '../../../../utils/entity/light';
 
 export function ColorTempTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const {entities, activeEntityIds, setActiveEntityIds} =
-    useLightModalContext();
-  const entitiesRef = useRef(entities);
+  const {entities, activeEntityIds} = useLightModalContext();
   const entitiesMaxSupportedKelvin = useMemo(
     () =>
       Math.max(
@@ -75,8 +73,7 @@ export function ColorTempTab() {
 
   useEffect(() => {
     generateColorTempWheel();
-    setActiveEntityIds([entitiesRef.current[0].entity_id]);
-  }, [generateColorTempWheel, setActiveEntityIds]);
+  }, [generateColorTempWheel]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">

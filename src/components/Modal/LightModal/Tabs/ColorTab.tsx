@@ -14,9 +14,7 @@ import {lightHasColor} from '../../../../utils/entity/light';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const {entities, activeEntityIds, setActiveEntityIds} =
-    useLightModalContext();
-  const entitiesRef = useRef(entities);
+  const {entities, activeEntityIds} = useLightModalContext();
 
   //TODO brightness bug
   //TODO color temp
@@ -45,8 +43,7 @@ export function ColorTab() {
 
   useEffect(() => {
     generateColorWheel();
-    setActiveEntityIds([entitiesRef.current[0].entity_id]);
-  }, [generateColorWheel, setActiveEntityIds]);
+  }, [generateColorWheel]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
