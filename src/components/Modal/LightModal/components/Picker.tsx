@@ -21,11 +21,11 @@ export function Picker(props: PickerProps) {
   const {setActiveEntityIds, hoverEntity} = useLightModalContext();
   const [position, setPosition] = useState({x: 0, y: 0});
   const hovered = hoverEntity === entity.entity_id;
-  const color = useMemo<[number, number, number]>(
+  const color = useMemo<ColorWheel<typeof mode>>(
     () =>
       mode === 'color'
         ? entity.attributes.rgb_color ?? [255, 255, 255]
-        : temperature2rgb(entity.attributes.color_temp_kelvin ?? 4333),
+        : entity.attributes.color_temp_kelvin ?? 4333,
     [mode, entity]
   );
 
@@ -54,9 +54,14 @@ export function Picker(props: PickerProps) {
 
   useEffect(() => {
     if (!entity || !canvas) return;
-    const {x, y} = getCoordFromColor(canvas, color);
-    setPosition({x, y});
-  }, [color, entity, canvas]);
+    let coord = {x: 0, y: 0};
+    if (mode === 'color') {
+      coord = getCoordFromColor(canvas, color as ColorWheel<'color'>);
+    } else {
+      coord = getCoordFromColorTemp(canvas, color as ColorWheel<'temperature'>);
+    }
+    setPosition(coord);
+  }, [mode, color, entity, canvas]);
 
   return (
     <AnimatePresence>
@@ -77,9 +82,10 @@ export function Picker(props: PickerProps) {
           width="24px"
           height="24px"
           borderRadius="50%"
-          border={`${hovered ? '3px' : '2px'} solid black`}
+          border={`${hovered ? '3px' : '2px'} solid`}
+          borderColor="divider"
           boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-          bgcolor={`rgb(${color.join(',')})`}
+          bgcolor={`rgb(${mode === 'color' ? color : temperature2rgb(color as number).join(',')})`}
           sx={{
             '&:hover': {
               border: '2px solid white',

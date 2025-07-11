@@ -41,8 +41,8 @@ export function ColorTempTab() {
       .map(entity => {
         entity.service.turnOn({
           serviceData: {
-            kelvin: Math.round(newColor),
-          },
+            color_temp_kelvin: Math.round(newColor),
+          } as object, // types object for bypass type missing on hakit
         });
       });
   };
