@@ -110,13 +110,21 @@ export const useColorPicker = <T extends WheelMode>(
     entities: HassEntityWithService<'light'>[],
     color: ColorWheel<T>
   ) => {
-    const rgb_color =
-      mode === 'color'
-        ? (color as ColorWheel<'color'>)
-        : temperature2rgb(color as ColorWheel<'temperature'>);
-    entities.map(entity => {
-      entity.service.turnOn({serviceData: {rgb_color}});
-    });
+    if (mode === 'color') {
+      entities.map(entity =>
+        entity.service.turnOn({
+          serviceData: {rgb_color: color as ColorWheel<'color'>},
+        })
+      );
+    } else {
+      entities.map(entity =>
+        entity.service.turnOn({
+          serviceData: {
+            color_temp_kelvin: color as ColorWheel<'temperature'>,
+          } as object, // types object for bypass type missing on hakit
+        })
+      );
+    }
   };
 
   return {
