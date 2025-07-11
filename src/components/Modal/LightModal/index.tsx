@@ -29,6 +29,8 @@ import {
   lightsHasColorTemp,
   lightsHasEffect,
 } from '../../../utils/entity/light';
+import Box from '@mui/material/Box';
+import {useTheme} from '@mui/material/styles';
 
 type LightModalProps = Omit<ModalProps, 'children'>;
 
@@ -43,6 +45,7 @@ export function LightModal(props: LightModalProps) {
   const {...modalProps} = props;
   const [tab, setTab] = useState(LightTab.COLOR);
   const {lightEntities} = useRoomContext();
+  const theme = useTheme();
 
   const entities = lightEntities.filter(
     (entity): entity is HassEntityWithService<'light'> => entity !== undefined
@@ -169,7 +172,12 @@ export function LightModal(props: LightModalProps) {
             </Stack>
           )}
           <Stack spacing={1}>
-            <Typography variant="h6">Lumières</Typography>
+            <Typography variant="h6" display="flex" gap={1}>
+              Lumières
+              <Box color="text.secondary">
+                {entities.length > 1 && entities.length}
+              </Box>
+            </Typography>
             <Stack
               direction="row"
               gap={2}

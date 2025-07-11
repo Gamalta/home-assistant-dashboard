@@ -72,7 +72,8 @@ export function LightCard(props: LightCardProps) {
       }
       p={activeEntity ? '2px' : 0}
       m={activeEntity ? '-4px' : 0}
-      width="180px"
+      width="150px"
+      minWidth="150px"
       sx={{
         transition: 'all 0.3s ease-out 0s, transform .15s',
         opacity: controllableByCurrentTab ? 1 : 0.3,
@@ -142,6 +143,7 @@ export function LightCard(props: LightCardProps) {
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
               WebkitLineClamp: 2,
+              textAlign: 'center',
             }}
           >
             {entity.attributes.friendly_name}
