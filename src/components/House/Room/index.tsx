@@ -3,8 +3,6 @@ import type {HouseConfigType} from '../../../configs/house';
 import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import {RoomLightImage} from './RoomLightImage';
-
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
 };
@@ -56,15 +54,6 @@ export function Room(props: RoomProps) {
               itemConfig={item}
             />
           </Stack>
-        ))}
-      {(room.items ?? [])
-        .filter(item => item.type === 'light')
-        .map(light => (
-          <RoomLightImage
-            //TODO move into LightItem
-            lightConfig={light}
-            key={`room-${room.id}-light-${light.lightEntityId}`}
-          />
         ))}
     </RoomProvider>
   );

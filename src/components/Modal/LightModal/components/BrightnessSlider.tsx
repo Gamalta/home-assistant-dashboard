@@ -136,6 +136,7 @@ function BrightnessDisplay({brightness}: {brightness: number}) {
       bottom="100%"
       width="100%"
       textAlign="center"
+      color="text.secondary"
     >
       {brightness} %
     </Typography>
