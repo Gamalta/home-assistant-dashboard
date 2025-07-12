@@ -5,13 +5,19 @@ import styled from '@emotion/styled';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {Picker} from '../components/Picker';
 import {ActivePicker} from '../components/ActivePicker';
-import {drawColorWheel} from '../../../../utils/color';
+import {
+  drawColorWheel,
+  getColorFromCoord,
+  getRelativePosition,
+} from '../../../../utils/color';
+import {lightHasColor} from '../../../../utils/entity/light';
 
 export function ColorTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const {entities, activeEntityIds, setActiveEntityIds} =
-    useLightModalContext();
-  const entitiesRef = useRef(entities);
+  const {entities, activeEntityIds} = useLightModalContext();
+
+  //TODO brightness bug
+  //TODO color temp
 
   const generateColorWheel = useCallback(() => {
     if (!canvasRef.current) return;
@@ -19,10 +25,25 @@ export function ColorTab() {
     drawColorWheel(ctx);
   }, []);
 
+  const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!canvasRef.current) return;
+    const {x, y} = getRelativePosition(
+      canvasRef.current,
+      event.clientX,
+      event.clientY
+    );
+    const newColor = getColorFromCoord(x, y);
+
+    entities
+      .filter(entity => activeEntityIds.includes(entity.entity_id))
+      .map(entity => {
+        entity.service.turnOn({serviceData: {rgb_color: newColor}});
+      });
+  };
+
   useEffect(() => {
     generateColorWheel();
-    setActiveEntityIds([entitiesRef.current[0].entity_id]);
-  }, [generateColorWheel, setActiveEntityIds]);
+  }, [generateColorWheel]);
 
   return (
     <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
@@ -34,18 +55,28 @@ export function ColorTab() {
         maxWidth="320px"
         minHeight="200px"
         minWidth="200px"
+        borderRadius="50%"
+        border="3px solid"
+        borderColor="divider"
       >
-        <Canvas ref={canvasRef} width="400px" height="400px" />
+        <Canvas
+          ref={canvasRef}
+          width="400px"
+          height="400px"
+          onClick={onClick}
+        />
         {entities
           .filter(
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              entity.attributes.rgb_color &&
+              lightHasColor(entity)
           )
           .map(entity => (
             <Picker
               key={`color-${entity.entity_id}`}
-              type="color"
+              mode="color"
               canvasRef={canvasRef}
               entity={entity}
             />
@@ -56,7 +87,9 @@ export function ColorTab() {
           entities={entities.filter(
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
-              entity.state === 'on'
+              entity.state === 'on' &&
+              entity.attributes.rgb_color &&
+              lightHasColor(entity)
           )}
         />
       </Stack>

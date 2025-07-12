@@ -1,160 +1,79 @@
-import {DragControls, Point} from 'framer-motion';
 import {useEffect, useRef, useState} from 'react';
-import {
-  HassEntityWithService,
-  hsv2rgb,
-  rgb2hs,
-  temperature2rgb,
-} from '@hakit/core';
 import {useLightModalContext} from '../contexts/LightModalContext';
-import {getRelativePosition} from '../utils/color';
+import {HassEntityWithService, temperature2rgb} from '@hakit/core';
 import {
-  MAX_KELVIN,
-  MIN_KELVIN,
-} from '../components/Modal/LightModal/Tabs/ColorTempTab';
+  getColorFromCoord,
+  getColorTempFromCoord,
+  getCoordFromColor,
+  getCoordFromColorTemp,
+} from '../utils/color';
 
-//type Mode = 'color' | 'temperature';
 type Color = [number, number, number];
 type Temperature = number;
-type Mode = 'color' | 'temperature';
-type UseColor<T extends Mode> = T extends 'color' ? Color : Temperature;
+export type WheelMode = 'color' | 'temperature';
+export type ColorWheel<T extends WheelMode> = T extends 'color'
+  ? Color
+  : Temperature;
 
-export const useColorPicker = <T extends Mode>(
+export const useColorPicker = <T extends WheelMode>(
   canvas: HTMLCanvasElement | null,
-  dragControls: DragControls,
-  mode: T
+  mode: T,
+  minKelvin = 0,
+  maxKelvin = 0
 ) => {
-  const [color, setColor] = useState<UseColor<T>>(
-    (mode === 'color' ? [0, 0, 0] : 0) as UseColor<T>
+  const [color, setColor] = useState<ColorWheel<T>>(
+    (mode === 'color' ? [0, 0, 0] : 0) as ColorWheel<T>
   );
 
-  const {
-    entities,
-    activeEntityIds,
-    setActiveEntityIds,
-    hoverEntity,
-    setHoverEntity,
-  } = useLightModalContext();
+  const {entities, activeEntityIds} = useLightModalContext();
   const activeEntityIdsRef = useRef(activeEntityIds);
   activeEntityIdsRef.current = activeEntityIds;
-
-  const onClick = (event: MouseEvent) => {
-    if (!canvas) return;
-    const radius = canvas.clientWidth / 2;
-    const {x, y} = getRelativePosition(canvas, event.clientX, event.clientY);
-    const newColor = getColorFromCoordWheel(x, y);
-
-    moveDragControls(dragControls, x * radius, y * radius);
-    setColor(newColor);
-
-    setEntitiesColor(
-      entities.filter(entity =>
-        activeEntityIdsRef.current.includes(entity.entity_id)
-      ),
-      newColor
-    );
-  };
-
-  const onDrag = (_: unknown, info: {point: Point}) => {
-    if (!canvas) return;
-    const {x: pointX, y: pointY} = info.point;
-    const {x: tempX, y: tempY} = getRelativePosition(canvas, pointX, pointY);
-    const distanceFromMiddle = Math.hypot(tempX, tempY);
-    const radius = canvas.clientWidth / 2;
-    let {x, y} = {x: tempX, y: tempY};
-
-    if (distanceFromMiddle > 1 || distanceFromMiddle < 0) {
-      const angle = Math.atan2(tempY, tempX);
-      x = radius * Math.cos(angle);
-      y = radius * Math.sin(angle);
-      moveDragControls(dragControls, x, y);
-    }
-
-    const newColor = getColorFromCoordWheel(x, y);
-    setColor(newColor);
-
-    const neerEntity = getNeerEntity(x, y, entities);
-    setHoverEntity(neerEntity?.entity_id);
-  };
-
-  const onDragEnd = (_: unknown, info: {point: Point}) => {
-    if (!canvas) return;
-    const {x, y} = getRelativePosition(canvas, info.point.x, info.point.y);
-    const newColor = getColorFromCoordWheel(x, y);
-    setColor(newColor);
-
-    if (hoverEntity) {
-      setActiveEntityIds(activeEntities => [hoverEntity, ...activeEntities]);
-    }
-
-    setEntitiesColor(
-      entities.filter(entity => activeEntityIds.includes(entity.entity_id)),
-      newColor
-    );
-  };
 
   const activeEntityState = entities.find(entity =>
     activeEntityIds.includes(entity.entity_id)
   )?.state;
 
   useEffect(() => {
-    if (!canvas || !entities[0]) return;
+    if (!entities[0]) return;
     const entity =
       entities.find(entity => activeEntityIds.includes(entity.entity_id)) ??
       entities[0];
     const newColor = getEntityColor(entity);
-    const {x, y} = getCoordFromColorWheel(newColor);
-    const radius = canvas.clientWidth / 2;
-    moveDragControls(dragControls, x * radius, y * radius);
     setColor(newColor);
-
-    canvas.addEventListener('click', onClick);
-    return () => {
-      canvas.removeEventListener('click', onClick);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvas, activeEntityState]);
+  }, [activeEntityState]);
 
-  const getColorFromCoordWheel = (x: number, y: number): UseColor<T> => {
-    let color: UseColor<T>;
+  const rgbColor =
+    mode === 'color'
+      ? (color as ColorWheel<'color'>)
+      : temperature2rgb(color as ColorWheel<'temperature'>);
+
+  const getColorFromCoordWheel = (x: number, y: number): ColorWheel<T> => {
+    let color: ColorWheel<T>;
     if (mode === 'color') {
-      color = getColorFromCoord(x, y) as UseColor<T>;
+      color = getColorFromCoord(x, y) as ColorWheel<T>;
     } else {
-      color = getTemperatureFromCoord(x, y) as UseColor<T>;
+      color = getColorTempFromCoord(
+        x,
+        y,
+        minKelvin,
+        maxKelvin
+      ) as ColorWheel<T>;
     }
     return color;
   };
 
-  const getCoordFromColorWheel = (color: UseColor<T>) => {
+  const getCoordFromColorWheel = (color: ColorWheel<T>) => {
     if (mode === 'color') {
-      return getCoordFromColor(color as UseColor<'color'>);
+      return getCoordFromColor(canvas, color as ColorWheel<'color'>);
     } else {
-      return getCoordFromTemperature(color as UseColor<'temperature'>);
+      return getCoordFromColorTemp(
+        canvas,
+        color as ColorWheel<'temperature'>,
+        minKelvin,
+        maxKelvin
+      );
     }
-  };
-
-  const getEntityColor = (entity: HassEntityWithService<'light'>) => {
-    let color;
-    if (mode === 'color') {
-      color = entity.attributes.rgb_color ?? [255, 255, 255];
-    } else {
-      //TODO behind don't work color_temp alaways return null
-      color = entity.attributes.color_temp ?? 5000;
-    }
-    return color as UseColor<T>;
-  };
-
-  const setEntitiesColor = (
-    entities: HassEntityWithService<'light'>[],
-    color: UseColor<T>
-  ) => {
-    const rgb_color =
-      mode === 'color'
-        ? (color as UseColor<'color'>)
-        : temperature2rgb(color as UseColor<'temperature'>);
-    entities.map(entity => {
-      entity.service.turnOn({rgb_color});
-    });
   };
 
   const getNeerEntity = (
@@ -168,7 +87,7 @@ export const useColorPicker = <T extends Mode>(
     entities.map(entity => {
       const coord = getCoordFromColorWheel(getEntityColor(entity));
       const distance = Math.hypot(coord.x - x, coord.y - y);
-      if (distance < 0.3 && distance < bestDistance) {
+      if (distance < 10 && distance < bestDistance) {
         bestDistance = distance;
         neerEntity = entity;
       }
@@ -176,57 +95,45 @@ export const useColorPicker = <T extends Mode>(
     return neerEntity;
   };
 
-  const rgbColor =
-    mode === 'color'
-      ? (color as UseColor<'color'>)
-      : temperature2rgb(color as UseColor<'temperature'>);
-  return {color: rgbColor, onDrag, onDragEnd};
-};
+  const getEntityColor = (entity: HassEntityWithService<'light'>) => {
+    let color;
+    if (mode === 'color') {
+      color = entity.attributes.rgb_color ?? [255, 255, 255];
+    } else {
+      //TODO behind don't work color_temp alaways return null
+      color = entity.attributes.color_temp ?? 5000;
+    }
+    return color as ColorWheel<T>;
+  };
 
-const moveDragControls = (dragControls: DragControls, x: number, y: number) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (dragControls as any).componentControls.forEach((entry: any) => {
-    entry.getAxisMotionValue('x').set(x);
-    entry.getAxisMotionValue('y').set(y);
-  });
-};
+  const setEntitiesColor = (
+    entities: HassEntityWithService<'light'>[],
+    color: ColorWheel<T>
+  ) => {
+    if (mode === 'color') {
+      entities.map(entity =>
+        entity.service.turnOn({
+          serviceData: {rgb_color: color as ColorWheel<'color'>},
+        })
+      );
+    } else {
+      entities.map(entity =>
+        entity.service.turnOn({
+          serviceData: {
+            color_temp_kelvin: color as ColorWheel<'temperature'>,
+          } as object, // types object for bypass type missing on hakit
+        })
+      );
+    }
+  };
 
-export const getColorFromCoord = (x: number, y: number) => {
-  const hue = Math.round((Math.atan2(y, x) / (2 * Math.PI)) * 360) % 360;
-  const saturation = Math.round(Math.min(Math.hypot(x, y), 1) * 100) / 100;
-  return hsv2rgb([hue, saturation, 255]);
-};
-
-export const getTemperatureFromCoord = (_: number, y: number) => {
-  const fraction = (y / 0.9 + 1) / 2;
-
-  // Calculer la température
-  const temp = Math.max(
-    Math.min(MIN_KELVIN + fraction * (MAX_KELVIN - MIN_KELVIN), MAX_KELVIN),
-    MIN_KELVIN
-  );
-  return temp;
-};
-
-/**
- * color const fraction = (y / SAFE_ZONE_FACTOR + 1) / 2;
-      const temperature = Math.max(Math.min(min + fraction * (max - min), max), min);
-      return Math.round(temperature);
- *
- */
-
-export const getCoordFromColor = (color: [number, number, number]) => {
-  const [hue, saturation] = rgb2hs(color);
-  const phi = (hue / 360) * 2 * Math.PI;
-  const sat = Math.min(saturation, 1);
-  const x = Math.cos(phi) * sat;
-  const y = Math.sin(phi) * sat;
-  return {x, y};
-};
-
-export const getCoordFromTemperature = (temperature: number) => {
-  const minKelvin = 2000;
-  const maxKelvin = 10000;
-  const fraction = (temperature - minKelvin) / (maxKelvin - minKelvin);
-  return {x: 0, y: 2 * fraction - 1};
+  return {
+    color: rgbColor,
+    setColor,
+    getNeerEntity,
+    getCoordFromColorWheel,
+    getColorFromCoordWheel,
+    getEntityColor,
+    setEntitiesColor,
+  };
 };

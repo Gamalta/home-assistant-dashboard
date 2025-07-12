@@ -33,13 +33,22 @@ export function BrightnessSlider() {
 
   return (
     <>
-      <Stack position="relative">
+      <Stack
+        position="relative"
+        border="1px solid"
+        borderColor="divider"
+        borderRadius="100px"
+      >
         <BrightnessDisplay brightness={brightness} />
         <Button
           variant="outlined"
           color="inherit"
           onClick={event => setSliderAnchor(event.currentTarget)}
-          sx={{height: '100%', overflow: 'hidden', border: '0px'}}
+          sx={{
+            height: '100%',
+            overflow: 'hidden',
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
         >
           <BrightnessIcon />
           <Stack
@@ -75,7 +84,9 @@ export function BrightnessSlider() {
             onChangeCommitted={(_, value) => {
               activeEntities.forEach(entity =>
                 entity.service.turnOn({
-                  brightness: Math.round(((value as number) * 255) / 100),
+                  serviceData: {
+                    brightness: Math.round(((value as number) * 255) / 100),
+                  },
                 })
               );
             }}
@@ -88,6 +99,7 @@ export function BrightnessSlider() {
               '& .MuiSlider-track': {
                 width: '100%',
                 color: 'transparent',
+                border: 0,
                 background:
                   'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
               },
@@ -124,6 +136,7 @@ function BrightnessDisplay({brightness}: {brightness: number}) {
       bottom="100%"
       width="100%"
       textAlign="center"
+      color="text.secondary"
     >
       {brightness} %
     </Typography>

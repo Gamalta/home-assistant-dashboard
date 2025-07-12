@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {HassEntityWithService} from '@hakit/core';
 import {
   Dispatch,
@@ -28,13 +28,19 @@ export const useLightModalContext = () => useContext(LightModalContext);
 
 type LightModalProviderProps = {
   entities: HassEntityWithService<'light'>[];
+  originLight: HassEntityWithService<'light'> | null;
   children: React.ReactNode;
 };
 
 export const LightModalProvider = (props: LightModalProviderProps) => {
-  const {entities, children} = props;
+  const {entities, originLight, children} = props;
   const [activeEntityIds, setActiveEntityIds] = useState<string[]>([]);
   const [hoverEntity, setHoverEntity] = useState<string>();
+
+  useEffect(() => {
+    if (!originLight) return;
+    setActiveEntityIds([originLight.entity_id]);
+  }, [originLight]);
 
   return (
     <LightModalContext.Provider

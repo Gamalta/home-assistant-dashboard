@@ -14,10 +14,12 @@ import {useIcon} from '../../../../hooks/useIcon';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;
+  controllableByCurrentTab: boolean;
+  onMoveToControllerTab: () => void;
 };
 
 export function LightCard(props: LightCardProps) {
-  const {entity} = props;
+  const {entity, controllableByCurrentTab, onMoveToControllerTab} = props;
   const {activeEntityIds, setActiveEntityIds} = useLightModalContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
@@ -70,10 +72,21 @@ export function LightCard(props: LightCardProps) {
       }
       p={activeEntity ? '2px' : 0}
       m={activeEntity ? '-4px' : 0}
+      width="150px"
+      minWidth="150px"
       sx={{
         transition: 'all 0.3s ease-out 0s, transform .15s',
+        opacity: controllableByCurrentTab ? 1 : 0.3,
+        '&:hover': {
+          opacity: controllableByCurrentTab ? 1 : 0.5,
+        },
       }}
-      onClick={() => setActiveEntityIds([entity.entity_id])}
+      onClick={() => {
+        if (!controllableByCurrentTab) {
+          onMoveToControllerTab();
+        }
+        setActiveEntityIds([entity.entity_id]);
+      }}
     >
       <Stack
         ref={cardRef}
@@ -123,7 +136,16 @@ export function LightCard(props: LightCardProps) {
           }}
         >
           {icon}
-          <Typography sx={{color: contrastColor}}>
+          <Typography
+            sx={{
+              color: contrastColor,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              textAlign: 'center',
+            }}
+          >
             {entity.attributes.friendly_name}
           </Typography>
         </Stack>

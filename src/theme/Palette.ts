@@ -29,7 +29,7 @@ export const LightPalette: ColorSystemOptions = {
       main: '#F2F2F7',
     },
     background: {
-      default: '#232323',
+      default: '#F2F2F7',
       paper: '#F2F2F7',
       primary: '#FFFFFF',
       tertiary: '#FFFFFF',

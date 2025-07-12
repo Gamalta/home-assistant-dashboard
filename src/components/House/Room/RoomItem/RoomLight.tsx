@@ -7,6 +7,9 @@ import {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 import {LightModal} from '../../../Modal/LightModal';
 import Button from '@mui/material/Button';
+import {RoomLightImage} from '../RoomLightImage';
+import {createPortal} from 'react-dom';
+import {useHouseContext} from '../../../../contexts/HouseContext';
 
 type RoomLightProps = {
   id: string;
@@ -17,6 +20,7 @@ export function RoomLight(props: RoomLightProps) {
   const {id, lightConfig} = props;
 
   const [lightModal, setLightModal] = useState(false);
+  const {houseRef} = useHouseContext();
   const {setLightEntities} = useRoomContext();
   const light = useEntity(lightConfig.lightEntityId, {
     returnNullIfNotFound: true,
@@ -68,9 +72,19 @@ export function RoomLight(props: RoomLightProps) {
       <LightModal
         id={`${id}-light`}
         open={lightModal}
+        originLight={light}
         onClose={() => setLightModal(false)}
         title="Lumière"
       />
+      {houseRef?.current &&
+        createPortal(
+          <RoomLightImage
+            lightConfig={lightConfig}
+            light={light}
+            key={`${id}-light-image`}
+          />,
+          houseRef?.current
+        )}
     </>
   );
 }

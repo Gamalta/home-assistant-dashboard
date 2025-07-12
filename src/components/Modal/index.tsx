@@ -1,5 +1,5 @@
 import {IconButton, Stack, Typography} from '@mui/material';
-import {AnimatePresence, motion} from 'framer-motion';
+import {AnimatePresence, motion, Variants} from 'framer-motion';
 import {useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
@@ -15,7 +15,7 @@ export interface ModalProps {
   onClose: () => void;
 }
 
-const variants = {
+const variants: Variants = {
   hidden: {
     scale: 0.9,
     y: '-10%',

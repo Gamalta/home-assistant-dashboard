@@ -6,7 +6,7 @@ import Alert from '@mui/material/Alert';
 import {CircularProgress} from '@mui/material';
 
 export function House() {
-  const {config} = useHouseContext();
+  const {config, houseRef} = useHouseContext();
   const houseConfig = config?.house;
   const [nightOpacity, setNightOpacity] = useState(0);
   const [showLoading, setShowLoading] = useState(true);
@@ -120,6 +120,7 @@ export function House() {
         sx={{
           transform: 'translateY(-50%)',
         }}
+        ref={houseRef}
       >
         {houseConfig.rooms.map(room => (
           <Room key={room.id} room={room} />
