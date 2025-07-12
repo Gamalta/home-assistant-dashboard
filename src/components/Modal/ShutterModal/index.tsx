@@ -21,7 +21,7 @@ type DesktopModalProps = Omit<ModalProps, 'children'> & {
 };
 
 export function ShutterModal(props: DesktopModalProps) {
-  const {shutterConfig, onClose, ...modalProps} = props;
+  const {shutterConfig, ...modalProps} = props;
 
   const entity = useEntity(shutterConfig.shutterEntityId, {
     returnNullIfNotFound: true,
@@ -76,7 +76,6 @@ export function ShutterModal(props: DesktopModalProps) {
   return (
     <Modal
       {...modalProps}
-      onClose={onClose}
       action={
         <Stack
           direction="row"
