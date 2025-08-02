@@ -98,6 +98,7 @@ export function ShutterModal(props: DesktopModalProps) {
           pb="9px"
           position="relative"
           sx={{
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             backgroundImage: 'url("shutter/shutter_base.png")',
             backgroundSize: 'cover',
           }}
