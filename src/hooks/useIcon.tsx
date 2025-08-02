@@ -29,7 +29,7 @@ export function useIcon(
     }
 
     return (
-      <Icon {...iconProps}>
+      <Icon sx={{lineHeight: 0}} {...iconProps}>
         <Iconify icon={icon || 'mdi:person'} width="24px" height="24px" />
       </Icon>
     );
