@@ -1,0 +1,240 @@
+import {HassEntityWithService} from '@hakit/core';
+import {Modal, ModalProps} from '..';
+import {keyframes} from '@emotion/react';
+import Stack from '@mui/material/Stack';
+import {Thermostat} from 'react-thermostat';
+import IconButton from '@mui/material/IconButton';
+import {useCallback, useState} from 'react';
+import {useTheme} from '@mui/material/styles';
+import WeekendIcon from '@mui/icons-material/WeekendRounded';
+import HotelIcon from '@mui/icons-material/HotelRounded';
+import PowerSettingsNewRoundedIcon from '@mui/icons-material/PowerSettingsNewRounded';
+import {LeaveIcon} from '../../Icons/LeaveIcon';
+import {FanIcon} from '../../Icons/FanIcon';
+
+type ClimateModalProps = Omit<ModalProps, 'children'> & {
+  climateEntity: HassEntityWithService<'climate'>;
+};
+
+enum PresetMode {
+  Sleep = 'sleep',
+  Comfort = 'comfort',
+  Eco = 'eco',
+  Off = 'off',
+}
+
+function interpolateColor(
+  color1: string,
+  color2: string,
+  factor: number
+): string {
+  const hexToRgb = (hex: string) =>
+    hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
+  const rgbToHex = (rgb: number[]) =>
+    '#' + rgb.map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+
+  const c1 = hexToRgb(color1);
+  const c2 = hexToRgb(color2);
+
+  const result = c1.map((c, i) => c + (c2[i] - c) * factor);
+  return rgbToHex(result as number[]);
+}
+
+const getModeColors = (
+  presetMode: PresetMode,
+  temperature: number,
+  targetTemperature: number
+) => {
+  const baseNeutral = '#848484';
+  const distance = targetTemperature - temperature;
+
+  if (presetMode === PresetMode.Off) {
+    return ['#848484', '#383838'];
+  }
+
+  if (distance <= -10) {
+    return ['#2c8e98', '#dae8eb'];
+  } else if (distance >= 10) {
+    return ['#cfac48', '#c96100'];
+  } else if (Math.abs(distance) <= 1) {
+    return ['#848484', '#848484'];
+  } else if (distance < -1) {
+    const factor = (distance + 10) / 9;
+    const coolColors = ['#2c8e98', '#dae8eb'];
+    return [
+      interpolateColor(coolColors[0], baseNeutral, factor),
+      interpolateColor(coolColors[1], baseNeutral, factor),
+    ];
+  } else {
+    const factor = (distance - 1) / 9;
+    const heatColors = ['#cfac48', '#c96100'];
+    return [
+      interpolateColor(baseNeutral, heatColors[0], factor),
+      interpolateColor(baseNeutral, heatColors[1], factor),
+    ];
+  }
+};
+
+export default function ClimateModal(props: ClimateModalProps) {
+  const {climateEntity, ...modalProps} = props;
+  const [targetTemperature, setTargetTemperature] = useState(
+    climateEntity.attributes.temperature
+  );
+  const [presetMode, setPresetMode] = useState<PresetMode>(
+    (climateEntity.attributes.preset_mode as PresetMode) ?? PresetMode.Off
+  );
+
+  const isActive = presetMode !== PresetMode.Off;
+  const theme = useTheme();
+
+  const getThermostatColors = useCallback(
+    () =>
+      getModeColors(
+        presetMode,
+        climateEntity.attributes.current_temperature,
+        targetTemperature
+      ),
+    [
+      presetMode,
+      climateEntity.attributes.current_temperature,
+      targetTemperature,
+    ]
+  );
+
+  return (
+    <Modal {...modalProps}>
+      <Stack width="300px" position="relative" alignItems="center">
+        {presetMode.toString()}
+        <Stack width="175px" mt={7} spacing={2} alignItems="center">
+          <Thermostat
+            min={climateEntity.attributes.min_temp}
+            max={climateEntity.attributes.max_temp}
+            disabled={!isActive}
+            value={targetTemperature}
+            valueSuffix="°C"
+            track={{
+              colors: getThermostatColors(),
+              markers: {
+                main: {color: theme.palette.background.paper},
+                sub: {color: theme.palette.background.paper},
+              },
+            }}
+            onChange={newTemp =>
+              setTargetTemperature(Number(newTemp.toFixed(0)))
+            }
+          />
+          <IconButton
+            size="large"
+            sx={{
+              color: isActive ? 'text.primary' : 'text.disabled',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: isActive ? 'text.primary' : 'text.disabled',
+            }}
+            onClick={() =>
+              setPresetMode(
+                presetMode === PresetMode.Off
+                  ? PresetMode.Comfort
+                  : PresetMode.Off
+              )
+            }
+          >
+            <PowerSettingsNewRoundedIcon />
+          </IconButton>
+        </Stack>
+        <Stack
+          spacing={1}
+          p={1}
+          position="absolute"
+          right={0}
+          top={0}
+          bgcolor="background.tertiary"
+          borderRadius={10}
+        >
+          <IconButton
+            sx={{
+              color:
+                presetMode === PresetMode.Comfort
+                  ? theme.palette.primary.main
+                  : undefined,
+              border: `solid 1px ${presetMode === PresetMode.Comfort ? theme.palette.primary.main : 'white'}`,
+            }}
+            onClick={() => setPresetMode(PresetMode.Comfort)}
+          >
+            <WeekendIcon />
+          </IconButton>
+          <IconButton
+            sx={{
+              color:
+                presetMode === PresetMode.Sleep
+                  ? theme.palette.primary.main
+                  : undefined,
+              border: `solid 1px ${presetMode === PresetMode.Sleep ? theme.palette.primary.main : 'white'}`,
+            }}
+            onClick={() => setPresetMode(PresetMode.Sleep)}
+          >
+            <HotelIcon />
+          </IconButton>
+          <IconButton
+            sx={{
+              color:
+                presetMode === PresetMode.Eco
+                  ? theme.palette.primary.main
+                  : undefined,
+              border: `solid 1px ${presetMode === PresetMode.Eco ? theme.palette.primary.main : 'white'}`,
+            }}
+            onClick={() => setPresetMode(PresetMode.Eco)}
+          >
+            <LeaveIcon />
+          </IconButton>
+        </Stack>
+        <Stack
+          spacing={1}
+          p={1}
+          position="absolute"
+          left={0}
+          top={0}
+          bgcolor="background.tertiary"
+          borderRadius={10}
+        >
+          <IconButton
+            component={Stack}
+            sx={{
+              color: isActive
+                ? theme.palette.text.primary
+                : theme.palette.text.disabled,
+              border: `solid 1px ${isActive ? theme.palette.text.primary : theme.palette.text.disabled}`,
+              '& .MuiIcon-root': {
+                display: 'flex',
+              },
+            }}
+          >
+            <FanIcon
+              sx={{
+                height: '24px',
+                width: '24px',
+                animation: `${spin} ${
+                  {
+                    [PresetMode.Eco]: '5s',
+                    [PresetMode.Sleep]: '3s',
+                    [PresetMode.Comfort]: '1s',
+                    [PresetMode.Off]: '3s',
+                  }[isActive ? presetMode : PresetMode.Off]
+                } linear infinite`,
+              }}
+            />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </Modal>
+  );
+}
+
+const spin = keyframes`
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(360deg);
+  }
+`;

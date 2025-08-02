@@ -13,6 +13,7 @@ type HouseConfigType = {
 
 type RoomItemConfigType =
   | LightConfigType
+  | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
   | DestkopConfigType;
@@ -36,6 +37,11 @@ type LightConfigType = BaseItemConfigType & {
     green: string;
     blue: string;
   };
+};
+
+type ClimateConfigType = BaseItemConfigType & {
+  type: 'climate';
+  climateEntityId: FilterByDomain<EntityName, 'climate'>;
 };
 
 type TemperatureConfigType = BaseItemConfigType & {
