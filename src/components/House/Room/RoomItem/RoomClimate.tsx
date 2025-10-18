@@ -37,8 +37,8 @@ export function RoomClimate(props: RoomClimateProps) {
           }}
           onClick={() => setClimateModal(true)}
         >
-          {climate.state === UNKNOWN
-            ? '-'
+          {climate.state === UNKNOWN || !climate.attributes.current_temperature
+            ? '--'
             : Math.floor(Number(climate.attributes.current_temperature))}
           °
         </Button>

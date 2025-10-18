@@ -1,6 +1,5 @@
 import {HassEntityWithService} from '@hakit/core';
 import {Modal, ModalProps} from '..';
-import {keyframes} from '@emotion/react';
 import Stack from '@mui/material/Stack';
 import {Thermostat} from 'react-thermostat';
 import IconButton from '@mui/material/IconButton';
@@ -10,7 +9,9 @@ import WeekendIcon from '@mui/icons-material/WeekendRounded';
 import HotelIcon from '@mui/icons-material/HotelRounded';
 import PowerSettingsNewRoundedIcon from '@mui/icons-material/PowerSettingsNewRounded';
 import {LeaveIcon} from '../../Icons/LeaveIcon';
-import {FanIcon} from '../../Icons/FanIcon';
+import {ThermostatIcon} from '../../Icons/ThermostatIcon';
+import Typography from '@mui/material/Typography';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
 
 type ClimateModalProps = Omit<ModalProps, 'children'> & {
   climateEntity: HassEntityWithService<'climate'>;
@@ -91,7 +92,7 @@ export default function ClimateModal(props: ClimateModalProps) {
     () =>
       getModeColors(
         presetMode,
-        climateEntity.attributes.current_temperature,
+        climateEntity.attributes.current_temperature ?? 22,
         targetTemperature
       ),
     [
@@ -103,9 +104,8 @@ export default function ClimateModal(props: ClimateModalProps) {
 
   return (
     <Modal {...modalProps}>
-      <Stack width="300px" position="relative" alignItems="center">
-        {presetMode.toString()}
-        <Stack width="175px" mt={7} spacing={2} alignItems="center">
+      <Stack width="350px" position="relative" alignItems="center">
+        <Stack width="200px" mt={7} spacing={3} alignItems="center">
           <Thermostat
             min={climateEntity.attributes.min_temp}
             max={climateEntity.attributes.max_temp}
@@ -126,7 +126,7 @@ export default function ClimateModal(props: ClimateModalProps) {
           <IconButton
             size="large"
             sx={{
-              color: isActive ? 'text.primary' : 'text.disabled',
+              color: 'text.primary',
               borderWidth: '1px',
               borderStyle: 'solid',
               borderColor: isActive ? 'text.primary' : 'text.disabled',
@@ -165,11 +165,8 @@ export default function ClimateModal(props: ClimateModalProps) {
           </IconButton>
           <IconButton
             sx={{
-              color:
-                presetMode === PresetMode.Sleep
-                  ? theme.palette.primary.main
-                  : undefined,
-              border: `solid 1px ${presetMode === PresetMode.Sleep ? theme.palette.primary.main : 'white'}`,
+              color: presetMode === PresetMode.Sleep ? '#04697bff' : undefined,
+              border: `solid 1px ${presetMode === PresetMode.Sleep ? '#04697bff' : 'white'}`,
             }}
             onClick={() => setPresetMode(PresetMode.Sleep)}
           >
@@ -177,11 +174,8 @@ export default function ClimateModal(props: ClimateModalProps) {
           </IconButton>
           <IconButton
             sx={{
-              color:
-                presetMode === PresetMode.Eco
-                  ? theme.palette.primary.main
-                  : undefined,
-              border: `solid 1px ${presetMode === PresetMode.Eco ? theme.palette.primary.main : 'white'}`,
+              color: presetMode === PresetMode.Eco ? '#3e913eff' : undefined,
+              border: `solid 1px ${presetMode === PresetMode.Eco ? '#3e913eff' : 'white'}`,
             }}
             onClick={() => setPresetMode(PresetMode.Eco)}
           >
@@ -189,52 +183,38 @@ export default function ClimateModal(props: ClimateModalProps) {
           </IconButton>
         </Stack>
         <Stack
+          mx={-1}
           spacing={1}
-          p={1}
           position="absolute"
           left={0}
           top={0}
-          bgcolor="background.tertiary"
-          borderRadius={10}
         >
-          <IconButton
-            component={Stack}
-            sx={{
-              color: isActive
-                ? theme.palette.text.primary
-                : theme.palette.text.disabled,
-              border: `solid 1px ${isActive ? theme.palette.text.primary : theme.palette.text.disabled}`,
-              '& .MuiIcon-root': {
-                display: 'flex',
-              },
-            }}
-          >
-            <FanIcon
-              sx={{
-                height: '24px',
-                width: '24px',
-                animation: `${spin} ${
-                  {
-                    [PresetMode.Eco]: '5s',
-                    [PresetMode.Sleep]: '3s',
-                    [PresetMode.Comfort]: '1s',
-                    [PresetMode.Off]: '3s',
-                  }[isActive ? presetMode : PresetMode.Off]
-                } linear infinite`,
-              }}
+          <Stack direction="row" width="fit-content" zIndex={102}>
+            <ThermostatIcon
+              sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
             />
-          </IconButton>
+            <Typography variant="h4">{`${climateEntity.attributes.current_temperature ?? '--'}°C`}</Typography>
+          </Stack>
+          {climateEntity.attributes.current_humidity && (
+            <Stack
+              direction="row"
+              width="fit-content"
+              spacing={1}
+              zIndex={102}
+              pl={1}
+            >
+              <WaterDropIcon
+                fontSize="large"
+                sx={{color: 'blue', opacity: 0.6}}
+              />
+              <Typography
+                variant="h5"
+                color="textSecondary"
+              >{`${climateEntity.attributes.current_humidity}%`}</Typography>
+            </Stack>
+          )}
         </Stack>
       </Stack>
     </Modal>
   );
 }
-
-const spin = keyframes`
-  from {
-    transform:rotate(0deg);
-  }
-  to {
-    transform:rotate(360deg);
-  }
-`;
