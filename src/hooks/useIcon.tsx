@@ -5,6 +5,7 @@ import {PlayBarIcon} from '../components/Icons/PlayBarIcon';
 import {BulbSultanIcon} from '../components/Icons/BulbSultanIcon';
 import Icon, {IconProps} from '@mui/material/Icon';
 import {BulbCableIcon} from '../components/Icons/BulbCandleIcon';
+import { LightStripIcon } from '../components/Icons/LightStripIcon';
 
 export function useIcon(
   icon?: string | null,
@@ -22,6 +23,8 @@ export function useIcon(
           return <IrisIcon />;
         case 'hue:play-bar-v':
           return <PlayBarIcon />;
+        case 'hue:lightstrip':
+          return <LightStripIcon />;
         default:
           console.warn('useIcon hue icon not found: ', icon);
           return <BulbSultanIcon />;
