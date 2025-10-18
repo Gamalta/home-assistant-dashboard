@@ -34,7 +34,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
   } = props;
 
   const temperatureMap = Object.fromEntries(
-    temperatureEntity.history.entityHistory.map(data => [
+    (temperatureEntity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
     ])
@@ -91,7 +91,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
   return (
     <Modal
       {...modalProps}
-      action={
+      action={(signalEntity || batteryEntity) && (
         <Stack
           direction="row"
           borderRadius={1}
@@ -106,7 +106,7 @@ export function TemperatureModal(props: TemperatureModalProps) {
             <BatteryDisplay batteryLevel={Number(batteryEntity.state)} />
           )}
         </Stack>
-      }
+  )}
     >
       <Stack width="500px" height="300px" position="relative">
         <Stack justifyContent="space-between" height="100%" width="fit-content">
