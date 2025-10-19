@@ -42,6 +42,8 @@ type LightConfigType = BaseItemConfigType & {
 type ClimateConfigType = BaseItemConfigType & {
   type: 'climate';
   climateEntityId: FilterByDomain<EntityName, 'climate'>;
+  temperatureEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  humidityEntityId?: FilterByDomain<EntityName, 'sensor'>;
 };
 
 type TemperatureConfigType = BaseItemConfigType & {

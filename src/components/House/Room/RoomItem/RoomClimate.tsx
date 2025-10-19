@@ -47,6 +47,7 @@ export function RoomClimate(props: RoomClimateProps) {
         id={`${id}-climate`}
         open={climateModal}
         onClose={() => setClimateModal(false)}
+        climateConfig={climateConfig}
         climateEntity={climate}
         title="Climatisation"
       />
