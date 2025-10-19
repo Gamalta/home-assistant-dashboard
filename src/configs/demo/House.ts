@@ -123,7 +123,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.office_light',
+          lightEntityId: 'light.office_switch',
           layer: {
             red: officeRed,
             green: officeGreen,
