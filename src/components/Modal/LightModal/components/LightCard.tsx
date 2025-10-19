@@ -68,7 +68,7 @@ export function LightCard(props: LightCardProps) {
           : undefined
       }
       borderRadius={
-        activeEntity ? theme => `${theme.shape.borderRadius + 4}px` : 1
+        activeEntity ? theme => `${Number(theme.shape.borderRadius) + 4}px` : 1
       }
       p={activeEntity ? '2px' : 0}
       m={activeEntity ? '-4px' : 0}

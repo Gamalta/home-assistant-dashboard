@@ -45,6 +45,8 @@ export function RoomLight(props: RoomLightProps) {
   );
 
   const icon = useIcon(light?.attributes.icon);
+
+  if (!light) return <></>;
   return (
     <>
       <motion.div layoutId={`${id}-light`}>

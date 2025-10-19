@@ -16,6 +16,10 @@ export const DarkPalette: ColorSystemOptions = {
       primary: '#1C1C1E',
       tertiary: '#3A3A3C',
     },
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#a5a5a5ff'
+    }
   },
 };
 

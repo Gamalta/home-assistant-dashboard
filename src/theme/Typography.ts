@@ -1,3 +1,3 @@
-import {TypographyOptions} from '@mui/material/styles/createTypography';
+import {TypographyVariantsOptions} from '@mui/material';
 
-export const Typography: TypographyOptions = {};
+export const Typography: TypographyVariantsOptions = {};

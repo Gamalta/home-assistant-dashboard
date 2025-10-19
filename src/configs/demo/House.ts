@@ -39,14 +39,14 @@ export const SideBarConfig: SideBarConfigType = {
     },
     {
       name: 'Elio',
-      personEntityId: 'person.home',
+      personEntityId: 'person.elio',
       avatar: 'person/Elio.png',
       homeZoneEntityId: 'zone.home',
-      homeDistanceEntityId: 'sensor.home_3eur_la_minute_distance',
+      homeDistanceEntityId: 'sensor.home_iphone_delio_distance',
       workZoneEntityId: 'zone.elio_work',
-      focusEntityId: 'binary_sensor.3eur_la_minute_focus',
-      batteryLevelEntityId: 'sensor.3eur_la_minute_battery_level',
-      batteryStateEntityId: 'sensor.3eur_la_minute_battery_state',
+      focusEntityId: 'binary_sensor.iphone_delio_focus',
+      batteryLevelEntityId: 'sensor.iphone_delio_battery_level',
+      batteryStateEntityId: 'sensor.iphone_delio_battery_state',
     },
   ],
   system: {
@@ -84,7 +84,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.salon_main',
+          lightEntityId: 'light.salon_light',
           layer: {
             red: salonRed,
             green: salonGreen,
@@ -92,12 +92,11 @@ export const HouseConfig: HouseConfigType = {
           },
         },
         {
-          type: 'temperature',
+          type: 'climate',
           roomDisplay: true,
-          temperatureEntityId: 'sensor.temperature_salon',
-          humidityEntityId: 'sensor.humidity_salon',
-          batteryEntityId: 'sensor.battery_level_atc_salon',
-          signalEntityId: 'sensor.signal_atc_salon',
+          climateEntityId: 'climate.salon',
+          temperatureEntityId: 'sensor.eurevia_hvac_salon_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_salon_humidity',
         },
         {
           type: 'light',
@@ -124,7 +123,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.office_main',
+          lightEntityId: 'light.office_light',
           layer: {
             red: officeRed,
             green: officeGreen,
@@ -132,12 +131,11 @@ export const HouseConfig: HouseConfigType = {
           },
         },
         {
-          type: 'temperature',
+          type: 'climate',
           roomDisplay: true,
-          temperatureEntityId: 'sensor.temperature_office',
-          humidityEntityId: 'sensor.humidity_office',
-          batteryEntityId: 'sensor.battery_level_atc_office',
-          signalEntityId: 'sensor.signal_atc_office',
+          climateEntityId: 'climate.office',
+          temperatureEntityId: 'sensor.eurevia_hvac_office_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_office_humidity',
         },
         {
           type: 'light',
@@ -191,7 +189,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.bedroom_main',
+          lightEntityId: 'light.bedroom_light',
           layer: {
             red: bedroomRed,
             green: bedroomGreen,
@@ -199,12 +197,11 @@ export const HouseConfig: HouseConfigType = {
           },
         },
         {
-          type: 'temperature',
+          type: 'climate',
           roomDisplay: true,
-          temperatureEntityId: 'sensor.temperature_bedroom',
-          humidityEntityId: 'sensor.humidity_bedroom',
-          batteryEntityId: 'sensor.battery_level_atc_bedroom',
-          signalEntityId: 'sensor.signal_atc_bedroom',
+          climateEntityId: 'climate.bedroom',
+          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_bedroom_humidity',
         },
         {
           type: 'shutter',
@@ -221,7 +218,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.bedroom_2_main',
+          lightEntityId: 'light.bedroom_2_light',
           layer: {
             red: bedroom2Red,
             green: bedroom2Green,
@@ -229,12 +226,11 @@ export const HouseConfig: HouseConfigType = {
           },
         },
         {
-          type: 'temperature',
+          type: 'climate',
           roomDisplay: true,
-          temperatureEntityId: 'sensor.temperature_bedroom2',
-          humidityEntityId: 'sensor.humidity_bedroom2',
-          batteryEntityId: 'sensor.battery_level_atc_bedroom2',
-          signalEntityId: 'sensor.signal_atc_bedroom2',
+          climateEntityId: 'climate.bedroom_2',
+          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_2_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_bedroom_2_humidity',
         },
         {
           type: 'shutter',
