@@ -5,7 +5,7 @@ import {PlayBarIcon} from '../components/Icons/PlayBarIcon';
 import {BulbSultanIcon} from '../components/Icons/BulbSultanIcon';
 import Icon, {IconProps} from '@mui/material/Icon';
 import {BulbCableIcon} from '../components/Icons/BulbCandleIcon';
-import { LightStripIcon } from '../components/Icons/LightStripIcon';
+import {LightStripIcon} from '../components/Icons/LightStripIcon';
 
 export function useIcon(
   icon?: string | null,

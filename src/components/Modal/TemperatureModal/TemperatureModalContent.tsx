@@ -12,7 +12,7 @@ import {
 } from '@mui/x-charts';
 import {roundToNearest5Minutes} from '../../../utils/graph';
 import {ThermostatIcon} from '../../Icons/ThermostatIcon';
-import { HassEntityWithService } from '@hakit/core';
+import {HassEntityWithService} from '@hakit/core';
 type TemperatureModalContentProps = {
   temperatureEntity: HassEntityWithService<'sensor'>;
   humidityEntity?: HassEntityWithService<'sensor'>;

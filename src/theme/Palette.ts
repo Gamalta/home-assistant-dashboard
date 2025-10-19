@@ -18,8 +18,8 @@ export const DarkPalette: ColorSystemOptions = {
     },
     text: {
       primary: '#FFFFFF',
-      secondary: '#a5a5a5ff'
-    }
+      secondary: '#a5a5a5ff',
+    },
   },
 };
 
