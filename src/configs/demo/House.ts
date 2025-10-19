@@ -95,6 +95,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.salon',
+          temperatureEntityId: 'sensor.eurevia_hvac_salon_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_salon_humidity',
         },
         {
           type: 'light',
@@ -132,6 +134,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.office',
+          temperatureEntityId: 'sensor.eurevia_hvac_office_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_office_humidity',
         },
         {
           type: 'light',
@@ -196,6 +200,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom',
+          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_bedroom_humidity',
         },
         {
           type: 'shutter',
@@ -223,6 +229,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom_2',
+          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_2_temperature',
+          humidityEntityId: 'sensor.eurevia_hvac_bedroom_2_humidity',
         },
         {
           type: 'shutter',
