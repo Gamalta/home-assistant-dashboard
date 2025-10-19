@@ -171,9 +171,13 @@ export default function ClimateModal(props: ClimateModalProps) {
                       sub: {color: theme.palette.background.paper},
                     },
                   }}
-                  onChange={newTemp =>
-                    setTargetTemperature(Number(newTemp.toFixed(0)))
-                  }
+                  onChange={newTemp => {
+                    const newFixedTemp = Number(newTemp.toFixed(0));
+                    setTargetTemperature(newFixedTemp);
+                    climateEntity.service.setTemperature({
+                      serviceData: {temperature: newFixedTemp},
+                    });
+                  }}
                 />
                 <IconButton
                   size="large"
@@ -183,13 +187,17 @@ export default function ClimateModal(props: ClimateModalProps) {
                     borderStyle: 'solid',
                     borderColor: isActive ? 'text.primary' : 'text.disabled',
                   }}
-                  onClick={() =>
-                    setPresetMode(
-                      presetMode === PresetMode.Off
-                        ? PresetMode.Comfort
-                        : PresetMode.Off
-                    )
-                  }
+                  onClick={() => {
+                    if (presetMode === PresetMode.Off) {
+                      setPresetMode(PresetMode.Comfort);
+                      climateEntity.service.setPresetMode({
+                        serviceData: {preset_mode: PresetMode.Comfort},
+                      });
+                    } else {
+                      setPresetMode(PresetMode.Off);
+                      climateEntity.service.turnOff();
+                    }
+                  }}
                 >
                   <PowerSettingsNewRoundedIcon />
                 </IconButton>
@@ -211,7 +219,12 @@ export default function ClimateModal(props: ClimateModalProps) {
                         : undefined,
                     border: `solid 1px ${presetMode === PresetMode.Comfort ? theme.palette.primary.main : 'white'}`,
                   }}
-                  onClick={() => setPresetMode(PresetMode.Comfort)}
+                  onClick={() => {
+                    setPresetMode(PresetMode.Comfort);
+                    climateEntity.service.setPresetMode({
+                      serviceData: {preset_mode: PresetMode.Comfort},
+                    });
+                  }}
                 >
                   <WeekendIcon />
                 </IconButton>
@@ -221,7 +234,12 @@ export default function ClimateModal(props: ClimateModalProps) {
                       presetMode === PresetMode.Sleep ? '#04697bff' : undefined,
                     border: `solid 1px ${presetMode === PresetMode.Sleep ? '#04697bff' : 'white'}`,
                   }}
-                  onClick={() => setPresetMode(PresetMode.Sleep)}
+                  onClick={() => {
+                    setPresetMode(PresetMode.Sleep);
+                    climateEntity.service.setPresetMode({
+                      serviceData: {preset_mode: PresetMode.Sleep},
+                    });
+                  }}
                 >
                   <HotelIcon />
                 </IconButton>
@@ -231,7 +249,12 @@ export default function ClimateModal(props: ClimateModalProps) {
                       presetMode === PresetMode.Eco ? '#3e913eff' : undefined,
                     border: `solid 1px ${presetMode === PresetMode.Eco ? '#3e913eff' : 'white'}`,
                   }}
-                  onClick={() => setPresetMode(PresetMode.Eco)}
+                  onClick={() => {
+                    setPresetMode(PresetMode.Eco);
+                    climateEntity.service.setPresetMode({
+                      serviceData: {preset_mode: PresetMode.Eco},
+                    });
+                  }}
                 >
                   <LeaveIcon />
                 </IconButton>
