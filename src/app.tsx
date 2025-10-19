@@ -2,6 +2,7 @@
 import Dashboard from './Dashboard';
 import {HassConnect} from '@hakit/core';
 import {ThemeProvider} from './contexts/ThemeProvider';
+import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/react';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <Dashboard />
         </HassConnect>
       </ThemeProvider>
+      <Analytics />
       <SpeedInsights />
     </>
   );
