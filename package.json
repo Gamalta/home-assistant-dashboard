@@ -29,7 +29,7 @@
     "framer-motion": "^12.18.1",
     "lodash": "^4.17.21",
     "react": "^19.1.4",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.1.4",
     "react-resizable-panels": "^2.1.6",
     "react-scripts": "^5.0.1",
     "react-thermostat": "^2.0.2"
