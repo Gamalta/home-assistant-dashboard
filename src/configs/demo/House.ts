@@ -55,7 +55,7 @@ export const SideBarConfig: SideBarConfigType = {
     graphs: [
       {
         color: 'red',
-        label: 'Mémoir:',
+        label: 'Mémoire:',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {

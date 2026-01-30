@@ -6,6 +6,7 @@ import {BulbSultanIcon} from '../components/Icons/BulbSultanIcon';
 import Icon, {IconProps} from '@mui/material/Icon';
 import {BulbCableIcon} from '../components/Icons/BulbCandleIcon';
 import {LightStripIcon} from '../components/Icons/LightStripIcon';
+import {BulbSpotHungIcon} from '../components/Icons/BulbSpotHungIcon';
 
 export function useIcon(
   icon?: string | null,
@@ -19,6 +20,8 @@ export function useIcon(
           return <BulbCableIcon />;
         case 'hue:bulb-sultan':
           return <BulbSultanIcon />;
+        case 'hue:bulb-spot-hung':
+          return <BulbSpotHungIcon />;
         case 'hue:iris':
           return <IrisIcon />;
         case 'hue:play-bar-v':
