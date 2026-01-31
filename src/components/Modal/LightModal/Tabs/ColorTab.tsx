@@ -70,7 +70,7 @@ export function ColorTab() {
             entity =>
               !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
-              entity.attributes.rgb_color &&
+              entity.custom.color &&
               lightHasColor(entity)
           )
           .map(entity => (
@@ -88,7 +88,7 @@ export function ColorTab() {
             entity =>
               activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
-              entity.attributes.rgb_color &&
+              entity.custom.color &&
               lightHasColor(entity)
           )}
         />

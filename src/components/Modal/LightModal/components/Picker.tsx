@@ -26,7 +26,7 @@ export function Picker(props: PickerProps) {
   const color = useMemo<ColorWheel<typeof mode>>(
     () =>
       mode === 'color'
-        ? entity.attributes.rgb_color ?? [255, 255, 255]
+        ? entity.custom.color ?? [255, 255, 255]
         : entity.attributes.color_temp_kelvin ?? 4333,
     [mode, entity]
   );
@@ -34,7 +34,7 @@ export function Picker(props: PickerProps) {
   useEffect(() => {
     let color: ColorWheel<WheelMode> | undefined;
     if (mode === 'color') {
-      color = entity.attributes.rgb_color;
+      color = entity.custom.color;
     } else {
       color = entity.attributes.color_temp_kelvin;
     }

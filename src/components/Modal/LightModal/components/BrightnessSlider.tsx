@@ -23,11 +23,7 @@ export function BrightnessSlider() {
 
   useEffect(() => {
     if (activeEntities.length === 0) return;
-    setBrightness(
-      Math.round(
-        ((activeEntities[0]?.attributes.brightness ?? 255) / 255) * 100
-      )
-    );
+    setBrightness(Math.round(activeEntities[0]?.custom.brightnessValue ?? 100));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEntities.length]);
 

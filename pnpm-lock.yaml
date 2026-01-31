@@ -15,11 +15,11 @@ importers:
         specifier: ^11.11.0
         version: 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3)
       '@hakit/components':
-        specifier: ^5.1.5
-        version: 5.1.5(xqwsxyrhgdn4y7baxqs2oznzo4)
+        specifier: ^6.0.1
+        version: 6.0.1(y4jjobyjfcn5kowlr5wz3mxvwq)
       '@hakit/core':
-        specifier: ^5.1.5
-        version: 5.1.5(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))
+        specifier: ^6.0.1
+        version: 6.0.1(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))
       '@iconify/react':
         specifier: ^4.1.1
         version: 4.1.1(react@19.2.3)
@@ -1204,16 +1204,15 @@ packages:
     peerDependencies:
       '@fullcalendar/core': ~6.1.15
 
-  '@hakit/components@5.1.5':
-    resolution: {integrity: sha512-W9YHxRq0hKjX9C3FMCJ1Jv3ffiXCY5WiIO15eE4xH+fuFzc4oFlAvhnS97Rnlf5B+C/XEPTk3LXkBii+RecaqQ==}
+  '@hakit/components@6.0.1':
+    resolution: {integrity: sha512-1PoBJdG5V70vrdhJVws/RTnMKVY0tfO64UtQfgixmJLumR/r2RkG+XyutcPluOISE6yTG54/jtX+r0kGMUNLKQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     peerDependencies:
       '@emotion/is-prop-valid': '>=1.3.x'
       '@emotion/react': '>=11.x.x'
       '@emotion/styled': '>=11.x'
       '@fullcalendar/react': '>=6.x.x'
-      '@hakit/core': ^5.1.5
-      '@mui/material': ^6.3.0
+      '@hakit/core': ^6.0.1
       '@use-gesture/react': '>=10.x'
       autolinker: '>=4.x'
       fullcalendar: '>=6.x.x'
@@ -1231,8 +1230,8 @@ packages:
       use-long-press: '>=3.x.x'
       zustand: '>=5.x.x'
 
-  '@hakit/core@5.1.5':
-    resolution: {integrity: sha512-D9hxIj/tiU7TyM1V1rbiyhtnO2RWm8EZ65ehlLxQQb2X/Gg+arqmtemD2bft7/Sy7Dg5481hzcxF5924pCWzqQ==}
+  '@hakit/core@6.0.1':
+    resolution: {integrity: sha512-guCMTrU2j03Y+5tpa49GjZZQtPNjgHtndn2es8OoCV5RLnr1+hrpAHkAGev0fI/CZ/YueFKSi2UxMoDanMU/Xg==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -8045,14 +8044,13 @@ snapshots:
       '@fullcalendar/core': 6.1.15
       '@fullcalendar/daygrid': 6.1.15(@fullcalendar/core@6.1.15)
 
-  '@hakit/components@5.1.5(xqwsxyrhgdn4y7baxqs2oznzo4)':
+  '@hakit/components@6.0.1(y4jjobyjfcn5kowlr5wz3mxvwq)':
     dependencies:
       '@emotion/is-prop-valid': 1.3.0
       '@emotion/react': 11.13.3(@types/react@18.3.5)(react@19.2.3)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3)
       '@fullcalendar/react': 6.1.15(@fullcalendar/core@6.1.15)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@hakit/core': 5.1.5(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))
-      '@mui/material': 7.3.4(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@hakit/core': 6.0.1(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))
       '@use-gesture/react': 10.3.1(react@19.2.3)
       autolinker: 4.0.0
       fullcalendar: 6.1.15
@@ -8070,7 +8068,7 @@ snapshots:
       use-long-press: 3.2.0(react@19.2.3)
       zustand: 4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3)
 
-  '@hakit/core@5.1.5(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))':
+  '@hakit/core@6.0.1(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3))(@iconify/react@4.1.1(react@19.2.3))(home-assistant-js-websocket@9.4.0)(lodash@4.17.21)(prettier@3.3.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-debounce@10.0.3(react@19.2.3))(ws@8.18.0)(yargs@16.2.0)(zustand@4.5.5(@types/react@18.3.5)(immer@9.0.21)(react@19.2.3))':
     dependencies:
       '@emotion/react': 11.13.3(@types/react@18.3.5)(react@19.2.3)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.5)(react@19.2.3))(@types/react@18.3.5)(react@19.2.3)

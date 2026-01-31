@@ -23,8 +23,8 @@ export function RoomLightImage(props: RoomLightImage) {
           mixBlendMode: 'lighten',
           opacity:
             light.state === 'on'
-              ? ((light.attributes.rgb_color?.[index] ?? 0) / 255) *
-                ((light.attributes.brightness ?? 255) / 255)
+              ? ((light.custom.color?.[index] ?? 0) / 255) *
+                ((light.custom.brightnessValue ?? 100) / 100)
               : 0,
         }}
       />

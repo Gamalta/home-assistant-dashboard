@@ -24,15 +24,15 @@ export function LightCard(props: LightCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
 
-  const rgbColor = entity.attributes.rgb_color;
+  console.log('entity', entity);
+
+  const rgbColor = entity.custom.color;
   const hexColor = rgbColor
     ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
     : undefined;
   const contrastColor = theme.palette.getContrastText(hexColor ?? '#000');
-  const color = `rgb(${
-    entity.attributes.rgb_color ?? [255, 255, 255].join(',')
-  })`;
-  const brightness = entity.attributes.brightness ?? 255;
+  const color = `rgb(${entity.custom.color ?? [255, 255, 255].join(',')})`;
+  const brightness = entity.custom.brightnessValue ?? 100;
   const icon = useIcon(entity.attributes.icon);
   const lightOn = entity.state === 'on';
   const activeEntity = activeEntityIds.includes(entity.entity_id);
@@ -45,17 +45,17 @@ export function LightCard(props: LightCardProps) {
       card.style.boxShadow = 'inset 0px 0px 10px rgba(0,0,0,0.2)';
     }
 
-    const darkness = 255 - brightness;
-    const coef = card.clientHeight / 255;
+    const darkness = 100 - brightness;
+    const coef = card.clientHeight / 100;
     const spread = 20;
     const position = spread + darkness * 0.95 * coef;
     let width = card.clientHeight / 2;
-    if (darkness > 178.5) {
-      width -= ((width - 20) * (darkness - 178.5)) / 76.5;
+    if (darkness > 70) {
+      width -= ((width - 20) * (darkness - 70)) / 30;
     }
     let shadowDensity = 0.65;
-    if (darkness > 153) {
-      shadowDensity -= ((shadowDensity - 0.5) * (darkness - 153)) / 102;
+    if (darkness > 60) {
+      shadowDensity -= ((shadowDensity - 0.5) * (darkness - 60)) / 40;
     }
     card.style.boxShadow = `0px 2px 3px rgba(0,0,0,0.4), inset 0px -${position}px ${width}px -${spread}px rgba(0,0,0,${shadowDensity})`;
   }, [brightness, cardRef.current?.clientHeight, lightOn]);
