@@ -58,9 +58,9 @@ export function RoomLight(props: RoomLightProps) {
             minWidth: 0,
             px: '6px',
             ...(light?.state === 'on' && {
-              color: `rgb(${(
-                light?.attributes.rgb_color ?? [255, 255, 255]
-              ).join(',')})`,
+              color: `rgb(${(light?.custom.color ?? [255, 255, 255]).join(
+                ','
+              )})`,
             }),
 
             cursor: unavailable ? 'not-allowed' : 'pointer',

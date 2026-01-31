@@ -105,7 +105,7 @@ export function ActivePicker(props: ActivePickerProps) {
     if (activeEntities.length === 0) return;
     let color: ColorWheel<WheelMode> | undefined;
     if (mode === 'color') {
-      color = activeEntities[0].attributes.rgb_color;
+      color = activeEntities[0].custom.color;
     } else {
       color = activeEntities[0].attributes.color_temp_kelvin;
     }
