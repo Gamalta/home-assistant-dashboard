@@ -24,8 +24,6 @@ export function LightCard(props: LightCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
 
-  console.log('entity', entity);
-
   const rgbColor = entity.custom.color;
   const hexColor = rgbColor
     ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
