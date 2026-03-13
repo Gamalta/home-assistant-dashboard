@@ -1,10 +1,14 @@
-//import {HassConnect} from '@hakit/core';
 import Dashboard from './Dashboard';
-import {HassConnect} from '@hakit/core';
 import {ThemeProvider} from './contexts/ThemeProvider';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/react';
 import {useEffect} from 'react';
+import {HassConnect} from '@hakit/core';
+import {HassConnect as HassConnectMock} from './mock/HassConnectMock';
+
+const HAConnect = import.meta.env.MOCK_HOME_ASSISTANT
+  ? HassConnectMock
+  : HassConnect;
 
 function App() {
   useEffect(() => {
@@ -16,9 +20,9 @@ function App() {
   return (
     <>
       <ThemeProvider>
-        <HassConnect hassUrl={import.meta.env.VITE_HA_URL}>
+        <HAConnect hassUrl={import.meta.env.VITE_HA_URL}>
           <Dashboard />
-        </HassConnect>
+        </HAConnect>
       </ThemeProvider>
       <Analytics />
       <SpeedInsights />
