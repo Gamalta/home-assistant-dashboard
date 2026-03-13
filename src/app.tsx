@@ -6,10 +6,9 @@ import {useEffect} from 'react';
 import {HassConnect} from '@hakit/core';
 import {HassConnect as HassConnectMock} from './mock/HassConnectMock';
 
-const HAConnect = import.meta.env.MOCK_HOME_ASSISTANT
+const HAConnect = import.meta.env.VITE_MOCK_HOME_ASSISTANT
   ? HassConnectMock
   : HassConnect;
-
 function App() {
   useEffect(() => {
     if (window.location.pathname !== '/') {
@@ -20,7 +19,7 @@ function App() {
   return (
     <>
       <ThemeProvider>
-        <HAConnect hassUrl={import.meta.env.VITE_HA_URL}>
+        <HAConnect hassUrl={import.meta.env.VITE_HA_URL ?? ''}>
           <Dashboard />
         </HAConnect>
       </ThemeProvider>
