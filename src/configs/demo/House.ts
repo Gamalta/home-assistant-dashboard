@@ -25,10 +25,11 @@ export const ConfigName = 'Démo';
 
 export const SideBarConfig: SideBarConfigType = {
   weatherEntityId: 'weather.home',
+  pets: ['Tom', 'Jerry'],
   persons: [
     {
-      name: 'Elise',
-      personEntityId: 'person.elise',
+      name: 'Juliette',
+      personEntityId: 'person.jane_doe',
       avatar: 'person/Elise.png',
       homeZoneEntityId: 'zone.home',
       homeDistanceEntityId: 'sensor.home_iphone_de_elise_distance',
@@ -38,8 +39,8 @@ export const SideBarConfig: SideBarConfigType = {
       batteryStateEntityId: 'sensor.iphone_de_elise_battery_state',
     },
     {
-      name: 'Elio',
-      personEntityId: 'person.elio',
+      name: 'Roméo',
+      personEntityId: 'person.john_doe',
       avatar: 'person/Elio.png',
       homeZoneEntityId: 'zone.home',
       homeDistanceEntityId: 'sensor.home_iphone_delio_distance',
@@ -49,27 +50,27 @@ export const SideBarConfig: SideBarConfigType = {
       batteryStateEntityId: 'sensor.iphone_delio_battery_state',
     },
   ],
-  system: {
-    uptimeEntityId: 'sensor.system_monitor_last_boot',
-    powerStatusEntityId: 'binary_sensor.rpi_power_status',
-    graphs: [
-      {
-        color: 'red',
-        label: 'Mémoire:',
-        sensorEntityId: 'sensor.system_monitor_memory_usage',
-      },
-      {
-        color: 'orange',
-        label: 'Température:',
-        sensorEntityId: 'sensor.system_monitor_processor_temperature',
-      },
-      {
-        color: 'cyan',
-        label: 'Processeur:',
-        sensorEntityId: 'sensor.system_monitor_processor_use',
-      },
-    ],
-  },
+  // system: {
+  //   uptimeEntityId: 'sensor.system_monitor_last_boot',
+  //   powerStatusEntityId: 'binary_sensor.rpi_power_status',
+  //   graphs: [
+  //     {
+  //       color: 'red',
+  //       label: 'Mémoire:',
+  //       sensorEntityId: 'sensor.system_monitor_memory_usage',
+  //     },
+  //     {
+  //       color: 'orange',
+  //       label: 'Température:',
+  //       sensorEntityId: 'sensor.system_monitor_processor_temperature',
+  //     },
+  //     {
+  //       color: 'cyan',
+  //       label: 'Processeur:',
+  //       sensorEntityId: 'sensor.system_monitor_processor_use',
+  //     },
+  //   ],
+  // },
 };
 
 export const HouseConfig: HouseConfigType = {
@@ -95,8 +96,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.salon',
-          temperatureEntityId: 'sensor.eurevia_hvac_salon_temperature',
-          humidityEntityId: 'sensor.eurevia_hvac_salon_humidity',
+          // temperatureEntityId: 'sensor.eurevia_hvac_salon_temperature',
+          // humidityEntityId: 'sensor.eurevia_hvac_salon_humidity',
         },
         {
           type: 'light',
@@ -134,8 +135,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.office',
-          temperatureEntityId: 'sensor.eurevia_hvac_office_temperature',
-          humidityEntityId: 'sensor.eurevia_hvac_office_humidity',
+          // temperatureEntityId: 'sensor.eurevia_hvac_office_temperature',
+          // humidityEntityId: 'sensor.eurevia_hvac_office_humidity',
         },
         {
           type: 'light',
@@ -146,33 +147,6 @@ export const HouseConfig: HouseConfigType = {
             blue: officeIrisBlue,
           },
           position: {x: 21, y: 67},
-        },
-        {
-          type: 'desktop',
-          position: {x: 29.5, y: 83},
-          options: [
-            {
-              icon: 'windows',
-              label: 'Windows',
-              color: '#357EC7',
-              scriptEntityId: 'script.start_windows_desktop',
-            },
-            {
-              icon: 'power',
-              scriptEntityId: 'script.start_default_desktop',
-            },
-            {
-              icon: 'ubuntu',
-              label: 'Ubuntu',
-              color: '#E95420',
-              scriptEntityId: 'script.start_ubuntu_desktop',
-            },
-            {
-              label: 'bios',
-              scriptEntityId: 'script.start_bios_desktop',
-              hide: true,
-            },
-          ],
         },
         {
           type: 'shutter',
@@ -200,8 +174,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom',
-          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_temperature',
-          humidityEntityId: 'sensor.eurevia_hvac_bedroom_humidity',
+          // temperatureEntityId: 'sensor.eurevia_hvac_bedroom_temperature',
+          // humidityEntityId: 'sensor.eurevia_hvac_bedroom_humidity',
         },
         {
           type: 'shutter',
@@ -229,8 +203,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom_2',
-          temperatureEntityId: 'sensor.eurevia_hvac_bedroom_2_temperature',
-          humidityEntityId: 'sensor.eurevia_hvac_bedroom_2_humidity',
+          // temperatureEntityId: 'sensor.eurevia_hvac_bedroom_2_temperature',
+          // humidityEntityId: 'sensor.eurevia_hvac_bedroom_2_humidity',
         },
         {
           type: 'shutter',

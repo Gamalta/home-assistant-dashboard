@@ -17,10 +17,6 @@ export function RoomClimate(props: RoomClimateProps) {
 
   const climate = useEntity(climateConfig.climateEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
-    historyOptions: {
-      disable: false,
-      hoursToShow: 24,
-    },
   });
 
   if (!climate) return;

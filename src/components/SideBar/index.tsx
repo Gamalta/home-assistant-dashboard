@@ -31,7 +31,7 @@ export function SideBar() {
             <PersonCard person={sideBarConfig.persons?.[1]} />
           </Stack>
         )}
-        <PetCard />
+        <PetCard pets={sideBarConfig?.pets} />
       </Stack>
       <Stack
         p={2}
