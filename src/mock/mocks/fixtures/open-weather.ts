@@ -1,0 +1,22 @@
+export default {
+  entity_id: 'weather.home',
+  state: 'sunny',
+  attributes: {
+    temperature: 20.1,
+    apparent_temperature: 19.5,
+    temperature_unit: '°C',
+    humidity: 53,
+    cloud_coverage: 10,
+    pressure: 1025,
+    pressure_unit: 'hPa',
+    wind_bearing: 84,
+    wind_gust_speed: 13.25,
+    wind_speed: 15.91,
+    wind_speed_unit: 'km/h',
+    visibility_unit: 'km',
+    precipitation_unit: 'mm',
+    attribution: 'data mocked',
+    friendly_name: 'Home weather',
+    supported_features: 2,
+  },
+};

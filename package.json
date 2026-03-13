@@ -27,6 +27,7 @@
     "@vercel/speed-insights": "^1.0.14",
     "dayjs": "^1.11.10",
     "framer-motion": "^12.18.1",
+    "home-assistant-js-websocket": "^9.6.0",
     "lodash": "^4.17.21",
     "react": "^19.1.4",
     "react-dom": "^19.1.4",
