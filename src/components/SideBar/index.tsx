@@ -10,7 +10,7 @@ export function SideBar() {
   const {config} = useHouseContext();
   const sideBarConfig = config?.sideBar;
 
-  const sideBarRef = useRef<HTMLDivElement>(null);
+  const sideBarRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <Stack

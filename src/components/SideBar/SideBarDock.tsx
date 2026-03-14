@@ -13,7 +13,7 @@ import {useHouseContext} from '../../contexts/HouseContext';
 import {SystemModal} from '../Modal/SystemModal';
 
 type SideBarDockProps = {
-  sideBarRef: React.RefObject<HTMLDivElement>;
+  sideBarRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export function SideBarDock(props: SideBarDockProps) {
@@ -28,7 +28,7 @@ export function SideBarDock(props: SideBarDockProps) {
   const {config, setConfig} = useHouseContext();
 
   useEffect(() => {
-    if (!sideBarRef?.current) return;
+    if (!sideBarRef.current) return;
     const sideBar = sideBarRef.current;
 
     const handleTouchStart = (event: TouchEvent) =>

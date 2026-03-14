@@ -13,7 +13,7 @@ import {
 import {lightHasColorTemp} from '../../../../utils/entity/light';
 
 export function ColorTempTab() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const {entities, activeEntityIds} = useLightModalContext();
   const entitiesMaxSupportedKelvin = useMemo(
     () =>

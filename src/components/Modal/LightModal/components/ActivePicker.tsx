@@ -13,7 +13,7 @@ import {Typography} from '@mui/material';
 
 type ActivePickerProps = {
   mode: WheelMode;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   entities: HassEntityWithService<'light'>[];
   minKelvin?: number;
   maxKelvin?: number;

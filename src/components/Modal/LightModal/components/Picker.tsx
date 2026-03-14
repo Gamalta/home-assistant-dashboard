@@ -11,7 +11,7 @@ import {ColorWheel, WheelMode} from '../../../../hooks/useColorPicker';
 
 type PickerProps = {
   mode: WheelMode;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   entity: HassEntityWithService<'light'>;
   minKelvin?: number;
   maxKelvin?: number;
