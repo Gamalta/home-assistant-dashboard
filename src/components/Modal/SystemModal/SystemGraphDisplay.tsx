@@ -15,7 +15,6 @@ type SystemGraphDisplayProps = {
 
 export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   const {graphConfig} = props;
-
   const entity = useEntity(graphConfig.sensorEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
     historyOptions: {
@@ -26,7 +25,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   if (!entity) return null;
 
   const valueMap = Object.fromEntries(
-    entity.history.entityHistory.map(data => [
+    (entity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
     ])

@@ -50,27 +50,27 @@ export const SideBarConfig: SideBarConfigType = {
       batteryStateEntityId: 'sensor.iphone_delio_battery_state',
     },
   ],
-  // system: {
-  //   uptimeEntityId: 'sensor.system_monitor_last_boot',
-  //   powerStatusEntityId: 'binary_sensor.rpi_power_status',
-  //   graphs: [
-  //     {
-  //       color: 'red',
-  //       label: 'Mémoire:',
-  //       sensorEntityId: 'sensor.system_monitor_memory_usage',
-  //     },
-  //     {
-  //       color: 'orange',
-  //       label: 'Température:',
-  //       sensorEntityId: 'sensor.system_monitor_processor_temperature',
-  //     },
-  //     {
-  //       color: 'cyan',
-  //       label: 'Processeur:',
-  //       sensorEntityId: 'sensor.system_monitor_processor_use',
-  //     },
-  //   ],
-  // },
+  system: {
+    uptimeEntityId: 'sensor.system_monitor_last_boot',
+    powerStatusEntityId: 'binary_sensor.rpi_power_status',
+    graphs: [
+      {
+        color: 'red',
+        label: 'Mémoire:',
+        sensorEntityId: 'sensor.system_monitor_memory_usage',
+      },
+      {
+        color: 'orange',
+        label: 'Température:',
+        sensorEntityId: 'sensor.system_monitor_processor_temperature',
+      },
+      {
+        color: 'cyan',
+        label: 'Processeur:',
+        sensorEntityId: 'sensor.system_monitor_processor_use',
+      },
+    ],
+  },
 };
 
 export const HouseConfig: HouseConfigType = {
@@ -96,8 +96,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.salon',
-          // temperatureEntityId: 'sensor.eurevia_hvac_salon_temperature',
-          // humidityEntityId: 'sensor.eurevia_hvac_salon_humidity',
+          temperatureEntityId: 'sensor.salon_temperature',
+          humidityEntityId: 'sensor.salon_humidity',
         },
         {
           type: 'light',
@@ -135,8 +135,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.office',
-          // temperatureEntityId: 'sensor.eurevia_hvac_office_temperature',
-          // humidityEntityId: 'sensor.eurevia_hvac_office_humidity',
+          temperatureEntityId: 'sensor.office_temperature',
+          humidityEntityId: 'sensor.office_humidity',
         },
         {
           type: 'light',
@@ -174,8 +174,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom',
-          // temperatureEntityId: 'sensor.eurevia_hvac_bedroom_temperature',
-          // humidityEntityId: 'sensor.eurevia_hvac_bedroom_humidity',
+          temperatureEntityId: 'sensor.bedroom_temperature',
+          humidityEntityId: 'sensor.bedroom_humidity',
         },
         {
           type: 'shutter',
@@ -203,8 +203,8 @@ export const HouseConfig: HouseConfigType = {
           type: 'climate',
           roomDisplay: true,
           climateEntityId: 'climate.bedroom_2',
-          // temperatureEntityId: 'sensor.eurevia_hvac_bedroom_2_temperature',
-          // humidityEntityId: 'sensor.eurevia_hvac_bedroom_2_humidity',
+          temperatureEntityId: 'sensor.bedroom_2_temperature',
+          humidityEntityId: 'sensor.bedroom_2_humidity',
         },
         {
           type: 'shutter',

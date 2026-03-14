@@ -6,9 +6,31 @@ import {createPerson} from './createPerson';
 import {createWeather} from './createWeather';
 // fixtures
 import openWeatherFixture from './fixtures/open-weather';
+import {createSensor} from './createSensor';
+import { createBinarySensor } from './createBinarySensor';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
+  ...createSensor('sensor.system_monitor_last_boot'),
+  ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createSensor('sensor.system_monitor_memory_usage', {
+    state: '50',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.system_monitor_processor_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.system_monitor_processor_use', {
+    state: '50',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
 
   ...createCover('cover.salon_shutter'),
   ...createCover('cover.office_shutter'),
@@ -49,9 +71,52 @@ export const entities: HassEntities = {
   }),
 
   ...createClimate('climate.salon'),
+  ...createSensor('sensor.salon_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.salon_humidity'),
   ...createClimate('climate.office'),
+  ...createSensor('sensor.office_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.office_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
   ...createClimate('climate.bedroom'),
+  ...createSensor('sensor.bedroom_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bedroom_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
   ...createClimate('climate.bedroom_2'),
+  ...createSensor('sensor.bedroom_2_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bedroom_2_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
 
   ...createPerson('person.john_doe'),
   ...createPerson('person.jane_doe', {
