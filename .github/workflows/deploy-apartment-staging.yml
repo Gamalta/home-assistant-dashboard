@@ -1,4 +1,4 @@
-name: Deploy Prod
+name: Deploy Apartement Staging
 
 on:
   workflow_dispatch:
