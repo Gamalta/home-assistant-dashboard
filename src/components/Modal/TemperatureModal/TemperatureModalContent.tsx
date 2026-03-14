@@ -8,7 +8,7 @@ import {
   ChartsClipPath,
   ChartsTooltip,
   LinePlot,
-  ResponsiveChartContainer,
+  ChartsContainer,
 } from '@mui/x-charts';
 import {roundToNearest5Minutes} from '../../../utils/graph';
 import {ThermostatIcon} from '../../Icons/ThermostatIcon';
@@ -127,7 +127,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
         bottom={0}
         zIndex={101}
       >
-        <ResponsiveChartContainer
+        <ChartsContainer
           margin={{bottom: 0, right: 0, top: 0, left: 0}}
           sx={{
             '& .MuiLineElement-series-temperature': {
@@ -145,7 +145,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
               type: 'line',
               dataKey: 'temperature',
               label: 'Température: ',
-              yAxisKey: 'temperature',
+              yAxisId: 'temperature',
               color: 'orange',
 
               area: true,
@@ -157,7 +157,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
               type: 'line',
               dataKey: 'humidity',
               label: 'Humidité: ',
-              yAxisKey: 'humidity',
+              yAxisId: 'humidity',
               color: 'blue',
               valueFormatter: value =>
                 `${value}${humidityEntity?.attributes.unit_of_measurement ?? '%'}`,
@@ -198,7 +198,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
           </g>
           <ChartsTooltip />
           <ChartsClipPath id="clip-path" />
-        </ResponsiveChartContainer>
+        </ChartsContainer>
       </Stack>
     </Stack>
   );

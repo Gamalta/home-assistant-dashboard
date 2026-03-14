@@ -16,7 +16,7 @@ type configType = ConfigType | undefined;
 type HouseContextType = {
   config: configType;
   setConfig: Dispatch<SetStateAction<configType>>;
-  houseRef: RefObject<HTMLDivElement> | null;
+  houseRef: RefObject<HTMLDivElement | null> | null;
 };
 
 const HouseContext = createContext<HouseContextType>({
@@ -34,7 +34,7 @@ type HouseProviderProps = {
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
   const [config, setConfig] = useState<configType>(undefined);
-  const houseRef = useRef<HTMLDivElement>(null);
+  const houseRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function updateConfig() {

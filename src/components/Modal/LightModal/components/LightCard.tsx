@@ -21,7 +21,7 @@ type LightCardProps = {
 export function LightCard(props: LightCardProps) {
   const {entity, controllableByCurrentTab, onMoveToControllerTab} = props;
   const {activeEntityIds, setActiveEntityIds} = useLightModalContext();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const theme = useTheme();
 
   const rgbColor = entity.custom.color;
