@@ -128,7 +128,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
         zIndex={101}
       >
         <ChartsContainer
-          margin={{bottom: 0, right: 0, top: 0, left: 0}}
+          margin={0}
           sx={{
             '& .MuiLineElement-series-temperature': {
               strokeWidth: 3,
@@ -166,6 +166,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
           xAxis={[
             {
               id: 'time',
+              height: 0,
               dataKey: 'timestamp',
               scaleType: 'utc',
               min: lastTime - 24 * 60 * 60 * 1000,
@@ -180,12 +181,14 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
           yAxis={[
             {
               id: 'temperature',
+              width: 0,
               min: minTemp - 1,
               max: maxTemp + 1,
               scaleType: 'linear',
             },
             {
               id: 'humidity',
+              width: 0,
               min: -80,
               max: 100,
               scaleType: 'linear',
