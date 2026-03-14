@@ -15,7 +15,6 @@ import type {
   AuthUser,
   InternalStore,
 } from '@hakit/core';
-import {isArray} from 'lodash';
 import {
   useHass,
   updateLocales,
@@ -262,7 +261,7 @@ useHass.setState({
     ): Promise<ServiceResponse<R>> | void => {
       console.log('callService', rawArgs);
       const {domain, service, serviceData, target: target} = rawArgs;
-      if (typeof target !== 'string' && !isArray(target))
+      if (typeof target !== 'string' && !Array.isArray(target))
         return undefined as R extends true ? never : void;
 
       const now = new Date().toISOString();
