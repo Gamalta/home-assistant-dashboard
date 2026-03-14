@@ -11,7 +11,50 @@ import { createBinarySensor } from './createBinarySensor';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
-  ...createSensor('sensor.system_monitor_last_boot'),
+
+
+  ...createPerson('person.juliette', {
+    state: 'not_home',
+    attributes: {
+      friendly_name: 'Juliette',
+      latitude: 48.85837,
+      longitude: 2.294481,
+    },
+  }),
+  ...createSensor('sensor.juliette_phone_battery_level', {
+    state: '43',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.juliette_phone_battery_state', {
+    state: 'Not Charging',
+  }),
+  ...createBinarySensor('binary_sensor.juliette_phone_focus', {
+    state: 'on',
+  }),
+  ...createSensor('sensor.home_juliette_phone_distance', {
+    state: '46200',
+  }),
+
+  ...createPerson('person.romeo'),
+  ...createSensor('sensor.romeo_phone_battery_level', {
+    state: '75',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.romeo_phone_battery_state', {
+    state: 'Charging',
+  }),
+  ...createBinarySensor('binary_sensor.romeo_phone_focus'),
+  ...createSensor('sensor.home_romeo_phone_distance', {
+    state: '0',
+  }),
+
+  ...createSensor('sensor.system_monitor_last_boot', {
+    last_updated: new Date(0).toISOString()
+  }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
   ...createSensor('sensor.system_monitor_memory_usage', {
     state: '50',
@@ -115,16 +158,6 @@ export const entities: HassEntities = {
     state: '55',
     attributes: {
       unit_of_measurement: '%',
-    },
-  }),
-
-  ...createPerson('person.john_doe'),
-  ...createPerson('person.jane_doe', {
-    state: 'not_home',
-    attributes: {
-      friendly_name: 'Jane',
-      latitude: 48.85837,
-      longitude: 2.294481,
     },
   }),
 } as const;
