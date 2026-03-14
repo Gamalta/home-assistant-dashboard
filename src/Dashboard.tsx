@@ -1,7 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {House} from './components/House';
 import {HouseProvider} from './contexts/HouseContext';
-import {useState} from 'react';
 import {SideBar} from './components/SideBar';
 import {
   Group,
@@ -9,14 +8,29 @@ import {
   Separator,
   useDefaultLayout,
 } from 'react-resizable-panels';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Dashboard() {
   const [isDragging, setIsDragging] = useState(false);
-
   const {defaultLayout, onLayoutChanged} = useDefaultLayout({
     groupId: 'siderbar-main',
     storage: localStorage,
   });
+
+  useEffect(() => {
+    const handlePointerUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('pointerup', handlePointerUp);
+    }
+
+    return () => {
+      document.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, [isDragging]);
 
   return (
     <HouseProvider>
@@ -26,15 +40,15 @@ export default function Dashboard() {
         onLayoutChanged={onLayoutChanged}
       >
         <Panel
-          defaultSize={30}
-          minSize={10}
-          maxSize={30}
-          collapsedSize={5}
+          defaultSize="30%"
+          minSize="10%"
+          maxSize="30%"
+          collapsedSize="5%"
           collapsible
         >
           <SideBar />
         </Panel>
-        <Separator onDrag={() => setIsDragging(true)} onDragEnd={() => setIsDragging(false)}>
+        <Separator style={{outline: 0}} onPointerDown={() => setIsDragging(true)}>
           <Stack
             height="100vh"
             width="26px"
@@ -56,7 +70,7 @@ export default function Dashboard() {
             />
           </Stack>
         </Separator>
-        <Panel defaultSize={70}>
+        <Panel defaultSize="70%">
           <House />
         </Panel>
       </Group>
