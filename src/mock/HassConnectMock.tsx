@@ -28,10 +28,10 @@ import {
 import {entities as ENTITIES} from './mocks/mockEntities';
 import fakeApi from './mocks/fake-call-service';
 import type {ServiceArgs} from './mocks/fake-call-service/types';
-import mockHistory from './mock-history';
 import {mockCallApi} from './mocks/fake-call-api';
 import {logs} from './mocks/mockLogs';
 import {dailyForecast, hourlyForecast} from './mocks/mockWeather';
+import { generateMockHistory } from './mock-history';
 interface HassProviderProps {
   children: (ready: boolean) => ReactNode;
   hassUrl: string;
@@ -188,7 +188,28 @@ class MockConnection extends Connection {
         } as Result);
       }
     } else {
-      callback(mockHistory as Result);
+      const entityId = params?.entity_ids?.[0] ?? 'sensor.mock_temperature';
+      let min = 0;
+      let max = 100;
+
+      if(entityId.includes('temperature')) {
+        min = 20;
+        max = 25;
+      } else if (entityId.includes('humidity')) {
+        min = 40;
+        max = 60;
+      }
+
+      const history = generateMockHistory(
+        entityId,
+        50,
+        min,
+        max,
+        params?.start_time ? new Date(params.start_time).getTime() / 1000 : undefined,
+        params?.end_time ? new Date(params.end_time).getTime() / 1000 : undefined
+      );
+
+      callback(history as Result);
     }
     return () => Promise.resolve();
   }

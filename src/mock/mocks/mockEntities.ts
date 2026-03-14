@@ -6,9 +6,74 @@ import {createPerson} from './createPerson';
 import {createWeather} from './createWeather';
 // fixtures
 import openWeatherFixture from './fixtures/open-weather';
+import {createSensor} from './createSensor';
+import { createBinarySensor } from './createBinarySensor';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
+
+
+  ...createPerson('person.juliette', {
+    state: 'not_home',
+    attributes: {
+      friendly_name: 'Juliette',
+      latitude: 48.85837,
+      longitude: 2.294481,
+    },
+  }),
+  ...createSensor('sensor.juliette_phone_battery_level', {
+    state: '43',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.juliette_phone_battery_state', {
+    state: 'Not Charging',
+  }),
+  ...createBinarySensor('binary_sensor.juliette_phone_focus', {
+    state: 'on',
+  }),
+  ...createSensor('sensor.home_juliette_phone_distance', {
+    state: '46200',
+  }),
+
+  ...createPerson('person.romeo'),
+  ...createSensor('sensor.romeo_phone_battery_level', {
+    state: '75',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.romeo_phone_battery_state', {
+    state: 'Charging',
+  }),
+  ...createBinarySensor('binary_sensor.romeo_phone_focus'),
+  ...createSensor('sensor.home_romeo_phone_distance', {
+    state: '0',
+  }),
+
+  ...createSensor('sensor.system_monitor_last_boot', {
+    last_updated: new Date(0).toISOString()
+  }),
+  ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createSensor('sensor.system_monitor_memory_usage', {
+    state: '50',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.system_monitor_processor_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.system_monitor_processor_use', {
+    state: '50',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
 
   ...createCover('cover.salon_shutter'),
   ...createCover('cover.office_shutter'),
@@ -49,17 +114,50 @@ export const entities: HassEntities = {
   }),
 
   ...createClimate('climate.salon'),
-  ...createClimate('climate.office'),
-  ...createClimate('climate.bedroom'),
-  ...createClimate('climate.bedroom_2'),
-
-  ...createPerson('person.john_doe'),
-  ...createPerson('person.jane_doe', {
-    state: 'not_home',
+  ...createSensor('sensor.salon_temperature', {
+    state: '21',
     attributes: {
-      friendly_name: 'Jane',
-      latitude: 48.85837,
-      longitude: 2.294481,
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.salon_humidity'),
+  ...createClimate('climate.office'),
+  ...createSensor('sensor.office_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.office_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createClimate('climate.bedroom'),
+  ...createSensor('sensor.bedroom_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bedroom_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createClimate('climate.bedroom_2'),
+  ...createSensor('sensor.bedroom_2_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bedroom_2_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
     },
   }),
 } as const;

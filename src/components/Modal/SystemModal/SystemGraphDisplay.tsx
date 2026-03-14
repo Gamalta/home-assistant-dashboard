@@ -7,7 +7,7 @@ import {ChartsClipPath} from '@mui/x-charts/ChartsClipPath';
 import {LinePlot} from '@mui/x-charts/LineChart';
 import {AreaPlot} from '@mui/x-charts/LineChart';
 import {SystemGraphConfigType} from '../../../configs/sidebar';
-import { ChartsContainer } from '@mui/x-charts';
+import {ChartsContainer} from '@mui/x-charts';
 
 type SystemGraphDisplayProps = {
   graphConfig: SystemGraphConfigType;
@@ -15,7 +15,6 @@ type SystemGraphDisplayProps = {
 
 export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   const {graphConfig} = props;
-
   const entity = useEntity(graphConfig.sensorEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
     historyOptions: {
@@ -26,7 +25,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   if (!entity) return null;
 
   const valueMap = Object.fromEntries(
-    entity.history.entityHistory.map(data => [
+    (entity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
     ])
@@ -57,7 +56,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
       overflow="hidden"
     >
       <ChartsContainer
-        margin={{bottom: 0, right: 0, top: 0, left: 0}}
+        margin={0}
         sx={{
           '& .MuiLineElement-series-temperature': {
             strokeWidth: 3,
@@ -83,6 +82,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
         xAxis={[
           {
             id: 'time',
+            height: 0,
             dataKey: 'timestamp',
             scaleType: 'utc',
             min: lastTime - 24 * 60 * 60 * 1000,
@@ -97,6 +97,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
         yAxis={[
           {
             id: 'temperature',
+            width: 0,
             min: minValue * 0.9,
             max: maxValue * 1.1,
             scaleType: 'linear',
