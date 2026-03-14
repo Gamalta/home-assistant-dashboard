@@ -3,11 +3,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {roundToNearest5Minutes} from '../../../utils/graph';
 import {ChartsTooltip} from '@mui/x-charts/ChartsTooltip';
-import {ResponsiveChartContainer} from '@mui/x-charts/ResponsiveChartContainer';
 import {ChartsClipPath} from '@mui/x-charts/ChartsClipPath';
 import {LinePlot} from '@mui/x-charts/LineChart';
 import {AreaPlot} from '@mui/x-charts/LineChart';
 import {SystemGraphConfigType} from '../../../configs/sidebar';
+import { ChartsContainer } from '@mui/x-charts';
 
 type SystemGraphDisplayProps = {
   graphConfig: SystemGraphConfigType;
@@ -56,7 +56,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
       borderRadius={1}
       overflow="hidden"
     >
-      <ResponsiveChartContainer
+      <ChartsContainer
         margin={{bottom: 0, right: 0, top: 0, left: 0}}
         sx={{
           '& .MuiLineElement-series-temperature': {
@@ -111,7 +111,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
         </g>
         <ChartsTooltip />
         <ChartsClipPath id="clip-path" />
-      </ResponsiveChartContainer>
+      </ChartsContainer>
       <Stack
         direction="row"
         justifyContent="space-between"

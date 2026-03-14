@@ -13,7 +13,7 @@ import {
 import {lightHasColor} from '../../../../utils/entity/light';
 
 export function ColorTab() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const {entities, activeEntityIds} = useLightModalContext();
 
   //TODO brightness bug
