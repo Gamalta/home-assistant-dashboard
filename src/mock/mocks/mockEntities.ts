@@ -7,11 +7,10 @@ import {createWeather} from './createWeather';
 // fixtures
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
-import { createBinarySensor } from './createBinarySensor';
+import {createBinarySensor} from './createBinarySensor';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
-
 
   ...createPerson('person.juliette', {
     state: 'not_home',
@@ -53,7 +52,7 @@ export const entities: HassEntities = {
   }),
 
   ...createSensor('sensor.system_monitor_last_boot', {
-    last_updated: new Date(0).toISOString()
+    last_updated: new Date(0).toISOString(),
   }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
   ...createSensor('sensor.system_monitor_memory_usage', {
@@ -76,9 +75,11 @@ export const entities: HassEntities = {
   }),
 
   ...createCover('cover.salon_shutter'),
-  ...createCover('cover.office_shutter'),
+  ...createCover('cover.kitchen_shutter'),
+  ...createCover('cover.kitchen_shutter_2'),
   ...createCover('cover.bedroom_shutter'),
   ...createCover('cover.bedroom_2_shutter'),
+  ...createCover('cover.bedroom_3_shutter'),
 
   ...createLight('light.salon_light', {
     attributes: {
@@ -94,7 +95,7 @@ export const entities: HassEntities = {
       hs_color: [240, 100],
     },
   }),
-  ...createLight('light.office_switch', {
+  ...createLight('light.kitchen_light', {
     state: 'off',
     attributes: {
       icon: 'hue:bulb-sultan',
@@ -102,8 +103,13 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.office_hue_iris', {
-    attributes: {icon: 'hue:iris', color_mode: 'hs', hs_color: [350, 80]},
+  ...createLight('light.dining_light', {
+    state: 'off',
+    attributes: {
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_light', {
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
@@ -112,8 +118,13 @@ export const entities: HassEntities = {
     state: 'off',
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
+  ...createLight('light.bedroom_3_light', {
+    state: 'off',
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
 
   ...createClimate('climate.salon'),
+  ...createClimate('climate.kitchen'),
   ...createSensor('sensor.salon_temperature', {
     state: '21',
     attributes: {
@@ -121,19 +132,6 @@ export const entities: HassEntities = {
     },
   }),
   ...createSensor('sensor.salon_humidity'),
-  ...createClimate('climate.office'),
-  ...createSensor('sensor.office_temperature', {
-    state: '21',
-    attributes: {
-      unit_of_measurement: '°C',
-    },
-  }),
-  ...createSensor('sensor.office_humidity', {
-    state: '55',
-    attributes: {
-      unit_of_measurement: '%',
-    },
-  }),
   ...createClimate('climate.bedroom'),
   ...createSensor('sensor.bedroom_temperature', {
     state: '21',
@@ -155,6 +153,19 @@ export const entities: HassEntities = {
     },
   }),
   ...createSensor('sensor.bedroom_2_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createClimate('climate.bedroom_3'),
+  ...createSensor('sensor.bedroom_3_temperature', {
+    state: '21',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bedroom_3_humidity', {
     state: '55',
     attributes: {
       unit_of_measurement: '%',

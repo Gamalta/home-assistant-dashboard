@@ -107,10 +107,9 @@ export function House() {
         ref={baseImageRef => setBaseImageRef(baseImageRef)}
         src={houseConfig.dayFloorPlan}
       />
-      {/**TODO remove / 100 */}
       <img
         src={houseConfig.nightFloorPlan}
-        style={{opacity: nightOpacity / 100}}
+        style={{opacity: nightOpacity}}
       />
       <Stack
         position="relative"
