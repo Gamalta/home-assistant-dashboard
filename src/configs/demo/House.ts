@@ -1,24 +1,12 @@
 import {HouseConfigType} from '../house';
 import baseDay from './assets/base_day.png';
 import baseNight from './assets/base_night.png';
-import salonRed from './assets/light/salon_red.png';
-import salonGreen from './assets/light/salon_green.png';
-import salonBlue from './assets/light/salon_blue.png';
-import salonPlayRed from './assets/light/salon_play_red.png';
-import salonPlayGreen from './assets/light/salon_play_green.png';
-import salonPlayBlue from './assets/light/salon_play_blue.png';
-import bedroomRed from './assets/light/bedroom_red.png';
-import bedroomGreen from './assets/light/bedroom_green.png';
-import bedroomBlue from './assets/light/bedroom_blue.png';
-import bedroom2Red from './assets/light/bedroom2_red.png';
-import bedroom2Green from './assets/light/bedroom2_green.png';
-import bedroom2Blue from './assets/light/bedroom2_blue.png';
-import officeRed from './assets/light/office_red.png';
-import officeGreen from './assets/light/office_green.png';
-import officeBlue from './assets/light/office_blue.png';
-import officeIrisRed from './assets/light/office_iris_red.png';
-import officeIrisGreen from './assets/light/office_iris_green.png';
-import officeIrisBlue from './assets/light/office_iris_blue.png';
+import bedroom2Red from './assets/light/bedroom_2_red.png'
+import bedroom2Green from './assets/light/bedroom_2_green.png'
+import bedroom2Blue from './assets/light/bedroom_2_blue.png'
+import bedroom3Red from './assets/light/bedroom_3_red.png'
+import bedroom3Green from './assets/light/bedroom_3_green.png'
+import bedroom3Blue from './assets/light/bedroom_3_blue.png'
 import {SideBarConfigType} from '../sidebar';
 
 export const ConfigName = 'Démo';
@@ -80,17 +68,17 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Salon',
       name: 'Séjour',
-      position: {x: 54, y: 35},
+      position: {x: 44, y: 73},
       items: [
         {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.salon_light',
-          layer: {
-            red: salonRed,
-            green: salonGreen,
-            blue: salonBlue,
-          },
+          // layer: {
+          //   red: salonRed,
+          //   green: salonGreen,
+          //   blue: salonBlue,
+          // },
         },
         {
           type: 'climate',
@@ -102,73 +90,85 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           lightEntityId: 'light.salon_hue_play',
-          layer: {
-            red: salonPlayRed,
-            green: salonPlayGreen,
-            blue: salonPlayBlue,
-          },
-          position: {x: 61, y: 22},
+          // layer: {
+          //   red: salonPlayRed,
+          //   green: salonPlayGreen,
+          //   blue: salonPlayBlue,
+          // },
+          position: {x: 31, y: 72},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.salon_shutter',
-          position: {x: 55, y: 17},
+          position: {x: 43.25, y: 91},
         },
       ],
     },
     {
-      id: 'Office',
-      name: 'Bureau',
-      position: {x: 24, y: 77},
+      id: 'Kitchen',
+      name: 'Cuisine',
+      position: {x: 45, y: 18},
       items: [
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.office_switch',
-          layer: {
-            red: officeRed,
-            green: officeGreen,
-            blue: officeBlue,
-          },
+          lightEntityId: 'light.kitchen_light',
+          // layer: {
+          //   red: bedroomRed,
+          //   green: bedroomGreen,
+          //   blue: bedroomBlue,
+          // },
         },
         {
           type: 'climate',
           roomDisplay: true,
-          climateEntityId: 'climate.office',
-          temperatureEntityId: 'sensor.office_temperature',
-          humidityEntityId: 'sensor.office_humidity',
-        },
-        {
-          type: 'light',
-          lightEntityId: 'light.office_hue_iris',
-          layer: {
-            red: officeIrisRed,
-            green: officeIrisGreen,
-            blue: officeIrisBlue,
-          },
-          position: {x: 21, y: 67},
+          climateEntityId: 'climate.kitchen',
+          temperatureEntityId: 'sensor.kitchen_temperature',
+          humidityEntityId: 'sensor.kitchen_humidity',
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.office_shutter',
-          position: {x: 25.5, y: 90},
+          shutterEntityId: 'cover.kitchen_shutter',
+          position: {x: 44, y: 8},
+        },
+        {
+          type: 'shutter',
+          shutterEntityId: 'cover.kitchen_shutter_2',
+          position: {x: 33.5, y: 27.5},
+        },
+      ],
+    },
+    {
+      id: 'Dining',
+      name: 'Salle à manger',
+      position: {x: 50, y: 39.25},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.dining_light',
+          // layer: {
+          //   red: bedroomRed,
+          //   green: bedroomGreen,
+          //   blue: bedroomBlue,
+          // },
         },
       ],
     },
     {
       id: 'Bedroom',
       name: 'Chambre',
-      position: {x: 72, y: 75},
+      position: {x: 20, y: 65},
       items: [
         {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.bedroom_light',
-          layer: {
-            red: bedroomRed,
-            green: bedroomGreen,
-            blue: bedroomBlue,
-          },
+          // layer: {
+          //   red: bedroomRed,
+          //   green: bedroomGreen,
+          //   blue: bedroomBlue,
+          // },
         },
         {
           type: 'climate',
@@ -180,14 +180,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
-          position: {x: 81.5, y: 72},
+          position: {x: 18, y: 80.5},
         },
       ],
     },
     {
       id: 'Bedroom_2',
       name: 'Chambre 2',
-      position: {x: 75, y: 30},
+      position: {x: 78, y: 31.5},
       items: [
         {
           type: 'light',
@@ -209,7 +209,36 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_2_shutter',
-          position: {x: 73, y: 17},
+          position: {x: 70, y: 23},
+        },
+      ],
+    },
+    {
+      id: 'Bedroom_3',
+      name: 'Chambre 3',
+      position: {x: 83, y: 68},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.bedroom_3_light',
+          layer: {
+            red: bedroom3Red,
+            green: bedroom3Green,
+            blue: bedroom3Blue,
+          },
+        },
+        {
+          type: 'climate',
+          roomDisplay: true,
+          climateEntityId: 'climate.bedroom_3',
+          temperatureEntityId: 'sensor.bedroom_3_temperature',
+          humidityEntityId: 'sensor.bedroom_3_humidity',
+        },
+        {
+          type: 'shutter',
+          shutterEntityId: 'cover.bedroom_3_shutter',
+          position: {x: 83, y: 80},
         },
       ],
     },
