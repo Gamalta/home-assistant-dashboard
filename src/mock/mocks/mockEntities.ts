@@ -114,6 +114,16 @@ export const entities: HassEntities = {
   ...createLight('light.bedroom_light', {
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
+  ...createLight('light.bedroom_dressing_light', {
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
+  ...createLight('light.bedroom_bathroom_light', {
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
+  ...createLight('light.bathroom_light', {
+    state: 'off',
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
   ...createLight('light.bedroom_2_light', {
     state: 'off',
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
@@ -122,17 +132,60 @@ export const entities: HassEntities = {
     state: 'off',
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
+  ...createLight('light.cellar_light', {
+    state: 'off',
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
+  ...createLight('light.toilet_light', {
+    state: 'off',
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
+  ...createLight('light.corridor_light', {
+    state: 'off',
+    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+  }),
 
   ...createClimate('climate.salon'),
-  ...createClimate('climate.kitchen'),
+  ...createClimate('climate.kitchen', {
+    attributes: {
+      current_temperature: 20,
+    },
+  }),
+  ...createSensor('sensor.kitchen_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.kitchen_temperature', {
+    state: '20',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
   ...createSensor('sensor.salon_temperature', {
     state: '21',
     attributes: {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_humidity'),
+  ...createSensor('sensor.salon_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
   ...createClimate('climate.bedroom'),
+  ...createClimate('climate.bathroom', {
+    attributes: {
+      current_temperature: 19,
+    },
+  }),
+  ...createClimate('climate.bedroom_bathroom', {
+    attributes: {
+      current_temperature: 19,
+    },
+  }),
   ...createSensor('sensor.bedroom_temperature', {
     state: '21',
     attributes: {
@@ -143,6 +196,30 @@ export const entities: HassEntities = {
     state: '55',
     attributes: {
       unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.bedroom_bathroom_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.bedroom_bathroom_temperature', {
+    state: '19',
+    attributes: {
+      unit_of_measurement: '°C',
+    },
+  }),
+  ...createSensor('sensor.bathroom_humidity', {
+    state: '55',
+    attributes: {
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.bathroom_temperature', {
+    state: '19',
+    attributes: {
+      unit_of_measurement: '°C',
     },
   }),
   ...createClimate('climate.bedroom_2'),
