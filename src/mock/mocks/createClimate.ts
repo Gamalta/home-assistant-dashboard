@@ -14,7 +14,7 @@ const defaults = {
     fan_modes: ['Low', 'Mid', 'High'],
     swing_modes: ['off', 'both', 'vertical', 'horizontal'],
     swing_mode: 'off',
-    current_temperature: 24,
+    current_temperature: 22,
     temperature: 25,
     fan_mode: 'High',
     hvac_action: 'heat',
