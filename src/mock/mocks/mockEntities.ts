@@ -82,6 +82,7 @@ export const entities: HassEntities = {
   ...createCover('cover.bedroom_3_shutter'),
 
   ...createLight('light.salon_light', {
+    state: 'off',
     attributes: {
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
@@ -104,7 +105,6 @@ export const entities: HassEntities = {
     },
   }),
   ...createLight('light.dining_light', {
-    state: 'off',
     attributes: {
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
@@ -115,9 +115,11 @@ export const entities: HassEntities = {
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.bedroom_dressing_light', {
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    state: 'off',
+    attributes: {icon: 'hue:bulb-spot-hung', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.bedroom_bathroom_light', {
+    state: 'off',
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.bathroom_light', {
@@ -129,7 +131,6 @@ export const entities: HassEntities = {
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.bedroom_3_light', {
-    state: 'off',
     attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.cellar_light', {
@@ -138,11 +139,11 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.toilet_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {icon: 'hue:bulb-candle', color_mode: 'hs', hs_color: [28, 64]},
   }),
   ...createLight('light.corridor_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {icon: 'hue:bulb-spot-hung', color_mode: 'hs', hs_color: [28, 64]},
   }),
 
   ...createClimate('climate.salon'),
