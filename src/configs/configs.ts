@@ -1,5 +1,6 @@
 import {HouseConfigType} from './house';
 import {SideBarConfigType} from './sidebar';
+import * as Sentry from '@sentry/react'
 
 export const HouseConfigsName: string[] = JSON.parse(
   import.meta.env.VITE_HOUSE_CONFIGS || '[]'
@@ -15,6 +16,7 @@ export type ConfigType = {
 export const loadConfig = async (configId = HouseConfigsName[0]) => {
   try {
     const module = await import(`./${configId}/House.ts`);
+    Sentry.setTag('configuration', configId)
     return {
       id: configId,
       name: module.ConfigName,
@@ -22,6 +24,7 @@ export const loadConfig = async (configId = HouseConfigsName[0]) => {
       sideBar: module.SideBarConfig,
     } as ConfigType;
   } catch (error) {
+    Sentry.captureException(error);
     console.error(`Failed to load config: ${configId}`, error);
     return null;
   }
