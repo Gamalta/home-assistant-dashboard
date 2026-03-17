@@ -1,9 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
 import App from './app';
+import * as Sentry from '@sentry/react';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+Sentry.init({
+  dsn: 'https://c1fe29bdae9902ba88417b8727437ba4@o4511062045491200.ingest.de.sentry.io/4511062047391824',
+  // Attention, Default PII peut poser des problèmes de RGPD.
+  sendDefaultPii: false,
+});
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(
+  <StrictMode>
     <App />
-  </React.StrictMode>
+  </StrictMode>,
 );
