@@ -11,6 +11,8 @@ const HAConnect = import.meta.env.VITE_MOCK_HOME_ASSISTANT
   : HassConnect;
 function App() {
   useEffect(() => {
+    console.log('App version:', import.meta.env.VITE_APP_VERSION);
+
     if (window.location.pathname !== '/') {
       window.location.pathname = '/';
     }
