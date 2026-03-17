@@ -16,6 +16,7 @@ export type ConfigType = {
 export const loadConfig = async (configId = HouseConfigsName[0]) => {
   try {
     const module = await import(`./${configId}/House.ts`);
+    Sentry.setTag('configuration', configId)
     return {
       id: configId,
       name: module.ConfigName,
