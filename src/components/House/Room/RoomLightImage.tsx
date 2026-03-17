@@ -1,7 +1,7 @@
 import {HassEntityWithService} from '@hakit/core';
 import type {LightConfigType} from '../../../configs/house';
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type RoomLightImage = {
   lightConfig: LightConfigType;
