@@ -65,7 +65,7 @@ export function House() {
     resizeObserver.observe(baseImageRef);
 
     return () => resizeObserver.unobserve(baseImageRef);
-  }, [baseImageRef, handleResize]);
+  }, [houseConfig, baseImageRef, handleResize]);
 
   if (!houseConfig) {
     if (showLoading) {
