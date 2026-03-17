@@ -10,8 +10,9 @@ const sentryRelease = `${process.env.PROJECT_NAME}@${commitHash}`
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    'import.meta.env.VITE_APP_VERSION': JSON.stringify(commitHash),
-    'import.meta.env.VITE_SENTRY_RELEASE': JSON.stringify(sentryRelease),
+    'import.meta.env.VITE_APP_VERSION': commitHash,
+    'import.meta.env.VITE_SENTRY_RELEASE': sentryRelease,
+    'import.meta.env.VITE_VERCEL_ENV': process.env.VERCEL_ENV,
   },
   plugins: [
     react(),

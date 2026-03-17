@@ -1,4 +1,6 @@
 interface CustomEnv {
+  VITE_VERCEL_ENV: string;
+  VITE_SENTRY_RELEASE: string;
   VITE_HA_URL: string;
   VITE_MOCK_HOME_ASSISTANT: string;
   VITE_HOUSE_CONFIGS: string[];
