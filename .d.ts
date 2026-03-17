@@ -2,6 +2,7 @@ interface CustomEnv {
   VITE_HA_URL: string;
   VITE_MOCK_HOME_ASSISTANT: string;
   VITE_HOUSE_CONFIGS: string[];
+  VITE_APP_VERSION: string;
   [key: string]: unknown;
 }
 
@@ -9,3 +10,5 @@ interface CustomEnv {
 interface ImportMeta {
   env: CustomEnv;
 }
+
+declare const __COMMIT_HASH__: string;
