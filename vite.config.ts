@@ -5,11 +5,13 @@ import react from '@vitejs/plugin-react';
 import {execSync} from 'child_process';
 
 const commitHash = execSync('git rev-parse --short HEAD').toString().trim();
+const sentryRelease = `${process.env.PROJECT_NAME}@${commitHash}`
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(commitHash),
+    'import.meta.env.VITE_SENTRY_RELEASE': JSON.stringify(sentryRelease),
   },
   plugins: [
     react(),
@@ -17,7 +19,7 @@ export default defineConfig({
       org: 'gamalta',
       project: 'home-assistant-dashboard',
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      release: { name: commitHash, },
+      release: { name: sentryRelease, },
       sourcemaps: {
         // On évite d'exposer les sourcemaps en production
         // https://blog.sentry.security/abusing-exposed-sourcemaps
