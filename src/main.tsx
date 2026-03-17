@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/react';
 Sentry.init({
   dsn: 'https://c1fe29bdae9902ba88417b8727437ba4@o4511062045491200.ingest.de.sentry.io/4511062047391824',
   environment: import.meta.env.VERCEL_ENV || 'development',
+  release: import.meta.env.VITE_SENTRY_RELEASE,
   // Attention, Default PII peut poser des problèmes de RGPD.
   sendDefaultPii: false,
 });
