@@ -106,6 +106,7 @@ export function House() {
       <img
         ref={baseImageRef => setBaseImageRef(baseImageRef)}
         src={houseConfig.dayFloorPlan}
+        onLoad={() => handleResize()}
       />
       <img
         src={houseConfig.nightFloorPlan}
