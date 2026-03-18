@@ -8,6 +8,7 @@ Sentry.init({
   integrations: [Sentry.browserTracingIntegration()],
   environment: import.meta.env.VITE_VERCEL_ENV || 'development',
   release: import.meta.env.VITE_SENTRY_RELEASE,
+  tracesSampleRate: 1.0,
   // Attention, Default PII peut poser des problèmes de RGPD.
   sendDefaultPii: false,
 });
