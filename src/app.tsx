@@ -18,6 +18,16 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const matomo = (window._mtm = window._mtm || []);
+    matomo.push({'mtm.startTime': new Date().getTime(), event: 'mtm.Start'});
+    const matomoScript = document.createElement('script');
+    const firstScript = document.getElementsByTagName('script')[0];
+    matomoScript.async = true;
+    matomoScript.src = 'https://matomo.elihome.fr/js/container_viH8f2FR.js';
+    firstScript?.parentNode?.insertBefore(matomoScript, firstScript);
+  }, []);
+
   return (
     <>
       <ThemeProvider>
