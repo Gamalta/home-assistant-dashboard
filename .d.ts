@@ -12,5 +12,10 @@ interface CustomEnv {
 interface ImportMeta {
   env: CustomEnv;
 }
+declare global {
+  interface Window {
+    _mtm: Record<string, unknown>[]
+  }
+}
 
-declare const __COMMIT_HASH__: string;
+export {}
