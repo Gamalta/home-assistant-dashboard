@@ -87,6 +87,12 @@ importers:
       eslint:
         specifier: ^10.2.1
         version: 10.2.1(jiti@1.21.7)
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@10.2.1(jiti@1.21.7))
+      eslint-plugin-prettier:
+        specifier: ^5.5.5
+        version: 5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@10.2.1(jiti@1.21.7)))(eslint@10.2.1(jiti@1.21.7))(prettier@3.8.3)
       eslint-plugin-react-hooks:
         specifier: ^7.1.1
         version: 7.1.1(eslint@10.2.1(jiti@1.21.7))
@@ -3868,6 +3874,10 @@ snapshots:
     dependencies:
       eslint: 10.2.1(jiti@1.21.7)
 
+  eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@1.21.7)):
+    dependencies:
+      eslint: 9.39.4(jiti@1.21.7)
+
   eslint-plugin-es-x@7.8.0(eslint@9.39.4(jiti@1.21.7)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@1.21.7))
@@ -3890,7 +3900,17 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  eslint-plugin-prettier@5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@1.21.7)))(eslint@9.39.4(jiti@1.21.7))(prettier@3.8.3):
+  eslint-plugin-prettier@5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@10.2.1(jiti@1.21.7)))(eslint@10.2.1(jiti@1.21.7))(prettier@3.8.3):
+    dependencies:
+      eslint: 10.2.1(jiti@1.21.7)
+      prettier: 3.8.3
+      prettier-linter-helpers: 1.0.1
+      synckit: 0.11.12
+    optionalDependencies:
+      '@types/eslint': 9.6.1
+      eslint-config-prettier: 10.1.8(eslint@10.2.1(jiti@1.21.7))
+
+  eslint-plugin-prettier@5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@10.2.1(jiti@1.21.7)))(eslint@9.39.4(jiti@1.21.7))(prettier@3.8.3):
     dependencies:
       eslint: 9.39.4(jiti@1.21.7)
       prettier: 3.8.3
@@ -4161,9 +4181,9 @@ snapshots:
       '@typescript-eslint/parser': 8.59.0(eslint@9.39.4(jiti@1.21.7))(typescript@6.0.3)
       chalk: 4.1.2
       eslint: 9.39.4(jiti@1.21.7)
-      eslint-config-prettier: 10.1.8(eslint@10.2.1(jiti@1.21.7))
+      eslint-config-prettier: 10.1.8(eslint@9.39.4(jiti@1.21.7))
       eslint-plugin-n: 17.24.0(eslint@9.39.4(jiti@1.21.7))(typescript@6.0.3)
-      eslint-plugin-prettier: 5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@1.21.7)))(eslint@9.39.4(jiti@1.21.7))(prettier@3.8.3)
+      eslint-plugin-prettier: 5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@10.2.1(jiti@1.21.7)))(eslint@9.39.4(jiti@1.21.7))(prettier@3.8.3)
       execa: 5.1.1
       inquirer: 7.3.3
       json5: 2.2.3
