@@ -2,6 +2,7 @@ import {RoomItemConfigType} from '../../../../configs/house';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
+import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomTemperature} from './RoomTemperature';
 
@@ -24,6 +25,8 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomShutter id={id} shutterConfig={itemConfig} />;
     case 'desktop':
       return <RoomDesktop id={id} desktopConfig={itemConfig} />;
+    case 'printer3d':
+      return <RoomPrinter3d id={id} printerConfig={itemConfig} />;
     default:
       return <></>;
   }

@@ -16,7 +16,8 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | Printer3DConfigType;
 
 type BaseItemConfigType =
   | {
@@ -68,4 +69,9 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type Printer3DConfigType = BaseItemConfigType & {
+  type: 'printer3d';
+  chambreLightEntity?: FilterByDomain<EntityName, 'light'>;
 };
