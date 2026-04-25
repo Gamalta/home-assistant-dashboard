@@ -80,22 +80,24 @@ export function Picker(props: PickerProps) {
         animate={{opacity: 1}}
         initial={{opacity: 0, transform: 'translate(-50%, -50%)'}}
         onClick={() => setActiveEntityIds([entity.entity_id])}
-        position="absolute"
-        width="32px"
-        height="32px"
-        top={position.y}
-        left={position.x}
+        sx={{
+          position: 'absolute',
+          width: '32px',
+          height: '32px',
+          top: position.y,
+          left: position.x,
+        }}
       >
         <Stack
-          m="4px"
-          width="24px"
-          height="24px"
-          borderRadius="50%"
-          border={`${hovered ? '3px' : '2px'} solid`}
-          borderColor="divider"
-          boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-          bgcolor={`rgb(${mode === 'color' ? color : temperature2rgb(color as number).join(',')})`}
           sx={{
+            m: '4px',
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            border: `${hovered ? '3px' : '2px'} solid`,
+            borderColor: 'divider',
+            boxShadow:"0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)",
+            bgcolor: `rgb(${mode === 'color' ? color : temperature2rgb(color as number).join(',')})`,
             '&:hover': {
               border: '2px solid white',
             },

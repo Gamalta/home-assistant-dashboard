@@ -20,7 +20,7 @@ export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
   if (!entity) return null;
 
   return (
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
+    <Stack direction="row" sx={{justifyContent: 'space-between', alignItems: 'center'}}>
       <Typography>{label}</Typography>
       <Typography color="text.secondary">{formatEntity(entity)}</Typography>
     </Stack>

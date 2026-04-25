@@ -39,10 +39,8 @@ export function WeatherModal(props: WeatherModalProps) {
       action={
         <Stack
           direction="row"
-          borderRadius={1}
-          border={theme => `1px solid ${theme.palette.divider}`}
           spacing={1}
-          p={1}
+          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
         >
           <AttributesDisplay attributes={[weather.attributes ?? {}]} />
         </Stack>
@@ -51,12 +49,7 @@ export function WeatherModal(props: WeatherModalProps) {
       <Stack spacing={2}>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          bgcolor="background.tertiary"
-          borderRadius={1}
-          p={4}
-          alignItems="center"
-          position="relative"
+          sx={{position: 'relative', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'background.tertiary', borderRadius: 1, p: 4}}
         >
           <Stack>
             <Typography variant="h5">
@@ -66,7 +59,7 @@ export function WeatherModal(props: WeatherModalProps) {
                 ]
               }
             </Typography>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
               <Typography variant="h6">
                 {weather.attributes.temperature}
                 {weather.attributes.temperature_unit}
@@ -109,12 +102,13 @@ export function WeatherModal(props: WeatherModalProps) {
           {weather.forecast?.forecast.slice(1, 5).map(period => (
             <Stack
               key={period.datetime}
-              alignItems="center"
-              bgcolor="background.tertiary"
-              borderRadius={1}
-              py={2}
               spacing={1}
-              width="124px"
+              sx={{alignItems: 'center',
+                bgcolor: 'background.tertiary',
+                borderRadius: 1,
+                py: 2,
+                width: '124px',
+              }}
             >
               <Typography>
                 {DAY_OF_WEEK[new Date(period.datetime).getDay()]}
@@ -127,7 +121,7 @@ export function WeatherModal(props: WeatherModalProps) {
                   objectFit: 'contain',
                 }}
               />
-              <Stack alignItems="center">
+              <Stack sx={{alignItems: 'center'}}>
                 <Typography>
                   {period.temperature}
                   {weather.attributes.temperature_unit}

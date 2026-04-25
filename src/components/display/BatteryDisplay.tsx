@@ -55,9 +55,9 @@ export function BatteryDisplay(props: BatteryDisplayProps) {
 
   if (type === 'text') {
     return (
-      <Stack direction="row" justifyContent="center">
+      <Stack direction="row" sx={{justifyContent: 'center'}}>
         {getBatteryIcon()}
-        <Typography mt="2px">{batteryLevel}%</Typography>
+        <Typography sx={{mt: '2px'}}>{batteryLevel}%</Typography>
       </Stack>
     );
   }

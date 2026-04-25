@@ -29,10 +29,8 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
       <Stack
         component={motion.div}
         layoutId="weather-modal"
-        justifyContent="end"
-        alignItems="center"
         spacing={1}
-        sx={{cursor: 'pointer'}}
+        sx={{justifyContent: 'end', alignItems: 'center', cursor: 'pointer'}}
         {...weatherLongPress}
       >
         <Box
@@ -48,8 +46,8 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
                 : `${weatherdAnimation} 6s ease-in-out infinite`,
           }}
         />
-        <Stack alignItems="center">
-          <Typography variant="h6" color="text.secondary" textAlign="center">
+        <Stack sx={{alignItems: 'center'}}>
+          <Typography variant="h6" color="text.secondary" sx={{textAlign: 'center'}}>
             {weather.attributes.temperature ?? '--'}
             {weather.attributes.temperature_unit}
           </Typography>
@@ -57,9 +55,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
             <Typography
               variant="body2"
               color="text.secondary"
-              textAlign="center"
-              sx={{opacity: 0.7}}
-              mt={-0.5}
+              sx={{opacity: 0.7, mt: -0.5, textAlign: 'center'}}
             >
               {weather.forecast?.forecast[0].templow}°/
               {weather.forecast?.forecast[0].temperature}°

@@ -77,10 +77,10 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
   const lastTime = dataset[dataset.length - 1]?.timestamp;
 
   return (
-    <Stack width="500px" height="300px" position="relative">
-      <Stack justifyContent="space-between" height="100%" width="fit-content">
+    <Stack sx={{position: 'relative', height: '300px', width: '500px'}}>
+      <Stack sx={{height: '100%', width: 'fit-content', justifyContent: 'space-between'}}>
         <Stack spacing={1}>
-          <Stack direction="row" width="fit-content" zIndex={102}>
+          <Stack direction="row" sx={{width: 'fit-content', zIndex: 102}}>
             <ThermostatIcon
               sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
             />
@@ -91,10 +91,12 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
           {humidityEntity && (
             <Stack
               direction="row"
-              width="fit-content"
               spacing={1}
-              zIndex={102}
-              pl={1}
+              sx={{
+                pl: 1,
+                zIndex: 102,
+                width: 'fit-content',
+              }}
             >
               <WaterDropIcon
                 fontSize="large"
@@ -109,7 +111,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
             </Stack>
           )}
         </Stack>
-        <Stack spacing={2} direction="row" ml={-2} mb={-2}>
+        <Stack spacing={2} direction="row" sx={{ml: -2, mb: -2}}>
           <Chip
             label={`min: ${minTemp}${temperatureEntity.attributes.unit_of_measurement}`}
           />
@@ -119,13 +121,15 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
         </Stack>
       </Stack>
       <Stack
-        margin="-32px"
-        marginTop={0}
-        height="275px"
-        width="564px"
-        position="absolute"
-        bottom={0}
-        zIndex={101}
+        sx={{
+          margin: "-32px",
+          marginTop: 0,
+          height: "275px",
+          width: "564px",
+          position: "absolute",
+          bottom: 0,
+          zIndex: 101,
+        }}
       >
         <ChartsContainer
           margin={0}

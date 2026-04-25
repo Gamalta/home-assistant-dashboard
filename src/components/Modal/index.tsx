@@ -63,9 +63,9 @@ export function Modal(props: ModalProps) {
         <>
           <Backdrop />
           <Container id={id}>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" sx={{justifyContent: 'space-between'}}>
               <Typography variant="h5">{title}</Typography>
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
                 {action}
                 <IconButton onClick={onClose}>
                   <CloseIcon />
@@ -78,8 +78,7 @@ export function Modal(props: ModalProps) {
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
               variants={variants}
-              p={2}
-              maxHeight="100%"
+              sx={{p: 2, maxHeight: '100%'}}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}

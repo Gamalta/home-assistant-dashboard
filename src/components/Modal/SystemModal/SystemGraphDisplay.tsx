@@ -50,10 +50,7 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
 
   return (
     <Stack
-      position="relative"
-      bgcolor="background.tertiary"
-      borderRadius={1}
-      overflow="hidden"
+      sx={{position: 'relative', bgcolor: 'background.tertiary', borderRadius: 1, overflow: 'hidden'}}
     >
       <ChartsContainer
         margin={0}
@@ -115,11 +112,8 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
       </ChartsContainer>
       <Stack
         direction="row"
-        justifyContent="space-between"
-        position="absolute"
-        width="100%"
         spacing={1}
-        p={1}
+        sx={{justifyContent: 'space-between', position: 'absolute', width: '100%', p: 1}}
       >
         <Typography variant="body2" sx={{fontWeight: 'bold'}}>
           {graphConfig.label}

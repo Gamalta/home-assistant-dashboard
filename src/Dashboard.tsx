@@ -50,23 +50,26 @@ export default function Dashboard() {
         </Panel>
         <Separator style={{outline: 0}} onPointerDown={() => setIsDragging(true)}>
           <Stack
-            height="100vh"
-            width="26px"
-            display="flex"
-            justifyContent="center"
-            bgcolor="background.primary"
             sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              height: '100vh',
+              width: '26px',
+              bgcolor: 'background.primary',
+              borderRadius: '0 16px 16px 0',
               '&:hover': {div: {height: '10%'}},
             }}
-            borderRadius="0 16px 16px 0"
           >
             <Stack
-              bgcolor={isDragging ? 'cyan' : 'grey'}
-              width="5px"
-              m="0 0 0 16px"
-              height={isDragging ? '10%' : '5%'}
-              borderRadius="50px"
-              sx={{transition: '500ms', opacity: isDragging ? 0.5 : 1}}
+              sx={{
+                height: isDragging ? '10%' : '5%',
+                width: '5px',
+                bgcolor: isDragging ? 'cyan' : 'grey',
+                borderRadius: '50px',
+                margin: "0 0 0 16px",
+                transition: '500ms',
+                opacity: isDragging ? 0.5 : 1
+              }}
             />
           </Stack>
         </Separator>

@@ -46,18 +46,10 @@ export function ColorTab() {
   }, [generateColorWheel]);
 
   return (
-    <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
+    <Stack sx={{maxWidth: '500px', minWidth: '500px', p: 2, alignItems: 'center'}}>
       <Stack
         component={motion.div}
-        position="relative"
-        height="30vh"
-        maxHeight="320px"
-        maxWidth="320px"
-        minHeight="200px"
-        minWidth="200px"
-        borderRadius="50%"
-        border="3px solid"
-        borderColor="divider"
+        sx={{position: 'relative', height: '30vh', maxHeight: '320px', maxWidth: '320px', minHeight: '200px', minWidth: '200px', borderRadius: '50%', border: '3px solid', borderColor: 'divider'}}
       >
         <Canvas
           ref={canvasRef}

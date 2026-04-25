@@ -30,10 +30,7 @@ export function BrightnessSlider() {
   return (
     <>
       <Stack
-        position="relative"
-        border="1px solid"
-        borderColor="divider"
-        borderRadius="100px"
+        sx={{position: 'relative', border: '1px solid', borderColor: 'divider', borderRadius: '100px'}}
       >
         <BrightnessDisplay brightness={brightness} />
         <Button
@@ -48,11 +45,11 @@ export function BrightnessSlider() {
         >
           <BrightnessIcon />
           <Stack
-            position="absolute"
-            bottom={0}
-            width="100%"
-            height={`${brightness}%`}
             sx={{
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              height: `${brightness}%`,
               background:
                 'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
             }}
@@ -73,7 +70,7 @@ export function BrightnessSlider() {
         }}
         sx={{'& .MuiPopover-paper': {overflow: 'visible'}}}
       >
-        <Stack position="relative" width="64px">
+        <Stack sx={{position: 'relative', width: '64px'}}>
           <Slider
             value={brightness}
             onChange={handleSliderMove}
@@ -128,11 +125,8 @@ function BrightnessDisplay({brightness}: {brightness: number}) {
   return (
     <Typography
       variant="body2"
-      position="absolute"
-      bottom="100%"
-      width="100%"
-      textAlign="center"
       color="text.secondary"
+      sx={{position: 'absolute', bottom: '100%', width: '100%', textAlign: 'center'}}
     >
       {brightness} %
     </Typography>

@@ -15,16 +15,12 @@ export function SideBar() {
   return (
     <Stack
       ref={sideBarRef}
-      position="relative"
       direction="column"
-      height="100%"
       spacing={2}
-      overflow="hidden"
-      bgcolor="background.primary"
-      p={theme => theme.spacing(4, 0, 4, 2)}
+      sx={{position: 'relative', height: '100%', overflow: 'hidden', bgcolor: 'background.primary', p: theme => theme.spacing(4, 0, 4, 2)}}
     >
       <HeaderCard weather={sideBarConfig?.weatherEntityId} />
-      <Stack spacing={2} p={2} bgcolor="background.paper" borderRadius={2}>
+      <Stack spacing={2} sx={{p: 2, bgcolor: 'background.paper', borderRadius: 2}}>
         {sideBarConfig?.persons && (
           <Stack direction="row" spacing={2}>
             <PersonCard person={sideBarConfig.persons?.[0]} />
@@ -34,11 +30,7 @@ export function SideBar() {
         <PetCard pets={sideBarConfig?.pets} />
       </Stack>
       <Stack
-        p={2}
-        bgcolor="background.paper"
-        borderRadius={2}
-        width="100%"
-        height="100%"
+        sx={{p: 2, bgcolor: 'background.paper', borderRadius: 2, width: '100%', height: '100%'}}
       />
       <SideBarDock sideBarRef={sideBarRef} />
     </Stack>

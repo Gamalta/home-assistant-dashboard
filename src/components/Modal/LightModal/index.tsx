@@ -85,10 +85,8 @@ export function LightModal(props: LightModalProps) {
       action={
         <Stack
           direction="row"
-          borderRadius={1}
-          border={theme => `1px solid ${theme.palette.divider}`}
           spacing={1}
-          p={1}
+          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
         >
           <AttributesDisplay
             attributes={entities.map(entity => entity.attributes)}
@@ -100,7 +98,6 @@ export function LightModal(props: LightModalProps) {
         <Stack spacing={2} sx={{overflowX: 'hidden', overflowY: 'auto'}}>
           <Stack
             direction="row"
-            width="500px"
             component={motion.div}
             transition={{
               mass: 0.4,
@@ -118,6 +115,7 @@ export function LightModal(props: LightModalProps) {
                   -100 +
                 '%',
             }}
+            sx={{width: '500px'}}
           >
             <OnOffTab />
             {hasColor && <ColorTab />}
@@ -125,7 +123,7 @@ export function LightModal(props: LightModalProps) {
             {hasEffect && <EffectTab />}
           </Stack>
           {(hasColor || hasColorTemp || hasEffect) && (
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" sx={{justifyContent: 'space-between'}}>
               <ToggleButtonGroup
                 exclusive
                 value={tab}
@@ -172,7 +170,7 @@ export function LightModal(props: LightModalProps) {
             </Stack>
           )}
           <Stack spacing={1}>
-            <Typography variant="h6" display="flex" gap={1}>
+            <Typography variant="h6" sx={{display: 'flex', gap: 1}}>
               Lumières
               <Box color="text.secondary">
                 {entities.length > 1 && entities.length}
@@ -180,10 +178,7 @@ export function LightModal(props: LightModalProps) {
             </Typography>
             <Stack
               direction="row"
-              gap={2}
-              p={1}
-              overflow="auto"
-              maxWidth="500px"
+              sx={{gap: 2, p: 1, maxWidth: '500px', overflow: 'auto'}}
             >
               {entities.map(entity => (
                 <LightCard

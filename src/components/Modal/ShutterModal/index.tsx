@@ -79,25 +79,23 @@ export function ShutterModal(props: DesktopModalProps) {
       action={
         <Stack
           direction="row"
-          borderRadius={1}
-          border={theme => `1px solid ${theme.palette.divider}`}
           spacing={1}
-          p={1}
+          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
         >
           <AttributesDisplay attributes={[entity?.attributes ?? {}]} />
         </Stack>
       }
     >
-      <Stack spacing={3} px={1}>
+      <Stack spacing={3} sx={{px: 1}}>
         <Stack
-          width="200px"
-          height="197px"
-          pl="11px"
-          pr="11.5px"
-          pt="22.5px"
-          pb="9px"
-          position="relative"
           sx={{
+            position: 'relative',
+            width: '200px',
+            height: '197px',
+            pl: '11px',
+            pr: '11.5px',
+            pt: '22.5px',
+            pb: '9px',
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             backgroundImage: 'url("shutter/shutter_base.png")',
             backgroundSize: 'cover',
@@ -114,9 +112,7 @@ export function ShutterModal(props: DesktopModalProps) {
         >
           <Stack
             ref={containerRef}
-            position="relative"
-            width="100%"
-            height="100%"
+            sx={{position: 'relative', width: '100%', height: '100%'}}
           >
             <motion.img
               draggable={false}
@@ -196,11 +192,8 @@ export function ShutterModal(props: DesktopModalProps) {
         </Stack>
         <Stack
           direction="row"
-          justifyContent="center"
-          alignItems="center"
-          bgcolor="background.tertiary"
-          borderRadius={1}
           spacing={1}
+          sx={{justifyContent: 'center', alignItems: 'center', bgcolor: 'background.tertiary', borderRadius: 1}}
         >
           <IconButton
             sx={{borderRadius: 1}}

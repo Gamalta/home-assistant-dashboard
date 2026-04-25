@@ -143,17 +143,18 @@ export function ActivePicker(props: ActivePickerProps) {
           dragMomentum={false}
         >
           <Stack
-            width="32px"
-            height="32px"
-            borderRadius="50%"
-            border="2px solid"
-            borderColor="divider"
-            boxSizing="border-box"
-            justifyContent="center"
-            alignItems="center"
-            boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-            bgcolor={`rgb(${color.join(',')})`}
             sx={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: '2px solid',
+              borderColor: 'divider',
+              boxSizing: 'border-box',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow:
+                '0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)',
+              bgcolor: `rgb(${color.join(',')})`,
               transform: 'translate(-16px, -38px) rotate(45deg)',
               borderBottomRightRadius: 0,
             }}

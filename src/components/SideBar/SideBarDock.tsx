@@ -98,18 +98,12 @@ export function SideBarDock(props: SideBarDockProps) {
       {isVisible && (
         <Stack
           component={motion.div}
-          position="absolute"
           direction="row"
-          bottom={theme => theme.spacing(2)}
-          right="50%"
-          justifyContent="center"
-          bgcolor="background.tertiary"
-          borderRadius="50px"
-          p={theme => theme.spacing(1, 2)}
           initial={{opacity: 0, x: '50%', y: 50}}
           animate={{opacity: 1, y: 0}}
           exit={{opacity: 0, y: 50}}
           transition={{duration: 0.5}}
+          sx={{position: 'absolute', bottom: theme => theme.spacing(2), right: '50%', justifyContent: 'center', bgcolor: 'background.tertiary', borderRadius: '50px', p: theme => theme.spacing(1, 2)}}
         >
           {themeMode && (
             <>
@@ -142,7 +136,7 @@ export function SideBarDock(props: SideBarDockProps) {
                   </MenuItem>
                 ))}
               </Menu>
-              <Stack py={0.5}>
+              <Stack sx={{py: 0.5}}>
                 <Divider orientation="vertical" />
               </Stack>
             </>

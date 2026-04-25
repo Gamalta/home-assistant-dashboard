@@ -6,15 +6,15 @@ export function Backdrop() {
     <Stack
       id="backdrop"
       component={motion.div}
-      position="absolute"
-      left={0}
-      top={0}
-      width="100%"
-      height="100%"
-      zIndex={50}
       sx={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        left: 0,
+        top: 0,
         cursor: 'pointer',
         backdropFilter: 'blur(2em) brightness(0.75)',
+        zIndex: 50,
       }}
       transition={{duration: 0.75}}
       initial={{opacity: 0}}

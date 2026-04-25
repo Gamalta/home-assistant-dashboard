@@ -70,13 +70,13 @@ export function House() {
   if (!houseConfig) {
     if (showLoading) {
       return (
-        <Stack height="100%" justifyContent="center" alignItems="center">
+        <Stack sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
           <CircularProgress />
         </Stack>
       );
     } else {
       return (
-        <Stack height="100%" justifyContent="center" alignItems="center">
+        <Stack sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
           <Alert severity="error" variant="filled">
             Impossible de charger la configuration.
           </Alert>
@@ -87,11 +87,11 @@ export function House() {
 
   return (
     <Stack
-      height="100%"
-      overflow="hidden"
-      position="relative"
-      alignItems="center"
       sx={{
+        height: '100%',
+        overflow: 'hidden',
+        position: 'relative',
+        alignItems: 'center',
         '& img': {
           position: 'absolute',
           top: 0,
@@ -113,11 +113,11 @@ export function House() {
         style={{opacity: nightOpacity}}
       />
       <Stack
-        position="relative"
-        top="50%"
-        width={imageSize.width}
-        height={imageSize.height}
         sx={{
+          position: 'relative',
+          top: '50%',
+          width: imageSize.width,
+          height: imageSize.height,
           transform: 'translateY(-50%)',
         }}
         ref={houseRef}

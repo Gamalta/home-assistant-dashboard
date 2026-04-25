@@ -43,20 +43,21 @@ export function PersonCard(props: PersonCardProps) {
 
   return (
     <Stack
-      alignItems="center"
-      width="100%"
-      borderRadius={1}
-      bgcolor="background.tertiary"
-      p={theme => theme.spacing(1, 2)}
+      sx={{
+        width: '100%',
+        alignItems: 'center',
+        borderRadius: 1,
+        bgcolor: 'background.tertiary',
+        p: theme => theme.spacing(1, 2),
+      }}
     >
-      <Stack position="relative">
+      <Stack sx={{position: 'relative'}}>
         <Box
-          p={0.5}
           component="img"
           src={person?.avatar}
           height="80px"
           width="80px"
-          sx={{objectFit: 'contain'}}
+          sx={{p: 0.5}}
         />
         {focused?.state === 'on' && (
           <Tooltip title={`depuis ${toLocalTime(focused.last_changed)}`}>

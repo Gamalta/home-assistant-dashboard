@@ -55,7 +55,7 @@ export function UbuntuIcon(props: SvgIconProps) {
 			C345.22,23.107,368.321,0,396.812,0C425.335,0,448.374,23.107,448.374,51.601z"
           />
         </g>
-      </g>{' '}
+      </g>
     </SvgIcon>
   );
 }
