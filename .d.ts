@@ -9,7 +9,7 @@ interface CustomEnv {
 }
 
 // For Vite's import.meta.env
-interface ImportMeta {
+export interface ImportMeta {
   env: CustomEnv;
 }
 declare global {

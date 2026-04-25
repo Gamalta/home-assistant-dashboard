@@ -52,8 +52,6 @@ export function Picker(props: PickerProps) {
       }
       setPosition(position);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entity]);
 
   useEffect(() => {

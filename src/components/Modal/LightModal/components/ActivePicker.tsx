@@ -115,7 +115,6 @@ export function ActivePicker(props: ActivePickerProps) {
       motionXValue.set(x);
       motionYValue.set(y);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEntities.length > 0, activeEntities[0]]);
 
   return (

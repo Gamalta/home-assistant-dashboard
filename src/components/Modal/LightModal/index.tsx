@@ -76,7 +76,6 @@ export function LightModal(props: LightModalProps) {
 
   useEffect(() => {
     moveToSupportedTab(entities);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasColor, hasColorTemp, hasEffect]);
 
   return (

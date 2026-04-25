@@ -6,7 +6,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
 export default [
   ...tsEslint.configs.recommended,
-  //reactHooks.configs.flat.recommended,
+  reactHooks.configs.flat.recommended,
   eslintPluginPrettier,
   {
     languageOptions: {
@@ -19,7 +19,8 @@ export default [
       "react-hooks/exhaustive-deps": "off",
       "react-hooks/refs": "off",
       "react-hooks/set-state-in-effect": "off",
-      "react-hooks/immutability": "off"
+      "react-hooks/immutability": "off",
+      "react-hooks/preserve-manual-memoization": "off"
     }
   },
   {

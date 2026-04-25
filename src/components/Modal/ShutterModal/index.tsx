@@ -47,7 +47,6 @@ export function ShutterModal(props: DesktopModalProps) {
     if (coverPosition !== targetPosition) return;
     setCoverPosition(position);
     setTargetPosition(position);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entity]);
 
   useEffect(() => {
@@ -68,7 +67,6 @@ export function ShutterModal(props: DesktopModalProps) {
     }, 100);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetPosition]);
 
   //TODO adapt modal to supported_feature

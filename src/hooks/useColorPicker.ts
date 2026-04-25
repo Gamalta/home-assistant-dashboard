@@ -40,7 +40,6 @@ export const useColorPicker = <T extends WheelMode>(
       entities[0];
     const newColor = getEntityColor(entity);
     setColor(newColor);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEntityState]);
 
   const rgbColor =
