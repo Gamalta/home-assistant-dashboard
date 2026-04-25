@@ -47,11 +47,12 @@ export function Printer3dModal(props: Printer3dModalProps) {
               transform: 'translate(50%, -50%)',
               backgroundColor: 'secondary.main',
               ...(chambreLightEntity.state === 'on' && {
-                color: `rgb(${(
-                  chambreLightEntity?.custom.color ?? [255, 255, 255]
-                ).join(',')})`,
+                color: '#ffb300',
               }),
               marginTop: 0,
+              '&:hover': {
+                backgroundColor: 'secondary.dark',
+              },
             }}
             onClick={() => chambreLightEntity.service.toggle()}
           >
