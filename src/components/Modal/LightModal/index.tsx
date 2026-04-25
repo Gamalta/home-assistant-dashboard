@@ -86,7 +86,6 @@ export function LightModal(props: LightModalProps) {
           direction="row"
           spacing={1}
           sx={{
-            borderRadius: 1,
             border: theme => `1px solid ${theme.palette.divider}`,
             p: 1,
           }}
@@ -140,9 +139,11 @@ export function LightModal(props: LightModalProps) {
                       entity => entity.state === 'on',
                     );
                     entities.map(entity => {
-                      oneWasEnable
-                        ? entity.service.turnOff()
-                        : entity.service.turnOn();
+                      if (oneWasEnable) {
+                        entity.service.turnOff();
+                      } else {
+                        entity.service.turnOn();
+                      }
                     });
                   }}
                 >

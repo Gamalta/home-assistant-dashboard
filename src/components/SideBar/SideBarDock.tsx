@@ -47,9 +47,11 @@ export function SideBarDock(props: SideBarDockProps) {
 
     const handleMouseMove = (event: MouseEvent) => {
       const heightThreshold = window.innerHeight - window.innerHeight / 4;
-      event.clientY > heightThreshold
-        ? setIsVisible(true)
-        : setIsVisible(false);
+      if (event.clientY > heightThreshold) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
     };
 
     sideBar.addEventListener('touchstart', handleTouchStart);

@@ -53,7 +53,7 @@ export function Modal(props: ModalProps) {
     }, 1000 / 1.8);
 
     return () => {
-      timerRef.current && clearTimeout(timerRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [open]);
 
