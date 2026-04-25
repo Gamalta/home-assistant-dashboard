@@ -1,17 +1,12 @@
-import tseslint from 'typescript-eslint';
+import tsEslint from 'typescript-eslint'
 import gts from 'gts'
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
-  ...tseslint.configs.recommended,
+  ...tsEslint.configs.recommended,
   ...gts,
+  ...reactHooks.configs.recommended,
   {
-    plugins: {
-      'react-hooks': reactHooks,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-    },
     ignores: ['node_modules/', 'dist/', 'eslint.config.js'],
   },
 ];
