@@ -57,7 +57,7 @@ export function PersonCard(props: PersonCardProps) {
           src={person?.avatar}
           height="80px"
           width="80px"
-          sx={{p: 0.5}}
+          sx={{p: 0.5, objectFit: 'contain'}}
         />
         {focused?.state === 'on' && (
           <Tooltip title={`depuis ${toLocalTime(focused.last_changed)}`}>
