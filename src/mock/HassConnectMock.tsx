@@ -31,7 +31,7 @@ import type {ServiceArgs} from './mocks/fake-call-service/types';
 import {mockCallApi} from './mocks/fake-call-api';
 import {logs} from './mocks/mockLogs';
 import {dailyForecast, hourlyForecast} from './mocks/mockWeather';
-import { generateMockHistory } from './mock-history';
+import {generateMockHistory} from './mock-history';
 interface HassProviderProps {
   children: (ready: boolean) => ReactNode;
   hassUrl: string;
@@ -117,7 +117,7 @@ class MockConnection extends Connection {
   // hass events
   async subscribeEvents<EventType>(
     eventCallback: (ev: EventType) => void,
-    eventType?: string
+    eventType?: string,
   ) {
     if (!eventType) {
       throw new Error('mock all events not implemented');
@@ -146,7 +146,7 @@ class MockConnection extends Connection {
       start_time?: string;
       forecast_type?: string;
       end_time?: string;
-    }
+    },
   ): Promise<() => Promise<void>> {
     if (
       params &&
@@ -192,7 +192,7 @@ class MockConnection extends Connection {
       let min = 0;
       let max = 100;
 
-      if(entityId.includes('temperature')) {
+      if (entityId.includes('temperature')) {
         min = 20;
         max = 25;
       } else if (entityId.includes('humidity')) {
@@ -205,8 +205,12 @@ class MockConnection extends Connection {
         50,
         min,
         max,
-        params?.start_time ? new Date(params.start_time).getTime() / 1000 : undefined,
-        params?.end_time ? new Date(params.end_time).getTime() / 1000 : undefined
+        params?.start_time
+          ? new Date(params.start_time).getTime() / 1000
+          : undefined,
+        params?.end_time
+          ? new Date(params.end_time).getTime() / 1000
+          : undefined,
       );
 
       callback(history as Result);
@@ -278,7 +282,7 @@ useHass.setState({
       T extends SnakeOrCamelDomains,
       M extends DomainService<T>,
     >(
-      rawArgs: CallServiceArgs<T, M, boolean>
+      rawArgs: CallServiceArgs<T, M, boolean>,
     ): Promise<ServiceResponse<R>> | void => {
       console.log('callService', rawArgs);
       const {domain, service, serviceData, target: target} = rawArgs;
@@ -290,7 +294,7 @@ useHass.setState({
       const {entities, setEntities} = useHass.getState() as InternalStore;
       if (domain in fakeApi) {
         const api = fakeApi[domain as 'scene'] as (
-          params: ServiceArgs<'scene'>
+          params: ServiceArgs<'scene'>,
         ) => boolean;
         const skip = api({
           setEntities(cb: (entities: HassEntities) => HassEntities) {
@@ -426,7 +430,7 @@ function HassProvider({children}: HassProviderProps) {
             ...route,
             active: false,
           };
-        })
+        }),
       );
       setHash(location.hash);
     }

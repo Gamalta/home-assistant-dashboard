@@ -25,17 +25,17 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
     (temperatureEntity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
-    ])
+    ]),
   );
   const tempTimestamps = Object.keys(temperatureMap);
   const temperatures = Object.values(temperatureMap).filter(
-    (data): data is number => data !== null
+    (data): data is number => data !== null,
   );
   const maxTemp = Math.max(...temperatures);
   const minTemp = Math.min(...temperatures);
   const tempLastTimestamp = tempTimestamps[tempTimestamps.length - 1];
   const tempFormatedLastTimestamp = new Date(
-    Number(tempLastTimestamp)
+    Number(tempLastTimestamp),
   ).toLocaleTimeString('fr', {
     hour: '2-digit',
     minute: '2-digit',
@@ -45,20 +45,20 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
     (humidityEntity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
-    ])
+    ]),
   );
 
   const humTimestamps = Object.keys(humidityMap);
   const humLastTimesptamp = humTimestamps[humTimestamps.length - 1];
   const formatedLastTimeHumidity = new Date(
-    Number(humLastTimesptamp)
+    Number(humLastTimesptamp),
   ).toLocaleTimeString('fr', {
     hour: '2-digit',
     minute: '2-digit',
   });
 
   const timestamps = Array.from(
-    new Set([...Object.keys(temperatureMap), ...Object.keys(humidityMap)])
+    new Set([...Object.keys(temperatureMap), ...Object.keys(humidityMap)]),
   ).sort((a, b) => Number(a) - Number(b));
 
   let lastTemp = 0;
@@ -78,7 +78,13 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
 
   return (
     <Stack sx={{position: 'relative', height: '300px', width: '500px'}}>
-      <Stack sx={{height: '100%', width: 'fit-content', justifyContent: 'space-between'}}>
+      <Stack
+        sx={{
+          height: '100%',
+          width: 'fit-content',
+          justifyContent: 'space-between',
+        }}
+      >
         <Stack spacing={1}>
           <Stack direction="row" sx={{width: 'fit-content', zIndex: 102}}>
             <ThermostatIcon
@@ -122,11 +128,11 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
       </Stack>
       <Stack
         sx={{
-          margin: "-32px",
+          margin: '-32px',
           marginTop: 0,
-          height: "275px",
-          width: "564px",
-          position: "absolute",
+          height: '275px',
+          width: '564px',
+          position: 'absolute',
           bottom: 0,
           zIndex: 101,
         }}

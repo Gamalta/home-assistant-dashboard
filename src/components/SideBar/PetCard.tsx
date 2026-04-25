@@ -12,7 +12,13 @@ export function PetCard(props: PetCardProps) {
     <Stack
       direction="row"
       spacing={2}
-      sx={{bgcolor: 'background.tertiary', borderRadius: 1, p: 1, alignItems: 'center', justifyContent: 'space-evenly'}}
+      sx={{
+        bgcolor: 'background.tertiary',
+        borderRadius: 1,
+        p: 1,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+      }}
     >
       <Stack sx={{alignItems: 'center'}}>
         <Box src="pet/zephyr.png" component="img" height="75px" width="75px" />

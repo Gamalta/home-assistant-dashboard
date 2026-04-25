@@ -9,11 +9,11 @@ import Typography from '@mui/material/Typography';
 
 export function BrightnessSlider() {
   const [sliderAnchor, setSliderAnchor] = useState<HTMLButtonElement | null>(
-    null
+    null,
   );
   const {entities, activeEntityIds} = useLightModalContext();
   const activeEntities = entities.filter(entity =>
-    activeEntityIds.includes(entity.entity_id)
+    activeEntityIds.includes(entity.entity_id),
   );
 
   const [brightness, setBrightness] = useState(255);
@@ -30,7 +30,12 @@ export function BrightnessSlider() {
   return (
     <>
       <Stack
-        sx={{position: 'relative', border: '1px solid', borderColor: 'divider', borderRadius: '100px'}}
+        sx={{
+          position: 'relative',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '100px',
+        }}
       >
         <BrightnessDisplay brightness={brightness} />
         <Button
@@ -80,7 +85,7 @@ export function BrightnessSlider() {
                   serviceData: {
                     brightness: Math.round(((value as number) * 255) / 100),
                   },
-                })
+                }),
               );
             }}
             orientation="vertical"
@@ -126,7 +131,12 @@ function BrightnessDisplay({brightness}: {brightness: number}) {
     <Typography
       variant="body2"
       color="text.secondary"
-      sx={{position: 'absolute', bottom: '100%', width: '100%', textAlign: 'center'}}
+      sx={{
+        position: 'absolute',
+        bottom: '100%',
+        width: '100%',
+        textAlign: 'center',
+      }}
     >
       {brightness} %
     </Typography>

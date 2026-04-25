@@ -18,7 +18,7 @@ export function RoomTemperature(props: RoomTemperatureProps) {
 
   const tempLongPress = useLongPress(
     () => setTempModal(true),
-    () => setTempModal(true)
+    () => setTempModal(true),
   );
 
   const temperature = useEntity(tempConfig.temperatureEntityId ?? 'unknown', {

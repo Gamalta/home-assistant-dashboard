@@ -35,7 +35,7 @@ export function ShutterModal(props: DesktopModalProps) {
   const percent = useTransform(
     motionValue,
     [0, containerRef.current?.getBoundingClientRect().height ?? 100],
-    [0, 100]
+    [0, 100],
   );
   const [coverPosition, setCoverPosition] = useState(position);
   const [targetPosition, setTargetPosition] = useState(position);
@@ -80,7 +80,11 @@ export function ShutterModal(props: DesktopModalProps) {
         <Stack
           direction="row"
           spacing={1}
-          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
+          sx={{
+            borderRadius: 1,
+            border: theme => `1px solid ${theme.palette.divider}`,
+            p: 1,
+          }}
         >
           <AttributesDisplay attributes={[entity?.attributes ?? {}]} />
         </Stack>
@@ -193,7 +197,12 @@ export function ShutterModal(props: DesktopModalProps) {
         <Stack
           direction="row"
           spacing={1}
-          sx={{justifyContent: 'center', alignItems: 'center', bgcolor: 'background.tertiary', borderRadius: 1}}
+          sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'background.tertiary',
+            borderRadius: 1,
+          }}
         >
           <IconButton
             sx={{borderRadius: 1}}

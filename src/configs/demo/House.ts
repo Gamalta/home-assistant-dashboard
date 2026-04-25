@@ -1,45 +1,45 @@
 import {HouseConfigType} from '../house';
 import baseDay from './assets/base_day.png';
 import baseNight from './assets/base_night.png';
-import salonRed from './assets/light/salon_red.png'
-import salonGreen from './assets/light/salon_green.png'
-import salonBlue from './assets/light/salon_blue.png'
-import salonPlayRed from './assets/light/salon_play_red.png'
-import salonPlayGreen from './assets/light/salon_play_green.png'
-import salonPlayBlue from './assets/light/salon_play_blue.png'
-import kitchenRed from './assets/light/kitchen_red.png'
-import kitchenGreen from './assets/light/kitchen_green.png'
-import kitchenBlue from './assets/light/kitchen_blue.png'
-import cellarRed from './assets/light/cellar_red.png'
-import cellarGreen from './assets/light/cellar_green.png'
-import cellarBlue from './assets/light/cellar_blue.png'
-import diningRed from './assets/light/dining_red.png'
-import diningGreen from './assets/light/dining_green.png'
-import diningBlue from './assets/light/dining_blue.png'
-import bedroomRed from './assets/light/bedroom_red.png'
-import bedroomGreen from './assets/light/bedroom_green.png'
-import bedroomBlue from './assets/light/bedroom_blue.png'
-import bedroomDressingRed from './assets/light/bedroom_dressing_red.png'
-import bedroomDressingGreen from './assets/light/bedroom_dressing_green.png'
-import bedroomDressingBlue from './assets/light/bedroom_dressing_blue.png'
-import bedroomBathroomRed from './assets/light/bedroom_bathroom_red.png'
-import bedroomBathroomGreen from './assets/light/bedroom_bathroom_green.png'
-import bedroomBathroomBlue from './assets/light/bedroom_bathroom_blue.png'
-import bathroomRed from './assets/light/bathroom_red.png'
-import bathroomGreen from './assets/light/bathroom_green.png'
-import bathroomBlue from './assets/light/bathroom_blue.png'
-import bedroom2Red from './assets/light/bedroom_2_red.png'
-import bedroom2Green from './assets/light/bedroom_2_green.png'
-import bedroom2Blue from './assets/light/bedroom_2_blue.png'
-import bedroom3Red from './assets/light/bedroom_3_red.png'
-import bedroom3Green from './assets/light/bedroom_3_green.png'
-import bedroom3Blue from './assets/light/bedroom_3_blue.png'
-import corridorRed from './assets/light/corridor_red.png'
-import corridorGreen from './assets/light/corridor_green.png'
-import corridorBlue from './assets/light/corridor_blue.png'
-import toiletRed from './assets/light/toilet_red.png'
-import toiletGreen from './assets/light/toilet_green.png'
-import toiletBlue from './assets/light/toilet_blue.png'
+import salonRed from './assets/light/salon_red.png';
+import salonGreen from './assets/light/salon_green.png';
+import salonBlue from './assets/light/salon_blue.png';
+import salonPlayRed from './assets/light/salon_play_red.png';
+import salonPlayGreen from './assets/light/salon_play_green.png';
+import salonPlayBlue from './assets/light/salon_play_blue.png';
+import kitchenRed from './assets/light/kitchen_red.png';
+import kitchenGreen from './assets/light/kitchen_green.png';
+import kitchenBlue from './assets/light/kitchen_blue.png';
+import cellarRed from './assets/light/cellar_red.png';
+import cellarGreen from './assets/light/cellar_green.png';
+import cellarBlue from './assets/light/cellar_blue.png';
+import diningRed from './assets/light/dining_red.png';
+import diningGreen from './assets/light/dining_green.png';
+import diningBlue from './assets/light/dining_blue.png';
+import bedroomRed from './assets/light/bedroom_red.png';
+import bedroomGreen from './assets/light/bedroom_green.png';
+import bedroomBlue from './assets/light/bedroom_blue.png';
+import bedroomDressingRed from './assets/light/bedroom_dressing_red.png';
+import bedroomDressingGreen from './assets/light/bedroom_dressing_green.png';
+import bedroomDressingBlue from './assets/light/bedroom_dressing_blue.png';
+import bedroomBathroomRed from './assets/light/bedroom_bathroom_red.png';
+import bedroomBathroomGreen from './assets/light/bedroom_bathroom_green.png';
+import bedroomBathroomBlue from './assets/light/bedroom_bathroom_blue.png';
+import bathroomRed from './assets/light/bathroom_red.png';
+import bathroomGreen from './assets/light/bathroom_green.png';
+import bathroomBlue from './assets/light/bathroom_blue.png';
+import bedroom2Red from './assets/light/bedroom_2_red.png';
+import bedroom2Green from './assets/light/bedroom_2_green.png';
+import bedroom2Blue from './assets/light/bedroom_2_blue.png';
+import bedroom3Red from './assets/light/bedroom_3_red.png';
+import bedroom3Green from './assets/light/bedroom_3_green.png';
+import bedroom3Blue from './assets/light/bedroom_3_blue.png';
+import corridorRed from './assets/light/corridor_red.png';
+import corridorGreen from './assets/light/corridor_green.png';
+import corridorBlue from './assets/light/corridor_blue.png';
+import toiletRed from './assets/light/toilet_red.png';
+import toiletGreen from './assets/light/toilet_green.png';
+import toiletBlue from './assets/light/toilet_blue.png';
 import {SideBarConfigType} from '../sidebar';
 
 export const ConfigName = 'Démo';
@@ -254,8 +254,8 @@ export const HouseConfig: HouseConfigType = {
           roomDisplay: true,
           climateEntityId: 'climate.bedroom_bathroom',
           temperatureEntityId: 'sensor.bedroom_bathroom_temperature',
-          humidityEntityId: 'sensor.bedroom_bathroom_humidity'
-        }
+          humidityEntityId: 'sensor.bedroom_bathroom_humidity',
+        },
       ],
     },
     {
@@ -353,8 +353,8 @@ export const HouseConfig: HouseConfigType = {
           roomDisplay: true,
           climateEntityId: 'climate.bathroom',
           temperatureEntityId: 'sensor.bathroom_temperature',
-          humidityEntityId: 'sensor.bathroom_humidity'
-        }
+          humidityEntityId: 'sensor.bathroom_humidity',
+        },
       ],
     },
     {

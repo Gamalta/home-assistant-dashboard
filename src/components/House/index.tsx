@@ -11,7 +11,7 @@ export function House() {
   const [nightOpacity, setNightOpacity] = useState(0);
   const [showLoading, setShowLoading] = useState(true);
   const [baseImageRef, setBaseImageRef] = useState<HTMLImageElement | null>(
-    null
+    null,
   );
   const [imageSize, setImageSize] = useState({width: 0, height: 0});
 
@@ -70,13 +70,17 @@ export function House() {
   if (!houseConfig) {
     if (showLoading) {
       return (
-        <Stack sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        <Stack
+          sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
+        >
           <CircularProgress />
         </Stack>
       );
     } else {
       return (
-        <Stack sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        <Stack
+          sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
+        >
           <Alert severity="error" variant="filled">
             Impossible de charger la configuration.
           </Alert>
@@ -108,10 +112,7 @@ export function House() {
         src={houseConfig.dayFloorPlan}
         onLoad={() => handleResize()}
       />
-      <img
-        src={houseConfig.nightFloorPlan}
-        style={{opacity: nightOpacity}}
-      />
+      <img src={houseConfig.nightFloorPlan} style={{opacity: nightOpacity}} />
       <Stack
         sx={{
           position: 'relative',

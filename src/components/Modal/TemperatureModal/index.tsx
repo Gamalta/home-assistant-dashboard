@@ -29,7 +29,11 @@ export function TemperatureModal(props: TemperatureModalProps) {
           <Stack
             direction="row"
             spacing={1}
-            sx={{borderRadius: 1, p: 1, border: theme => `1px solid ${theme.palette.divider}`}}
+            sx={{
+              borderRadius: 1,
+              p: 1,
+              border: theme => `1px solid ${theme.palette.divider}`,
+            }}
           >
             {signalEntity && (
               <SignalDisplay signal={Number(signalEntity?.state) ?? -100} />

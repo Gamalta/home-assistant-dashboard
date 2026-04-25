@@ -116,7 +116,11 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.bedroom_dressing_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-spot-hung', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      icon: 'hue:bulb-spot-hung',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_bathroom_light', {
     state: 'off',
@@ -143,7 +147,11 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.corridor_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-spot-hung', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      icon: 'hue:bulb-spot-hung',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
 
   ...createClimate('climate.salon'),

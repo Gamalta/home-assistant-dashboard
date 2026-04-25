@@ -35,7 +35,7 @@ export function drawColorWheel(ctx: CanvasRenderingContext2D) {
 export function drawColorTempWheel(
   ctx: CanvasRenderingContext2D,
   minKelvin: number,
-  maxKelvin: number
+  maxKelvin: number,
 ) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   const radius = ctx.canvas.width / 2;
@@ -47,7 +47,7 @@ export function drawColorTempWheel(
 
     const temperature = Math.max(
       Math.min(minKelvin + fraction * (maxKelvin - minKelvin), maxKelvin),
-      minKelvin
+      minKelvin,
     );
 
     const color = rgb2hex(temperature2rgb(temperature));
@@ -65,7 +65,7 @@ export function degToRad(deg: number) {
 export const getRelativePosition = (
   canvas: HTMLCanvasElement | null,
   x: number,
-  y: number
+  y: number,
 ) => {
   if (!canvas) return {x: 0, y: 0};
   const {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
@@ -77,7 +77,7 @@ export const getRelativePosition = (
 export const getWheelPosition = (
   canvas: HTMLCanvasElement | null,
   x: number,
-  y: number
+  y: number,
 ) => {
   if (!canvas) return {x: 0, y: 0};
   const width = canvas.clientWidth;
@@ -90,7 +90,7 @@ export const getWheelPosition = (
 export const getContainerPosition = (
   canvas: HTMLCanvasElement | null,
   x: number,
-  y: number
+  y: number,
 ) => {
   if (!canvas) return {x: 0, y: 0};
   const width = canvas.clientWidth;
@@ -102,7 +102,7 @@ export const getContainerPosition = (
 
 export const getCoordFromColor = (
   canvas: HTMLCanvasElement | null,
-  color: [number, number, number]
+  color: [number, number, number],
 ) => {
   if (!canvas) return {x: 0, y: 0};
   const diameter = canvas.clientWidth;
@@ -118,7 +118,7 @@ export const getCoordFromColorTemp = (
   canvas: HTMLCanvasElement | null,
   temperature: number,
   minKelvin: number,
-  maxKelvin: number
+  maxKelvin: number,
 ) => {
   if (!canvas) return {x: 0, y: 0};
   const diameter = canvas.clientWidth;
@@ -136,12 +136,12 @@ export const getColorTempFromCoord = (
   _x: number,
   y: number,
   minKelvin: number,
-  maxKelvin: number
+  maxKelvin: number,
 ) => {
   const fraction = (y / 0.9 + 1) / 2;
   const temp = Math.max(
     Math.min(minKelvin + fraction * (maxKelvin - minKelvin), maxKelvin),
-    minKelvin
+    minKelvin,
   );
   return temp;
 };

@@ -15,7 +15,7 @@ export function lightsHasEffect(entities: HassEntityWithService<'light'>[]) {
     entity =>
       ((entity.attributes.supported_features ?? 0) &
         LightEntityFeature.EFFECT) ===
-      LightEntityFeature.EFFECT
+      LightEntityFeature.EFFECT,
   );
 }
 
@@ -24,12 +24,12 @@ export function lightHasBrightness(entity: HassEntityWithService<'light'>) {
 }
 
 export function lightsHasBrightness(
-  entities: HassEntityWithService<'light'>[]
+  entities: HassEntityWithService<'light'>[],
 ) {
   return entities.some(entity =>
     ['brightness', 'color_temp', 'hs', 'rgb', 'rgbw', 'rgbww', 'xy'].some(
-      colorMode => entity.attributes.supported_color_modes?.includes(colorMode)
-    )
+      colorMode => entity.attributes.supported_color_modes?.includes(colorMode),
+    ),
   );
 }
 export function lightHasColorTemp(entity: HassEntityWithService<'light'>) {
@@ -37,7 +37,7 @@ export function lightHasColorTemp(entity: HassEntityWithService<'light'>) {
 }
 export function lightsHasColorTemp(entities: HassEntityWithService<'light'>[]) {
   return entities.some(entity =>
-    entity.attributes.supported_color_modes?.includes('color_temp')
+    entity.attributes.supported_color_modes?.includes('color_temp'),
   );
 }
 export function lightHasColor(entity: HassEntityWithService<'light'>) {
@@ -46,7 +46,7 @@ export function lightHasColor(entity: HassEntityWithService<'light'>) {
 export function lightsHasColor(entities: HassEntityWithService<'light'>[]) {
   return entities.some(entity =>
     ['hs', 'rgb', 'rgbw', 'rgbww', 'xy'].some(colorMode =>
-      entity.attributes.supported_color_modes?.includes(colorMode)
-    )
+      entity.attributes.supported_color_modes?.includes(colorMode),
+    ),
   );
 }

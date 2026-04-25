@@ -30,7 +30,7 @@ export function ColorTab() {
     const {x, y} = getRelativePosition(
       canvasRef.current,
       event.clientX,
-      event.clientY
+      event.clientY,
     );
     const newColor = getColorFromCoord(x, y);
 
@@ -46,10 +46,22 @@ export function ColorTab() {
   }, [generateColorWheel]);
 
   return (
-    <Stack sx={{maxWidth: '500px', minWidth: '500px', p: 2, alignItems: 'center'}}>
+    <Stack
+      sx={{maxWidth: '500px', minWidth: '500px', p: 2, alignItems: 'center'}}
+    >
       <Stack
         component={motion.div}
-        sx={{position: 'relative', height: '30vh', maxHeight: '320px', maxWidth: '320px', minHeight: '200px', minWidth: '200px', borderRadius: '50%', border: '3px solid', borderColor: 'divider'}}
+        sx={{
+          position: 'relative',
+          height: '30vh',
+          maxHeight: '320px',
+          maxWidth: '320px',
+          minHeight: '200px',
+          minWidth: '200px',
+          borderRadius: '50%',
+          border: '3px solid',
+          borderColor: 'divider',
+        }}
       >
         <Canvas
           ref={canvasRef}
@@ -63,7 +75,7 @@ export function ColorTab() {
               !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
               entity.custom.color &&
-              lightHasColor(entity)
+              lightHasColor(entity),
           )
           .map(entity => (
             <Picker
@@ -81,7 +93,7 @@ export function ColorTab() {
               activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
               entity.custom.color &&
-              lightHasColor(entity)
+              lightHasColor(entity),
           )}
         />
       </Stack>

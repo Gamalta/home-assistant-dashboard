@@ -25,7 +25,7 @@ export const defaults = {
 
 export const createAlarmPanel = (
   entity_id: string,
-  overrides: Partial<HassEntity> = {}
+  overrides: Partial<HassEntity> = {},
 ) => {
   return createEntity(entity_id, defaults, overrides);
 };

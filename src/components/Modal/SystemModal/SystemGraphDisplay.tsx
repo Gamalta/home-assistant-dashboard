@@ -28,15 +28,15 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
     (entity?.history?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
-    ])
+    ]),
   );
   const values = Object.values(valueMap).filter(
-    (data): data is number => data !== null
+    (data): data is number => data !== null,
   );
   const maxValue = Math.max(...values);
   const minValue = Math.min(...values);
   const timestamps = Array.from(new Set(Object.keys(valueMap))).sort(
-    (a, b) => Number(a) - Number(b)
+    (a, b) => Number(a) - Number(b),
   );
 
   const dataset = timestamps.map(time => {
@@ -50,7 +50,12 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
 
   return (
     <Stack
-      sx={{position: 'relative', bgcolor: 'background.tertiary', borderRadius: 1, overflow: 'hidden'}}
+      sx={{
+        position: 'relative',
+        bgcolor: 'background.tertiary',
+        borderRadius: 1,
+        overflow: 'hidden',
+      }}
     >
       <ChartsContainer
         margin={0}
@@ -113,7 +118,12 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
       <Stack
         direction="row"
         spacing={1}
-        sx={{justifyContent: 'space-between', position: 'absolute', width: '100%', p: 1}}
+        sx={{
+          justifyContent: 'space-between',
+          position: 'absolute',
+          width: '100%',
+          p: 1,
+        }}
       >
         <Typography variant="body2" sx={{fontWeight: 'bold'}}>
           {graphConfig.label}

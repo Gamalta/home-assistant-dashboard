@@ -88,6 +88,6 @@ export function Modal(props: ModalProps) {
         </>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }

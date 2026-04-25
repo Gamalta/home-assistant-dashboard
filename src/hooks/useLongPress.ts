@@ -3,7 +3,7 @@ import {MouseEvent, TouchEvent, useCallback, useRef, useState} from 'react';
 export const useLongPress = (
   onLongPress: (event: MouseEvent | TouchEvent) => void,
   onClick: (event: MouseEvent | TouchEvent) => void,
-  {shouldPreventDefault = true, delay = 300} = {}
+  {shouldPreventDefault = true, delay = 300} = {},
 ) => {
   const [longPressTriggered, setLongPressTriggered] = useState(false);
   const timeout = useRef<number | null>(null);
@@ -22,7 +22,7 @@ export const useLongPress = (
         setLongPressTriggered(true);
       }, delay);
     },
-    [onLongPress, delay, shouldPreventDefault]
+    [onLongPress, delay, shouldPreventDefault],
   );
 
   const clear = useCallback(
@@ -37,11 +37,11 @@ export const useLongPress = (
       setLongPressTriggered(false);
       if (shouldPreventDefault && target.current) {
         target.current.removeEventListener('touchend', () =>
-          preventDefault(event)
+          preventDefault(event),
         );
       }
     },
-    [shouldPreventDefault, onClick, longPressTriggered]
+    [shouldPreventDefault, onClick, longPressTriggered],
   );
 
   return {

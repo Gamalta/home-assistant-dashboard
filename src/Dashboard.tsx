@@ -8,8 +8,8 @@ import {
   Separator,
   useDefaultLayout,
 } from 'react-resizable-panels';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import {useState} from 'react';
+import {useEffect} from 'react';
 
 export default function Dashboard() {
   const [isDragging, setIsDragging] = useState(false);
@@ -48,7 +48,10 @@ export default function Dashboard() {
         >
           <SideBar />
         </Panel>
-        <Separator style={{outline: 0}} onPointerDown={() => setIsDragging(true)}>
+        <Separator
+          style={{outline: 0}}
+          onPointerDown={() => setIsDragging(true)}
+        >
           <Stack
             sx={{
               display: 'flex',
@@ -66,9 +69,9 @@ export default function Dashboard() {
                 width: '5px',
                 bgcolor: isDragging ? 'cyan' : 'grey',
                 borderRadius: '50px',
-                margin: "0 0 0 16px",
+                margin: '0 0 0 16px',
                 transition: '500ms',
-                opacity: isDragging ? 0.5 : 1
+                opacity: isDragging ? 0.5 : 1,
               }}
             />
           </Stack>

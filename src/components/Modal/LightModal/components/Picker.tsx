@@ -26,9 +26,9 @@ export function Picker(props: PickerProps) {
   const color = useMemo<ColorWheel<typeof mode>>(
     () =>
       mode === 'color'
-        ? entity.custom.color ?? [255, 255, 255]
-        : entity.attributes.color_temp_kelvin ?? 4333,
-    [mode, entity]
+        ? (entity.custom.color ?? [255, 255, 255])
+        : (entity.attributes.color_temp_kelvin ?? 4333),
+    [mode, entity],
   );
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function Picker(props: PickerProps) {
           canvas,
           color as ColorWheel<'temperature'>,
           minKelvin,
-          maxKelvin
+          maxKelvin,
         );
       }
       setPosition(position);
@@ -66,7 +66,7 @@ export function Picker(props: PickerProps) {
         canvas,
         color as ColorWheel<'temperature'>,
         minKelvin,
-        maxKelvin
+        maxKelvin,
       );
     }
     setPosition(coord);
@@ -96,7 +96,8 @@ export function Picker(props: PickerProps) {
             borderRadius: '50%',
             border: `${hovered ? '3px' : '2px'} solid`,
             borderColor: 'divider',
-            boxShadow:"0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)",
+            boxShadow:
+              '0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)',
             bgcolor: `rgb(${mode === 'color' ? color : temperature2rgb(color as number).join(',')})`,
             '&:hover': {
               border: '2px solid white',

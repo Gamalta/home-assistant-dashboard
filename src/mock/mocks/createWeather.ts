@@ -34,7 +34,7 @@ const defaults = {
 
 export const createWeather = (
   entity_id: string,
-  overrides: Partial<HassEntity> = {}
+  overrides: Partial<HassEntity> = {},
 ) => {
   return createEntity(entity_id, defaults, overrides);
 };

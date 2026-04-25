@@ -15,7 +15,12 @@ export function HeaderCard(props: HeaderCardProps) {
     <Stack
       component={motion.header}
       direction="row"
-      sx={{p: 2, bgcolor: 'background.paper', borderRadius: 2, justifyContent: 'space-between'}}
+      sx={{
+        p: 2,
+        bgcolor: 'background.paper',
+        borderRadius: 2,
+        justifyContent: 'space-between',
+      }}
     >
       <DateTime />
       {weather && <WeatherDisplay weather={weather} />}

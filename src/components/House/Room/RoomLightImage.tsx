@@ -1,7 +1,7 @@
 import {HassEntityWithService} from '@hakit/core';
 import type {LightConfigType} from '../../../configs/house';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import {useState} from 'react';
 
 type RoomLightImage = {
   lightConfig: LightConfigType;
@@ -20,12 +20,12 @@ export function RoomLightImage(props: RoomLightImage) {
         component="img"
         key={color}
         src={lightConfig?.layer[color]}
-        onLoad={() => setimageLoaded((prev) => prev + 1)}
+        onLoad={() => setimageLoaded(prev => prev + 1)}
         sx={{
           zIndex: 10,
           mixBlendMode: 'lighten',
           opacity:
-            (light.state === 'on' && imageLoaded === 3)
+            light.state === 'on' && imageLoaded === 3
               ? ((light.custom.color?.[index] ?? 0) / 255) *
                 ((light.custom.brightnessValue ?? 100) / 100)
               : 0,

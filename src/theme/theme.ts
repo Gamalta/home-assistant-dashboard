@@ -29,7 +29,7 @@ export const theme = responsiveFontSizes(
     shape: {
       borderRadius: 12,
     },
-  })
+  }),
 );
 
 declare module '@mui/material/styles' {

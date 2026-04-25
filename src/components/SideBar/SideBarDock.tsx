@@ -69,7 +69,7 @@ export function SideBarDock(props: SideBarDockProps) {
       const promises = HouseConfigsName.map(name => loadConfig(name));
       const loadedConfigs = await Promise.all(promises);
       setConfigs(
-        loadedConfigs.filter(config => config !== null) as ConfigType[]
+        loadedConfigs.filter(config => config !== null) as ConfigType[],
       );
     }
     loadConfigs();
@@ -103,7 +103,15 @@ export function SideBarDock(props: SideBarDockProps) {
           animate={{opacity: 1, y: 0}}
           exit={{opacity: 0, y: 50}}
           transition={{duration: 0.5}}
-          sx={{position: 'absolute', bottom: theme => theme.spacing(2), right: '50%', justifyContent: 'center', bgcolor: 'background.tertiary', borderRadius: '50px', p: theme => theme.spacing(1, 2)}}
+          sx={{
+            position: 'absolute',
+            bottom: theme => theme.spacing(2),
+            right: '50%',
+            justifyContent: 'center',
+            bgcolor: 'background.tertiary',
+            borderRadius: '50px',
+            p: theme => theme.spacing(1, 2),
+          }}
         >
           {themeMode && (
             <>

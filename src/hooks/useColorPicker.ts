@@ -19,10 +19,10 @@ export const useColorPicker = <T extends WheelMode>(
   canvas: HTMLCanvasElement | null,
   mode: T,
   minKelvin = 0,
-  maxKelvin = 0
+  maxKelvin = 0,
 ) => {
   const [color, setColor] = useState<ColorWheel<T>>(
-    (mode === 'color' ? [0, 0, 0] : 0) as ColorWheel<T>
+    (mode === 'color' ? [0, 0, 0] : 0) as ColorWheel<T>,
   );
 
   const {entities, activeEntityIds} = useLightModalContext();
@@ -30,7 +30,7 @@ export const useColorPicker = <T extends WheelMode>(
   activeEntityIdsRef.current = activeEntityIds;
 
   const activeEntityState = entities.find(entity =>
-    activeEntityIds.includes(entity.entity_id)
+    activeEntityIds.includes(entity.entity_id),
   )?.state;
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const useColorPicker = <T extends WheelMode>(
         x,
         y,
         minKelvin,
-        maxKelvin
+        maxKelvin,
       ) as ColorWheel<T>;
     }
     return color;
@@ -71,7 +71,7 @@ export const useColorPicker = <T extends WheelMode>(
         canvas,
         color as ColorWheel<'temperature'>,
         minKelvin,
-        maxKelvin
+        maxKelvin,
       );
     }
   };
@@ -79,7 +79,7 @@ export const useColorPicker = <T extends WheelMode>(
   const getNeerEntity = (
     x: number,
     y: number,
-    entities: HassEntityWithService<'light'>[]
+    entities: HassEntityWithService<'light'>[],
   ): HassEntityWithService<'light'> | undefined => {
     let bestDistance = 999;
     let neerEntity;
@@ -108,13 +108,13 @@ export const useColorPicker = <T extends WheelMode>(
 
   const setEntitiesColor = (
     entities: HassEntityWithService<'light'>[],
-    color: ColorWheel<T>
+    color: ColorWheel<T>,
   ) => {
     if (mode === 'color') {
       entities.map(entity =>
         entity.service.turnOn({
           serviceData: {rgb_color: color as ColorWheel<'color'>},
-        })
+        }),
       );
     } else {
       entities.map(entity =>
@@ -122,7 +122,7 @@ export const useColorPicker = <T extends WheelMode>(
           serviceData: {
             color_temp_kelvin: color as ColorWheel<'temperature'>,
           } as object, // types object for bypass type missing on hakit
-        })
+        }),
       );
     }
   };

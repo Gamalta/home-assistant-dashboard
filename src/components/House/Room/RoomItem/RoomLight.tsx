@@ -41,7 +41,7 @@ export function RoomLight(props: RoomLightProps) {
 
   const lightLongPress = useLongPress(
     () => setLightModal(true),
-    () => light?.service.toggle()
+    () => light?.service.toggle(),
   );
 
   const icon = useIcon(light?.attributes.icon);
@@ -59,7 +59,7 @@ export function RoomLight(props: RoomLightProps) {
             px: '6px',
             ...(light?.state === 'on' && {
               color: `rgb(${(light?.custom.color ?? [255, 255, 255]).join(
-                ','
+                ',',
               )})`,
             }),
 
@@ -85,7 +85,7 @@ export function RoomLight(props: RoomLightProps) {
             light={light}
             key={`${id}-light-image`}
           />,
-          houseRef?.current
+          houseRef?.current,
         )}
     </>
   );

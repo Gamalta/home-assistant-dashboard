@@ -65,7 +65,8 @@ export function LightCard(props: LightCardProps) {
         minWidth: '150px',
         p: activeEntity ? '2px' : 0,
         m: activeEntity ? '-4px' : 0,
-        border: activeEntity ? `2px solid ${lightOn ? color : 'rgba(102, 102, 102, 0.6)'}`
+        border: activeEntity
+          ? `2px solid ${lightOn ? color : 'rgba(102, 102, 102, 0.6)'}`
           : undefined,
         borderRadius: activeEntity
           ? theme => `${Number(theme.shape.borderRadius) + 4}px`
@@ -94,7 +95,10 @@ export function LightCard(props: LightCardProps) {
           transition: 'all 0.3s ease-out 0s, transform .15s',
         }}
       >
-        <Stack direction="row-reverse" sx={{justifyContent: 'space-between', p: 1}}>
+        <Stack
+          direction="row-reverse"
+          sx={{justifyContent: 'space-between', p: 1}}
+        >
           <IconButton
             size="small"
             sx={{
@@ -106,7 +110,7 @@ export function LightCard(props: LightCardProps) {
               setActiveEntityIds(entities =>
                 entities.includes(entity.entity_id)
                   ? entities.filter(entityId => entityId !== entity.entity_id)
-                  : [entity.entity_id, ...entities]
+                  : [entity.entity_id, ...entities],
               );
               event.stopPropagation();
             }}

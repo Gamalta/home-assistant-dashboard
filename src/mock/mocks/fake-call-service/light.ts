@@ -22,12 +22,11 @@ export function lightUpdates({
         const attributes: LightEntity['attributes'] = {...prev.attributes};
 
         // Brightness handling
-        // eslint-disable-next-line eqeqeq
+
         if (serviceData?.brightness_pct != null) {
           attributes.brightness = Math.round(
-            (255 * serviceData.brightness_pct) / 100
+            (255 * serviceData.brightness_pct) / 100,
           );
-          // eslint-disable-next-line eqeqeq
         } else if (serviceData?.brightness != null) {
           attributes.brightness = serviceData.brightness;
         } else if (!attributes.brightness) {
@@ -45,7 +44,7 @@ export function lightUpdates({
           'white',
         ];
         const hasColorModeUpdate = colorModeKeys.some(
-          k => k in (serviceData || {})
+          k => k in (serviceData || {}),
         );
 
         if (hasColorModeUpdate) {

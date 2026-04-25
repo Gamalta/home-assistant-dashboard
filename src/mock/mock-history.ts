@@ -9,7 +9,7 @@ export function generateMockHistory(
   min: number,
   max: number,
   start?: number,
-  end?: number
+  end?: number,
 ) {
   const data: MockHistory[] = [];
 

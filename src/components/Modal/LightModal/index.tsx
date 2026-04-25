@@ -48,7 +48,7 @@ export function LightModal(props: LightModalProps) {
   const {lightEntities} = useRoomContext();
 
   const entities = lightEntities.filter(
-    (entity): entity is HassEntityWithService<'light'> => entity !== undefined
+    (entity): entity is HassEntityWithService<'light'> => entity !== undefined,
   );
 
   const hasEffect = lightsHasEffect(entities);
@@ -86,7 +86,11 @@ export function LightModal(props: LightModalProps) {
         <Stack
           direction="row"
           spacing={1}
-          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
+          sx={{
+            borderRadius: 1,
+            border: theme => `1px solid ${theme.palette.divider}`,
+            p: 1,
+          }}
         >
           <AttributesDisplay
             attributes={entities.map(entity => entity.attributes)}
@@ -134,7 +138,7 @@ export function LightModal(props: LightModalProps) {
                   onClick={event => {
                     event.preventDefault();
                     const oneWasEnable = entities.find(
-                      entity => entity.state === 'on'
+                      entity => entity.state === 'on',
                     );
                     entities.map(entity => {
                       oneWasEnable

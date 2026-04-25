@@ -14,8 +14,8 @@ interface ImportMeta {
 }
 declare global {
   interface Window {
-    _mtm: Record<string, unknown>[]
+    _mtm: Record<string, unknown>[];
   }
 }
 
-export {}
+export {};

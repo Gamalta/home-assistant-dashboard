@@ -21,7 +21,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
 
   const weatherLongPress = useLongPress(
     () => setWeatherModalOpen(true),
-    () => setWeatherModalOpen(true)
+    () => setWeatherModalOpen(true),
   );
 
   return (
@@ -47,7 +47,11 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
           }}
         />
         <Stack sx={{alignItems: 'center'}}>
-          <Typography variant="h6" color="text.secondary" sx={{textAlign: 'center'}}>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{textAlign: 'center'}}
+          >
             {weather.attributes.temperature ?? '--'}
             {weather.attributes.temperature_unit}
           </Typography>

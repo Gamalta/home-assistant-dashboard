@@ -85,10 +85,10 @@ export function PersonCard(props: PersonCardProps) {
           type="text"
           distance={Number(homeDistance.state)}
           atHome={homeZone?.attributes.persons?.includes(
-            person?.personEntityId
+            person?.personEntityId,
           )}
           atWork={workZone?.attributes.persons?.includes(
-            person?.personEntityId
+            person?.personEntityId,
           )}
         />
       )}

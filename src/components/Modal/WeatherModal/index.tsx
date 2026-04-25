@@ -40,7 +40,11 @@ export function WeatherModal(props: WeatherModalProps) {
         <Stack
           direction="row"
           spacing={1}
-          sx={{borderRadius: 1, border: theme => `1px solid ${theme.palette.divider}`, p: 1}}
+          sx={{
+            borderRadius: 1,
+            border: theme => `1px solid ${theme.palette.divider}`,
+            p: 1,
+          }}
         >
           <AttributesDisplay attributes={[weather.attributes ?? {}]} />
         </Stack>
@@ -49,7 +53,14 @@ export function WeatherModal(props: WeatherModalProps) {
       <Stack spacing={2}>
         <Stack
           direction="row"
-          sx={{position: 'relative', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'background.tertiary', borderRadius: 1, p: 4}}
+          sx={{
+            position: 'relative',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            bgcolor: 'background.tertiary',
+            borderRadius: 1,
+            p: 4,
+          }}
         >
           <Stack>
             <Typography variant="h5">
@@ -84,7 +95,7 @@ export function WeatherModal(props: WeatherModalProps) {
             <img
               src={getWeatherIconPath(
                 weather.forecast?.forecast[0].condition,
-                true
+                true,
               )}
               style={{
                 position: 'absolute',
@@ -103,7 +114,8 @@ export function WeatherModal(props: WeatherModalProps) {
             <Stack
               key={period.datetime}
               spacing={1}
-              sx={{alignItems: 'center',
+              sx={{
+                alignItems: 'center',
                 bgcolor: 'background.tertiary',
                 borderRadius: 1,
                 py: 2,
