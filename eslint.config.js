@@ -4,8 +4,8 @@ import gts from 'gts'
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
-  ...tsEslint.configs.recommended,
   ...gts,
+  ...tsEslint.configs.recommended,
   reactHooks.configs.flat.recommended,
   {
     languageOptions: {
