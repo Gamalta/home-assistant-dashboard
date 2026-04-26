@@ -86,6 +86,7 @@ export function LightModal(props: LightModalProps) {
           direction="row"
           spacing={1}
           sx={{
+            borderRadius: 1,
             border: theme => `1px solid ${theme.palette.divider}`,
             p: 1,
           }}
