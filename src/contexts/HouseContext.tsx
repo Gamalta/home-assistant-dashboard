@@ -10,12 +10,16 @@ import {
   useState,
 } from 'react';
 import {ConfigType, loadConfig} from '../configs/configs';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import { HouseConfig } from '../configs/demo/House';
 
-type configType = ConfigType | undefined;
+type roomType = (typeof HouseConfig.rooms)[0] | null;
 
 type HouseContextType = {
-  config: configType;
-  setConfig: Dispatch<SetStateAction<configType>>;
+  config: ConfigType | undefined;
+  setConfig: Dispatch<SetStateAction<ConfigType | undefined>>;
   houseRef: RefObject<HTMLDivElement | null> | null;
 };
 
@@ -33,13 +37,16 @@ type HouseProviderProps = {
 
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
-  const [config, setConfig] = useState<configType>(undefined);
+  const [config, setConfig] = useState<ConfigType | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   const houseRef = useRef<HTMLDivElement | null>(null);
+  const [room, setRoom] = useState<roomType>(null);
 
   useEffect(() => {
     async function updateConfig() {
       const configName = window.localStorage.getItem('config') || undefined;
       const config = await loadConfig(configName);
+      setIsLoading(false);
       if (config) setConfig(config);
     }
     updateConfig();
@@ -53,6 +60,26 @@ export const HouseProvider = (props: HouseProviderProps) => {
       window.localStorage.setItem('config', config.id);
     }
   }, [config]);
+
+  if(isLoading) {
+    return (
+      <Stack sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (!config) {
+    return (
+      <Stack
+        sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}
+      >
+        <Alert severity="error" variant="filled">
+          Impossible de charger la configuration.
+        </Alert>
+      </Stack>
+    );
+  }
 
   return (
     <HouseContext.Provider value={{config, setConfig, houseRef}}>

@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import {House} from './components/House';
+import {House} from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
 import {

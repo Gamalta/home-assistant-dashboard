@@ -1,3 +1,4 @@
+import { useGLTF } from '@react-three/drei';
 import {HouseConfigType} from './house';
 import {SideBarConfigType} from './sidebar';
 import * as Sentry from '@sentry/react';
@@ -17,6 +18,7 @@ export const loadConfig = async (configId = HouseConfigsName[0]) => {
   Sentry.setTag('configuration', configId);
   try {
     const module = await import(`./${configId}/House.ts`);
+    useGLTF.preload(module.HouseConfig.model);
     return {
       id: configId,
       name: module.ConfigName,
