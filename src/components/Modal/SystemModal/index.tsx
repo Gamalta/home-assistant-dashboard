@@ -3,6 +3,9 @@ import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
 import {SystemGraphDisplay} from './SystemGraphDisplay';
 import {SideBarConfigType} from '../../../configs/sidebar';
+import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
+import { useAppContext } from '../../../contexts/AppContext';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -10,6 +13,7 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
+  const {debug, setDebug} = useAppContext();
 
   return (
     <Modal {...modalProps}>
@@ -32,6 +36,16 @@ export function SystemModal(props: SystemModalProps) {
               entity.state === 'off' ? 'Suffisant' : 'Insuffisante'
             }
           />
+          <Stack
+            direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>Debug</Typography>
+            <Switch
+              checked={debug}
+              onChange={(e) => setDebug(e.target.checked)}
+            />
+          </Stack>
         </Stack>
       </Stack>
     </Modal>
