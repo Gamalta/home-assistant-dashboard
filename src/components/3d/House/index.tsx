@@ -2,12 +2,19 @@ import Stack from '@mui/material/Stack';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {Canvas} from '@react-three/fiber';
 import {useRef} from 'react';
-import {GizmoHelper, GizmoViewcube, GizmoViewport, PerformanceMonitor, Stats, useGLTF} from '@react-three/drei';
+import {
+  Environment,
+  GizmoHelper,
+  GizmoViewport,
+  PerformanceMonitor,
+  Stats,
+  useGLTF,
+} from '@react-three/drei';
 import {Scene} from './Scene';
 import {AmbientLight} from './AmbientLight';
 import {Camera} from '../Camera';
-import {Room} from '../../House/Room';
 import {useAppContext} from '../../../contexts/AppContext';
+import {Room3d} from './Room3d';
 
 export function House() {
   const {debug} = useAppContext();
@@ -26,7 +33,6 @@ export function House() {
         <Canvas
           frameloop="demand"
           camera={{position: mainCamera?.position.toArray() ?? [0, 7, -7]}}
-          gl={{antialias: false}}
           shadows
           flat
           ref={canvasRef}
@@ -39,10 +45,7 @@ export function House() {
           >
             {debug && (
               <>
-                <GizmoHelper
-                  alignment="top-right"
-                  margin={[55, 55]}
-                >
+                <GizmoHelper alignment="top-right" margin={[55, 55]}>
                   <GizmoViewport
                     axisColors={['red', 'green', 'blue']}
                     labelColor="black"
@@ -55,7 +58,7 @@ export function House() {
             <Scene scene={scene} />
             <AmbientLight />
             {houseConfig?.rooms.map(room => (
-              <Room key={room.id} room={room} />
+              <Room3d key={room.id} room={room} />
             ))}
           </PerformanceMonitor>
         </Canvas>
