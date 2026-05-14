@@ -25,5 +25,5 @@ export function AmbientLight() {
     return () => clearInterval(interval);
   }, []);
 
-  return <ambientLight intensity={1} />;
+  return <ambientLight intensity={ambientIntensity} />;
 }
