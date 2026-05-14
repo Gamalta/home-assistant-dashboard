@@ -6,6 +6,7 @@ import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import { useAppContext } from '../../../contexts/AppContext';
+import * as THREE from 'three';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -13,7 +14,7 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
-  const {debug, setDebug} = useAppContext();
+  const {debug, setDebug, triangle} = useAppContext();
   const renderer = new THREE.WebGLRenderer()
 
   return (
@@ -52,6 +53,12 @@ export function SystemModal(props: SystemModalProps) {
           >
             <Typography>Max Textures</Typography>
             <Typography>{renderer.capabilities.maxTextures}</Typography>
+          </Stack>
+          <Stack direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>Triangles</Typography>
+            <Typography>{triangle}</Typography>
           </Stack>
         </Stack>
       </Stack>
