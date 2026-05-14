@@ -13,9 +13,6 @@ import {ConfigType, loadConfig} from '../configs/configs';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
-import { HouseConfig } from '../configs/demo/House';
-
-type roomType = (typeof HouseConfig.rooms)[0] | null;
 
 type HouseContextType = {
   config: ConfigType | undefined;
@@ -40,7 +37,6 @@ export const HouseProvider = (props: HouseProviderProps) => {
   const [config, setConfig] = useState<ConfigType | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const houseRef = useRef<HTMLDivElement | null>(null);
-  const [room, setRoom] = useState<roomType>(null);
 
   useEffect(() => {
     async function updateConfig() {

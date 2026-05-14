@@ -12,21 +12,15 @@ export function Scene(props: SceneProps) {
 
   useEffect(() => {
     let total = 0;
-    scene.traverse(obj => {
-      if (obj instanceof THREE.Mesh) {
-        obj.receiveShadow = true;
-        obj.castShadow = true;
-
-        const geometry = obj.geometry;
+    scene.traverse(object => {
+      if (object instanceof THREE.Mesh) {
+        const geometry = object.geometry;
 
         if (geometry.index) {
           total += geometry.index.count / 3;
         } else {
           total += geometry.attributes.position.count / 3;
         }
-      }
-      if (obj instanceof THREE.Light) {
-        obj.castShadow = true;
       }
     });
     setTriangle(total);

@@ -15,6 +15,8 @@ import {AmbientLight} from './AmbientLight';
 import {Camera} from '../Camera';
 import {useAppContext} from '../../../contexts/AppContext';
 import {Room3d} from './Room3d';
+import * as THREE from 'three';
+import {Bloom, EffectComposer} from '@react-three/postprocessing';
 
 export function House() {
   const {debug} = useAppContext();
@@ -33,7 +35,6 @@ export function House() {
         <Canvas
           frameloop="demand"
           camera={{position: mainCamera?.position.toArray() ?? [0, 7, -7]}}
-          shadows
           flat
           ref={canvasRef}
         >
@@ -57,6 +58,10 @@ export function House() {
             <Camera />
             <Scene scene={scene} />
             <AmbientLight />
+            <Environment preset="night" resolution={128} />
+            <EffectComposer multisampling={0}>
+              <Bloom intensity={0.05} luminanceThreshold={0.9} />
+            </EffectComposer>
             {houseConfig?.rooms.map(room => (
               <Room3d key={room.id} room={room} />
             ))}
