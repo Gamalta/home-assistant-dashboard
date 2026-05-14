@@ -13,8 +13,9 @@ export function Room3d(props: RoomProps) {
   return (
     <RoomProvider>
       <Room room={room} />
-      {(room.items ?? []).map((item) => (
+      {(room.items ?? []).map((item, id) => (
         <RoomItem3d
+          key={`item-3d-${id}`}
           itemConfig={item}
         />
       ))}

@@ -14,6 +14,7 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
   const {debug, setDebug} = useAppContext();
+  const renderer = new THREE.WebGLRenderer()
 
   return (
     <Modal {...modalProps}>
@@ -45,6 +46,12 @@ export function SystemModal(props: SystemModalProps) {
               checked={debug}
               onChange={(e) => setDebug(e.target.checked)}
             />
+          </Stack>
+          <Stack direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>Max Textures</Typography>
+            <Typography>{renderer.capabilities.maxTextures}</Typography>
           </Stack>
         </Stack>
       </Stack>
