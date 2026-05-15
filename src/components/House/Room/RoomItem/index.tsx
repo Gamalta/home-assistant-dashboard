@@ -1,9 +1,9 @@
 import {RoomItemConfigType} from '../../../../configs/house';
-import { RoomClimate } from './RoomClimate';
-import { RoomDesktop } from './RoomDesktop';
-import { RoomLight } from './RoomLight';
-import { RoomShutter } from './RoomShutter';
-import { RoomTemperature } from './RoomTemperature';
+import {RoomClimate} from './RoomClimate';
+import {RoomDesktop} from './RoomDesktop';
+import {RoomLight} from './RoomLight';
+import {RoomShutter} from './RoomShutter';
+import {RoomTemperature} from './RoomTemperature';
 
 type RoomItemProps = {
   id: string;

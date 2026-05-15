@@ -5,7 +5,7 @@ import {SystemGraphDisplay} from './SystemGraphDisplay';
 import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
-import { useAppContext } from '../../../contexts/AppContext';
+import {useAppContext} from '../../../contexts/AppContext';
 import * as THREE from 'three';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
@@ -15,7 +15,7 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
   const {debug, setDebug, triangle} = useAppContext();
-  const renderer = new THREE.WebGLRenderer()
+  const renderer = new THREE.WebGLRenderer();
 
   return (
     <Modal {...modalProps}>
@@ -45,26 +45,31 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>Debug</Typography>
             <Switch
               checked={debug}
-              onChange={(e) => setDebug(e.target.checked)}
+              onChange={e => setDebug(e.target.checked)}
             />
           </Stack>
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{justifyContent: 'space-between', alignItems: 'center'}}
           >
             <Typography>Max Textures</Typography>
             <Typography>{renderer.capabilities.maxTextures}</Typography>
           </Stack>
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{justifyContent: 'space-between', alignItems: 'center'}}
           >
             <Typography>Triangles</Typography>
             <Typography>{triangle}</Typography>
           </Stack>
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{justifyContent: 'space-between', alignItems: 'center'}}
           >
             <Typography>Web GPU</Typography>
-            <Typography>{navigator.gpu ? 'Supporté' : 'Non supporté'}</Typography>
+            <Typography>
+              {navigator.gpu ? 'Supporté' : 'Non supporté'}
+            </Typography>
           </Stack>
         </Stack>
       </Stack>

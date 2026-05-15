@@ -1,4 +1,4 @@
-import { useGLTF } from '@react-three/drei';
+import {useGLTF} from '@react-three/drei';
 import {HouseConfigType} from './house';
 import {SideBarConfigType} from './sidebar';
 import * as Sentry from '@sentry/react';

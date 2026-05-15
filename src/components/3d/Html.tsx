@@ -2,8 +2,8 @@ import {Html as DreiHtml} from '@react-three/drei';
 import CssBaseline from '@mui/material/CssBaseline';
 import {HtmlProps as DreiHtmlProps} from '@react-three/drei/web/Html';
 import Stack from '@mui/material/Stack';
-import { ThemeProvider } from '@mui/material';
-import { theme } from '../../theme/theme';
+import {ThemeProvider} from '@mui/material';
+import {theme} from '../../theme/theme';
 
 export type HtmlProps = DreiHtmlProps & {
   children: React.ReactNode;

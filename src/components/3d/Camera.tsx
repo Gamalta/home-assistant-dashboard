@@ -1,7 +1,7 @@
 import {useFrame, useThree} from '@react-three/fiber';
 import {useRef, useState} from 'react';
 import {usePerformanceMonitor} from '@react-three/drei';
-import { OrbitControls } from '@react-three/drei';
+import {OrbitControls} from '@react-three/drei';
 
 export function Camera() {
   const controls = useRef<any>(null);
@@ -33,7 +33,5 @@ export function Camera() {
     }
   });
 
-  return (
-    <OrbitControls />
-  );
+  return <OrbitControls />;
 }

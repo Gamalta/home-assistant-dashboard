@@ -1,12 +1,12 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
 type HouseConfigType = {
-  model: string,
+  model: string;
   camera?: `Camera_${string}`;
   rooms: {
     id: string;
     name: string;
-    position: {x: number; y: number; z: number}
+    position: {x: number; y: number; z: number};
     items?: RoomItemConfigType[];
   }[];
 };
