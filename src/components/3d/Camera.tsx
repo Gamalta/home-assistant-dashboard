@@ -33,5 +33,5 @@ export function Camera() {
     }
   });
 
-  return <OrbitControls />;
+  return <OrbitControls maxPolarAngle={Math.PI / 2} minPolarAngle={0} />;
 }
