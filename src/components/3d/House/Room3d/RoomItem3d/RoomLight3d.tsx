@@ -46,4 +46,6 @@ export function RoomLight3d(props: RoomLight3dProps) {
       (lightMesh as any).angle = 180;
     }
   }, [light]);
+
+  return <></>
 }
