@@ -36,8 +36,9 @@ export function Scene(props: SceneProps) {
         ? object.material
         : [object.material];
 
-      const isWall = materials.some(material =>
-        material.name?.toLowerCase().startsWith('wall_'),
+      const isWall = materials.some(material => {
+        return material.name?.toLowerCase().startsWith('wall_') || ['white', 'yellowbrt'].includes(material.name);
+      }
       );
       if (!isWall) return;
 
