@@ -1,6 +1,6 @@
 import {HouseConfigType} from '../house';
 import {SideBarConfigType} from '../sidebar';
-import Appartement from './Appartement.glb?url';
+import Appartement from '../apartment/Appartement.glb?url';
 
 export const ConfigName = 'Démo';
 
