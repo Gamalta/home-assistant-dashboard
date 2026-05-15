@@ -15,14 +15,14 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 type HouseContextType = {
-  config: ConfigType | undefined;
-  setConfig: Dispatch<SetStateAction<ConfigType | undefined>>;
+  houseConfig: ConfigType | undefined;
+  setHouseConfig: Dispatch<SetStateAction<ConfigType | undefined>>;
   houseRef: RefObject<HTMLDivElement | null> | null;
 };
 
 const HouseContext = createContext<HouseContextType>({
-  config: undefined,
-  setConfig: () => {},
+  houseConfig: undefined,
+  setHouseConfig: () => {},
   houseRef: null,
 });
 
@@ -34,7 +34,7 @@ type HouseProviderProps = {
 
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
-  const [config, setConfig] = useState<ConfigType | undefined>(undefined);
+  const [houseConfig, setHouseConfig] = useState<ConfigType | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const houseRef = useRef<HTMLDivElement | null>(null);
 
@@ -43,19 +43,19 @@ export const HouseProvider = (props: HouseProviderProps) => {
       const configName = window.localStorage.getItem('config') || undefined;
       const config = await loadConfig(configName);
       setIsLoading(false);
-      if (config) setConfig(config);
+      if (config) setHouseConfig(config);
     }
     updateConfig();
-  }, [setConfig]);
+  }, [setHouseConfig]);
 
   useEffect(() => {
-    if (!config) return;
+    if (!houseConfig) return;
     const oldConfigName = window.localStorage.getItem('config');
 
-    if (oldConfigName !== config.name) {
-      window.localStorage.setItem('config', config.id);
+    if (oldConfigName !== houseConfig.name) {
+      window.localStorage.setItem('config', houseConfig.id);
     }
-  }, [config]);
+  }, [houseConfig]);
 
   if (isLoading) {
     return (
@@ -67,7 +67,7 @@ export const HouseProvider = (props: HouseProviderProps) => {
     );
   }
 
-  if (!config) {
+  if (!houseConfig) {
     return (
       <Stack
         sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}
@@ -80,7 +80,7 @@ export const HouseProvider = (props: HouseProviderProps) => {
   }
 
   return (
-    <HouseContext.Provider value={{config, setConfig, houseRef}}>
+    <HouseContext.Provider value={{houseConfig, setHouseConfig, houseRef}}>
       {children}
     </HouseContext.Provider>
   );

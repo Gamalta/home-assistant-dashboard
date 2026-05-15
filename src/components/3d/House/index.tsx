@@ -18,14 +18,13 @@ import {Room3d} from './Room3d';
 import {Bloom, EffectComposer} from '@react-three/postprocessing';
 
 export function House() {
-  const {debug} = useAppContext();
-  const {config} = useHouseContext();
-  const houseConfig = config?.house;
-  const {scene, cameras} = useGLTF(houseConfig?.model!);
+  const {configuration} = useAppContext();
+  const {houseConfig} = useHouseContext();
+  const {scene, cameras} = useGLTF(houseConfig?.house?.model!);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const mainCamera =
-    cameras?.find(camera => camera.name === houseConfig?.camera) ??
+    cameras?.find(camera => camera.name === houseConfig?.house?.camera) ??
     cameras?.[0];
 
   return (
@@ -43,7 +42,7 @@ export function House() {
             threshold={0.5}
             factor={0.5}
           >
-            {debug && (
+            {configuration.debug && (
               <>
                 <GizmoHelper alignment="top-right" margin={[55, 55]}>
                   <GizmoViewport
@@ -61,7 +60,7 @@ export function House() {
             <EffectComposer multisampling={0}>
               <Bloom intensity={0.05} luminanceThreshold={0.9} />
             </EffectComposer>
-            {houseConfig?.rooms.map(room => (
+            {houseConfig?.house?.rooms.map(room => (
               <Room3d key={room.id} room={room} />
             ))}
           </PerformanceMonitor>
