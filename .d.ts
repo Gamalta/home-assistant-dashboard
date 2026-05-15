@@ -1,4 +1,4 @@
-import { ThreeElements } from '@react-three/fiber'
+import {ThreeElements} from '@react-three/fiber';
 interface CustomEnv {
   VITE_VERCEL_ENV: string;
   VITE_SENTRY_RELEASE: string;

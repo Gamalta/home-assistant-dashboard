@@ -57,9 +57,11 @@ export const HouseProvider = (props: HouseProviderProps) => {
     }
   }, [config]);
 
-  if(isLoading) {
+  if (isLoading) {
     return (
-      <Stack sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
+      <Stack
+        sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}
+      >
         <CircularProgress />
       </Stack>
     );

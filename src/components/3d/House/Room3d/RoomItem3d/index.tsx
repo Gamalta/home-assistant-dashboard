@@ -1,5 +1,5 @@
-import { RoomItemConfigType } from "../../../../../configs/house";
-import { RoomLight3d } from "./RoomLight3d";
+import {RoomItemConfigType} from '../../../../../configs/house';
+import {RoomLight3d} from './RoomLight3d';
 
 type RoomItemProps = {
   itemConfig: RoomItemConfigType;

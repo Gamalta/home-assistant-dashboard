@@ -47,5 +47,5 @@ export function RoomLight3d(props: RoomLight3dProps) {
     }
   }, [light]);
 
-  return <></>
+  return <></>;
 }
