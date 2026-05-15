@@ -15,7 +15,6 @@ import {AmbientLight} from './AmbientLight';
 import {Camera} from '../Camera';
 import {useAppContext} from '../../../contexts/AppContext';
 import {Room3d} from './Room3d';
-import * as THREE from 'three';
 import {Bloom, EffectComposer} from '@react-three/postprocessing';
 
 export function House() {
