@@ -60,6 +60,12 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>Triangles</Typography>
             <Typography>{triangle}</Typography>
           </Stack>
+          <Stack direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>Web GPU</Typography>
+            <Typography>{navigator.gpu ? 'Supporté' : 'Non supporté'}</Typography>
+          </Stack>
         </Stack>
       </Stack>
     </Modal>
