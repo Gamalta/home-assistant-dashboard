@@ -14,7 +14,7 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
-  const {debug, setDebug, triangle} = useAppContext();
+  const {configuration, setConfiguration, triangle} = useAppContext();
   const renderer = new THREE.WebGLRenderer();
 
   return (
@@ -44,8 +44,8 @@ export function SystemModal(props: SystemModalProps) {
           >
             <Typography>Debug</Typography>
             <Switch
-              checked={debug}
-              onChange={e => setDebug(e.target.checked)}
+              checked={configuration.debug}
+              onChange={e => setConfiguration({...configuration, debug: e.target.checked})}
             />
           </Stack>
           <Stack

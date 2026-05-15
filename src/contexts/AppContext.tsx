@@ -6,16 +6,21 @@ import {
   useState,
 } from 'react';
 
-type AppContextType = {
+type ConfigurationOptions = {
   debug: boolean;
-  setDebug: Dispatch<SetStateAction<boolean>>;
+  hideWalls: boolean;
+}
+
+type AppContextType = {
+  configuration: ConfigurationOptions;
+  setConfiguration: Dispatch<SetStateAction<ConfigurationOptions>>;
   triangle: number;
   setTriangle: Dispatch<SetStateAction<number>>;
 };
 
 const AppContext = createContext<AppContextType>({
-  debug: false,
-  setDebug: () => {},
+  configuration: {debug: false, hideWalls: true},
+  setConfiguration: () => {},
   triangle: -1,
   setTriangle: () => {},
 });
@@ -23,14 +28,14 @@ const AppContext = createContext<AppContextType>({
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
-  const [debug, setDebug] = useState<boolean>(false);
+  const [configuration, setConfiguration] = useState<ConfigurationOptions>({debug: false, hideWalls: true});
   const [triangle, setTriangle] = useState<number>(-1);
 
   return (
     <AppContext.Provider
       value={{
-        debug,
-        setDebug,
+        configuration,
+        setConfiguration,
         triangle,
         setTriangle,
       }}
