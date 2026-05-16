@@ -31,8 +31,8 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
   const [configuration, setConfiguration] = useState<ConfigurationOptions>({
     debug: false,
-    hideWallsShader: false,
-    heatmapShader: true,
+    hideWallsShader: true,
+    heatmapShader: false,
   });
   const [triangle, setTriangle] = useState<number>(-1);
 
