@@ -7,8 +7,8 @@ import {SideBarDock} from './SideBarDock';
 import {useHouseContext} from '../../contexts/HouseContext';
 
 export function SideBar() {
-  const {config} = useHouseContext();
-  const sideBarConfig = config?.sideBar;
+  const {houseConfig} = useHouseContext();
+  const sideBarConfig = houseConfig?.sideBar;
 
   const sideBarRef = useRef<HTMLDivElement | null>(null);
 
