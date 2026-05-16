@@ -60,7 +60,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Salon',
       name: 'Séjour',
-      position: {x: 44, y: 73, z: 0},
+      position: {x: -0.8, y: 2.5, z: 2.8},
       items: [
         {
           type: 'light',
@@ -77,19 +77,19 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           lightEntityId: 'light.salon_hue_play',
-          position: {x: 31, y: 72, z: 0},
+          position: {x: -3.2, y: 0.3, z: -3.1},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.salon_shutter',
-          position: {x: 43.25, y: 91, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
       ],
     },
     {
       id: 'Kitchen',
       name: 'Cuisine',
-      position: {x: 45, y: 18, z: 0},
+      position: {x: -0.5, y: 2.5, z: -5.3},
       items: [
         {
           type: 'light',
@@ -106,19 +106,19 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: 44, y: 8, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: 33.5, y: 27.5, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
       ],
     },
     {
       id: 'Dining',
       name: 'Salle à manger',
-      position: {x: 50, y: 39.25, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -130,7 +130,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom',
       name: 'Chambre',
-      position: {x: 20, y: 65, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -147,14 +147,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
-          position: {x: 18, y: 80.5, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
       ],
     },
     {
       id: 'Bedroom_dressing',
       name: 'Dressing',
-      position: {x: 14, y: 52, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -166,7 +166,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom_bathroom',
       name: 'Sale de bain',
-      position: {x: 17, y: 39, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -185,7 +185,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom_2',
       name: 'Chambre 2',
-      position: {x: 78, y: 31.5, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -202,14 +202,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_2_shutter',
-          position: {x: 70, y: 23, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
       ],
     },
     {
       id: 'Bedroom_3',
       name: 'Chambre 3',
-      position: {x: 83, y: 68, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -226,14 +226,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_3_shutter',
-          position: {x: 83, y: 80, z: 0},
+          position: {x: 0, y: 0, z: 0},
         },
       ],
     },
     {
       id: 'Cellar',
       name: 'Cellier',
-      position: {x: 33, y: 40, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -245,7 +245,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bathroom',
       name: 'Sale de bain',
-      position: {x: 83, y: 47, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -264,7 +264,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Corridor',
       name: 'Couloir',
-      position: {x: 65, y: 57, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
@@ -276,7 +276,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Toilet',
       name: 'Toilette',
-      position: {x: 69, y: 72, z: 0},
+      position: {x: 0, y: 2.5, z: 0},
       items: [
         {
           type: 'light',
