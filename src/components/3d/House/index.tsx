@@ -16,7 +16,8 @@ import {Camera} from '../Camera';
 import {useAppContext} from '../../../contexts/AppContext';
 import {Room3d} from './Room3d';
 import {Bloom, EffectComposer} from '@react-three/postprocessing';
-import { HeatmapGround } from './shaders/floorHeatmapMaterial';
+import {HideWalls} from './HideWalls';
+import {HeatmapGround} from './HeatmapGround';
 
 export function House() {
   const {configuration} = useAppContext();
@@ -57,14 +58,17 @@ export function House() {
             <Camera />
             <Scene scene={scene} />
             <AmbientLight />
+            {houseConfig?.house?.rooms.map(room => (
+              <Room3d key={room.id} room={room} />
+            ))}
+            {configuration.hideWallsShader && <HideWalls />}
+            {configuration.heatmapShader && (
+              <HeatmapGround rooms={houseConfig?.house?.rooms ?? []} />
+            )}
             <Environment preset="night" resolution={128} />
             <EffectComposer multisampling={0}>
               <Bloom intensity={0.05} luminanceThreshold={0.9} />
             </EffectComposer>
-            {houseConfig?.house?.rooms.map(room => (
-              <Room3d key={room.id} room={room} />
-            ))}
-            <HeatmapGround />
           </PerformanceMonitor>
         </Canvas>
       </Stack>
