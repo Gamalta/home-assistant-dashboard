@@ -1,4 +1,4 @@
-uniform vec3 points[6];
+uniform vec3 points[10];
 uniform float minTemp;
 uniform float maxTemp;
 uniform int numPoints;
@@ -8,7 +8,7 @@ float idwInterpolation(vec3 pos) {
   float tempSum = 0.0;
   float weightSum = 0.0;
 
-  for(int i = 0; i < 6; i++) {
+  for(int i = 0; i < 10; i++) {
     if(i >= numPoints) break;
     float dx = pos.x - points[i].x;
     float dy = pos.y - points[i].z;

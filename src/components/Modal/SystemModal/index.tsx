@@ -45,7 +45,27 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>Debug</Typography>
             <Switch
               checked={configuration.debug}
-              onChange={e => setConfiguration({...configuration, debug: e.target.checked})}
+              onChange={event => setConfiguration({...configuration, debug: event.target.checked})}
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>HideWallsShader</Typography>
+            <Switch
+              checked={configuration.hideWallsShader}
+              onChange={event => setConfiguration({...configuration, hideWallsShader: event.target.checked})}
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          >
+            <Typography>HeatMapShader</Typography>
+            <Switch
+              checked={configuration.heatmapShader}
+              onChange={event => setConfiguration({...configuration, heatmapShader: event.target.checked})}
             />
           </Stack>
           <Stack

@@ -10,7 +10,7 @@ export type FadeMaterial = THREE.MeshStandardMaterial & {
   };
 };
 
-export function createCameraFadeMaterial(
+export function createHideWallsMaterial(
   source: THREE.MeshStandardMaterial,
 ): FadeMaterial {
   const material = source.clone() as FadeMaterial;

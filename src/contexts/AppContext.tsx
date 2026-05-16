@@ -8,8 +8,9 @@ import {
 
 type ConfigurationOptions = {
   debug: boolean;
-  hideWalls: boolean;
-}
+  hideWallsShader: boolean;
+  heatmapShader: boolean;
+};
 
 type AppContextType = {
   configuration: ConfigurationOptions;
@@ -19,7 +20,7 @@ type AppContextType = {
 };
 
 const AppContext = createContext<AppContextType>({
-  configuration: {debug: false, hideWalls: true},
+  configuration: {debug: false, hideWallsShader: true, heatmapShader: false},
   setConfiguration: () => {},
   triangle: -1,
   setTriangle: () => {},
@@ -28,7 +29,11 @@ const AppContext = createContext<AppContextType>({
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
-  const [configuration, setConfiguration] = useState<ConfigurationOptions>({debug: false, hideWalls: true});
+  const [configuration, setConfiguration] = useState<ConfigurationOptions>({
+    debug: false,
+    hideWallsShader: false,
+    heatmapShader: true,
+  });
   const [triangle, setTriangle] = useState<number>(-1);
 
   return (
