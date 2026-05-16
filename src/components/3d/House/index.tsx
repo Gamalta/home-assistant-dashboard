@@ -15,9 +15,10 @@ import {AmbientLight} from './AmbientLight';
 import {Camera} from '../Camera';
 import {useAppContext} from '../../../contexts/AppContext';
 import {Room3d} from './Room3d';
-import {Bloom, EffectComposer} from '@react-three/postprocessing';
 import {HideWalls} from './HideWalls';
 import {HeatmapGround} from './HeatmapGround';
+import {WebGLRenderer} from 'three';
+import {WebGPURenderer} from 'three/webgpu';
 
 export function House() {
   const {configuration} = useAppContext();
@@ -37,6 +38,15 @@ export function House() {
           camera={{position: mainCamera?.position.toArray() ?? [0, 7, -7]}}
           flat
           ref={canvasRef}
+          gl={async gl => {
+            const supportsWebGPU = 'gpu' in navigator;
+            if (supportsWebGPU) {
+              const renderer = new WebGPURenderer(gl as any);
+              await renderer.init();
+              return renderer;
+            }
+            return new WebGLRenderer(gl as any);
+          }}
         >
           <PerformanceMonitor
             ms={100}
@@ -66,9 +76,6 @@ export function House() {
               <HeatmapGround rooms={houseConfig?.house?.rooms ?? []} />
             )}
             <Environment preset="night" resolution={128} />
-            <EffectComposer multisampling={0}>
-              <Bloom intensity={0.05} luminanceThreshold={0.9} />
-            </EffectComposer>
           </PerformanceMonitor>
         </Canvas>
       </Stack>
