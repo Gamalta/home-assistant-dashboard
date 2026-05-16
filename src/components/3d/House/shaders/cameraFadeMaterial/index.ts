@@ -1,4 +1,8 @@
 import * as THREE from 'three';
+import fadeCommonVertex from './fadeCommon.vertex.glsl?raw';
+import fadeWorldPosVertex from './fadeWorldPos.vertex.glsl?raw';
+import fadeCommonFragment from './fadeCommon.fragment.glsl?raw';
+import fadeDitherFragment from './fadeDither.fragment.glsl?raw';
 
 export type FadeMaterial = THREE.MeshStandardMaterial & {
   userData: {
@@ -20,46 +24,19 @@ export function createCameraFadeMaterial(
     shader.uniforms.nearFadeDistance = {value: 6.0};
     shader.vertexShader = shader.vertexShader.replace(
       '#include <common>',
-      `
-      #include <common>
-      varying vec3 vWorldPosition;
-      `,
+      fadeCommonVertex,
     );
     shader.vertexShader = shader.vertexShader.replace(
       '#include <worldpos_vertex>',
-      `
-      #include <worldpos_vertex>
-      vWorldPosition = worldPosition.xyz;
-      `,
+      fadeWorldPosVertex,
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <common>',
-      `
-      #include <common>
-      varying vec3 vWorldPosition;
-      uniform float fadeRadius;
-      uniform float minOpacity;
-      uniform float nearFadeDistance;
-      `,
+      fadeCommonFragment,
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <dithering_fragment>',
-      `
-      float dist = length(cameraPosition - vWorldPosition);
-      float opacity;
-
-      if (dist < nearFadeDistance) {
-        opacity = minOpacity;
-      } else if (dist < fadeRadius) {
-        opacity = smoothstep(nearFadeDistance, fadeRadius, dist);
-        opacity = opacity * (1.0 - minOpacity) + minOpacity;
-      } else {
-        opacity = 1.0;
-      }
-
-      gl_FragColor.a *= opacity;
-      #include <dithering_fragment>
-      `,
+      fadeDitherFragment,
     );
   };
 

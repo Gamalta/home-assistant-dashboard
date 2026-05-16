@@ -23,7 +23,10 @@ export function Scene(props: SceneProps) {
     let total = 0;
 
     materialRefs.current = [];
-    const oldMaterials = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
+    const oldMaterials = new Map<
+      THREE.Mesh,
+      THREE.Material | THREE.Material[]
+    >();
 
     scene.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
@@ -36,9 +39,10 @@ export function Scene(props: SceneProps) {
         ? object.material
         : [object.material];
 
-      const isWall = materials.some(material => {
-        return material.name?.toLowerCase().startsWith('wall_') || ['white', 'yellowbrt'].includes(material.name);
-      }
+      const isWall = materials.some(
+        material =>
+          material.name?.toLowerCase().startsWith('wall_') ||
+          ['white', 'yellowbrt'].includes(material.name),
       );
       if (!isWall) return;
 
