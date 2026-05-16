@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import fadeCommonVertex from './fadeCommon.vertex.glsl?raw';
-import fadeWorldPosVertex from './fadeWorldPos.vertex.glsl?raw';
-import fadeCommonFragment from './fadeCommon.fragment.glsl?raw';
-import fadeDitherFragment from './fadeDither.fragment.glsl?raw';
+import hideWallsCommonVertex from './hideWallsCommon.vertex.glsl?raw';
+import hideWallsWorldPosVertex from './hideWallsWorldPos.vertex.glsl?raw';
+import hideWallsCommonFragment from './hideWallsCommon.fragment.glsl?raw';
+import hideWallsDitheringFragment from './hideWallsDithering.fragment.glsl?raw';
 
 export type FadeMaterial = THREE.MeshStandardMaterial & {
   userData: {
@@ -24,19 +24,19 @@ export function createHideWallsMaterial(
     shader.uniforms.nearFadeDistance = {value: 6.0};
     shader.vertexShader = shader.vertexShader.replace(
       '#include <common>',
-      fadeCommonVertex,
+      hideWallsCommonVertex,
     );
     shader.vertexShader = shader.vertexShader.replace(
       '#include <worldpos_vertex>',
-      fadeWorldPosVertex,
+      hideWallsWorldPosVertex,
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <common>',
-      fadeCommonFragment,
+      hideWallsCommonFragment,
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <dithering_fragment>',
-      fadeDitherFragment,
+      hideWallsDitheringFragment,
     );
   };
 
