@@ -10,7 +10,7 @@ export function createHeatmapGroundMaterialWebGl(points: HeatmapPoint[]) {
   const shaderMaterial = new THREE.ShaderMaterial({
     name: 'heatmapGround',
     transparent: false,
-    depthWrite: true,
+    depthWrite: false,
     side: THREE.FrontSide,
     uniforms: {
       points: {
