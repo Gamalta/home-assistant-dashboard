@@ -45,7 +45,12 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>Debug</Typography>
             <Switch
               checked={configuration.debug}
-              onChange={event => setConfiguration({...configuration, debug: event.target.checked})}
+              onChange={event =>
+                setConfiguration({
+                  ...configuration,
+                  debug: event.target.checked,
+                })
+              }
             />
           </Stack>
           <Stack
@@ -55,7 +60,12 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>HideWallsShader</Typography>
             <Switch
               checked={configuration.hideWallsShader}
-              onChange={event => setConfiguration({...configuration, hideWallsShader: event.target.checked})}
+              onChange={event =>
+                setConfiguration({
+                  ...configuration,
+                  hideWallsShader: event.target.checked,
+                })
+              }
             />
           </Stack>
           <Stack
@@ -65,7 +75,12 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>HeatMapShader</Typography>
             <Switch
               checked={configuration.heatmapShader}
-              onChange={event => setConfiguration({...configuration, heatmapShader: event.target.checked})}
+              onChange={event =>
+                setConfiguration({
+                  ...configuration,
+                  heatmapShader: event.target.checked,
+                })
+              }
             />
           </Stack>
           <Stack
@@ -91,7 +106,12 @@ export function SystemModal(props: SystemModalProps) {
             <Switch
               checked={configuration.webGPU}
               disabled={!navigator.gpu}
-              onChange={event => setConfiguration({...configuration, webGPU: event.target.checked})}
+              onChange={event =>
+                setConfiguration({
+                  ...configuration,
+                  webGPU: event.target.checked,
+                })
+              }
             />
           </Stack>
         </Stack>

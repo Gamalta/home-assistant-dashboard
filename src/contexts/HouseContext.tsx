@@ -34,7 +34,9 @@ type HouseProviderProps = {
 
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
-  const [houseConfig, setHouseConfig] = useState<ConfigType | undefined>(undefined);
+  const [houseConfig, setHouseConfig] = useState<ConfigType | undefined>(
+    undefined,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const houseRef = useRef<HTMLDivElement | null>(null);
 

@@ -41,8 +41,8 @@ export function createHeatmapGroundMaterialWebGPU(
   const vPosition = positionLocal;
 
   const idwInterpolation = Fn(([pos]: [THREE.AttributeNode<'vec3'>]) => {
-    let tempSum = float(0).toVar();
-    let weightSum = float(0).toVar();
+    const tempSum = float(0).toVar();
+    const weightSum = float(0).toVar();
 
     for (let i = 0; i < points.length; i++) {
       const point = pointsBuffer.element(i);
@@ -70,7 +70,7 @@ export function createHeatmapGroundMaterialWebGPU(
   const temperatureToColor = Fn(([temperature]: [THREE.Node<'float'>]) => {
     let normalized = temperature.sub(minTemp).div(maxTemp.sub(minTemp));
     normalized = clamp(normalized, 0.0, 1.0);
-    let color = vec3(0.0).toVar();
+    const color = vec3(0.0).toVar();
 
     If(normalized.lessThan(0.2), () => {
       color.assign(

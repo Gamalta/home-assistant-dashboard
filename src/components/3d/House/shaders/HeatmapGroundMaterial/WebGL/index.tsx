@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import heatmapGroundFragment from './heatmapGround.fragment.glsl?raw';
 import heatmapGroundVertex from './heatmapGround.vertex.glsl?raw';
-import { HeatmapPoint } from '..';
+import {HeatmapPoint} from '..';
 
 export function createHeatmapGroundMaterialWebGl(points: HeatmapPoint[]) {
   const minTemp = Math.min(...points.map(point => point.temperature));
