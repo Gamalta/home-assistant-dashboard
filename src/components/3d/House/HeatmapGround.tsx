@@ -76,6 +76,7 @@ export function HeatmapGround(props: HeatmapGroundProps) {
       const materials = Array.isArray(object.material)
         ? object.material
         : [object.material];
+        
       const isNewGround = materials.some(
         material => material?.name === 'heatmapGround',
       );

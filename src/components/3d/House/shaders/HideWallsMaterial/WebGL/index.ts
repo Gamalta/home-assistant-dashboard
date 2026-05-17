@@ -15,7 +15,7 @@ export function createHideWallsMaterialWebGl(
 ): FadeMaterial {
   const material = source.clone() as FadeMaterial;
   material.transparent = true;
-  material.depthWrite = true;
+  material.depthWrite = false;
 
   material.onBeforeCompile = shader => {
     material.userData.shader = shader;

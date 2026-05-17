@@ -26,7 +26,7 @@ export function createHideWallsMaterialWebGPU(
   const opacityNode = mix(minOpacity, 1.0, fadeT);
   material.opacityNode = mix(opacityNode, minOpacity, near);
   material.transparent = true;
-  material.depthWrite = true;
+  material.depthWrite = false;
 
   return material;
 }
