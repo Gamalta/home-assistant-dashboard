@@ -20,15 +20,6 @@ export function Scene(props: SceneProps) {
       total +=
         (object.geometry.index?.count ??
           object.geometry.attributes.position.count) / 3;
-
-      const materials = Array.isArray(object.material)
-        ? object.material
-        : [object.material];
-
-      materials.forEach(material => {
-        if (!material) return;
-        material.depthWrite = false;
-      });
     });
 
     setTriangle(total);
