@@ -99,6 +99,7 @@ export function HeatmapGround(props: HeatmapGroundProps) {
           material.transparent = true;
           const currentOpacity = material.opacity ?? 1;
           material.opacity = currentOpacity / 3;
+          material.depthWrite = false;
           material.needsUpdate = true;
         });
         return;
