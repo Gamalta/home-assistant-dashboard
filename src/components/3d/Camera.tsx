@@ -1,35 +1,30 @@
+import * as THREE from 'three';
 import {useFrame, useThree} from '@react-three/fiber';
-import {ComponentRef, useRef, useState} from 'react';
-import {usePerformanceMonitor} from '@react-three/drei';
-import {OrbitControls} from '@react-three/drei';
+import {OrbitControls, usePerformanceMonitor} from '@react-three/drei';
+import {useRef} from 'react';
+import type {ComponentRef} from 'react';
 
 export function Camera() {
+  const {setDpr} = useThree();
+
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const [dpr, setDpr] = useState(1);
-  const [factor, setFactor] = useState(0.5);
-  const {invalidate, setDpr: setThreeDpr} = useThree();
+  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const isMoving = useRef<boolean>(false);
+  const factor = useRef(1);
+  const currentDpr = useRef(window.devicePixelRatio);
 
-  const setDprSafe = (dpr: number) => {
-    setDpr(dpr);
-    setThreeDpr(dpr);
-  };
-
-  usePerformanceMonitor({onChange: ({factor}) => setFactor(factor)});
+  usePerformanceMonitor({
+    onChange: ({factor: newFactor}) => (factor.current = newFactor),
+  });
 
   useFrame(() => {
-    const controlsObj = controls.current;
-    if (!controlsObj) return;
-
-    const isIdle = controlsObj.getDistance?.() < 0.01;
-
-    if (isIdle) {
-      if (dpr < 1) {
-        setDprSafe(Math.min(1, dpr + 0.2));
-        invalidate();
-      }
-    } else {
-      setDprSafe(Math.round(Math.max(factor, 0.1) * 10) / 10);
-      invalidate();
+    const perf =
+      THREE.MathUtils.clamp(factor.current, 0, 1) * window.devicePixelRatio;
+    const nextDpr = THREE.MathUtils.lerp(currentDpr.current, perf, 0.1);
+    const targetDpr = isMoving.current ? nextDpr : window.devicePixelRatio;
+    if (Math.abs(targetDpr - currentDpr.current) > 0.01) {
+      currentDpr.current = targetDpr;
+      setDpr(targetDpr);
     }
   });
 
@@ -38,6 +33,17 @@ export function Camera() {
       ref={controls}
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}
+      onStart={() => {
+        if (timeout.current) clearTimeout(timeout.current);
+        isMoving.current = true;
+      }}
+      onEnd={() =>
+        (timeout.current = setTimeout(() => {
+          isMoving.current = false;
+          if (currentDpr.current != window.devicePixelRatio)
+            setDpr(window.devicePixelRatio);
+        }, 1000))
+      }
     />
   );
 }
