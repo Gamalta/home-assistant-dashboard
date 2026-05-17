@@ -7,7 +7,7 @@ import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {useAppContext} from '../../../contexts/AppContext';
 
 export function HideWalls() {
-  const {scene} = useThree();
+  const {scene, invalidate} = useThree();
   const {configuration} = useAppContext();
   const materialRefs = useRef<(FadeMaterial | MeshStandardNodeMaterial)[]>([]);
 
@@ -60,6 +60,8 @@ export function HideWalls() {
       });
     };
   }, [scene, configuration.hideWallsShader, configuration.heatmapShader]);
+
+  useEffect(() => invalidate(), []);
 
   return null;
 }

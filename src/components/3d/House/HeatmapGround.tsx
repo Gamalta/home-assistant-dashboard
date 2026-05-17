@@ -16,7 +16,7 @@ type HeatmapGroundProps = {
 export function HeatmapGround(props: HeatmapGroundProps) {
   const {rooms} = props;
   const {configuration} = useAppContext();
-  const {scene} = useThree();
+  const {scene, invalidate} = useThree();
   const groundRef = useRef<THREE.Mesh | undefined>(undefined);
 
   const heatmapPointsWithId = rooms.flatMap(room => {
@@ -85,6 +85,13 @@ export function HeatmapGround(props: HeatmapGroundProps) {
         material?.name?.toLowerCase()?.startsWith('room_'),
       );
 
+      oldMaterials.set(
+        object,
+        Array.isArray(object.material)
+          ? object.material.map(material => material.clone())
+          : object.material.clone(),
+      );
+
       if (!isGround) {
         materials.forEach(material => {
           if (!material) return;
@@ -95,11 +102,6 @@ export function HeatmapGround(props: HeatmapGroundProps) {
         });
         return;
       }
-
-      oldMaterials.set(
-        object,
-        Array.isArray(object.material) ? [...object.material] : object.material,
-      );
 
       groundRef.current = object;
       object.geometry.computeBoundingBox();
@@ -116,15 +118,13 @@ export function HeatmapGround(props: HeatmapGroundProps) {
         const currentMaterials = Array.isArray(mesh.material)
           ? mesh.material
           : [mesh.material];
-        currentMaterials.forEach(mat => {
-          if (!mat) return;
-          mat.dispose();
-        });
-
+        currentMaterials.forEach(material => material?.dispose());
         mesh.material = oldMaterial;
       });
     };
   }, [scene, configuration.heatmapShader, configuration.hideWallsShader]);
+
+  useEffect(() => invalidate(), []);
 
   return null;
 }
