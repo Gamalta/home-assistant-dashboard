@@ -46,6 +46,12 @@ export function RoomLight3d(props: RoomLight3dProps) {
     if ('angle' in lightMesh && Number(lightMesh.angle) > 1.57079637050628) {
       lightMesh.angle = 180;
     }
+
+    return () => {
+      if (!lightMesh) return;
+      lightMesh.visible = false;
+      lightMesh.intensity = 0;
+    };
   }, [light]);
 
   return <></>;

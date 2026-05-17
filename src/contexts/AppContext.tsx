@@ -23,7 +23,7 @@ type AppContextType = {
 const AppContext = createContext<AppContextType>({
   configuration: {
     debug: false,
-    hideWallsShader: true,
+    hideWallsShader: false,
     heatmapShader: false,
     webGPU: false,
   },
