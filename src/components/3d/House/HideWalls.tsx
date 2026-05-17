@@ -1,14 +1,15 @@
 import {useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
-import {
-  createHideWallsMaterial,
-  FadeMaterial,
-} from './shaders/HideWallsMaterial';
+import {FadeMaterial} from './shaders/HideWallsMaterial/WebGL';
+import {createHideWallsMaterial} from './shaders/HideWallsMaterial';
+import {MeshStandardNodeMaterial} from 'three/webgpu';
+import {useAppContext} from '../../../contexts/AppContext';
 
 export function HideWalls() {
   const {scene} = useThree();
-  const materialRefs = useRef<FadeMaterial[]>([]);
+  const {configuration} = useAppContext();
+  const materialRefs = useRef<(FadeMaterial | MeshStandardNodeMaterial)[]>([]);
 
   useEffect(() => {
     materialRefs.current = [];
@@ -37,7 +38,10 @@ export function HideWalls() {
       );
 
       const sourceMaterial = materials[0] as THREE.MeshStandardMaterial;
-      const material = createHideWallsMaterial(sourceMaterial.clone());
+      const material = createHideWallsMaterial(
+        configuration.webGPU,
+        sourceMaterial.clone(),
+      );
       object.material = material;
       materialRefs.current.push(material);
     });

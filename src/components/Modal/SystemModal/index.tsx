@@ -75,6 +75,7 @@ export function SystemModal(props: SystemModalProps) {
             <Typography>Max Textures</Typography>
             <Typography>{renderer.capabilities.maxTextures}</Typography>
           </Stack>
+
           <Stack
             direction="row"
             sx={{justifyContent: 'space-between', alignItems: 'center'}}
@@ -87,9 +88,11 @@ export function SystemModal(props: SystemModalProps) {
             sx={{justifyContent: 'space-between', alignItems: 'center'}}
           >
             <Typography>Web GPU</Typography>
-            <Typography>
-              {navigator.gpu ? 'Supporté' : 'Non supporté'}
-            </Typography>
+            <Switch
+              checked={configuration.webGPU}
+              disabled={!navigator.gpu}
+              onChange={event => setConfiguration({...configuration, webGPU: event.target.checked})}
+            />
           </Stack>
         </Stack>
       </Stack>

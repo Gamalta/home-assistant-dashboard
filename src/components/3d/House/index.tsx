@@ -34,13 +34,17 @@ export function House() {
     <Stack sx={{position: 'relative', height: '100%'}}>
       <Stack sx={{position: 'relative', height: '100%', width: '100%'}}>
         <Canvas
+          key={
+            configuration.webGPU
+              ? `config-${houseConfig?.id ?? 0}-webgpu`
+              : `config-${houseConfig?.id ?? 0}-webgl`
+          }
           frameloop="demand"
           camera={{position: mainCamera?.position.toArray() ?? [0, 7, -7]}}
           flat
           ref={canvasRef}
           gl={async gl => {
-            const supportsWebGPU = 'gpu' in navigator;
-            if (supportsWebGPU) {
+            if (configuration.webGPU) {
               const renderer = new WebGPURenderer(gl as any);
               await renderer.init();
               return renderer;
@@ -56,12 +60,14 @@ export function House() {
           >
             {configuration.debug && (
               <>
-                <GizmoHelper alignment="top-right" margin={[55, 55]}>
-                  <GizmoViewport
-                    axisColors={['red', 'green', 'blue']}
-                    labelColor="black"
-                  />
-                </GizmoHelper>
+                {!configuration.webGPU && (
+                  <GizmoHelper alignment="top-right" margin={[55, 55]}>
+                    <GizmoViewport
+                      axisColors={['red', 'green', 'blue']}
+                      labelColor="black"
+                    />
+                  </GizmoHelper>
+                )}
                 <Stats />
               </>
             )}

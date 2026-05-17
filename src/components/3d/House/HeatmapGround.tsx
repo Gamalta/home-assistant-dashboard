@@ -1,12 +1,10 @@
 import {useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
-import {
-  createHeatmapGroundMaterial,
-  HeatmapPoint,
-} from './shaders/HeatmapGroundMaterial';
 import {HouseConfigType, RoomItemConfigType} from '../../../configs/house';
 import {useEntities} from '@hakit/core';
+import { createHeatmapGroundMaterial, HeatmapPoint } from './shaders/HeatmapGroundMaterial';
+import { useAppContext } from '../../../contexts/AppContext';
 
 type HeatmapGroundProps = {
   rooms: HouseConfigType['rooms'];
@@ -14,6 +12,7 @@ type HeatmapGroundProps = {
 
 export function HeatmapGround(props: HeatmapGroundProps) {
   const {rooms} = props;
+  const {configuration} = useAppContext()
   const {scene} = useThree();
   const groundRef = useRef<THREE.Mesh | undefined>(undefined);
 
@@ -75,7 +74,7 @@ export function HeatmapGround(props: HeatmapGroundProps) {
       if (isNewGround) return;
 
       const isGround = mats.some(material =>
-        material?.name?.toLowerCase().includes('room_76_452'),
+        material?.name?.toLowerCase()?.startsWith('room_'),
       );
 
       if (!isGround) {
@@ -90,8 +89,7 @@ export function HeatmapGround(props: HeatmapGroundProps) {
       }
       groundRef.current = object;
       object.geometry.computeBoundingBox();
-
-      const heatmapMaterial = createHeatmapGroundMaterial(heatmapPoints);
+      const heatmapMaterial = createHeatmapGroundMaterial(configuration.webGPU, heatmapPoints);
       if (Array.isArray(object.material)) object.material[0] = heatmapMaterial;
       else object.material = heatmapMaterial;
     });
