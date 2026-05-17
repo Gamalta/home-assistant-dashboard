@@ -47,9 +47,19 @@ export function HideWalls() {
     });
 
     return () => {
-      oldMaterials.forEach((material, mesh) => (mesh.material = material));
+      oldMaterials.forEach((oldMaterial, mesh) => {
+        const currentMaterials = Array.isArray(mesh.material)
+          ? mesh.material
+          : [mesh.material];
+        currentMaterials.forEach(mat => {
+          if (!mat) return;
+          mat.dispose();
+        });
+
+        mesh.material = oldMaterial;
+      });
     };
-  }, [scene]);
+  }, [scene, configuration.hideWallsShader, configuration.heatmapShader]);
 
   return null;
 }

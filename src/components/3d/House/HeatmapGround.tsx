@@ -3,8 +3,11 @@ import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import {HouseConfigType, RoomItemConfigType} from '../../../configs/house';
 import {useEntities} from '@hakit/core';
-import { createHeatmapGroundMaterial, HeatmapPoint } from './shaders/HeatmapGroundMaterial';
-import { useAppContext } from '../../../contexts/AppContext';
+import {
+  createHeatmapGroundMaterial,
+  HeatmapPoint,
+} from './shaders/HeatmapGroundMaterial';
+import {useAppContext} from '../../../contexts/AppContext';
 
 type HeatmapGroundProps = {
   rooms: HouseConfigType['rooms'];
@@ -12,7 +15,7 @@ type HeatmapGroundProps = {
 
 export function HeatmapGround(props: HeatmapGroundProps) {
   const {rooms} = props;
-  const {configuration} = useAppContext()
+  const {configuration} = useAppContext();
   const {scene} = useThree();
   const groundRef = useRef<THREE.Mesh | undefined>(undefined);
 
@@ -62,23 +65,28 @@ export function HeatmapGround(props: HeatmapGroundProps) {
     .filter((point): point is HeatmapPoint => !!point);
 
   useEffect(() => {
+    const oldMaterials = new Map<
+      THREE.Mesh,
+      THREE.Material | THREE.Material[]
+    >();
+
     scene.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
 
-      const mats = Array.isArray(object.material)
+      const materials = Array.isArray(object.material)
         ? object.material
         : [object.material];
-      const isNewGround = mats.some(
+      const isNewGround = materials.some(
         material => material?.name === 'heatmapGround',
       );
       if (isNewGround) return;
 
-      const isGround = mats.some(material =>
+      const isGround = materials.some(material =>
         material?.name?.toLowerCase()?.startsWith('room_'),
       );
 
       if (!isGround) {
-        mats.forEach(material => {
+        materials.forEach(material => {
           if (!material) return;
           material.transparent = true;
           const currentOpacity = material.opacity ?? 1;
@@ -87,13 +95,36 @@ export function HeatmapGround(props: HeatmapGroundProps) {
         });
         return;
       }
+
+      oldMaterials.set(
+        object,
+        Array.isArray(object.material) ? [...object.material] : object.material,
+      );
+
       groundRef.current = object;
       object.geometry.computeBoundingBox();
-      const heatmapMaterial = createHeatmapGroundMaterial(configuration.webGPU, heatmapPoints);
+      const heatmapMaterial = createHeatmapGroundMaterial(
+        configuration.webGPU,
+        heatmapPoints,
+      );
       if (Array.isArray(object.material)) object.material[0] = heatmapMaterial;
       else object.material = heatmapMaterial;
     });
-  }, [scene]);
+
+    return () => {
+      oldMaterials.forEach((oldMaterial, mesh) => {
+        const currentMaterials = Array.isArray(mesh.material)
+          ? mesh.material
+          : [mesh.material];
+        currentMaterials.forEach(mat => {
+          if (!mat) return;
+          mat.dispose();
+        });
+
+        mesh.material = oldMaterial;
+      });
+    };
+  }, [scene, configuration.heatmapShader, configuration.hideWallsShader]);
 
   return null;
 }
