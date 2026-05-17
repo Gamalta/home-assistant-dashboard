@@ -118,7 +118,7 @@ export function createHeatmapGroundMaterialWebGPU(
   });
 
   const material = new THREE.MeshBasicNodeMaterial();
-  material.depthWrite = false
+  material.depthWrite = false;
   material.colorNode = Fn(() => {
     const temperature = idwInterpolation(vPosition);
     const temperatureStep = float(1.0);
