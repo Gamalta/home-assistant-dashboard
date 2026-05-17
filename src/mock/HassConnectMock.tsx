@@ -52,7 +52,7 @@ let fakeConfig: HassConfig = {
     wind_speed: 'm/s',
   },
   location_name: 'Home',
-  time_zone: 'France/Paris',
+  time_zone: 'Europe/Paris',
   components: [],
   config_dir: '/config',
   allowlist_external_dirs: [],
@@ -401,10 +401,8 @@ useHass.setState({
 });
 
 function HassProvider({children}: HassProviderProps) {
-  const {hash: _hash, ready} = useHass(s => ({
-    hash: s.hash,
-    ready: s.ready,
-  }));
+  const ready = useHass(s => s.ready);
+  const _hash = useHass(s => s.hash);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

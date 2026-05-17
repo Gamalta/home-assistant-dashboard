@@ -10,6 +10,7 @@ type ConfigurationOptions = {
   debug: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
+  webGPU: boolean;
 };
 
 type AppContextType = {
@@ -20,7 +21,12 @@ type AppContextType = {
 };
 
 const AppContext = createContext<AppContextType>({
-  configuration: {debug: false, hideWallsShader: true, heatmapShader: false},
+  configuration: {
+    debug: false,
+    hideWallsShader: true,
+    heatmapShader: false,
+    webGPU: false,
+  },
   setConfiguration: () => {},
   triangle: -1,
   setTriangle: () => {},
@@ -33,6 +39,7 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
     debug: false,
     hideWallsShader: true,
     heatmapShader: false,
+    webGPU: !!navigator.gpu,
   });
   const [triangle, setTriangle] = useState<number>(-1);
 

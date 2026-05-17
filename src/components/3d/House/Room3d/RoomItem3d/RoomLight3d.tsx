@@ -10,13 +10,14 @@ type RoomLight3dProps = {
 
 export function RoomLight3d(props: RoomLight3dProps) {
   const {lightConfig} = props;
-  const {scene} = useThree();
+  const {scene, invalidate} = useThree();
 
   const light = useEntity(lightConfig.lightEntityId, {
     returnNullIfNotFound: true,
   });
 
   useEffect(() => {
+    invalidate()
     let lightMesh: THREE.Light | undefined;
 
     scene.traverse(obj => {

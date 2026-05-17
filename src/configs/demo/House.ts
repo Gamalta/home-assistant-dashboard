@@ -77,12 +77,12 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           lightEntityId: 'light.salon_hue_play',
-          position: {x: -3.2, y: 0.3, z: -3.1},
+          position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.salon_shutter',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: -0.8, y: 1.3, z: 5.8},
         },
       ],
     },
@@ -106,19 +106,19 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: -0.6, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: -2.5, y: 1.3, z: -4.2},
         },
       ],
     },
     {
       id: 'Dining',
       name: 'Salle à manger',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 0.5, y: 2.5, z: -2.45},
       items: [
         {
           type: 'light',
@@ -130,7 +130,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom',
       name: 'Chambre',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: -5.25, y: 2.5, z: 2.15},
       items: [
         {
           type: 'light',
@@ -147,14 +147,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: -5.6, y: 1.3, z: 4},
         },
       ],
     },
     {
       id: 'Bedroom_dressing',
       name: 'Dressing',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: -5.7, y: 2.5, z: -0.4},
       items: [
         {
           type: 'light',
@@ -166,7 +166,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom_bathroom',
       name: 'Sale de bain',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: -5.7, y: 2.5, z: -2.5},
       items: [
         {
           type: 'light',
@@ -185,7 +185,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bedroom_2',
       name: 'Chambre 2',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 5.1, y: 2.5, z: -3.5},
       items: [
         {
           type: 'light',
@@ -202,14 +202,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_2_shutter',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: 4.2, y: 1.3, z: -5},
         },
       ],
     },
     {
       id: 'Bedroom_3',
       name: 'Chambre 3',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 6, y: 2.5, z: 2},
       items: [
         {
           type: 'light',
@@ -226,14 +226,14 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_3_shutter',
-          position: {x: 0, y: 0, z: 0},
+          position: {x: 6.5, y: 1.3, z: 4.2},
         },
       ],
     },
     {
       id: 'Cellar',
       name: 'Cellier',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: -2.5, y: 2.5, z: -2.5},
       items: [
         {
           type: 'light',
@@ -245,7 +245,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Bathroom',
       name: 'Sale de bain',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 6, y: 2.5, z: -1.2},
       items: [
         {
           type: 'light',
@@ -264,7 +264,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Corridor',
       name: 'Couloir',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 2.9, y: 2.5, z: 0.4},
       items: [
         {
           type: 'light',
@@ -276,7 +276,7 @@ export const HouseConfig: HouseConfigType = {
     {
       id: 'Toilet',
       name: 'Toilette',
-      position: {x: 0, y: 2.5, z: 0},
+      position: {x: 3.8, y: 2.5, z: 2.6},
       items: [
         {
           type: 'light',
