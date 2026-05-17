@@ -1,10 +1,10 @@
 import {useFrame, useThree} from '@react-three/fiber';
-import {useRef, useState} from 'react';
+import {ComponentRef, useRef, useState} from 'react';
 import {usePerformanceMonitor} from '@react-three/drei';
 import {OrbitControls} from '@react-three/drei';
 
 export function Camera() {
-  const controls = useRef<any>(null);
+  const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const [dpr, setDpr] = useState(1);
   const [factor, setFactor] = useState(0.5);
   const {invalidate, setDpr: setThreeDpr} = useThree();
@@ -33,5 +33,11 @@ export function Camera() {
     }
   });
 
-  return <OrbitControls maxPolarAngle={Math.PI / 2} minPolarAngle={0} />;
+  return (
+    <OrbitControls
+      ref={controls}
+      maxPolarAngle={Math.PI / 2}
+      minPolarAngle={0}
+    />
+  );
 }

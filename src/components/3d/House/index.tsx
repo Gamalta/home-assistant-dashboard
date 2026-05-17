@@ -17,13 +17,14 @@ import {useAppContext} from '../../../contexts/AppContext';
 import {Room3d} from './Room3d';
 import {HideWalls} from './HideWalls';
 import {HeatmapGround} from './HeatmapGround';
-import {WebGLRenderer} from 'three';
+import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {WebGPURenderer} from 'three/webgpu';
+import {WebGPURendererParameters} from 'three/src/renderers/webgpu/WebGPURenderer.js';
 
 export function House() {
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
-  const {scene, cameras} = useGLTF(houseConfig?.house?.model!);
+  const {scene, cameras} = useGLTF(houseConfig?.house?.model ?? '');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const mainCamera =
@@ -45,11 +46,13 @@ export function House() {
           ref={canvasRef}
           gl={async gl => {
             if (configuration.webGPU) {
-              const renderer = new WebGPURenderer(gl as any);
+              const renderer = new WebGPURenderer(
+                gl as WebGPURendererParameters,
+              );
               await renderer.init();
               return renderer;
             }
-            return new WebGLRenderer(gl as any);
+            return new WebGLRenderer(gl as WebGLRendererParameters);
           }}
         >
           <PerformanceMonitor

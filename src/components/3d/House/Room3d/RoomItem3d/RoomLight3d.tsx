@@ -43,8 +43,8 @@ export function RoomLight3d(props: RoomLight3dProps) {
     lightMesh.intensity = light?.state === 'on' ? 0.05 : 0;
 
     // On réecrit l'angle car 180 venant de blender ne fonctionne pas (on perd les ombres)
-    if ((lightMesh as any).angle > 1.57079637050628) {
-      (lightMesh as any).angle = 180;
+    if ('angle' in lightMesh && Number(lightMesh.angle) > 1.57079637050628) {
+      lightMesh.angle = 180;
     }
   }, [light]);
 
