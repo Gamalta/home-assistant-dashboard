@@ -7,6 +7,10 @@ export type HeatmapPoint = {
   temperature: number;
 };
 
-export const createHeatmapGroundMaterial = (webGPU: boolean, points: HeatmapPoint[]) => webGPU
-  ? createHeatmapGroundMaterialWebGPU(points)
-  : createHeatmapGroundMaterialWebGl(points);
+export const createHeatmapGroundMaterial = (
+  webGPU: boolean,
+  points: HeatmapPoint[],
+) =>
+  webGPU
+    ? createHeatmapGroundMaterialWebGPU(points)
+    : createHeatmapGroundMaterialWebGl(points);

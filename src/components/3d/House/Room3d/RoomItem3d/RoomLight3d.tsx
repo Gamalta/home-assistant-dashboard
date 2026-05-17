@@ -17,7 +17,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
   });
 
   useEffect(() => {
-    invalidate()
+    invalidate();
     let lightMesh: THREE.Light | undefined;
 
     scene.traverse(obj => {
