@@ -16,7 +16,9 @@ export interface ImportMeta {
 declare global {
   namespace React {
     namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
+      interface IntrinsicElements extends ThreeElements {
+        '';
+      }
     }
   }
   interface Window {
