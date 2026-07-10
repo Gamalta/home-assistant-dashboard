@@ -6,6 +6,7 @@ import {useEntities} from '@hakit/core';
 import {
   createHeatmapGroundMaterial,
   HeatmapPoint,
+  updateHeatmapGroundMaterial,
 } from './shaders/HeatmapGroundMaterial';
 import {useAppContext} from '../../../contexts/AppContext';
 
@@ -18,6 +19,7 @@ export function HeatmapGround(props: HeatmapGroundProps) {
   const {configuration} = useAppContext();
   const {scene, invalidate} = useThree();
   const groundRef = useRef<THREE.Mesh | undefined>(undefined);
+  const heatmapMaterialRef = useRef<THREE.Material | undefined>(undefined);
 
   const heatmapPointsWithId = rooms.flatMap(room => {
     const roomPosition = room.position;
@@ -64,6 +66,10 @@ export function HeatmapGround(props: HeatmapGroundProps) {
     })
     .filter((point): point is HeatmapPoint => !!point);
 
+  const heatmapPointsKey = JSON.stringify(heatmapPoints);
+  const heatmapPointsRef = useRef(heatmapPoints);
+  heatmapPointsRef.current = heatmapPoints;
+
   useEffect(() => {
     const oldMaterials = new Map<
       THREE.Mesh,
@@ -109,13 +115,16 @@ export function HeatmapGround(props: HeatmapGroundProps) {
       object.geometry.computeBoundingBox();
       const heatmapMaterial = createHeatmapGroundMaterial(
         configuration.webGPU,
-        heatmapPoints,
+        heatmapPointsRef.current,
       );
+      heatmapMaterialRef.current = heatmapMaterial;
       if (Array.isArray(object.material)) object.material[0] = heatmapMaterial;
       else object.material = heatmapMaterial;
     });
 
     return () => {
+      heatmapMaterialRef.current = undefined;
+      groundRef.current = undefined;
       oldMaterials.forEach((oldMaterial, mesh) => {
         const currentMaterials = Array.isArray(mesh.material)
           ? mesh.material
@@ -125,6 +134,31 @@ export function HeatmapGround(props: HeatmapGroundProps) {
       });
     };
   }, [scene, configuration.heatmapShader, configuration.hideWallsShader]);
+
+  useEffect(() => {
+    const material = heatmapMaterialRef.current;
+    const ground = groundRef.current;
+    if (!material || !ground) return;
+
+    const updated = updateHeatmapGroundMaterial(
+      configuration.webGPU,
+      material,
+      heatmapPointsRef.current,
+    );
+
+    if (!updated) {
+      const next = createHeatmapGroundMaterial(
+        configuration.webGPU,
+        heatmapPointsRef.current,
+      );
+      heatmapMaterialRef.current = next;
+      if (Array.isArray(ground.material)) ground.material[0] = next;
+      else ground.material = next;
+      material.dispose();
+    }
+
+    invalidate();
+  }, [heatmapPointsKey, configuration.webGPU, invalidate]);
 
   useEffect(() => invalidate(), []);
 

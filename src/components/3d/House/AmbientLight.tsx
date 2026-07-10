@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react';
+import {useThree} from '@react-three/fiber';
 
 export function AmbientLight() {
+  const {invalidate} = useThree();
   const [ambientIntensity, setAmbientIntensity] = useState(0.5);
+  useEffect(() => invalidate(), [ambientIntensity, invalidate]);
 
   useEffect(() => {
     const updateAmbientIntensity = () => {

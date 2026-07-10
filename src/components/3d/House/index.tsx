@@ -46,13 +46,19 @@ export function House() {
           ref={canvasRef}
           gl={async gl => {
             if (configuration.webGPU) {
-              const renderer = new WebGPURenderer(
-                gl as WebGPURendererParameters,
-              );
+              const renderer = new WebGPURenderer({
+                ...(gl as WebGPURendererParameters),
+                powerPreference: 'high-performance',
+                antialias: false,
+              });
               await renderer.init();
               return renderer;
             }
-            return new WebGLRenderer(gl as WebGLRendererParameters);
+            return new WebGLRenderer({
+              ...(gl as WebGLRendererParameters),
+              powerPreference: 'high-performance',
+              antialias: false,
+            });
           }}
         >
           <PerformanceMonitor
