@@ -29,7 +29,6 @@
     "@vercel/speed-insights": "2.0.0",
     "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.6.1",
-    "@react-three/postprocessing": "3.0.4",
     "dayjs": "1.11.20",
     "framer-motion": "12.38.0",
     "home-assistant-js-websocket": "9.6.0",

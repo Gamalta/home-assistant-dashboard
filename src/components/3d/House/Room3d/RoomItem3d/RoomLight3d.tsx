@@ -1,7 +1,7 @@
 import {useEntity} from '@hakit/core';
 import {useThree} from '@react-three/fiber';
 import {LightConfigType} from '../../../../../configs/house';
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import * as THREE from 'three';
 
 type RoomLight3dProps = {
@@ -16,20 +16,20 @@ export function RoomLight3d(props: RoomLight3dProps) {
     returnNullIfNotFound: true,
   });
 
-  useEffect(() => {
-    invalidate();
-    let lightMesh: THREE.Light | undefined;
-
+  const lightMesh = useMemo(() => {
+    const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
+    let found: THREE.Light | undefined;
     scene.traverse(obj => {
-      if (
-        obj.name
-          .toLowerCase()
-          .startsWith(lightConfig.lightEntityId.split('.')[1].toLowerCase())
-      ) {
-        lightMesh = obj as THREE.Light;
+      if (found) return;
+      if (obj.name.toLowerCase().startsWith(prefix)) {
+        found = obj as THREE.Light;
       }
     });
+    return found;
+  }, [scene, lightConfig.lightEntityId]);
 
+  useEffect(() => {
+    invalidate();
     if (!lightMesh) return;
 
     // ON / OFF
@@ -52,7 +52,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
       lightMesh.visible = false;
       lightMesh.intensity = 0;
     };
-  }, [light]);
+  }, [light, lightMesh, invalidate]);
 
   return <></>;
 }

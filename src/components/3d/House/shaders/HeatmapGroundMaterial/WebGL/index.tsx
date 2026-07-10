@@ -30,3 +30,19 @@ export function createHeatmapGroundMaterialWebGl(points: HeatmapPoint[]) {
   });
   return shaderMaterial;
 }
+
+export function updateHeatmapGroundMaterialWebGl(
+  material: THREE.ShaderMaterial,
+  points: HeatmapPoint[],
+) {
+  const {uniforms} = material;
+  const values = uniforms.points.value as THREE.Vector3[];
+  for (let i = 0; i < values.length; i++) {
+    const p = points[i];
+    if (p) values[i].set(p.x, p.temperature, p.z);
+    else values[i].set(0, 0, 0);
+  }
+  uniforms.minTemp.value = Math.min(...points.map(point => point.temperature));
+  uniforms.maxTemp.value = Math.max(...points.map(point => point.temperature));
+  uniforms.numPoints.value = points.length;
+}
