@@ -61,12 +61,7 @@ export function House() {
             });
           }}
         >
-          <PerformanceMonitor
-            ms={100}
-            iterations={3}
-            threshold={0.5}
-            factor={0.5}
-          >
+          <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
             {configuration.debug && (
               <>
                 {!configuration.webGPU && (
