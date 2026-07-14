@@ -20,7 +20,7 @@ type AppContextType = {
   setTriangle: Dispatch<SetStateAction<number>>;
 };
 
-const AppContext = createContext<AppContextType>({
+export const AppContext = createContext<AppContextType>({
   configuration: {
     debug: false,
     hideWallsShader: false,

@@ -12,7 +12,7 @@ type RoomContextType = {
   setLightEntities: Dispatch<SetStateAction<HassEntityWithService<'light'>[]>>;
 };
 
-const RoomContext = createContext<RoomContextType>({
+export const RoomContext = createContext<RoomContextType>({
   lightEntities: [],
   setLightEntities: () => {},
 });
