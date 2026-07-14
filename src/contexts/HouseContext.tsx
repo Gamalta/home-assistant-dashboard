@@ -20,7 +20,7 @@ type HouseContextType = {
   houseRef: RefObject<HTMLDivElement | null> | null;
 };
 
-const HouseContext = createContext<HouseContextType>({
+export const HouseContext = createContext<HouseContextType>({
   houseConfig: undefined,
   setHouseConfig: () => {},
   houseRef: null,

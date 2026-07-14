@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack';
 import type {HouseConfigType} from '../../../configs/house';
-import {RoomProvider} from '../../../contexts/RoomContext';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {Html} from '../../3d/Html';
@@ -13,7 +12,7 @@ export function Room(props: RoomProps) {
   const {room} = props;
 
   return (
-    <RoomProvider>
+    <>
       <Html
         key={room.id}
         position={[room.position.x, room.position.y, room.position.z]}
@@ -52,6 +51,6 @@ export function Room(props: RoomProps) {
             </Stack>
           </Html>
         ))}
-    </RoomProvider>
+    </>
   );
 }
