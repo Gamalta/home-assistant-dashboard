@@ -1,7 +1,7 @@
 import {useEntity} from '@hakit/core';
-import {useThree} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {LightConfigType} from '../../../../../configs/house';
-import {useEffect, useMemo} from 'react';
+import {useEffect, useState} from 'react';
 import * as THREE from 'three';
 
 type RoomLight3dProps = {
@@ -16,7 +16,8 @@ export function RoomLight3d(props: RoomLight3dProps) {
     returnNullIfNotFound: true,
   });
 
-  const lightMesh = useMemo(() => {
+  const [lightMesh, setLightMesh] = useState<THREE.Light>();
+  useEffect(() => {
     const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
     let found: THREE.Light | undefined;
     scene.traverse(obj => {
@@ -25,34 +26,48 @@ export function RoomLight3d(props: RoomLight3dProps) {
         found = obj as THREE.Light;
       }
     });
-    return found;
+    setLightMesh(found);
   }, [scene, lightConfig.lightEntityId]);
 
   useEffect(() => {
-    invalidate();
     if (!lightMesh) return;
-
-    // ON / OFF
-    lightMesh.visible = light?.state === 'on';
-    // couleur
-    if (light?.custom?.color) {
-      lightMesh.color.set(new THREE.Color(...light.custom.color));
-    }
-
-    // intensité
-    lightMesh.intensity = light?.state === 'on' ? 0.05 : 0;
+    lightMesh.visible = true;
+    lightMesh.intensity = 0;
 
     // On réecrit l'angle car 180 venant de blender ne fonctionne pas (on perd les ombres)
     if ('angle' in lightMesh && Number(lightMesh.angle) > 1.57079637050628) {
       lightMesh.angle = 180;
     }
 
+    invalidate();
     return () => {
-      if (!lightMesh) return;
-      lightMesh.visible = false;
       lightMesh.intensity = 0;
+      invalidate();
     };
-  }, [light, lightMesh, invalidate]);
+  }, [lightMesh, invalidate]);
+
+  const targetIntensity = light?.state === 'on' ? ((light?.attributes.brightness ?? 255) / 255 * 0.05) : 0;
+  useEffect(() => {
+    if (!lightMesh) return;
+
+    if (light?.custom?.color) {
+      lightMesh.color.set(new THREE.Color(...light.custom.color));
+    }
+    invalidate();
+  }, [light, lightMesh, targetIntensity, invalidate]);
+
+  useFrame((_, delta) => {
+    if (!lightMesh) return;
+
+    if (Math.abs(lightMesh.intensity - targetIntensity) < 0.0001) {
+      lightMesh.intensity = targetIntensity;
+      return;
+    }
+
+    const t = 1 - Math.exp(-8 * Math.min(delta, 0.03));
+    lightMesh.intensity += (targetIntensity - lightMesh.intensity) * t;
+    invalidate();
+  });
 
   return <></>;
 }
