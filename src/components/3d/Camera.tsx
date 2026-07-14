@@ -11,9 +11,7 @@ export function Camera() {
   const timeout = useRef<NodeJS.Timeout | null>(null);
   const isMoving = useRef<boolean>(false);
   const factor = useRef(1);
-  // devicePixelRatio est constant pour un écran donné : on le lit une seule fois.
   const maxDpr = useRef(window.devicePixelRatio);
-  // Valeur lissée (continue) et valeur réellement appliquée (quantifiée).
   const smoothedDpr = useRef(maxDpr.current);
   const appliedDpr = useRef(maxDpr.current);
 
@@ -21,8 +19,6 @@ export function Camera() {
     onChange: ({factor: newFactor}) => (factor.current = newFactor),
   });
 
-  // On quantifie le DPR par paliers de 0,25 pour éviter d'appeler setDpr
-  // (donc renderer.setSize + réallocation du drawing buffer) à chaque frame.
   const DPR_STEP = 0.25;
   const quantize = (value: number) =>
     Math.max(DPR_STEP, Math.round(value / DPR_STEP) * DPR_STEP);
