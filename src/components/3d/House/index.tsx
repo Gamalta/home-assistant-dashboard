@@ -20,6 +20,7 @@ import {useAppContext} from '../../../contexts/AppContext';
 import {Scene} from './Scene';
 import {AmbientLight} from './AmbientLight';
 import {Camera} from '../Camera';
+import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
 import {loadRenderBackend, RenderBackend} from '../backends';
@@ -120,6 +121,7 @@ function HouseScene(props: HouseSceneProps) {
           </>
         )}
         <Camera target={camera.target} />
+        <Benchmark target={camera.target} />
         <Scene scene={scene} backend={backend} />
         <SceneMaterials
           scene={scene}

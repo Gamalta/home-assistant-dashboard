@@ -5,9 +5,17 @@ import {useEffect, useState} from 'react';
 export function DateTime() {
   const [now, setNow] = useState(new Date());
 
+  // Seules les minutes sont affichées : on se cale sur le changement de minute
+  // au lieu de re-rendre chaque seconde.
   useEffect(() => {
-    const interval = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(interval);
+    let timeout: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      const current = new Date();
+      setNow(current);
+      timeout = setTimeout(tick, 60000 - (current.getTime() % 60000) + 50);
+    };
+    tick();
+    return () => clearTimeout(timeout);
   }, []);
 
   const capitalize = (str: string) =>

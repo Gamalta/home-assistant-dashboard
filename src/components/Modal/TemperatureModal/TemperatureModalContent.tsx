@@ -12,7 +12,7 @@ import {
 } from '@mui/x-charts';
 import {roundToNearest5Minutes} from '../../../utils/graph';
 import {ThermostatIcon} from '../../Icons/ThermostatIcon';
-import {HassEntityWithService} from '@hakit/core';
+import {EntityName, HassEntityWithService, useEntity} from '@hakit/core';
 type TemperatureModalContentProps = {
   temperatureEntity: HassEntityWithService<'sensor'>;
   humidityEntity?: HassEntityWithService<'sensor'>;
@@ -21,8 +21,20 @@ type TemperatureModalContentProps = {
 export function TemperatureModalContent(props: TemperatureModalContentProps) {
   const {temperatureEntity, humidityEntity} = props;
 
+  // L'historique n'est chargé qu'à l'ouverture de la modale (et non pour
+  // chaque capteur affiché sur l'écran principal).
+  const historyOptions = {disable: false, hoursToShow: 24};
+  const temperatureHistory = useEntity(
+    temperatureEntity.entity_id as EntityName,
+    {returnNullIfNotFound: true, historyOptions},
+  )?.history;
+  const humidityHistory = useEntity(
+    (humidityEntity?.entity_id ?? 'unknown') as EntityName,
+    {returnNullIfNotFound: true, historyOptions},
+  )?.history;
+
   const temperatureMap = Object.fromEntries(
-    (temperatureEntity?.history?.entityHistory ?? []).map(data => [
+    (temperatureHistory?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
     ]),
@@ -42,7 +54,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
   });
 
   const humidityMap = Object.fromEntries(
-    (humidityEntity?.history?.entityHistory ?? []).map(data => [
+    (humidityHistory?.entityHistory ?? []).map(data => [
       roundToNearest5Minutes(data.lu * 1000),
       Number(data.s) || null,
     ]),

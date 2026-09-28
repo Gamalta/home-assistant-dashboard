@@ -6,6 +6,8 @@ import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import {useState} from 'react';
 import {
   ConfigurationOptions,
   useAppContext,
@@ -41,6 +43,34 @@ function OptionRow(props: OptionRowProps) {
           setConfiguration(prev => ({...prev, [option]: event.target.checked}))
         }
       />
+    </Stack>
+  );
+}
+
+/** Lance le banc de mesure intégré à la vue 3D (voir components/3d/Benchmark). */
+function BenchmarkRow() {
+  const [result, setResult] = useState<string | null>(null);
+  const [running, setRunning] = useState(false);
+
+  const run = async () => {
+    const benchmark = window.__dashboardBenchmark;
+    if (!benchmark) return;
+    setRunning(true);
+    const rest = await benchmark(60);
+    const motion = await benchmark(60, Math.min(1, window.devicePixelRatio));
+    setResult(
+      `repos ${rest.msPerFrame} ms (${rest.fps} img/s, ×${rest.pixelRatio}) · ` +
+        `mouvement ${motion.msPerFrame} ms (${motion.fps} img/s, ×${motion.pixelRatio})`,
+    );
+    setRunning(false);
+  };
+
+  return (
+    <Stack spacing={0.5}>
+      <Button variant="outlined" disabled={running} onClick={run}>
+        {running ? 'Mesure en cours…' : 'Mesurer les performances'}
+      </Button>
+      {result && <Typography variant="caption">{result}</Typography>}
     </Stack>
   );
 }
@@ -127,6 +157,7 @@ export function SystemModal(props: SystemModalProps) {
                     : rendererInfo.triangles.toLocaleString('fr-FR')
                 }
               />
+              <BenchmarkRow />
             </>
           )}
         </Stack>
