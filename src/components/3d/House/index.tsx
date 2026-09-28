@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import {Canvas} from '@react-three/fiber';
 import {Suspense, useEffect, useMemo, useState} from 'react';
 import {
-  Environment,
   GizmoHelper,
   GizmoViewport,
   PerformanceMonitor,
@@ -23,6 +22,7 @@ import {Camera} from '../Camera';
 import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
+import {EnvironmentLighting} from './EnvironmentLighting';
 import {loadRenderBackend, RenderBackend} from '../backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 // Servi avec l'application : pas de dépendance à un CDN au démarrage.
@@ -134,7 +134,10 @@ function HouseScene(props: HouseSceneProps) {
         {rooms.map(room => (
           <Room3d key={room.id} room={room} />
         ))}
-        <Environment files={nightEnvironment} resolution={128} />
+        <EnvironmentLighting
+          file={nightEnvironment}
+          reflections={configuration.environmentReflections}
+        />
       </PerformanceMonitor>
     </Canvas>
   );

@@ -133,6 +133,11 @@ export function SystemModal(props: SystemModalProps) {
             disabled={!is3d}
           />
           <OptionRow
+            label="Reflets d'environnement"
+            option="environmentReflections"
+            disabled={!is3d}
+          />
+          <OptionRow
             label="Carte des températures"
             option="heatmapShader"
             disabled={!is3d}

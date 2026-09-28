@@ -12,6 +12,8 @@ export type ConfigurationOptions = {
   view3d: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
+  /** Reflets de l'environnement (IBL) ; sinon éclairage diffus seul. */
+  environmentReflections: boolean;
   webGPU: boolean;
 };
 
@@ -37,6 +39,9 @@ const defaultConfiguration: ConfigurationOptions = {
   view3d: true,
   hideWallsShader: true,
   heatmapShader: false,
+  // Écart invisible à l'œil (~1/255 en moyenne) pour un coût par pixel
+  // divisé par ~2 : les reflets restent disponibles dans la modale Système.
+  environmentReflections: false,
   webGPU: false,
 };
 
