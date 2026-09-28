@@ -1,12 +1,10 @@
 import {
   Dispatch,
   ReactNode,
-  RefObject,
   SetStateAction,
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import {ConfigType, loadConfig} from '../configs/configs';
@@ -17,13 +15,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 type HouseContextType = {
   houseConfig: ConfigType | undefined;
   setHouseConfig: Dispatch<SetStateAction<ConfigType | undefined>>;
-  houseRef: RefObject<HTMLDivElement | null> | null;
 };
 
 export const HouseContext = createContext<HouseContextType>({
   houseConfig: undefined,
   setHouseConfig: () => {},
-  houseRef: null,
 });
 
 export const useHouseContext = () => useContext(HouseContext);
@@ -38,7 +34,6 @@ export const HouseProvider = (props: HouseProviderProps) => {
     undefined,
   );
   const [isLoading, setIsLoading] = useState(true);
-  const houseRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function updateConfig() {
@@ -52,9 +47,8 @@ export const HouseProvider = (props: HouseProviderProps) => {
 
   useEffect(() => {
     if (!houseConfig) return;
-    const oldConfigName = window.localStorage.getItem('config');
-
-    if (oldConfigName !== houseConfig.name) {
+    // On mémorise l'identifiant (et non le nom affiché) de la configuration.
+    if (window.localStorage.getItem('config') !== houseConfig.id) {
       window.localStorage.setItem('config', houseConfig.id);
     }
   }, [houseConfig]);
@@ -82,7 +76,7 @@ export const HouseProvider = (props: HouseProviderProps) => {
   }
 
   return (
-    <HouseContext.Provider value={{houseConfig, setHouseConfig, houseRef}}>
+    <HouseContext.Provider value={{houseConfig, setHouseConfig}}>
       {children}
     </HouseContext.Provider>
   );

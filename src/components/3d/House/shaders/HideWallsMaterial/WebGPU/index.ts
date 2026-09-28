@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {MeshStandardNodeMaterial} from 'three/webgpu';
+import {MeshStandardNodeMaterial, type Node} from 'three/webgpu';
 import {
   positionWorld,
   cameraPosition,
@@ -7,13 +7,18 @@ import {
   uniform,
   smoothstep,
   mix,
+  materialOpacity,
 } from 'three/tsl';
 
 export function createHideWallsMaterialWebGPU(
   source: THREE.MeshStandardMaterial,
 ) {
   const material = new MeshStandardNodeMaterial();
+  material.name = source.name;
   material.color.copy(source.color);
+  material.map = source.map;
+  material.side = source.side;
+  material.opacity = source.opacity;
   material.roughness = source.roughness;
   material.metalness = source.metalness;
 
@@ -24,7 +29,10 @@ export function createHideWallsMaterialWebGPU(
   const near = dist.lessThan(nearFadeDistance).toFloat();
   const fadeT = smoothstep(nearFadeDistance, fadeRadius, dist);
   const opacityNode = mix(minOpacity, 1.0, fadeT);
-  material.opacityNode = mix(opacityNode, minOpacity, near);
+  // On garde `material.opacity` (utilisée par la carte des températures).
+  material.opacityNode = mix(opacityNode, minOpacity, near).mul(
+    materialOpacity as unknown as Node<'float'>,
+  );
   material.transparent = true;
   material.depthWrite = false;
 

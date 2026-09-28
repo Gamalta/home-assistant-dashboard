@@ -1,27 +1,38 @@
 import * as THREE from 'three';
 import {useFrame, useThree} from '@react-three/fiber';
 import {OrbitControls, usePerformanceMonitor} from '@react-three/drei';
-import {useRef} from 'react';
-import type {ComponentRef} from 'react';
+import {useEffect, useRef} from 'react';
 
-export function Camera() {
+type CameraProps = {
+  /** Point visé par la caméra (centre de rotation). */
+  target: THREE.Vector3Tuple;
+};
+
+const DPR_STEP = 0.25;
+const quantize = (value: number) =>
+  Math.max(DPR_STEP, Math.round(value / DPR_STEP) * DPR_STEP);
+
+export function Camera(props: CameraProps) {
+  const {target} = props;
   const {setDpr} = useThree();
 
-  const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMoving = useRef<boolean>(false);
   const factor = useRef(1);
   const maxDpr = useRef(window.devicePixelRatio);
   const smoothedDpr = useRef(maxDpr.current);
   const appliedDpr = useRef(maxDpr.current);
 
+  useEffect(
+    () => () => {
+      if (timeout.current) clearTimeout(timeout.current);
+    },
+    [],
+  );
+
   usePerformanceMonitor({
     onChange: ({factor: newFactor}) => (factor.current = newFactor),
   });
-
-  const DPR_STEP = 0.25;
-  const quantize = (value: number) =>
-    Math.max(DPR_STEP, Math.round(value / DPR_STEP) * DPR_STEP);
 
   useFrame(() => {
     if (!isMoving.current) return;
@@ -36,7 +47,7 @@ export function Camera() {
 
   return (
     <OrbitControls
-      ref={controls}
+      target={target}
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}
       onStart={() => {

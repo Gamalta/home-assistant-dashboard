@@ -1,29 +1,27 @@
-uniform vec3 points[10];
+// points[i] = (x, température, z) en coordonnées monde.
+uniform vec3 points[MAX_POINTS];
 uniform float minTemp;
 uniform float maxTemp;
 uniform int numPoints;
-varying vec3 vPosition;
+varying vec3 vWorldPosition;
 
 float idwInterpolation(vec3 pos) {
   float tempSum = 0.0;
   float weightSum = 0.0;
 
-  for(int i = 0; i < 10; i++) {
+  for(int i = 0; i < MAX_POINTS; i++) {
     if(i >= numPoints) break;
     float dx = pos.x - points[i].x;
-    float dy = pos.y - points[i].z;
-    float distSq = dx*dx + dy*dy;
-
-    if(distSq < 0.01) {
-      return points[i].y;
-    }
+    float dz = pos.z - points[i].z;
+    // Distance plancher : évite une division par zéro sur le capteur lui-même.
+    float distSq = max(dx*dx + dz*dz, 0.01);
 
     float weight = 1.0 / distSq;
     tempSum += points[i].y * weight;
     weightSum += weight;
   }
 
-  return tempSum / weightSum;
+  return tempSum / max(weightSum, 1e-6);
 }
 
 vec3 temperatureToColor(float temp) {
@@ -47,7 +45,7 @@ vec3 temperatureToColor(float temp) {
 }
 
 void main() {
-  float temp = idwInterpolation(vPosition);
+  float temp = idwInterpolation(vWorldPosition);
   float tempStep = 1.0;
   float contourValue = mod(temp, tempStep);
   float width = fwidth(temp) * 0.3;

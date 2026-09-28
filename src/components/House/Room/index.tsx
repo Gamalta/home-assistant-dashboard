@@ -1,22 +1,35 @@
 import Stack from '@mui/material/Stack';
-import type {HouseConfigType} from '../../../configs/house';
+import type {ComponentType, ReactNode} from 'react';
+import type {
+  HouseConfigType,
+  Position2dType,
+  Position3dType,
+} from '../../../configs/house';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import {Html} from '../../3d/Html';
+
+export type RoomAnchorProps = {
+  position: Position3dType;
+  floorPosition?: Position2dType;
+  children: ReactNode;
+};
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
+  /**
+   * Place un élément dans la vue (Html de drei en 3D, positionnement absolu
+   * en 2D). Injecté pour que la vue 2D n'embarque pas three.js.
+   */
+  Anchor: ComponentType<RoomAnchorProps>;
 };
 
 export function Room(props: RoomProps) {
-  const {room} = props;
+  const {room, Anchor} = props;
+  const items = room.items ?? [];
 
   return (
     <>
-      <Html
-        key={room.id}
-        position={[room.position.x, room.position.y, room.position.z]}
-      >
+      <Anchor position={room.position} floorPosition={room.floorPosition}>
         <ButtonGroup
           variant="contained"
           size="small"
@@ -25,7 +38,7 @@ export function Room(props: RoomProps) {
             boxShadow: 0,
           }}
         >
-          {(room.items ?? [])
+          {items
             .filter(item => item.roomDisplay)
             .map((item, id) => (
               <RoomItem
@@ -35,13 +48,13 @@ export function Room(props: RoomProps) {
               />
             ))}
         </ButtonGroup>
-      </Html>
-      {(room.items ?? [])
-        .filter(item => !item.roomDisplay)
-        .map((item, id) => (
-          <Html
+      </Anchor>
+      {items.map((item, id) =>
+        item.roomDisplay ? null : (
+          <Anchor
             key={`room-${room.id}-item-${item.type}-id-${id}`}
-            position={[item.position.x, item.position.y, item.position.z]}
+            position={item.position}
+            floorPosition={item.floorPosition}
           >
             <Stack>
               <RoomItem
@@ -49,8 +62,9 @@ export function Room(props: RoomProps) {
                 itemConfig={item}
               />
             </Stack>
-          </Html>
-        ))}
+          </Anchor>
+        ),
+      )}
     </>
   );
 }

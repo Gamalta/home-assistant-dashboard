@@ -1,12 +1,26 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
+type Position3dType = {x: number; y: number; z: number};
+/** Position en pourcentage de la largeur / hauteur du plan 2D. */
+type Position2dType = {x: number; y: number};
+
 type HouseConfigType = {
-  model: string;
-  camera?: `Camera_${string}`;
+  /** Modèle glTF utilisé par la vue 3D. */
+  model?: string;
+  /** Caméra du modèle donnant la position initiale (sinon la première). */
+  camera?: string;
+  /** Point visé par la caméra (par défaut l'origine). */
+  cameraTarget?: Position3dType;
+  /** Plans utilisés par la vue 2D (fallback sans WebGL). */
+  floorPlan?: {
+    day: string;
+    night: string;
+  };
   rooms: {
     id: string;
     name: string;
-    position: {x: number; y: number; z: number};
+    position: Position3dType;
+    floorPosition?: Position2dType;
     items?: RoomItemConfigType[];
   }[];
 };
@@ -26,12 +40,26 @@ type BaseItemConfigType =
   | {
       type: string;
       roomDisplay?: false;
-      position: {x: number; y: number; z: number};
+      position: Position3dType;
+      floorPosition?: Position2dType;
     };
 
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
+  /**
+   * Noms des lumières du modèle 3D pilotées par cette entité.
+   * Par défaut : toutes celles dont le nom commence par l'id de l'entité.
+   */
+  lightNames?: string[];
+  /** Intensité 3D à pleine luminosité (12.75 par défaut, dépend des unités de l'export). */
+  intensity?: number;
+  /** Calques RGB utilisés par la vue 2D. */
+  layer?: {
+    red: string;
+    green: string;
+    blue: string;
+  };
 };
 
 type ClimateConfigType = BaseItemConfigType & {
