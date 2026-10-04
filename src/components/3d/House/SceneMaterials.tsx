@@ -10,6 +10,8 @@ type SceneMaterialsProps = {
   backend: RenderBackend;
   hideWalls: boolean;
   heatmap: boolean;
+  /** Éclairage diffus seul (Lambert) : voir `toLambert`. */
+  diffuseOnly: boolean;
   rooms: HouseConfigType['rooms'];
 };
 
@@ -33,6 +35,35 @@ function getMaterialKind(material: THREE.Material): MaterialKind {
 }
 
 /**
+ * Le modèle utilise KHR_materials_specular : GLTFLoader crée des
+ * MeshPhysicalMaterial, le shader le plus coûteux de three.js, évalué pour
+ * chaque lumière et chaque pixel. Les matériaux étant mats (rugosité ≥ 0.64,
+ * non métalliques), le reflet spéculaire est quasi invisible : un matériau
+ * Lambert (diffus seul) donne le même rendu pour une fraction du coût.
+ */
+function toLambert(source: THREE.Material) {
+  if (!(source instanceof THREE.MeshStandardMaterial)) return source;
+  const material = new THREE.MeshLambertMaterial({
+    name: source.name,
+    color: source.color,
+    map: source.map,
+    emissive: source.emissive,
+    emissiveMap: source.emissiveMap,
+    emissiveIntensity: source.emissiveIntensity,
+    alphaMap: source.alphaMap,
+    aoMap: source.aoMap,
+    aoMapIntensity: source.aoMapIntensity,
+    vertexColors: source.vertexColors,
+  });
+  material.opacity = source.opacity;
+  material.transparent = source.transparent;
+  material.alphaTest = source.alphaTest;
+  material.side = source.side;
+  material.depthWrite = source.depthWrite;
+  return material;
+}
+
+/**
  * Seul composant autorisé à modifier les matériaux du modèle.
  *
  * Les matériaux d'origine sont conservés dans `mesh.userData` (la scène est
@@ -40,7 +71,7 @@ function getMaterialKind(material: THREE.Material): MaterialKind {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {scene, backend, hideWalls, heatmap, rooms} = props;
+  const {scene, backend, hideWalls, heatmap, diffuseOnly, rooms} = props;
   const invalidate = useThree(state => state.invalidate);
 
   const heatmapPoints = useHeatmapPoints(rooms);
@@ -53,8 +84,8 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     const createdMaterials: THREE.Material[] = [];
     const meshes: THREE.Mesh[] = [];
 
-    const transform = (original: THREE.Material) => {
-      const kind = getMaterialKind(original);
+    const transform = (gltfMaterial: THREE.Material) => {
+      const kind = getMaterialKind(gltfMaterial);
 
       if (showHeatmap && kind === 'ground') {
         const material = backend.createHeatmapMaterial(
@@ -65,6 +96,12 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         return material;
       }
 
+      let original = gltfMaterial;
+      if (diffuseOnly) {
+        original = toLambert(gltfMaterial);
+        if (original !== gltfMaterial) createdMaterials.push(original);
+      }
+
       let material = original;
       if (hideWalls && kind === 'wall') {
         material = backend.createHideWallsMaterial(original);
@@ -72,12 +109,12 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       }
       if (showHeatmap) {
         // Le reste de la maison devient translucide pour laisser voir le sol.
-        if (material === original) {
+        if (material === gltfMaterial) {
           material = original.clone();
           createdMaterials.push(material);
         }
         material.transparent = true;
-        material.opacity = original.opacity / 3;
+        material.opacity = gltfMaterial.opacity / 3;
         material.depthWrite = false;
       }
       return material;
@@ -103,7 +140,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       heatmapMaterials.current = [];
       invalidate();
     };
-  }, [scene, backend, hideWalls, showHeatmap, invalidate]);
+  }, [scene, backend, hideWalls, showHeatmap, diffuseOnly, invalidate]);
 
   const heatmapPointsKey = JSON.stringify(heatmapPoints);
   useEffect(() => {

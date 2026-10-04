@@ -1,5 +1,9 @@
 import * as THREE from 'three';
-import {MeshStandardNodeMaterial, type Node} from 'three/webgpu';
+import {
+  MeshLambertNodeMaterial,
+  MeshStandardNodeMaterial,
+  type Node,
+} from 'three/webgpu';
 import {
   positionWorld,
   cameraPosition,
@@ -11,16 +15,21 @@ import {
 } from 'three/tsl';
 
 export function createHideWallsMaterialWebGPU(
-  source: THREE.MeshStandardMaterial,
+  source: THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
 ) {
-  const material = new MeshStandardNodeMaterial();
+  let material: MeshStandardNodeMaterial | MeshLambertNodeMaterial;
+  if (source instanceof THREE.MeshStandardMaterial) {
+    material = new MeshStandardNodeMaterial();
+    material.roughness = source.roughness;
+    material.metalness = source.metalness;
+  } else {
+    material = new MeshLambertNodeMaterial();
+  }
   material.name = source.name;
   material.color.copy(source.color);
   material.map = source.map;
   material.side = source.side;
   material.opacity = source.opacity;
-  material.roughness = source.roughness;
-  material.metalness = source.metalness;
 
   const fadeRadius = uniform(8.0);
   const minOpacity = uniform(0.05);

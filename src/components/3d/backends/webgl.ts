@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type {RenderBackend} from './types';
+import {describeWebGlContext, waitForWebGlContext} from './webglInfo';
 import {createHideWallsMaterialWebGl} from '../House/shaders/HideWallsMaterial/WebGL';
 import {
   createHeatmapGroundMaterialWebGl,
@@ -15,7 +16,9 @@ export const webGLBackend: RenderBackend = {
       antialias: false,
     }),
   createHideWallsMaterial: source =>
-    createHideWallsMaterialWebGl(source as THREE.MeshStandardMaterial),
+    createHideWallsMaterialWebGl(
+      source as THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
+    ),
   createHeatmapMaterial: createHeatmapGroundMaterialWebGl,
   updateHeatmapMaterial: (material, points) =>
     updateHeatmapGroundMaterialWebGl(material as THREE.ShaderMaterial, points),
@@ -23,4 +26,13 @@ export const webGLBackend: RenderBackend = {
     renderer instanceof THREE.WebGLRenderer
       ? renderer.capabilities.maxTextures
       : null,
+  describeGpu: renderer =>
+    renderer instanceof THREE.WebGLRenderer
+      ? `WebGL · ${describeWebGlContext(renderer.getContext())}`
+      : '—',
+  waitForGpu: async renderer => {
+    if (renderer instanceof THREE.WebGLRenderer) {
+      waitForWebGlContext(renderer.getContext());
+    }
+  },
 };

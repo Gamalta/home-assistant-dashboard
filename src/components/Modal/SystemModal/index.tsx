@@ -49,19 +49,25 @@ function OptionRow(props: OptionRowProps) {
 
 /** Lance le banc de mesure intégré à la vue 3D (voir components/3d/Benchmark). */
 function BenchmarkRow() {
-  const [result, setResult] = useState<string | null>(null);
+  const [results, setResults] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
 
   const run = async () => {
     const benchmark = window.__dashboardBenchmark;
     if (!benchmark) return;
     setRunning(true);
-    const rest = await benchmark(60);
-    const motion = await benchmark(60, Math.min(1, window.devicePixelRatio));
-    setResult(
-      `repos ${rest.msPerFrame} ms (${rest.fps} img/s, ×${rest.pixelRatio}) · ` +
-        `mouvement ${motion.msPerFrame} ms (${motion.fps} img/s, ×${motion.pixelRatio})`,
-    );
+    setResults([]);
+    // Si le temps ne baisse pas avec la résolution, le coût n'est pas dans
+    // les pixels (géométrie, CPU, rendu logiciel...).
+    const pixelRatios = [undefined, 1, 0.5, 0.25];
+    for (const pixelRatio of pixelRatios) {
+      const r = await benchmark(60, pixelRatio);
+      setResults(prev => [
+        ...prev,
+        `×${r.pixelRatio} : ${r.msPerFrame} ms (${r.fps} img/s) · ` +
+          `CPU ${r.cpuMs} ms · GPU ${r.gpuMs} ms · navigateur ${r.browserFps} img/s`,
+      ]);
+    }
     setRunning(false);
   };
 
@@ -70,7 +76,11 @@ function BenchmarkRow() {
       <Button variant="outlined" disabled={running} onClick={run}>
         {running ? 'Mesure en cours…' : 'Mesurer les performances'}
       </Button>
-      {result && <Typography variant="caption">{result}</Typography>}
+      {results.map(result => (
+        <Typography key={result} variant="caption">
+          {result}
+        </Typography>
+      ))}
     </Stack>
   );
 }
@@ -150,6 +160,7 @@ export function SystemModal(props: SystemModalProps) {
           <OptionRow label="Debug" option="debug" disabled={!is3d} />
           {is3d && configuration.debug && (
             <>
+              <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />
               <InfoRow
                 label="Textures max"
                 value={rendererInfo.maxTextures ?? '—'}

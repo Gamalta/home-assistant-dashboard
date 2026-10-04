@@ -4,14 +4,17 @@ import hideWallsWorldPosVertex from './hideWallsWorldPos.vertex.glsl?raw';
 import hideWallsCommonFragment from './hideWallsCommon.fragment.glsl?raw';
 import hideWallsDitheringFragment from './hideWallsDithering.fragment.glsl?raw';
 
-export type FadeMaterial = THREE.MeshStandardMaterial & {
+export type FadeMaterial = (
+  | THREE.MeshStandardMaterial
+  | THREE.MeshLambertMaterial
+) & {
   userData: {
     shader?: THREE.WebGLProgramParametersWithUniforms;
   };
 };
 
 export function createHideWallsMaterialWebGl(
-  source: THREE.MeshStandardMaterial,
+  source: THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
 ): FadeMaterial {
   const material = source.clone() as FadeMaterial;
   material.transparent = true;

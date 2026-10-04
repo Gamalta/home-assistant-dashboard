@@ -121,13 +121,14 @@ function HouseScene(props: HouseSceneProps) {
           </>
         )}
         <Camera target={camera.target} />
-        <Benchmark target={camera.target} />
+        <Benchmark target={camera.target} backend={backend} />
         <Scene scene={scene} backend={backend} />
         <SceneMaterials
           scene={scene}
           backend={backend}
           hideWalls={configuration.hideWallsShader}
           heatmap={configuration.heatmapShader}
+          diffuseOnly={!configuration.environmentReflections}
           rooms={rooms}
         />
         <AmbientLight />

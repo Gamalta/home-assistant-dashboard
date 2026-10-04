@@ -20,6 +20,7 @@ export type ConfigurationOptions = {
 export type RendererInfo = {
   triangles: number;
   maxTextures: number | null;
+  gpu: string | null;
 };
 
 type AppContextType = {
@@ -45,7 +46,11 @@ const defaultConfiguration: ConfigurationOptions = {
   webGPU: false,
 };
 
-const defaultRendererInfo: RendererInfo = {triangles: -1, maxTextures: null};
+const defaultRendererInfo: RendererInfo = {
+  triangles: -1,
+  maxTextures: null,
+  gpu: null,
+};
 
 export const AppContext = createContext<AppContextType>({
   configuration: defaultConfiguration,

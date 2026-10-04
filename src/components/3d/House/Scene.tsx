@@ -27,7 +27,11 @@ export function Scene(props: SceneProps) {
 
     // Lu sur le renderer existant : en créer un nouveau ouvrirait un contexte
     // WebGL supplémentaire (et les navigateurs en limitent le nombre).
-    setRendererInfo({triangles, maxTextures: backend.getMaxTextures(gl)});
+    setRendererInfo({
+      triangles,
+      maxTextures: backend.getMaxTextures(gl),
+      gpu: backend.describeGpu(gl),
+    });
   }, [scene, gl, backend, setRendererInfo]);
 
   return <primitive object={scene} />;

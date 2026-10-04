@@ -19,4 +19,8 @@ export type RenderBackend = {
     points: HeatmapPoint[],
   ) => void;
   getMaxTextures: (renderer: unknown) => number | null;
+  /** API et GPU réellement utilisés (ex : rendu logiciel, secours WebGL2). */
+  describeGpu: (renderer: unknown) => string;
+  /** Attend que le GPU ait terminé le travail déjà soumis. */
+  waitForGpu: (renderer: unknown) => Promise<void>;
 };
