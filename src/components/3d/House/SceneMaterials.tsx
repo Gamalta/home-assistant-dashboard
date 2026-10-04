@@ -82,9 +82,14 @@ export function SceneMaterials(props: SceneMaterialsProps) {
 
   useEffect(() => {
     const createdMaterials: THREE.Material[] = [];
-    const meshes: THREE.Mesh[] = [];
 
-    const transform = (gltfMaterial: THREE.Material) => {
+    const overlays: THREE.Mesh[] = [];
+
+    // Pour les murs, `fade` dessine la zone qui s'efface près de la caméra
+    // (voir createHideWallsMaterials).
+    const transform = (
+      gltfMaterial: THREE.Material,
+    ): {material: THREE.Material; fade?: THREE.Material} => {
       const kind = getMaterialKind(gltfMaterial);
 
       if (showHeatmap && kind === 'ground') {
@@ -93,7 +98,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         );
         heatmapMaterials.current.push(material);
         createdMaterials.push(material);
-        return material;
+        return {material};
       }
 
       let original = gltfMaterial;
@@ -103,9 +108,12 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       }
 
       let material = original;
+      let fade: THREE.Material | undefined;
       if (hideWalls && kind === 'wall') {
-        material = backend.createHideWallsMaterial(original);
-        createdMaterials.push(material);
+        const wall = backend.createHideWallsMaterials(original);
+        material = wall.opaque;
+        fade = wall.fade;
+        createdMaterials.push(wall.opaque, wall.fade);
       }
       if (showHeatmap) {
         // Le reste de la maison devient translucide pour laisser voir le sol.
@@ -113,26 +121,48 @@ export function SceneMaterials(props: SceneMaterialsProps) {
           material = original.clone();
           createdMaterials.push(material);
         }
-        material.transparent = true;
-        material.opacity = gltfMaterial.opacity / 3;
-        material.depthWrite = false;
+        for (const translucent of fade ? [material, fade] : [material]) {
+          translucent.transparent = true;
+          translucent.opacity = gltfMaterial.opacity / 3;
+          translucent.depthWrite = false;
+        }
       }
-      return material;
+      // Transparent et double face, un matériau est rendu en deux passes
+      // (faces arrière puis avant) : une seule suffit ici.
+      for (const created of fade ? [material, fade] : [material]) {
+        if (created !== gltfMaterial && created.transparent) {
+          created.forceSinglePass = true;
+        }
+      }
+      return {material, fade};
     };
 
+    const meshes: THREE.Mesh[] = [];
     scene.traverse(object => {
-      if (!(object instanceof THREE.Mesh)) return;
-      const userData = object.userData as MeshUserData;
-      userData.originalMaterial ??= object.material;
+      if (object instanceof THREE.Mesh) meshes.push(object);
+    });
+    meshes.forEach(mesh => {
+      const userData = mesh.userData as MeshUserData;
+      userData.originalMaterial ??= mesh.material;
       const original = userData.originalMaterial!;
-      object.material = Array.isArray(original)
-        ? original.map(transform)
-        : transform(original);
-      meshes.push(object);
+      if (Array.isArray(original)) {
+        // Pas de calque de fondu pour les maillages multi-matériaux.
+        mesh.material = original.map(material => transform(material).material);
+        return;
+      }
+      const {material, fade} = transform(original);
+      mesh.material = material;
+      if (fade) {
+        // Même géométrie, rendue une seconde fois avec le matériau de fondu.
+        const overlay = new THREE.Mesh(mesh.geometry, fade);
+        mesh.add(overlay);
+        overlays.push(overlay);
+      }
     });
     invalidate();
 
     return () => {
+      overlays.forEach(overlay => overlay.removeFromParent());
       meshes.forEach(mesh => {
         mesh.material = (mesh.userData as MeshUserData).originalMaterial!;
       });

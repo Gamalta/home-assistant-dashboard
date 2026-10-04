@@ -3,6 +3,16 @@ import {useEffect} from 'react';
 import * as THREE from 'three';
 import type {RenderBackend} from './backends';
 
+export type MotionBenchmarkResult = {
+  frames: number;
+  /** Cadence moyenne pendant une vraie rotation de la caméra. */
+  fps: number;
+  /** Image la plus longue (saccade la plus visible). */
+  worstMs: number;
+  /** Résolution utilisée pendant le mouvement. */
+  pixelRatio: number;
+};
+
 export type BenchmarkResult = {
   frames: number;
   /** Image complète : préparation (CPU) + exécution sur le GPU. */
@@ -27,11 +37,19 @@ declare global {
       frames?: number,
       pixelRatio?: number,
     ) => Promise<BenchmarkResult>;
+    /**
+     * Fait tourner la vraie caméra (OrbitControls) : inclut tout ce que
+     * subit l'utilisateur (overlays HTML, résolution réduite, React...).
+     */
+    __dashboardMotionBenchmark?: (
+      frames?: number,
+    ) => Promise<MotionBenchmarkResult>;
   }
 }
 
 const round = (value: number) => Math.round(value * 10) / 10;
-const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+const nextFrame = () =>
+  new Promise<number>(resolve => requestAnimationFrame(resolve));
 
 /**
  * Rend `frames` images en faisant tourner la caméra autour de sa cible, en
@@ -119,8 +137,47 @@ export function Benchmark(props: {
         pixelRatio: measuredPixelRatio,
       };
     };
+
+    window.__dashboardMotionBenchmark = async (frames = 120) => {
+      const {camera, invalidate} = get();
+      const center = new THREE.Vector3(...target);
+      const initialPosition = camera.position.clone();
+      const offset = initialPosition.clone().sub(center);
+      const axis = new THREE.Vector3(0, 1, 0);
+      let pixelRatio = 0;
+
+      // OrbitControls relit la position de la caméra à chaque image et
+      // déclenche « change », comme lors d'un geste réel.
+      let last = await nextFrame();
+      const start = last;
+      let worstMs = 0;
+      for (let i = 1; i <= frames; i++) {
+        camera.position
+          .copy(offset)
+          .applyAxisAngle(axis, (i / frames) * Math.PI * 2)
+          .add(center);
+        invalidate();
+        const now = await nextFrame();
+        worstMs = Math.max(worstMs, now - last);
+        last = now;
+        if (i === frames >> 1) pixelRatio = get().viewport.dpr;
+      }
+      const msPerFrame = (last - start) / frames;
+
+      camera.position.copy(initialPosition);
+      invalidate();
+
+      return {
+        frames,
+        fps: round(1000 / msPerFrame),
+        worstMs: round(worstMs),
+        pixelRatio,
+      };
+    };
+
     return () => {
       delete window.__dashboardBenchmark;
+      delete window.__dashboardMotionBenchmark;
     };
   }, [get, target, backend]);
 

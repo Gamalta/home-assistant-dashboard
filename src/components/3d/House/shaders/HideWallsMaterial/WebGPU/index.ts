@@ -14,9 +14,9 @@ import {
   materialOpacity,
 } from 'three/tsl';
 
-export function createHideWallsMaterialWebGPU(
-  source: THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
-) {
+type WallMaterial = THREE.MeshStandardMaterial | THREE.MeshLambertMaterial;
+
+function createVariant(source: WallMaterial, fadeVariant: boolean) {
   let material: MeshStandardNodeMaterial | MeshLambertNodeMaterial;
   if (source instanceof THREE.MeshStandardMaterial) {
     material = new MeshStandardNodeMaterial();
@@ -37,13 +37,28 @@ export function createHideWallsMaterialWebGPU(
   const dist = distance(cameraPosition, positionWorld);
   const near = dist.lessThan(nearFadeDistance).toFloat();
   const fadeT = smoothstep(nearFadeDistance, fadeRadius, dist);
-  const opacityNode = mix(minOpacity, 1.0, fadeT);
-  // On garde `material.opacity` (utilisée par la carte des températures).
-  material.opacityNode = mix(opacityNode, minOpacity, near).mul(
-    materialOpacity as unknown as Node<'float'>,
-  );
-  material.transparent = true;
-  material.depthWrite = false;
+  const fade = mix(mix(minOpacity, 1.0, fadeT), minOpacity, near);
+
+  // Chaque pixel n'est dessiné que par l'une des deux variantes (voir
+  // version WebGL).
+  if (fadeVariant) {
+    material.maskNode = fade.lessThan(1.0);
+    // On garde `material.opacity` (utilisée par la carte des températures).
+    material.opacityNode = fade.mul(
+      materialOpacity as unknown as Node<'float'>,
+    );
+    material.transparent = true;
+    material.depthWrite = false;
+  } else {
+    material.maskNode = fade.greaterThanEqual(1.0);
+  }
 
   return material;
+}
+
+export function createHideWallsMaterialsWebGPU(source: WallMaterial) {
+  return {
+    opaque: createVariant(source, false),
+    fade: createVariant(source, true),
+  };
 }

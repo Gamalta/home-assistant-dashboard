@@ -14,7 +14,7 @@ type BackendInternals = {
 // backend effectivement utilisé.
 const getBackend = (renderer: unknown) =>
   (renderer as {backend: BackendInternals}).backend;
-import {createHideWallsMaterialWebGPU} from '../House/shaders/HideWallsMaterial/WebGPU';
+import {createHideWallsMaterialsWebGPU} from '../House/shaders/HideWallsMaterial/WebGPU';
 import {
   createHeatmapGroundMaterialWebGPU,
   updateHeatmapGroundMaterialWebGPU,
@@ -32,8 +32,8 @@ export const webGPUBackend: RenderBackend = {
     // R3F est typé pour WebGLRenderer mais accepte le renderer WebGPU.
     return renderer as unknown as THREE.WebGLRenderer;
   },
-  createHideWallsMaterial: source =>
-    createHideWallsMaterialWebGPU(
+  createHideWallsMaterials: source =>
+    createHideWallsMaterialsWebGPU(
       source as THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
     ),
   createHeatmapMaterial: createHeatmapGroundMaterialWebGPU,

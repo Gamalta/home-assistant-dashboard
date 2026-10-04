@@ -2,46 +2,38 @@ import * as THREE from 'three';
 import hideWallsCommonVertex from './hideWallsCommon.vertex.glsl?raw';
 import hideWallsWorldPosVertex from './hideWallsWorldPos.vertex.glsl?raw';
 import hideWallsCommonFragment from './hideWallsCommon.fragment.glsl?raw';
-import hideWallsDitheringFragment from './hideWallsDithering.fragment.glsl?raw';
+import hideWallsClipFragment from './hideWallsClip.fragment.glsl?raw';
+import hideWallsFadeFragment from './hideWallsFade.fragment.glsl?raw';
 
-export type FadeMaterial = (
-  | THREE.MeshStandardMaterial
-  | THREE.MeshLambertMaterial
-) & {
-  userData: {
-    shader?: THREE.WebGLProgramParametersWithUniforms;
-  };
-};
+type WallMaterial = THREE.MeshStandardMaterial | THREE.MeshLambertMaterial;
 
-export function createHideWallsMaterialWebGl(
-  source: THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
-): FadeMaterial {
-  const material = source.clone() as FadeMaterial;
-  material.transparent = true;
-  material.depthWrite = false;
+function createVariant(source: WallMaterial, fade: boolean) {
+  const material = source.clone();
+  if (fade) {
+    material.defines = {...material.defines, HIDE_WALLS_FADE: ''};
+    material.transparent = true;
+    material.depthWrite = false;
+  }
 
   material.onBeforeCompile = shader => {
-    material.userData.shader = shader;
     shader.uniforms.fadeRadius = {value: 8.0};
     shader.uniforms.minOpacity = {value: 0.05};
     shader.uniforms.nearFadeDistance = {value: 6.0};
-    shader.vertexShader = shader.vertexShader.replace(
-      '#include <common>',
-      hideWallsCommonVertex,
-    );
-    shader.vertexShader = shader.vertexShader.replace(
-      '#include <worldpos_vertex>',
-      hideWallsWorldPosVertex,
-    );
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <common>',
-      hideWallsCommonFragment,
-    );
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <dithering_fragment>',
-      hideWallsDitheringFragment,
-    );
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', hideWallsCommonVertex)
+      .replace('#include <worldpos_vertex>', hideWallsWorldPosVertex);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', hideWallsCommonFragment)
+      .replace('#include <clipping_planes_fragment>', hideWallsClipFragment)
+      .replace('#include <dithering_fragment>', hideWallsFadeFragment);
   };
 
   return material;
+}
+
+export function createHideWallsMaterialsWebGl(source: WallMaterial) {
+  return {
+    opaque: createVariant(source, false),
+    fade: createVariant(source, true),
+  };
 }

@@ -77,6 +77,8 @@ export function Camera(props: CameraProps) {
 
   return (
     <OrbitControls
+      // Exposé dans le store de R3F (utilisé par le benchmark).
+      makeDefault
       target={target}
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}

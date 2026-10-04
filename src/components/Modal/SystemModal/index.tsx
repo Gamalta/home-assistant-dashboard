@@ -54,9 +54,15 @@ function BenchmarkRow() {
 
   const run = async () => {
     const benchmark = window.__dashboardBenchmark;
-    if (!benchmark) return;
+    const motionBenchmark = window.__dashboardMotionBenchmark;
+    if (!benchmark || !motionBenchmark) return;
     setRunning(true);
     setResults([]);
+    const motion = await motionBenchmark();
+    setResults([
+      `Rotation réelle (×${motion.pixelRatio}) : ${motion.fps} img/s · ` +
+        `pire image ${motion.worstMs} ms`,
+    ]);
     // Si le temps ne baisse pas avec la résolution, le coût n'est pas dans
     // les pixels (géométrie, CPU, rendu logiciel...).
     const pixelRatios = [undefined, 1, 0.5, 0.25];

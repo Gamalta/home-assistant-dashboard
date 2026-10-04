@@ -12,7 +12,15 @@ export type RenderBackend = {
   createRenderer: (
     defaults: THREE.WebGLRendererParameters,
   ) => Promise<THREE.WebGLRenderer>;
-  createHideWallsMaterial: (source: THREE.Material) => THREE.Material;
+  /**
+   * Murs transparents près de la caméra, en deux matériaux : `opaque` pour
+   * les parties pleines (elles écrivent la profondeur, donc un mur du fond ne
+   * passe jamais devant), `fade` pour la zone qui s'efface (transparente).
+   */
+  createHideWallsMaterials: (source: THREE.Material) => {
+    opaque: THREE.Material;
+    fade: THREE.Material;
+  };
   createHeatmapMaterial: (points: HeatmapPoint[]) => THREE.Material;
   updateHeatmapMaterial: (
     material: THREE.Material,
