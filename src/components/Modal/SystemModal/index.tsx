@@ -153,6 +153,7 @@ export function SystemModal(props: SystemModalProps) {
             option="environmentReflections"
             disabled={!is3d}
           />
+          <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
           <OptionRow
             label="Carte des températures"
             option="heatmapShader"

@@ -14,6 +14,8 @@ export type ConfigurationOptions = {
   heatmapShader: boolean;
   /** Reflets de l'environnement (IBL) ; sinon éclairage diffus seul. */
   environmentReflections: boolean;
+  /** Ombres des lumières allumées (les plus intenses). */
+  shadows: boolean;
   webGPU: boolean;
 };
 
@@ -43,6 +45,7 @@ const defaultConfiguration: ConfigurationOptions = {
   // Écart invisible à l'œil (~1/255 en moyenne) pour un coût par pixel
   // divisé par ~2 : les reflets restent disponibles dans la modale Système.
   environmentReflections: false,
+  shadows: false,
   webGPU: false,
 };
 

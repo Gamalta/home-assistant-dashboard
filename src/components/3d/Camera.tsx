@@ -6,6 +6,8 @@ import {useEffect, useRef} from 'react';
 type CameraProps = {
   /** Point visé par la caméra (centre de rotation). */
   target: THREE.Vector3Tuple;
+  /** Début et fin d'un mouvement (amorti compris). */
+  onMovingChange?: (moving: boolean) => void;
 };
 
 const DPR_STEP = 0.25;
@@ -25,7 +27,7 @@ const quantize = (value: number) =>
  * la résolution, ce qui divise le nombre de pixels à calculer par ~2 à 4.
  */
 export function Camera(props: CameraProps) {
-  const {target} = props;
+  const {target, onMovingChange} = props;
   const setDpr = useThree(state => state.setDpr);
 
   const restDpr = useRef(window.devicePixelRatio);
@@ -55,6 +57,7 @@ export function Camera(props: CameraProps) {
   const handleChange = () => {
     if (!isMoving.current) {
       isMoving.current = true;
+      onMovingChange?.(true);
       const motionDpr = THREE.MathUtils.lerp(
         MOTION_MIN_DPR,
         MOTION_MAX_DPR,
@@ -71,6 +74,7 @@ export function Camera(props: CameraProps) {
     if (isDragging.current) return;
     timeout.current = setTimeout(() => {
       isMoving.current = false;
+      onMovingChange?.(false);
       applyDpr(restDpr.current);
     }, REST_DELAY);
   };

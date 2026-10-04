@@ -155,6 +155,9 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       if (fade) {
         // Même géométrie, rendue une seconde fois avec le matériau de fondu.
         const overlay = new THREE.Mesh(mesh.geometry, fade);
+        // Reçoit les ombres comme le mur, sans en projeter une seconde fois.
+        overlay.userData.fadeOverlay = true;
+        overlay.receiveShadow = mesh.receiveShadow;
         mesh.add(overlay);
         overlays.push(overlay);
       }

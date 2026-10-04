@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import {Canvas} from '@react-three/fiber';
-import {Suspense, useEffect, useMemo, useState} from 'react';
+import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {
   GizmoHelper,
   GizmoViewport,
@@ -23,6 +23,7 @@ import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
 import {EnvironmentLighting} from './EnvironmentLighting';
+import {LightShadows} from './LightShadows';
 import {loadRenderBackend, RenderBackend} from '../backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 // Servi avec l'application : pas de dépendance à un CDN au démarrage.
@@ -97,6 +98,7 @@ function HouseScene(props: HouseSceneProps) {
     houseConfig?.house.cameraTarget,
   );
   const rooms = houseConfig?.house.rooms ?? [];
+  const moving = useRef(false);
 
   return (
     <Canvas
@@ -120,7 +122,10 @@ function HouseScene(props: HouseSceneProps) {
             <Stats />
           </>
         )}
-        <Camera target={camera.target} />
+        <Camera
+          target={camera.target}
+          onMovingChange={value => (moving.current = value)}
+        />
         <Benchmark target={camera.target} backend={backend} />
         <Scene scene={scene} backend={backend} />
         <SceneMaterials
@@ -130,6 +135,12 @@ function HouseScene(props: HouseSceneProps) {
           heatmap={configuration.heatmapShader}
           diffuseOnly={!configuration.environmentReflections}
           rooms={rooms}
+        />
+        <LightShadows
+          scene={scene}
+          enabled={configuration.shadows}
+          reflections={configuration.environmentReflections}
+          moving={moving}
         />
         <AmbientLight />
         {rooms.map(room => (
