@@ -1,7 +1,7 @@
 import {useThree} from '@react-three/fiber';
 import {useEffect} from 'react';
 import * as THREE from 'three';
-import type {RenderBackend} from './backends';
+import type {RenderBackend} from '../../rendering/backends';
 
 export type MotionBenchmarkResult = {
   frames: number;

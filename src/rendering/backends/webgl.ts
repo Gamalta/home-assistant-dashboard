@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import type {RenderBackend} from './types';
 import {describeWebGlContext, waitForWebGlContext} from './webglInfo';
-import {createHideWallsMaterialsWebGl} from '../House/shaders/HideWallsMaterial/WebGL';
+import {createHideWallsMaterialsWebGl} from '../shaders/HideWallsMaterial/WebGL';
 import {
   createHeatmapGroundMaterialWebGl,
   updateHeatmapGroundMaterialWebGl,
-} from '../House/shaders/HeatmapGroundMaterial/WebGL';
+} from '../shaders/HeatmapGroundMaterial/WebGL';
 
 export const webGLBackend: RenderBackend = {
   kind: 'webgl',

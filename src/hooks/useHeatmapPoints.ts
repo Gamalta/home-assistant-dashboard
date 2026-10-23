@@ -1,6 +1,6 @@
 import {useEntities} from '@hakit/core';
-import type {HouseConfigType, RoomItemConfigType} from '../../../configs/house';
-import type {HeatmapPoint} from './shaders/HeatmapGroundMaterial/common';
+import type {HouseConfigType, RoomItemConfigType} from '../configs/house';
+import type {HeatmapPoint} from '../rendering/shaders/HeatmapGroundMaterial/common';
 
 type TemperatureItem = Extract<
   RoomItemConfigType,

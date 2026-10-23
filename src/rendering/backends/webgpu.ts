@@ -14,11 +14,11 @@ type BackendInternals = {
 // backend effectivement utilisé.
 const getBackend = (renderer: unknown) =>
   (renderer as {backend: BackendInternals}).backend;
-import {createHideWallsMaterialsWebGPU} from '../House/shaders/HideWallsMaterial/WebGPU';
+import {createHideWallsMaterialsWebGPU} from '../shaders/HideWallsMaterial/WebGPU';
 import {
   createHeatmapGroundMaterialWebGPU,
   updateHeatmapGroundMaterialWebGPU,
-} from '../House/shaders/HeatmapGroundMaterial/WebGPU';
+} from '../shaders/HeatmapGroundMaterial/WebGPU';
 
 export const webGPUBackend: RenderBackend = {
   kind: 'webgpu',

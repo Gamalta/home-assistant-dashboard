@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useThree} from '@react-three/fiber';
 import * as THREE from 'three';
 import {useAppContext} from '../../../contexts/AppContext';
-import type {RenderBackend} from '../backends';
+import type {RenderBackend} from '../../../rendering/backends';
 
 type SceneProps = {
   scene: THREE.Group;

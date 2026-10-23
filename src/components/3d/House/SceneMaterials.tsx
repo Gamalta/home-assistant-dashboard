@@ -2,8 +2,8 @@ import {useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
-import type {RenderBackend} from '../backends';
-import {useHeatmapPoints} from './useHeatmapPoints';
+import type {RenderBackend} from '../../../rendering/backends';
+import {useHeatmapPoints} from '../../../hooks/useHeatmapPoints';
 
 type SceneMaterialsProps = {
   scene: THREE.Object3D;

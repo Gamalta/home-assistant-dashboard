@@ -24,7 +24,7 @@ import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
 import {EnvironmentLighting} from './EnvironmentLighting';
 import {LightShadows} from './LightShadows';
-import {loadRenderBackend, RenderBackend} from '../backends';
+import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 // Servi avec l'application : pas de dépendance à un CDN au démarrage.
 import nightEnvironment from '../assets/dikhololo_night_1k.hdr?url';

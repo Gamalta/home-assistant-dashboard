@@ -1,5 +1,5 @@
 import type * as THREE from 'three';
-import type {HeatmapPoint} from '../House/shaders/HeatmapGroundMaterial/common';
+import type {HeatmapPoint} from '../shaders/HeatmapGroundMaterial/common';
 
 /**
  * Tout ce qui dépend du moteur de rendu (WebGL ou WebGPU). Chaque
