@@ -74,8 +74,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
     light.visible = visible;
     try {
       await gl.compileAsync(scene, camera);
-    } catch {
-    }
+    } catch {}
     if (id !== transition.current) return;
     phase.current = visible ? 'visible' : 'hidden';
     invalidate();
