@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/react';
 type ErrorBoundaryProps = {
   children: ReactNode;
   fallback: ReactNode;
-  /** Changer cette clé réinitialise l'erreur (ex: nouvelle configuration). */
   resetKey?: string;
   onError?: (error: unknown) => void;
 };
