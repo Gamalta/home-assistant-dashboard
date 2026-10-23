@@ -109,18 +109,11 @@ export function SystemModal(props: SystemModalProps) {
     useAppContext();
   const {houseConfig} = useHouseContext();
   const house = houseConfig?.house;
-  const can3d = webGLSupported && !!house?.model;
-  const can2d = !!house?.floorPlan;
-  const is3d = can3d && (configuration.view3d || !can2d);
+  const is3d = webGLSupported && !!house?.model;
 
   return (
     <Modal {...modalProps}>
       <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
-          {(systemConfig?.graphs ?? []).map(graph => (
-            <SystemGraphDisplay key={graph.label} graphConfig={graph} />
-          ))}
-        </Stack>
         <Stack spacing={1}>
           <SystemInfoDisplay
             label="Lancé depuis:"
@@ -138,11 +131,7 @@ export function SystemModal(props: SystemModalProps) {
           <Typography variant="subtitle2" color="text.secondary">
             Affichage
           </Typography>
-          <OptionRow
-            label="Vue 3D"
-            option="view3d"
-            disabled={!can3d || !can2d}
-          />
+          <BenchmarkRow />
           <OptionRow
             label="Murs transparents"
             option="hideWallsShader"
@@ -180,7 +169,6 @@ export function SystemModal(props: SystemModalProps) {
                     : rendererInfo.triangles.toLocaleString('fr-FR')
                 }
               />
-              <BenchmarkRow />
             </>
           )}
         </Stack>

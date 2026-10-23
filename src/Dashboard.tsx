@@ -13,9 +13,8 @@ import {
 import {lazy, Suspense, useState} from 'react';
 import {useEffect} from 'react';
 
-// Chargées à la demande : three.js (~1 Mo) n'est téléchargé qu'en vue 3D.
+// Chargée à la demande : three.js (~1 Mo) ne retarde pas l'affichage de la barre latérale.
 const House3d = lazy(() => import('./components/3d/House'));
-const House2d = lazy(() => import('./components/House'));
 
 const centered = {
   height: '100%',
@@ -32,33 +31,28 @@ function Loader() {
 }
 
 function HouseView() {
-  const {configuration, webGLSupported, webGPUSupported} = useAppContext();
+  const {webGLSupported, webGPUSupported} = useAppContext();
   const {houseConfig} = useHouseContext();
   const house = houseConfig?.house;
 
-  const can3d = webGLSupported && !!house?.model;
-  const can2d = !!house?.floorPlan;
-
-  if (!can3d && !can2d) {
+  if (!webGLSupported || !house?.model) {
     return (
       <Stack sx={centered}>
         <Alert severity="error" variant="filled">
           {house?.model
-            ? 'Cet appareil ne supporte pas WebGL et aucun plan 2D n’est configuré.'
-            : 'Aucun modèle 3D ni plan 2D dans cette configuration.'}
+            ? 'Cet appareil ne supporte pas WebGL.'
+            : 'Aucun modèle 3D dans cette configuration.'}
         </Alert>
       </Stack>
     );
   }
 
-  // La 3D est prioritaire, sauf si l'utilisateur a choisi la 2D.
-  const use3d = can3d && (configuration.view3d || !can2d);
   // On attend la détection WebGPU pour ne pas créer le canvas deux fois.
-  if (use3d && webGPUSupported === null) return <Loader />;
+  if (webGPUSupported === null) return <Loader />;
 
   return (
     <Suspense fallback={<Loader />}>
-      {use3d ? <House3d /> : <House2d />}
+      <House3d />
     </Suspense>
   );
 }

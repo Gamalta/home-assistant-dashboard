@@ -1,8 +1,6 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
 type Position3dType = {x: number; y: number; z: number};
-/** Position en pourcentage de la largeur / hauteur du plan 2D. */
-type Position2dType = {x: number; y: number};
 
 type HouseConfigType = {
   /** Modèle glTF utilisé par la vue 3D. */
@@ -11,16 +9,10 @@ type HouseConfigType = {
   camera?: string;
   /** Point visé par la caméra (par défaut l'origine). */
   cameraTarget?: Position3dType;
-  /** Plans utilisés par la vue 2D (fallback sans WebGL). */
-  floorPlan?: {
-    day: string;
-    night: string;
-  };
   rooms: {
     id: string;
     name: string;
     position: Position3dType;
-    floorPosition?: Position2dType;
     items?: RoomItemConfigType[];
   }[];
 };
@@ -41,7 +33,6 @@ type BaseItemConfigType =
       type: string;
       roomDisplay?: false;
       position: Position3dType;
-      floorPosition?: Position2dType;
     };
 
 type LightConfigType = BaseItemConfigType & {
@@ -54,12 +45,6 @@ type LightConfigType = BaseItemConfigType & {
   lightNames?: string[];
   /** Intensité 3D à pleine luminosité (12.75 par défaut, dépend des unités de l'export). */
   intensity?: number;
-  /** Calques RGB utilisés par la vue 2D. */
-  layer?: {
-    red: string;
-    green: string;
-    blue: string;
-  };
 };
 
 type ClimateConfigType = BaseItemConfigType & {

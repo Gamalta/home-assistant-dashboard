@@ -9,7 +9,6 @@ import {
 
 export type ConfigurationOptions = {
   debug: boolean;
-  view3d: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
   /** Reflets de l'environnement (IBL) ; sinon éclairage diffus seul. */
@@ -39,7 +38,6 @@ const STORAGE_KEY = 'graphics-options';
 
 const defaultConfiguration: ConfigurationOptions = {
   debug: false,
-  view3d: true,
   hideWallsShader: true,
   heatmapShader: false,
   // Écart invisible à l'œil (~1/255 en moyenne) pour un coût par pixel

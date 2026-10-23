@@ -1,35 +1,33 @@
 import Stack from '@mui/material/Stack';
-import type {ComponentType, ReactNode} from 'react';
-import type {
-  HouseConfigType,
-  Position2dType,
-  Position3dType,
-} from '../../../configs/house';
+import type {ReactNode} from 'react';
+import type {HouseConfigType, Position3dType} from '../../../configs/house';
+import {Html} from '../../3d/Html';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-export type RoomAnchorProps = {
-  position: Position3dType;
-  floorPosition?: Position2dType;
-  children: ReactNode;
-};
-
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
-  /**
-   * Place un élément dans la vue (Html de drei en 3D, positionnement absolu
-   * en 2D). Injecté pour que la vue 2D n'embarque pas three.js.
-   */
-  Anchor: ComponentType<RoomAnchorProps>;
 };
 
+function Anchor({
+  position,
+  children,
+}: {
+  position: Position3dType;
+  children: ReactNode;
+}) {
+  return (
+    <Html position={[position.x, position.y, position.z]}>{children}</Html>
+  );
+}
+
 export function Room(props: RoomProps) {
-  const {room, Anchor} = props;
+  const {room} = props;
   const items = room.items ?? [];
 
   return (
     <>
-      <Anchor position={room.position} floorPosition={room.floorPosition}>
+      <Anchor position={room.position}>
         <ButtonGroup
           variant="contained"
           size="small"
@@ -54,7 +52,6 @@ export function Room(props: RoomProps) {
           <Anchor
             key={`room-${room.id}-item-${item.type}-id-${id}`}
             position={item.position}
-            floorPosition={item.floorPosition}
           >
             <Stack>
               <RoomItem
