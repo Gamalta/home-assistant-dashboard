@@ -1,107 +1,18 @@
 import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
-import {SystemGraphDisplay} from './SystemGraphDisplay';
+import {OptionRow} from './OptionRow';
+import {BenchmarkRow} from './BenchmarkRow';
+import {InfoRow} from './InfoRow';
 import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
-import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
-import Button from '@mui/material/Button';
-import {useState} from 'react';
-import {
-  ConfigurationOptions,
-  useAppContext,
-} from '../../../contexts/AppContext';
+import {useAppContext} from '../../../contexts/AppContext';
 import {useHouseContext} from '../../../contexts/HouseContext';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
 };
-
-type OptionRowProps = {
-  label: string;
-  option: keyof ConfigurationOptions;
-  disabled?: boolean;
-};
-
-function OptionRow(props: OptionRowProps) {
-  const {label, option, disabled} = props;
-  const {configuration, setConfiguration} = useAppContext();
-
-  return (
-    <Stack
-      direction="row"
-      sx={{justifyContent: 'space-between', alignItems: 'center'}}
-    >
-      <Typography color={disabled ? 'text.disabled' : undefined}>
-        {label}
-      </Typography>
-      <Switch
-        checked={configuration[option]}
-        disabled={disabled}
-        onChange={event =>
-          setConfiguration(prev => ({...prev, [option]: event.target.checked}))
-        }
-      />
-    </Stack>
-  );
-}
-
-/** Lance le banc de mesure intégré à la vue 3D (voir components/3d/Benchmark). */
-function BenchmarkRow() {
-  const [results, setResults] = useState<string[]>([]);
-  const [running, setRunning] = useState(false);
-
-  const run = async () => {
-    const benchmark = window.__dashboardBenchmark;
-    const motionBenchmark = window.__dashboardMotionBenchmark;
-    if (!benchmark || !motionBenchmark) return;
-    setRunning(true);
-    setResults([]);
-    const motion = await motionBenchmark();
-    setResults([
-      `Rotation réelle (×${motion.pixelRatio}) : ${motion.fps} img/s · ` +
-        `pire image ${motion.worstMs} ms`,
-    ]);
-    // Si le temps ne baisse pas avec la résolution, le coût n'est pas dans
-    // les pixels (géométrie, CPU, rendu logiciel...).
-    const pixelRatios = [undefined, 1, 0.5, 0.25];
-    for (const pixelRatio of pixelRatios) {
-      const r = await benchmark(60, pixelRatio);
-      setResults(prev => [
-        ...prev,
-        `×${r.pixelRatio} : ${r.msPerFrame} ms (${r.fps} img/s) · ` +
-          `CPU ${r.cpuMs} ms · GPU ${r.gpuMs} ms · navigateur ${r.browserFps} img/s`,
-      ]);
-    }
-    setRunning(false);
-  };
-
-  return (
-    <Stack spacing={0.5}>
-      <Button variant="outlined" disabled={running} onClick={run}>
-        {running ? 'Mesure en cours…' : 'Mesurer les performances'}
-      </Button>
-      {results.map(result => (
-        <Typography key={result} variant="caption">
-          {result}
-        </Typography>
-      ))}
-    </Stack>
-  );
-}
-
-function InfoRow(props: {label: string; value: string | number}) {
-  return (
-    <Stack
-      direction="row"
-      sx={{justifyContent: 'space-between', alignItems: 'center'}}
-    >
-      <Typography>{props.label}</Typography>
-      <Typography>{props.value}</Typography>
-    </Stack>
-  );
-}
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
