@@ -63,7 +63,7 @@ Le détail se trouve dans le [guide des tests](guides/tests.md) et l'[ADR 0010](
 
 - **Branches** : `<type>/<sujet-en-kebab>`, avec `type` parmi `feat`, `fix`, `perf`, `refactor`, `test`, `docs`, `chore`, `ci`. Une branche porte un seul sujet et part de `feat/three-js` tant que celle-ci n'est pas fusionnée dans `dev`.
 - **Commits** : [Conventional Commits](https://www.conventionalcommits.org/fr/) en français (`perf: fusionner les meshes du modèle`). Des commits petits et logiques, chacun qui compile.
-- **Identité** : `Elio-Swello <elio@swello.com>` en config git locale, jamais `--global`.
+- **Identité** : `Gamalta <eliovital@icloud.com>` en config git locale, jamais `--global`.
 - **Issue → branche → PR.** Chaque branche a son issue. La PR la ferme (`Closes #n`) et suit le [modèle de PR](../.github/pull_request_template.md).
 
 ## Définition de « terminé »
