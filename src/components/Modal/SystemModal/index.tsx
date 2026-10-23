@@ -1,12 +1,15 @@
 import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
-import {SystemGraphDisplay} from './SystemGraphDisplay';
+import {OptionRow} from './OptionRow';
+import {BenchmarkRow} from './BenchmarkRow';
+import {InfoRow} from './InfoRow';
 import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
-import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
 import {useAppContext} from '../../../contexts/AppContext';
-import * as THREE from 'three';
+import {useHouseContext} from '../../../contexts/HouseContext';
+import { SystemGraphDisplay } from './SystemGraphDisplay';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -14,8 +17,11 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
-  const {configuration, setConfiguration, triangle} = useAppContext();
-  const renderer = new THREE.WebGLRenderer();
+  const {configuration, webGLSupported, webGPUSupported, rendererInfo} =
+    useAppContext();
+  const {houseConfig} = useHouseContext();
+  const house = houseConfig?.house;
+  const is3d = webGLSupported && !!house?.model;
 
   return (
     <Modal {...modalProps}>
@@ -38,82 +44,50 @@ export function SystemModal(props: SystemModalProps) {
               entity.state === 'off' ? 'Suffisant' : 'Insuffisante'
             }
           />
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>Debug</Typography>
-            <Switch
-              checked={configuration.debug}
-              onChange={event =>
-                setConfiguration({
-                  ...configuration,
-                  debug: event.target.checked,
-                })
-              }
-            />
-          </Stack>
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>HideWallsShader</Typography>
-            <Switch
-              checked={configuration.hideWallsShader}
-              onChange={event =>
-                setConfiguration({
-                  ...configuration,
-                  hideWallsShader: event.target.checked,
-                })
-              }
-            />
-          </Stack>
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>HeatMapShader</Typography>
-            <Switch
-              checked={configuration.heatmapShader}
-              onChange={event =>
-                setConfiguration({
-                  ...configuration,
-                  heatmapShader: event.target.checked,
-                })
-              }
-            />
-          </Stack>
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>Max Textures</Typography>
-            <Typography>{renderer.capabilities.maxTextures}</Typography>
-          </Stack>
-
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>Triangles</Typography>
-            <Typography>{triangle}</Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <Typography>Web GPU</Typography>
-            <Switch
-              checked={configuration.webGPU}
-              disabled={!navigator.gpu}
-              onChange={event =>
-                setConfiguration({
-                  ...configuration,
-                  webGPU: event.target.checked,
-                })
-              }
-            />
-          </Stack>
+          <Divider />
+          <Typography variant="subtitle2" color="text.secondary">
+            Affichage
+          </Typography>
+          <BenchmarkRow />
+          <OptionRow
+            label="Murs transparents"
+            option="hideWallsShader"
+            disabled={!is3d}
+          />
+          <OptionRow
+            label="Reflets d'environnement"
+            option="environmentReflections"
+            disabled={!is3d}
+          />
+          <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
+          <OptionRow
+            label="Carte des températures"
+            option="heatmapShader"
+            disabled={!is3d}
+          />
+          <OptionRow
+            label="WebGPU"
+            option="webGPU"
+            disabled={!is3d || !webGPUSupported}
+          />
+          <OptionRow label="Debug" option="debug" disabled={!is3d} />
+          {is3d && configuration.debug && (
+            <>
+              <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />
+              <InfoRow
+                label="Textures max"
+                value={rendererInfo.maxTextures ?? '—'}
+              />
+              <InfoRow
+                label="Triangles"
+                value={
+                  rendererInfo.triangles < 0
+                    ? '—'
+                    : rendererInfo.triangles.toLocaleString('fr-FR')
+                }
+              />
+            </>
+          )}
         </Stack>
       </Stack>
     </Modal>

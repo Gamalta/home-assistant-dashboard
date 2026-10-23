@@ -1,12 +1,14 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
+type Position3dType = {x: number; y: number; z: number};
+
 type HouseConfigType = {
-  model: string;
-  camera?: `Camera_${string}`;
+  model?: string;
+  camera?: string;
   rooms: {
     id: string;
     name: string;
-    position: {x: number; y: number; z: number};
+    position: Position3dType;
     items?: RoomItemConfigType[];
   }[];
 };
@@ -26,12 +28,13 @@ type BaseItemConfigType =
   | {
       type: string;
       roomDisplay?: false;
-      position: {x: number; y: number; z: number};
+      position: Position3dType;
     };
 
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
+  intensity?: number;
 };
 
 type ClimateConfigType = BaseItemConfigType & {

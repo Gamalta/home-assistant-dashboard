@@ -8,11 +8,11 @@ type RoomProps = {
   room: HouseConfigType['rooms'][0];
 };
 
+const heatmapDisplay = ['climate', 'temperature'];
+
 export function Room3d(props: RoomProps) {
   const {room} = props;
   const {configuration} = useAppContext();
-
-  const heatmapDisplay = ['climate', 'temperature'];
 
   const cleanedRoom = {
     ...room,
@@ -25,7 +25,7 @@ export function Room3d(props: RoomProps) {
   return (
     <RoomProvider>
       <Room room={cleanedRoom} />
-      {(cleanedRoom.items ?? []).map((item, id) => (
+      {cleanedRoom.items.map((item, id) => (
         <RoomItem3d key={`item-3d-${id}`} itemConfig={item} />
       ))}
     </RoomProvider>

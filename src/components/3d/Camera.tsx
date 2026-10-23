@@ -1,58 +1,69 @@
 import * as THREE from 'three';
-import {useFrame, useThree} from '@react-three/fiber';
+import {useThree} from '@react-three/fiber';
 import {OrbitControls, usePerformanceMonitor} from '@react-three/drei';
-import {useRef} from 'react';
-import type {ComponentRef} from 'react';
+import {useEffect, useRef} from 'react';
 
-export function Camera() {
-  const {setDpr} = useThree();
+type CameraProps = {
+  onMovingChange?: (moving: boolean) => void;
+};
 
-  const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const timeout = useRef<NodeJS.Timeout | null>(null);
-  const isMoving = useRef<boolean>(false);
+const MOTION_MIN_DPR = 0.5;
+const MOTION_MAX_DPR = 1;
+const REST_DELAY = 250;
+
+export function Camera(props: CameraProps) {
+  const {onMovingChange} = props;
+  const setDpr = useThree(state => state.setDpr);
+
   const factor = useRef(1);
-  const maxDpr = useRef(window.devicePixelRatio);
-  const smoothedDpr = useRef(maxDpr.current);
-  const appliedDpr = useRef(maxDpr.current);
+  const isMoving = useRef(false);
+  const isDragging = useRef(false);
+  const timeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   usePerformanceMonitor({
     onChange: ({factor: newFactor}) => (factor.current = newFactor),
   });
 
-  const DPR_STEP = 0.25;
-  const quantize = (value: number) =>
-    Math.max(DPR_STEP, Math.round(value / DPR_STEP) * DPR_STEP);
+  useEffect(() => () => clearTimeout(timeout.current), []);
 
-  useFrame(() => {
-    if (!isMoving.current) return;
-    const perf = THREE.MathUtils.clamp(factor.current, 0, 1) * maxDpr.current;
-    smoothedDpr.current = THREE.MathUtils.lerp(smoothedDpr.current, perf, 0.1);
-    const targetDpr = quantize(smoothedDpr.current);
-    if (targetDpr !== appliedDpr.current) {
-      appliedDpr.current = targetDpr;
-      setDpr(targetDpr);
-    }
-  });
+  const startMoving = () => {
+    isMoving.current = true;
+    onMovingChange?.(true);
+    const dpr = THREE.MathUtils.lerp(
+      MOTION_MIN_DPR,
+      MOTION_MAX_DPR,
+      THREE.MathUtils.clamp(factor.current, 0, 1),
+    );
+    setDpr(Math.min(window.devicePixelRatio, Math.round(dpr * 4) / 4));
+  };
+
+  const stopMovingLater = () => {
+    clearTimeout(timeout.current);
+    if (isDragging.current) return;
+    timeout.current = setTimeout(() => {
+      isMoving.current = false;
+      onMovingChange?.(false);
+      setDpr(window.devicePixelRatio);
+    }, REST_DELAY);
+  };
 
   return (
     <OrbitControls
-      ref={controls}
+      makeDefault
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}
-      onStart={() => {
-        if (timeout.current) clearTimeout(timeout.current);
-        isMoving.current = true;
+      onChange={() => {
+        if (!isMoving.current) startMoving();
+        stopMovingLater();
       }}
-      onEnd={() =>
-        (timeout.current = setTimeout(() => {
-          isMoving.current = false;
-          smoothedDpr.current = maxDpr.current;
-          if (appliedDpr.current !== maxDpr.current) {
-            appliedDpr.current = maxDpr.current;
-            setDpr(maxDpr.current);
-          }
-        }, 1000))
-      }
+      onStart={() => {
+        isDragging.current = true;
+        clearTimeout(timeout.current);
+      }}
+      onEnd={() => {
+        isDragging.current = false;
+        stopMovingLater();
+      }}
     />
   );
 }

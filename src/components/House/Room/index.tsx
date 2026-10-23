@@ -1,8 +1,8 @@
 import Stack from '@mui/material/Stack';
 import type {HouseConfigType} from '../../../configs/house';
+import {Html} from '../../3d/Html';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import {Html} from '../../3d/Html';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -10,13 +10,11 @@ type RoomProps = {
 
 export function Room(props: RoomProps) {
   const {room} = props;
+  const items = room.items ?? [];
 
   return (
     <>
-      <Html
-        key={room.id}
-        position={[room.position.x, room.position.y, room.position.z]}
-      >
+      <Html position={[room.position.x, room.position.y, room.position.z]}>
         <ButtonGroup
           variant="contained"
           size="small"
@@ -25,7 +23,7 @@ export function Room(props: RoomProps) {
             boxShadow: 0,
           }}
         >
-          {(room.items ?? [])
+          {items
             .filter(item => item.roomDisplay)
             .map((item, id) => (
               <RoomItem
@@ -36,9 +34,8 @@ export function Room(props: RoomProps) {
             ))}
         </ButtonGroup>
       </Html>
-      {(room.items ?? [])
-        .filter(item => !item.roomDisplay)
-        .map((item, id) => (
+      {items.map((item, id) =>
+        item.roomDisplay ? null : (
           <Html
             key={`room-${room.id}-item-${item.type}-id-${id}`}
             position={[item.position.x, item.position.y, item.position.z]}
@@ -50,7 +47,8 @@ export function Room(props: RoomProps) {
               />
             </Stack>
           </Html>
-        ))}
+        ),
+      )}
     </>
   );
 }

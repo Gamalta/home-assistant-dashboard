@@ -3,53 +3,116 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 
-type ConfigurationOptions = {
+export type ConfigurationOptions = {
   debug: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
+  environmentReflections: boolean;
+  shadows: boolean;
   webGPU: boolean;
+};
+
+export type RendererInfo = {
+  triangles: number;
+  maxTextures: number | null;
+  gpu: string | null;
 };
 
 type AppContextType = {
   configuration: ConfigurationOptions;
   setConfiguration: Dispatch<SetStateAction<ConfigurationOptions>>;
-  triangle: number;
-  setTriangle: Dispatch<SetStateAction<number>>;
+  webGLSupported: boolean;
+  webGPUSupported: boolean;
+  rendererInfo: RendererInfo;
+  setRendererInfo: Dispatch<SetStateAction<RendererInfo>>;
 };
 
+const STORAGE_KEY = 'graphics-options';
+
+function detectWebGL() {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+    return !!gl;
+  } catch {
+    return false;
+  }
+}
+
+async function detectWebGPU() {
+  try {
+    return !!(await navigator.gpu?.requestAdapter());
+  } catch {
+    return false;
+  }
+}
+
+const webGLSupported = detectWebGL();
+const webGPUSupported = await detectWebGPU();
+
+const defaultConfiguration: ConfigurationOptions = {
+  debug: false,
+  hideWallsShader: true,
+  heatmapShader: false,
+  environmentReflections: false,
+  shadows: false,
+  webGPU: webGPUSupported,
+};
+
+const defaultRendererInfo: RendererInfo = {
+  triangles: -1,
+  maxTextures: null,
+  gpu: null,
+};
+
+function loadConfiguration(): ConfigurationOptions {
+  let stored: Partial<ConfigurationOptions> = {};
+  try {
+    stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}');
+  } catch {
+    /* */
+  }
+  const configuration = {...defaultConfiguration, ...stored};
+  return {...configuration, webGPU: webGPUSupported && configuration.webGPU};
+}
+
 export const AppContext = createContext<AppContextType>({
-  configuration: {
-    debug: false,
-    hideWallsShader: false,
-    heatmapShader: false,
-    webGPU: false,
-  },
+  configuration: defaultConfiguration,
   setConfiguration: () => {},
-  triangle: -1,
-  setTriangle: () => {},
+  webGLSupported,
+  webGPUSupported,
+  rendererInfo: defaultRendererInfo,
+  setRendererInfo: () => {},
 });
 
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
-  const [configuration, setConfiguration] = useState<ConfigurationOptions>({
-    debug: false,
-    hideWallsShader: true,
-    heatmapShader: false,
-    webGPU: !!navigator.gpu,
-  });
-  const [triangle, setTriangle] = useState<number>(-1);
+  const [configuration, setConfiguration] = useState(loadConfiguration);
+  const [rendererInfo, setRendererInfo] = useState(defaultRendererInfo);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(configuration));
+    } catch {
+      /* */
+    }
+  }, [configuration]);
 
   return (
     <AppContext.Provider
       value={{
         configuration,
         setConfiguration,
-        triangle,
-        setTriangle,
+        webGLSupported,
+        webGPUSupported,
+        rendererInfo,
+        setRendererInfo,
       }}
     >
       {children}

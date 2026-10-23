@@ -1,7 +1,7 @@
 import {useEntity} from '@hakit/core';
 import {useFrame, useThree} from '@react-three/fiber';
 import {LightConfigType} from '../../../../../configs/house';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import * as THREE from 'three';
 
 type RoomLight3dProps = {
@@ -10,64 +10,98 @@ type RoomLight3dProps = {
 
 export function RoomLight3d(props: RoomLight3dProps) {
   const {lightConfig} = props;
-  const {scene, invalidate} = useThree();
+  const {scene, camera, gl, invalidate} = useThree();
 
   const light = useEntity(lightConfig.lightEntityId, {
     returnNullIfNotFound: true,
   });
 
-  const [lightMesh, setLightMesh] = useState<THREE.Light>();
+  const [lightObject, setLightObject] = useState<THREE.Light>();
+  const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
+  const transition = useRef(0);
   useEffect(() => {
     const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
     let found: THREE.Light | undefined;
     scene.traverse(obj => {
-      if (found) return;
-      if (obj.name.toLowerCase().startsWith(prefix)) {
-        found = obj as THREE.Light;
-      }
+      if (found || !(obj instanceof THREE.Light)) return;
+      if (obj.name.toLowerCase().startsWith(prefix)) found = obj;
     });
-    setLightMesh(found);
+    if (!found) {
+      console.warn(
+        `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId} (${prefix})`,
+      );
+    }
+    setLightObject(found);
   }, [scene, lightConfig.lightEntityId]);
 
   useEffect(() => {
-    if (!lightMesh) return;
-    lightMesh.visible = true;
-    lightMesh.intensity = 0;
+    if (!lightObject) return;
+    lightObject.visible = false;
+    lightObject.intensity = 0;
 
-    // On réecrit l'angle car 180 venant de blender ne fonctionne pas (on perd les ombres)
-    if ('angle' in lightMesh && Number(lightMesh.angle) > 1.57079637050628) {
-      lightMesh.angle = 180;
-    }
-
+    phase.current = 'hidden';
     invalidate();
     return () => {
-      lightMesh.intensity = 0;
+      transition.current++;
+      lightObject.intensity = 0;
+      lightObject.visible = false;
       invalidate();
     };
-  }, [lightMesh, invalidate]);
+  }, [lightObject, invalidate]);
 
-  const targetIntensity = light?.state === 'on' ? ((light?.attributes.brightness ?? 255) / 255 * 0.05) : 0;
+  const maxIntensity = lightConfig.intensity ?? 12.75;
+  const targetIntensity =
+    light?.state === 'on'
+      ? ((light?.attributes.brightness ?? 255) / 255) * maxIntensity
+      : 0;
+
+  const color = light?.custom?.color;
+  const colorKey = color?.join(',');
   useEffect(() => {
-    if (!lightMesh) return;
+    if (!color || !lightObject) return;
+    lightObject.color.setRGB(
+      color[0] / 255,
+      color[1] / 255,
+      color[2] / 255,
+      THREE.SRGBColorSpace,
+    );
+    invalidate();
+  }, [colorKey, lightObject, invalidate]);
 
-    if (light?.custom?.color) {
-      lightMesh.color.set(new THREE.Color(...light.custom.color));
+  const setVisible = async (light: THREE.Light, visible: boolean) => {
+    const id = ++transition.current;
+    phase.current = visible ? 'showing' : 'hiding';
+    light.visible = visible;
+    try {
+      await gl.compileAsync(scene, camera);
+    } catch {}
+    if (id !== transition.current) return;
+    phase.current = visible ? 'visible' : 'hidden';
+    invalidate();
+  };
+
+  useEffect(() => {
+    if (!lightObject) return;
+    if (targetIntensity > 0 && phase.current !== 'visible') {
+      if (phase.current !== 'showing') setVisible(lightObject, true);
+    } else if (targetIntensity === 0 && phase.current === 'showing') {
+      setVisible(lightObject, false);
     }
     invalidate();
-  }, [light, lightMesh, targetIntensity, invalidate]);
+  }, [targetIntensity, lightObject]);
 
   useFrame((_, delta) => {
-    if (!lightMesh) return;
-
-    if (Math.abs(lightMesh.intensity - targetIntensity) < 0.0001) {
-      lightMesh.intensity = targetIntensity;
+    if (!lightObject || phase.current !== 'visible') return;
+    const epsilon = maxIntensity * 0.002;
+    if (Math.abs(lightObject.intensity - targetIntensity) < epsilon) {
+      lightObject.intensity = targetIntensity;
+      if (targetIntensity === 0) setVisible(lightObject, false);
       return;
     }
-
     const t = 1 - Math.exp(-8 * Math.min(delta, 0.03));
-    lightMesh.intensity += (targetIntensity - lightMesh.intensity) * t;
+    lightObject.intensity += (targetIntensity - lightObject.intensity) * t;
     invalidate();
   });
 
-  return <></>;
+  return null;
 }

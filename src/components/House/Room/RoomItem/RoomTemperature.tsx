@@ -23,17 +23,9 @@ export function RoomTemperature(props: RoomTemperatureProps) {
 
   const temperature = useEntity(tempConfig.temperatureEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
-    historyOptions: {
-      disable: false,
-      hoursToShow: 24,
-    },
   });
   const humidity = useEntity(tempConfig.humidityEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
-    historyOptions: {
-      disable: false,
-      hoursToShow: 24,
-    },
   });
 
   const battery = useEntity(tempConfig.batteryEntityId ?? 'unknown', {
