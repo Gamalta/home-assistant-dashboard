@@ -5,16 +5,9 @@ import * as THREE from 'three';
 
 type EnvironmentLightingProps = {
   file: string;
-  /**
-   * true : éclairage d'environnement complet (IBL, avec reflets).
-   * false : sonde de lumière calculée depuis le même HDR (éclairage diffus
-   * identique, sans les reflets), beaucoup moins coûteuse par pixel.
-   */
   reflections: boolean;
 };
 
-// Un échantillon sur SAMPLE_STEP pixels dans chaque direction suffit pour des
-// harmoniques sphériques d'ordre 2 (9 coefficients, très basse fréquence).
 const SAMPLE_STEP = 4;
 
 function readTexel(data: ArrayLike<number>, index: number, half: boolean) {
@@ -22,10 +15,6 @@ function readTexel(data: ArrayLike<number>, index: number, half: boolean) {
   return half ? THREE.DataUtils.fromHalfFloat(value) : value;
 }
 
-/**
- * Projette une image HDR équirectangulaire sur les harmoniques sphériques
- * (même convention que LightProbeGenerator.fromCubeTexture).
- */
 function sphericalHarmonicsFromEquirect(texture: THREE.DataTexture) {
   const {data, width, height} = texture.image as {
     data: ArrayLike<number>;
@@ -41,10 +30,8 @@ function sphericalHarmonicsFromEquirect(texture: THREE.DataTexture) {
   let totalWeight = 0;
 
   for (let y = 0; y < height; y += SAMPLE_STEP) {
-    // flipY : la première ligne de données correspond au haut de l'image.
     const v = 1 - (y + 0.5) / height;
     const latitude = (v - 0.5) * Math.PI;
-    // Angle solide d'un texel équirectangulaire : proportionnel à cos(lat).
     const weight = Math.cos(latitude);
     for (let x = 0; x < width; x += SAMPLE_STEP) {
       const u = (x + 0.5) / width;

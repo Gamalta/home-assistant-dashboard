@@ -5,11 +5,9 @@ import * as THREE from 'three';
 
 const NIGHT_INTENSITY = 0.05;
 const DAY_INTENSITY = 0.7;
-// Élévation du soleil (en degrés) entre lesquelles on passe de la nuit au jour.
-const NIGHT_ELEVATION = -6; // fin du crépuscule civil
+const NIGHT_ELEVATION = -6;
 const DAY_ELEVATION = 10;
 
-/** Repli sans entité `sun.sun` : estimation selon l'heure. */
 function intensityFromHour(date: Date) {
   const hour = date.getHours() + date.getMinutes() / 60;
   if (hour >= 19 || hour < 6) return NIGHT_INTENSITY;
