@@ -4,28 +4,18 @@ import {OrbitControls, usePerformanceMonitor} from '@react-three/drei';
 import {useEffect, useRef} from 'react';
 
 type CameraProps = {
-  /** Point visé par la caméra (centre de rotation). */
   target: THREE.Vector3Tuple;
-  /** Début et fin d'un mouvement (amorti compris). */
   onMovingChange?: (moving: boolean) => void;
 };
 
 const DPR_STEP = 0.25;
-// Résolution utilisée pendant les mouvements : au plus 1 pixel rendu par
-// pixel CSS, et jusqu'à 0.5 si l'appareil peine (PerformanceMonitor).
 const MOTION_MAX_DPR = 1;
 const MOTION_MIN_DPR = 0.5;
-// Délai sans mouvement (amorti compris) avant de revenir à la pleine résolution.
 const REST_DELAY = 250;
 
 const quantize = (value: number) =>
   Math.max(DPR_STEP, Math.round(value / DPR_STEP) * DPR_STEP);
 
-/**
- * Au repos (`frameloop="demand"`), une image coûte une seule fois : on la rend
- * en pleine résolution. Pendant une rotation, chaque image compte : on réduit
- * la résolution, ce qui divise le nombre de pixels à calculer par ~2 à 4.
- */
 export function Camera(props: CameraProps) {
   const {target, onMovingChange} = props;
   const setDpr = useThree(state => state.setDpr);
@@ -68,7 +58,6 @@ export function Camera(props: CameraProps) {
     scheduleRest();
   };
 
-  // Retour à la pleine résolution une fois le doigt levé et l'amorti terminé.
   const scheduleRest = () => {
     if (timeout.current) clearTimeout(timeout.current);
     if (isDragging.current) return;
@@ -81,7 +70,6 @@ export function Camera(props: CameraProps) {
 
   return (
     <OrbitControls
-      // Exposé dans le store de R3F (utilisé par le benchmark).
       makeDefault
       target={target}
       maxPolarAngle={Math.PI / 2}
