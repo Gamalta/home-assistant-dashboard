@@ -1,8 +1,6 @@
 import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import {HouseProvider, useHouseContext} from './contexts/HouseContext';
-import {useAppContext} from './contexts/AppContext';
+import House from './components/3d/House';
+import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
 import {
   Group,
@@ -10,52 +8,8 @@ import {
   Separator,
   useDefaultLayout,
 } from 'react-resizable-panels';
-import {lazy, Suspense, useState} from 'react';
+import {useState} from 'react';
 import {useEffect} from 'react';
-
-// Chargée à la demande : three.js (~1 Mo) ne retarde pas l'affichage de la barre latérale.
-const House3d = lazy(() => import('./components/3d/House'));
-
-const centered = {
-  height: '100%',
-  justifyContent: 'center',
-  alignItems: 'center',
-};
-
-function Loader() {
-  return (
-    <Stack sx={centered}>
-      <CircularProgress />
-    </Stack>
-  );
-}
-
-function HouseView() {
-  const {webGLSupported, webGPUSupported} = useAppContext();
-  const {houseConfig} = useHouseContext();
-  const house = houseConfig?.house;
-
-  if (!webGLSupported || !house?.model) {
-    return (
-      <Stack sx={centered}>
-        <Alert severity="error" variant="filled">
-          {house?.model
-            ? 'Cet appareil ne supporte pas WebGL.'
-            : 'Aucun modèle 3D dans cette configuration.'}
-        </Alert>
-      </Stack>
-    );
-  }
-
-  // On attend la détection WebGPU pour ne pas créer le canvas deux fois.
-  if (webGPUSupported === null) return <Loader />;
-
-  return (
-    <Suspense fallback={<Loader />}>
-      <House3d />
-    </Suspense>
-  );
-}
 
 export default function Dashboard() {
   const [isDragging, setIsDragging] = useState(false);
@@ -123,7 +77,7 @@ export default function Dashboard() {
           </Stack>
         </Separator>
         <Panel defaultSize="70%">
-          <HouseView />
+          <House />
         </Panel>
       </Group>
     </HouseProvider>

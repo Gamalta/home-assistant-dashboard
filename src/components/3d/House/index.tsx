@@ -156,7 +156,8 @@ function HouseScene(props: HouseSceneProps) {
 }
 
 export default function House() {
-  const {configuration, setConfiguration} = useAppContext();
+  const {configuration, setConfiguration, webGLSupported, webGPUSupported} =
+    useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -173,19 +174,23 @@ export default function House() {
     };
   }, [configuration.webGPU]);
 
-  if (!model) {
+  if (!webGLSupported || !model) {
     return (
       <Stack
         sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
       >
         <Alert severity="warning" variant="filled">
-          Aucun modèle 3D dans cette configuration.
+          {model
+            ? 'Cet appareil ne supporte pas WebGL.'
+            : 'Aucun modèle 3D dans cette configuration.'}
         </Alert>
       </Stack>
     );
   }
 
-  if (backend?.kind !== wantedKind) return <CenteredLoader />;
+  if (webGPUSupported === null || backend?.kind !== wantedKind) {
+    return <CenteredLoader />;
+  }
 
   return (
     <Stack sx={{position: 'relative', height: '100%', width: '100%'}}>
