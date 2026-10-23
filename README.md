@@ -1,46 +1,38 @@
-# Getting Started with Create React App
+# Elihome Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dashboard Home Assistant pour tablette murale : la maison est affichée en 3D, et chaque lumière, thermomètre, volet ou climatisation se pilote directement dans la scène.
 
-## Available Scripts
+React 19 · Vite · React Three Fiber · three.js · MUI · [@hakit/core](https://github.com/shannonhochkins/ha-component-kit)
 
-In the project directory, you can run:
+## Démarrer
 
-### `npm start`
+Prérequis : Node 24 et pnpm 10.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```sh
+git clone --recurse-submodules https://github.com/Gamalta/home-assistant-dashboard.git
+pnpm install
+cp .env.example .env   # ou créer .env, voir ci-dessous
+pnpm dev
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Sans accès au sous-module privé `src/configs/apartment`, utiliser la maison `demo`.
 
-### `npm test`
+| Variable                   | Rôle                                                   | Exemple                            |
+| -------------------------- | ------------------------------------------------------ | ---------------------------------- |
+| `VITE_HA_URL`              | URL de l'instance Home Assistant                       | `https://homeassistant.local:8123` |
+| `VITE_MOCK_HOME_ASSISTANT` | `true` pour simuler Home Assistant                     | `true`                             |
+| `VITE_HOUSE_CONFIGS`       | Maisons disponibles, la première s'ouvre par défaut    | `["demo"]`                         |
+| `SENTRY_AUTH_TOKEN`        | Upload des sourcemaps au build (laisser vide en local) |                                    |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Scripts
 
-### `npm run build`
+| Commande                                 | Effet                                            |
+| ---------------------------------------- | ------------------------------------------------ |
+| `pnpm dev`                               | Serveur de développement                         |
+| `pnpm build` / `pnpm preview`            | Build de production et serveur local             |
+| `pnpm lint` / `pnpm fix`                 | Lint gts, avec correction automatique pour `fix` |
+| `pnpm optimize-model <in.glb> [out.glb]` | Compression d'un modèle glTF pour le web         |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Documentation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Tout est dans [`docs/`](docs/README.md) : état des lieux, conventions, décisions d'architecture (ADR), specs et guides.
