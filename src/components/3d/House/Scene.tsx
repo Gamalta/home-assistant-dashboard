@@ -25,8 +25,6 @@ export function Scene(props: SceneProps) {
           object.geometry.attributes.position.count) / 3;
     });
 
-    // Lu sur le renderer existant : en créer un nouveau ouvrirait un contexte
-    // WebGL supplémentaire (et les navigateurs en limitent le nombre).
     setRendererInfo({
       triangles,
       maxTextures: backend.getMaxTextures(gl),
