@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type {ReactNode} from 'react';
-import type {HouseConfigType, Position3dType} from '../../../configs/house';
+import type {HouseConfigType} from '../../../configs/house';
 import {Html} from '../../3d/Html';
 import {RoomItem} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -9,25 +8,13 @@ type RoomProps = {
   room: HouseConfigType['rooms'][0];
 };
 
-function Anchor({
-  position,
-  children,
-}: {
-  position: Position3dType;
-  children: ReactNode;
-}) {
-  return (
-    <Html position={[position.x, position.y, position.z]}>{children}</Html>
-  );
-}
-
 export function Room(props: RoomProps) {
   const {room} = props;
   const items = room.items ?? [];
 
   return (
     <>
-      <Anchor position={room.position}>
+      <Html position={[room.position.x, room.position.y, room.position.z]}>
         <ButtonGroup
           variant="contained"
           size="small"
@@ -46,12 +33,12 @@ export function Room(props: RoomProps) {
               />
             ))}
         </ButtonGroup>
-      </Anchor>
+      </Html>
       {items.map((item, id) =>
         item.roomDisplay ? null : (
-          <Anchor
+          <Html
             key={`room-${room.id}-item-${item.type}-id-${id}`}
-            position={item.position}
+            position={[item.position.x, item.position.y, item.position.z]}
           >
             <Stack>
               <RoomItem
@@ -59,7 +46,7 @@ export function Room(props: RoomProps) {
                 itemConfig={item}
               />
             </Stack>
-          </Anchor>
+          </Html>
         ),
       )}
     </>
