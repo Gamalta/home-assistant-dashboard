@@ -47,7 +47,6 @@ export const HouseProvider = (props: HouseProviderProps) => {
 
   useEffect(() => {
     if (!houseConfig) return;
-    // On mémorise l'identifiant (et non le nom affiché) de la configuration.
     if (window.localStorage.getItem('config') !== houseConfig.id) {
       window.localStorage.setItem('config', houseConfig.id);
     }
