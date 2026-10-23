@@ -5,7 +5,6 @@ type Position3dType = {x: number; y: number; z: number};
 type HouseConfigType = {
   model?: string;
   camera?: string;
-  cameraTarget?: Position3dType;
   rooms: {
     id: string;
     name: string;

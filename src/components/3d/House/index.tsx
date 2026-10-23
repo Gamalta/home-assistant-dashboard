@@ -14,7 +14,6 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import {useHouseContext} from '../../../contexts/HouseContext';
-import type {Position3dType} from '../../../configs/house';
 import {useAppContext} from '../../../contexts/AppContext';
 import {Scene} from './Scene';
 import {AmbientLight} from './AmbientLight';
@@ -26,12 +25,10 @@ import {EnvironmentLighting} from './EnvironmentLighting';
 import {LightShadows} from './LightShadows';
 import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
-// Servi avec l'application : pas de dépendance à un CDN au démarrage.
 import nightEnvironment from '../assets/dikhololo_night_1k.hdr?url';
 
 const DEFAULT_CAMERA = {
   position: [0, 7, -7] as THREE.Vector3Tuple,
-  target: [0, 0, 0] as THREE.Vector3Tuple,
   fov: 75,
 };
 
@@ -58,28 +55,16 @@ function ModelLoader() {
   return <CenteredLoader progress={progress} />;
 }
 
-/**
- * Position initiale : celle de la caméra du modèle (son orientation n'est pas
- * utilisée, la vue est pilotée par OrbitControls). Cible : `cameraTarget` de
- * la configuration, sinon l'origine.
- */
-function useModelCamera(
-  cameras: THREE.Camera[],
-  cameraName?: string,
-  cameraTarget?: Position3dType,
-) {
+function useModelCamera(cameras: THREE.Camera[], cameraName?: string) {
   return useMemo(() => {
     const camera =
       cameras.find(camera => camera.name === cameraName) ?? cameras[0];
-    const target: THREE.Vector3Tuple = cameraTarget
-      ? [cameraTarget.x, cameraTarget.y, cameraTarget.z]
-      : DEFAULT_CAMERA.target;
-    if (!camera) return {...DEFAULT_CAMERA, target};
+    if (!camera) return DEFAULT_CAMERA;
 
     camera.updateWorldMatrix(true, false);
     const position = camera.getWorldPosition(new THREE.Vector3()).toArray();
-    return {...DEFAULT_CAMERA, position, target};
-  }, [cameras, cameraName, cameraTarget]);
+    return {...DEFAULT_CAMERA, position};
+  }, [cameras, cameraName]);
 }
 
 type HouseSceneProps = {
@@ -92,11 +77,7 @@ function HouseScene(props: HouseSceneProps) {
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
   const {scene, cameras} = useGLTF(model);
-  const camera = useModelCamera(
-    cameras,
-    houseConfig?.house.camera,
-    houseConfig?.house.cameraTarget,
-  );
+  const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
   const moving = useRef(false);
 
@@ -122,11 +103,8 @@ function HouseScene(props: HouseSceneProps) {
             <Stats />
           </>
         )}
-        <Camera
-          target={camera.target}
-          onMovingChange={value => (moving.current = value)}
-        />
-        <Benchmark target={camera.target} backend={backend} />
+        <Camera onMovingChange={value => (moving.current = value)} />
+        <Benchmark backend={backend} />
         <Scene scene={scene} backend={backend} />
         <SceneMaterials
           scene={scene}
@@ -194,7 +172,6 @@ export default function House() {
       <ErrorBoundary
         resetKey={`${houseConfig?.id}-${backend.kind}`}
         onError={() => {
-          // WebGPU peut échouer à l'initialisation : on retente en WebGL.
           if (backend.kind === 'webgpu') {
             setConfiguration(prev => ({...prev, webGPU: false}));
           }

@@ -36,11 +36,8 @@ const round = (value: number) => Math.round(value * 10) / 10;
 const nextFrame = () =>
   new Promise<number>(resolve => requestAnimationFrame(resolve));
 
-export function Benchmark(props: {
-  target: THREE.Vector3Tuple;
-  backend: RenderBackend;
-}) {
-  const {target, backend} = props;
+export function Benchmark(props: {backend: RenderBackend}) {
+  const {backend} = props;
   const get = useThree(state => state.get);
 
   useEffect(() => {
@@ -56,7 +53,7 @@ export function Benchmark(props: {
       const camera = mainCamera.clone();
       const previousPixelRatio = viewport.dpr;
       const initialPosition = camera.position.clone();
-      const center = new THREE.Vector3(...target);
+      const center = new THREE.Vector3();
       const offset = initialPosition.clone().sub(center);
 
       if (pixelRatio) {
@@ -112,7 +109,7 @@ export function Benchmark(props: {
 
     window.__dashboardMotionBenchmark = async (frames = 120) => {
       const {camera, invalidate} = get();
-      const center = new THREE.Vector3(...target);
+      const center = new THREE.Vector3();
       const initialPosition = camera.position.clone();
       const offset = initialPosition.clone().sub(center);
       const axis = new THREE.Vector3(0, 1, 0);
@@ -149,7 +146,7 @@ export function Benchmark(props: {
       delete window.__dashboardBenchmark;
       delete window.__dashboardMotionBenchmark;
     };
-  }, [get, target, backend]);
+  }, [get, backend]);
 
   return null;
 }
