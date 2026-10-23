@@ -3,11 +3,8 @@ import {FilterByDomain, EntityName} from '@hakit/core';
 type Position3dType = {x: number; y: number; z: number};
 
 type HouseConfigType = {
-  /** Modèle glTF utilisé par la vue 3D. */
   model?: string;
-  /** Caméra du modèle donnant la position initiale (sinon la première). */
   camera?: string;
-  /** Point visé par la caméra (par défaut l'origine). */
   cameraTarget?: Position3dType;
   rooms: {
     id: string;
@@ -38,7 +35,6 @@ type BaseItemConfigType =
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
-  /** Intensité 3D à pleine luminosité (12.75 par défaut, dépend des unités de l'export). */
   intensity?: number;
 };
 
