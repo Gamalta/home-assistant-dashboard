@@ -8,10 +8,6 @@ type RoomLight3dProps = {
   lightConfig: LightConfigType;
 };
 
-// Calibrée sur le rendu précédent, où la couleur 0-255 était passée telle
-// quelle à three.js (ce qui multipliait l'intensité 0.05 par 255).
-const DEFAULT_INTENSITY = 12.75;
-
 export function RoomLight3d(props: RoomLight3dProps) {
   const {lightConfig} = props;
   const {scene, camera, gl, invalidate} = useThree();
@@ -20,57 +16,46 @@ export function RoomLight3d(props: RoomLight3dProps) {
     returnNullIfNotFound: true,
   });
 
-  // Une entité peut piloter plusieurs lumières du modèle (ex: salon_light et
-  // salon_light_2).
-  const [lightObjects, setLightObjects] = useState<THREE.Light[]>([]);
+  // Première lumière du modèle dont le nom commence par l'id de l'entité.
+  const [lightObject, setLightObject] = useState<THREE.Light>();
   // Changer le nombre de lumières visibles impose de recompiler les shaders.
   // On le fait en arrière-plan (compileAsync) pour éviter un à-coup :
   // hidden -> showing (compilation) -> visible (fondu) -> hiding -> hidden.
   const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
   const transition = useRef(0);
   useEffect(() => {
-    const useExactNames = !!lightConfig.lightNames;
-    const names = (
-      lightConfig.lightNames ?? [lightConfig.lightEntityId.split('.')[1]]
-    ).map(name => name.toLowerCase());
-    const found: THREE.Light[] = [];
+    const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
+    let found: THREE.Light | undefined;
     scene.traverse(obj => {
-      if (!(obj instanceof THREE.Light)) return;
-      const name = obj.name.toLowerCase();
-      const matches = useExactNames
-        ? names.includes(name)
-        : names.some(prefix => name.startsWith(prefix));
-      if (matches) found.push(obj);
+      if (found || !(obj instanceof THREE.Light)) return;
+      if (obj.name.toLowerCase().startsWith(prefix)) found = obj;
     });
-    if (!found.length) {
+    if (!found) {
       console.warn(
-        `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId} (${names.join(', ')})`,
+        `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId} (${prefix})`,
       );
     }
-    setLightObjects(found);
-  }, [scene, lightConfig.lightNames, lightConfig.lightEntityId]);
+    setLightObject(found);
+  }, [scene, lightConfig.lightEntityId]);
 
   useEffect(() => {
-    lightObjects.forEach(lightObject => {
-      // Une lumière éteinte est retirée du rendu : sinon chaque pixel continue
-      // de la calculer, même à intensité nulle.
-      lightObject.visible = false;
-      lightObject.intensity = 0;
-    });
+    if (!lightObject) return;
+    // Une lumière éteinte est retirée du rendu : sinon chaque pixel continue
+    // de la calculer, même à intensité nulle.
+    lightObject.visible = false;
+    lightObject.intensity = 0;
 
     phase.current = 'hidden';
     invalidate();
     return () => {
       transition.current++;
-      lightObjects.forEach(lightObject => {
-        lightObject.intensity = 0;
-        lightObject.visible = false;
-      });
+      lightObject.intensity = 0;
+      lightObject.visible = false;
       invalidate();
     };
-  }, [lightObjects, invalidate]);
+  }, [lightObject, invalidate]);
 
-  const maxIntensity = lightConfig.intensity ?? DEFAULT_INTENSITY;
+  const maxIntensity = lightConfig.intensity ?? 12.75;
   const targetIntensity =
     light?.state === 'on'
       ? ((light?.attributes.brightness ?? 255) / 255) * maxIntensity
@@ -79,23 +64,21 @@ export function RoomLight3d(props: RoomLight3dProps) {
   const color = light?.custom?.color;
   const colorKey = color?.join(',');
   useEffect(() => {
-    if (!color) return;
+    if (!color || !lightObject) return;
     // Home Assistant fournit du RGB 0-255, three.js attend des valeurs 0-1.
-    lightObjects.forEach(lightObject =>
-      lightObject.color.setRGB(
-        color[0] / 255,
-        color[1] / 255,
-        color[2] / 255,
-        THREE.SRGBColorSpace,
-      ),
+    lightObject.color.setRGB(
+      color[0] / 255,
+      color[1] / 255,
+      color[2] / 255,
+      THREE.SRGBColorSpace,
     );
     invalidate();
-  }, [colorKey, lightObjects, invalidate]);
+  }, [colorKey, lightObject, invalidate]);
 
-  const setVisible = async (visible: boolean) => {
+  const setVisible = async (light: THREE.Light, visible: boolean) => {
     const id = ++transition.current;
     phase.current = visible ? 'showing' : 'hiding';
-    lightObjects.forEach(lightObject => (lightObject.visible = visible));
+    light.visible = visible;
     try {
       await gl.compileAsync(scene, camera);
     } catch {
@@ -107,32 +90,28 @@ export function RoomLight3d(props: RoomLight3dProps) {
   };
 
   useEffect(() => {
-    if (!lightObjects.length) return;
+    if (!lightObject) return;
     if (targetIntensity > 0 && phase.current !== 'visible') {
-      if (phase.current !== 'showing') setVisible(true);
+      if (phase.current !== 'showing') setVisible(lightObject, true);
     } else if (targetIntensity === 0 && phase.current === 'showing') {
-      setVisible(false);
+      setVisible(lightObject, false);
     }
     invalidate();
-  }, [targetIntensity, lightObjects]);
+  }, [targetIntensity, lightObject]);
 
   useFrame((_, delta) => {
-    if (phase.current !== 'visible') return;
-    let settled = true;
+    if (!lightObject || phase.current !== 'visible') return;
     // Seuil relatif : le fondu s'arrête dès que l'écart n'est plus visible.
     const epsilon = maxIntensity * 0.002;
-    lightObjects.forEach(lightObject => {
-      if (Math.abs(lightObject.intensity - targetIntensity) < epsilon) {
-        lightObject.intensity = targetIntensity;
-        return;
-      }
-      settled = false;
-      const t = 1 - Math.exp(-8 * Math.min(delta, 0.03));
-      lightObject.intensity += (targetIntensity - lightObject.intensity) * t;
-    });
-    if (!settled) invalidate();
-    // Fondu de sortie terminé : on retire la lumière du rendu.
-    else if (targetIntensity === 0) setVisible(false);
+    if (Math.abs(lightObject.intensity - targetIntensity) < epsilon) {
+      lightObject.intensity = targetIntensity;
+      // Fondu de sortie terminé : on retire la lumière du rendu.
+      if (targetIntensity === 0) setVisible(lightObject, false);
+      return;
+    }
+    const t = 1 - Math.exp(-8 * Math.min(delta, 0.03));
+    lightObject.intensity += (targetIntensity - lightObject.intensity) * t;
+    invalidate();
   });
 
   return null;

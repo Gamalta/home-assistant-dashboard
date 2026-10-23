@@ -38,11 +38,6 @@ type BaseItemConfigType =
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
-  /**
-   * Noms des lumières du modèle 3D pilotées par cette entité.
-   * Par défaut : toutes celles dont le nom commence par l'id de l'entité.
-   */
-  lightNames?: string[];
   /** Intensité 3D à pleine luminosité (12.75 par défaut, dépend des unités de l'export). */
   intensity?: number;
 };
