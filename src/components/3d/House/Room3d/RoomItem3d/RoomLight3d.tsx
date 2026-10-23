@@ -16,11 +16,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
     returnNullIfNotFound: true,
   });
 
-  // Première lumière du modèle dont le nom commence par l'id de l'entité.
   const [lightObject, setLightObject] = useState<THREE.Light>();
-  // Changer le nombre de lumières visibles impose de recompiler les shaders.
-  // On le fait en arrière-plan (compileAsync) pour éviter un à-coup :
-  // hidden -> showing (compilation) -> visible (fondu) -> hiding -> hidden.
   const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
   const transition = useRef(0);
   useEffect(() => {
@@ -40,8 +36,6 @@ export function RoomLight3d(props: RoomLight3dProps) {
 
   useEffect(() => {
     if (!lightObject) return;
-    // Une lumière éteinte est retirée du rendu : sinon chaque pixel continue
-    // de la calculer, même à intensité nulle.
     lightObject.visible = false;
     lightObject.intensity = 0;
 
@@ -65,7 +59,6 @@ export function RoomLight3d(props: RoomLight3dProps) {
   const colorKey = color?.join(',');
   useEffect(() => {
     if (!color || !lightObject) return;
-    // Home Assistant fournit du RGB 0-255, three.js attend des valeurs 0-1.
     lightObject.color.setRGB(
       color[0] / 255,
       color[1] / 255,
@@ -82,7 +75,6 @@ export function RoomLight3d(props: RoomLight3dProps) {
     try {
       await gl.compileAsync(scene, camera);
     } catch {
-      // Le rendu suivant compilera de façon synchrone.
     }
     if (id !== transition.current) return;
     phase.current = visible ? 'visible' : 'hidden';
@@ -101,11 +93,9 @@ export function RoomLight3d(props: RoomLight3dProps) {
 
   useFrame((_, delta) => {
     if (!lightObject || phase.current !== 'visible') return;
-    // Seuil relatif : le fondu s'arrête dès que l'écart n'est plus visible.
     const epsilon = maxIntensity * 0.002;
     if (Math.abs(lightObject.intensity - targetIntensity) < epsilon) {
       lightObject.intensity = targetIntensity;
-      // Fondu de sortie terminé : on retire la lumière du rendu.
       if (targetIntensity === 0) setVisible(lightObject, false);
       return;
     }
