@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useHouseContext} from '../../../contexts/HouseContext';
+import { SystemGraphDisplay } from './SystemGraphDisplay';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -25,6 +26,11 @@ export function SystemModal(props: SystemModalProps) {
   return (
     <Modal {...modalProps}>
       <Stack spacing={2}>
+        <Stack direction="row" spacing={2}>
+          {(systemConfig?.graphs ?? []).map(graph => (
+            <SystemGraphDisplay key={graph.label} graphConfig={graph} />
+          ))}
+        </Stack>
         <Stack spacing={1}>
           <SystemInfoDisplay
             label="Lancé depuis:"
