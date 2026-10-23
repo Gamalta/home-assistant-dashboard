@@ -11,9 +11,7 @@ export type ConfigurationOptions = {
   debug: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
-  /** Reflets de l'environnement (IBL) ; sinon éclairage diffus seul. */
   environmentReflections: boolean;
-  /** Ombres des lumières allumées (les plus intenses). */
   shadows: boolean;
   webGPU: boolean;
 };
@@ -28,56 +26,17 @@ type AppContextType = {
   configuration: ConfigurationOptions;
   setConfiguration: Dispatch<SetStateAction<ConfigurationOptions>>;
   webGLSupported: boolean;
-  /** null tant que la détection (asynchrone) n'est pas terminée. */
-  webGPUSupported: boolean | null;
+  webGPUSupported: boolean;
   rendererInfo: RendererInfo;
   setRendererInfo: Dispatch<SetStateAction<RendererInfo>>;
 };
 
 const STORAGE_KEY = 'graphics-options';
 
-const defaultConfiguration: ConfigurationOptions = {
-  debug: false,
-  hideWallsShader: true,
-  heatmapShader: false,
-  // Écart invisible à l'œil (~1/255 en moyenne) pour un coût par pixel
-  // divisé par ~2 : les reflets restent disponibles dans la modale Système.
-  environmentReflections: false,
-  shadows: false,
-  webGPU: false,
-};
-
-const defaultRendererInfo: RendererInfo = {
-  triangles: -1,
-  maxTextures: null,
-  gpu: null,
-};
-
-export const AppContext = createContext<AppContextType>({
-  configuration: defaultConfiguration,
-  setConfiguration: () => {},
-  webGLSupported: false,
-  webGPUSupported: null,
-  rendererInfo: defaultRendererInfo,
-  setRendererInfo: () => {},
-});
-
-export const useAppContext = () => useContext(AppContext);
-
-function readStoredConfiguration(): Partial<ConfigurationOptions> | null {
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : null;
-  } catch {
-    return null;
-  }
-}
-
 function detectWebGL() {
   try {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
-    // On libère tout de suite le contexte : les navigateurs en limitent le nombre.
     gl?.getExtension('WEBGL_lose_context')?.loseContext();
     return !!gl;
   } catch {
@@ -87,42 +46,63 @@ function detectWebGL() {
 
 async function detectWebGPU() {
   try {
-    // navigator.gpu peut exister sans adaptateur disponible (ex: Chrome Linux).
     return !!(await navigator.gpu?.requestAdapter());
   } catch {
     return false;
   }
 }
 
+const webGLSupported = detectWebGL();
+const webGPUSupported = await detectWebGPU();
+
+const defaultConfiguration: ConfigurationOptions = {
+  debug: false,
+  hideWallsShader: true,
+  heatmapShader: false,
+  environmentReflections: false,
+  shadows: false,
+  webGPU: webGPUSupported,
+};
+
+const defaultRendererInfo: RendererInfo = {
+  triangles: -1,
+  maxTextures: null,
+  gpu: null,
+};
+
+function loadConfiguration(): ConfigurationOptions {
+  let stored: Partial<ConfigurationOptions> = {};
+  try {
+    stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}');
+  } catch {
+    /* */
+  }
+  const configuration = {...defaultConfiguration, ...stored};
+  return {...configuration, webGPU: webGPUSupported && configuration.webGPU};
+}
+
+export const AppContext = createContext<AppContextType>({
+  configuration: defaultConfiguration,
+  setConfiguration: () => {},
+  webGLSupported,
+  webGPUSupported,
+  rendererInfo: defaultRendererInfo,
+  setRendererInfo: () => {},
+});
+
+export const useAppContext = () => useContext(AppContext);
+
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
-  const [storedConfiguration] = useState(readStoredConfiguration);
-  const [configuration, setConfiguration] = useState<ConfigurationOptions>({
-    ...defaultConfiguration,
-    ...storedConfiguration,
-  });
-  const [webGLSupported] = useState(detectWebGL);
-  const [webGPUSupported, setWebGPUSupported] = useState<boolean | null>(null);
+  const [configuration, setConfiguration] = useState(loadConfiguration);
   const [rendererInfo, setRendererInfo] = useState(defaultRendererInfo);
 
   useEffect(() => {
-    detectWebGPU().then(supported => {
-      setWebGPUSupported(supported);
-      setConfiguration(prev => ({
-        ...prev,
-        // Sans préférence enregistrée, on active WebGPU dès qu'il est disponible.
-        webGPU: supported && (storedConfiguration?.webGPU ?? true),
-      }));
-    });
-  }, [storedConfiguration]);
-
-  useEffect(() => {
-    if (webGPUSupported === null) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(configuration));
     } catch {
-      // Stockage indisponible (navigation privée...) : les options restent en mémoire.
+      /* */
     }
-  }, [configuration, webGPUSupported]);
+  }, [configuration]);
 
   return (
     <AppContext.Provider

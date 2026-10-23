@@ -156,8 +156,7 @@ function HouseScene(props: HouseSceneProps) {
 }
 
 export default function House() {
-  const {configuration, setConfiguration, webGLSupported, webGPUSupported} =
-    useAppContext();
+  const {configuration, setConfiguration, webGLSupported} = useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -188,9 +187,7 @@ export default function House() {
     );
   }
 
-  if (webGPUSupported === null || backend?.kind !== wantedKind) {
-    return <CenteredLoader />;
-  }
+  if (backend?.kind !== wantedKind) return <CenteredLoader />;
 
   return (
     <Stack sx={{position: 'relative', height: '100%', width: '100%'}}>
