@@ -10,8 +10,6 @@ type BackendInternals = {
   device?: GPUDevice;
 };
 
-// WebGPURenderer bascule seul sur WebGL2 si WebGPU échoue : on regarde le
-// backend effectivement utilisé.
 const getBackend = (renderer: unknown) =>
   (renderer as {backend: BackendInternals}).backend;
 import {createHideWallsMaterialsWebGPU} from '../shaders/HideWallsMaterial/WebGPU';
@@ -29,7 +27,6 @@ export const webGPUBackend: RenderBackend = {
       antialias: false,
     });
     await renderer.init();
-    // R3F est typé pour WebGLRenderer mais accepte le renderer WebGPU.
     return renderer as unknown as THREE.WebGLRenderer;
   },
   createHideWallsMaterials: source =>
@@ -38,7 +35,6 @@ export const webGPUBackend: RenderBackend = {
     ),
   createHeatmapMaterial: createHeatmapGroundMaterialWebGPU,
   updateHeatmapMaterial: updateHeatmapGroundMaterialWebGPU,
-  // Pas d'équivalent exposé par WebGPURenderer.
   getMaxTextures: () => null,
   describeGpu: renderer => {
     const {isWebGLBackend, gl, device} = getBackend(renderer);
