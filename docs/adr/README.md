@@ -19,14 +19,4 @@ Un correctif ou une fonctionnalité qui suit un motif existant n'en a pas besoin
 
 ## Index
 
-| N°                                                 | Décision                                                          | Statut  |
-| -------------------------------------------------- | ----------------------------------------------------------------- | ------- |
-| [0001](0001-consigner-les-decisions.md)            | Consigner les décisions dans des ADR                              | Accepté |
-| [0002](0002-rendu-3d-a-la-demande.md)              | Scène 3D en React Three Fiber, rendue à la demande                | Accepté |
-| [0003](0003-backends-webgl-webgpu.md)              | Backends WebGL et WebGPU interchangeables, chargés à la demande   | Accepté |
-| [0004](0004-scenematerials-proprietaire-unique.md) | `SceneMaterials`, seul propriétaire des matériaux du modèle       | Accepté |
-| [0005](0005-qualite-adaptative-en-mouvement.md)    | Qualité réduite pendant le mouvement, ombres figées               | Accepté |
-| [0006](0006-home-assistant-simule.md)              | Home Assistant simulé pour le développement, la démo et les tests | Accepté |
-| [0007](0007-une-config-par-maison.md)              | Une configuration par maison, la maison privée en sous-module     | Accepté |
-| [0008](0008-specs-et-definition-de-termine.md)     | Spec, ADR, doc et tests dans chaque PR de fonctionnalité          | Accepté |
-| [0009](0009-budget-performance-tablette.md)        | Budget de performance de la tablette                              | Proposé |
+Les fichiers sont numérotés dans l'ordre des décisions : la liste du dossier fait office d'index, ce qui évite qu'un tableau central ne crée des conflits entre les PR. Le statut figure en tête de chaque ADR.
