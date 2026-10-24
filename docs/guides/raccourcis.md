@@ -21,6 +21,17 @@ La tuile affiche le nombre de lumières allumées. Un appui ouvre la liste de ce
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `scriptEntityId` | Script Home Assistant lancé à la place, par exemple pour éteindre aussi la TV ou les prises. Le dashboard n'éteint alors rien lui-même. |
 
+## Liste de courses
+
+`{type: 'shoppingList', todoEntityId: 'todo.shopping_list'}`
+
+La tuile affiche le nombre d'articles à acheter. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
+
+| Option         | Rôle                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `todoEntityId` | Liste `todo` de Home Assistant, par exemple celle de l'intégration « Liste de courses » |
+| `label`        | Libellé de la tuile, `Courses` par défaut                                               |
+
 ## Ajouter un type de tuile
 
 1. Ajouter son type à l'union `ShortcutConfigType` de `src/configs/sidebar.d.ts`.
