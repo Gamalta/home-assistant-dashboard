@@ -15,6 +15,8 @@ export type ConfigurationOptions = {
   webGPU: boolean;
   /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
   screensaverMinutes: number;
+  // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
+  hiddenCategories: string[];
 };
 
 export type RendererInfo = {
@@ -63,6 +65,7 @@ const defaultConfiguration: ConfigurationOptions = {
   shadows: false,
   webGPU: false,
   screensaverMinutes: 0,
+  hiddenCategories: [],
 };
 
 const defaultRendererInfo: RendererInfo = {

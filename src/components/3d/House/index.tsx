@@ -8,6 +8,7 @@ import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
+import {LabelFilter} from './LabelFilter';
 
 export default function House() {
   const {configuration, setConfiguration, webGLSupported} = useAppContext();
@@ -78,6 +79,7 @@ export default function House() {
             model={model}
           />
         </Suspense>
+        <LabelFilter rooms={houseConfig?.house.rooms ?? []} />
       </ErrorBoundary>
     </Stack>
   );

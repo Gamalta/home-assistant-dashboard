@@ -4,6 +4,7 @@ import {RoomProvider} from '../../../../contexts/RoomContext';
 import {HouseConfigType} from '../../../../configs/house';
 import {RoomItem3d} from './RoomItem3d';
 import {useAppContext} from '../../../../contexts/AppContext';
+import {isLabelShown} from '../../../../utils/labelCategories';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -23,10 +24,17 @@ export function Room3d(props: RoomProps) {
         !configuration.heatmapShader || heatmapDisplay.includes(item.type),
     ),
   };
+  // Le filtre ne retire que les étiquettes : les lumières 3D restent pilotées.
+  const labelledRoom = {
+    ...cleanedRoom,
+    items: cleanedRoom.items.filter(item =>
+      isLabelShown(item.type, configuration.hiddenCategories),
+    ),
+  };
 
   return (
     <RoomProvider>
-      <Room room={cleanedRoom} />
+      <Room room={labelledRoom} />
       {cleanedRoom.items.map((item, id) => (
         <RoomItem3d key={`item-3d-${id}`} itemConfig={item} model={model} />
       ))}
