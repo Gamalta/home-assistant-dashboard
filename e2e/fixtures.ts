@@ -36,3 +36,14 @@ export {expect};
 export async function waitForScene(page: Page) {
   await page.waitForFunction(() => !!window.__dashboardBenchmark);
 }
+
+// Le dock apparaît quand la souris passe en bas de la barre latérale.
+export async function openSystemModal(page: Page) {
+  await waitForScene(page);
+  await page.mouse.move(150, 700);
+  const button = page.getByRole('button', {name: 'Système'});
+  // Un clic pendant l'animation d'entrée du dock peut tomber à côté.
+  await expect(button.locator('..')).toHaveCSS('opacity', '1');
+  await button.click();
+  await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+}

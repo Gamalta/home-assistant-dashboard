@@ -10,3 +10,4 @@
 | [Guide : performance](guides/performance.md)               | Mesurer le rendu et simuler la tablette             |
 | [Guide : ajouter une maison](guides/ajouter-une-maison.md) | Brancher un nouveau modèle 3D et ses entités        |
 | [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et actions de la barre latérale           |
+| [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun       |
