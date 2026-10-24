@@ -1,5 +1,5 @@
 import {useThree} from '@react-three/fiber';
-import {useEffect, useRef} from 'react';
+import {useEffect, useLayoutEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
@@ -80,7 +80,9 @@ export function SceneMaterials(props: SceneMaterialsProps) {
   const heatmapMaterials = useRef<THREE.Material[]>([]);
   const showHeatmap = heatmap && heatmapPoints.length > 0;
 
-  useEffect(() => {
+  // Avant la première image : sinon elle compile et affiche les matériaux
+  // d'origine, aussitôt remplacés.
+  useLayoutEffect(() => {
     const createdMaterials: THREE.Material[] = [];
 
     const overlays: THREE.Mesh[] = [];
