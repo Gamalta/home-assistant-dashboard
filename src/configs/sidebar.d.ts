@@ -5,6 +5,7 @@ type SideBarConfigType = {
   weatherEntityId: FilterByDomain<EntityName, 'weather'>;
   persons: [PersonConfigType, PersonConfigType];
   pets?: [string, string];
+  alerts?: AlertsConfigType;
   system?: {
     uptimeEntityId?: FilterByDomain<EntityName, 'sensor'>;
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
@@ -85,4 +86,20 @@ type ShoppingListShortcutConfigType = {
   todoEntityId: `todo.${string}`;
   /** Libellé de la tuile, `Courses` par défaut. */
   label?: string;
+};
+
+type AlertsConfigType = {
+  /** Détecteurs de fumée et de chaleur : `on` est une alerte critique. */
+  smokeEntityIds?: FilterByDomain<EntityName, 'binary_sensor'>[];
+  /** Piles faibles signalées par un `binary_sensor` à `on`. */
+  batteryLowEntityIds?: FilterByDomain<EntityName, 'binary_sensor'>[];
+  /** Niveaux de pile en %, signalés sous `batteryThreshold` (20 par défaut). */
+  batteryLevelEntityIds?: FilterByDomain<EntityName, 'sensor'>[];
+  batteryThreshold?: number;
+  /** Connexion WAN de la box : `off` est une coupure. */
+  internetEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  /** Connexion du pont Zigbee : `off` est une déconnexion. */
+  zigbeeEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  /** État de charge de la tablette murale (application Companion Android). */
+  tabletBatteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
 };

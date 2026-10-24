@@ -15,3 +15,4 @@
 | [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et ambilight HyperHDR    |
 | [Guide : mode veille](guides/mode-veille.md) | Mettre la tablette murale en veille après inactivité |
 | [Guide : raccourcis](guides/raccourcis.md)                 | Configurer les tuiles de la barre latérale          |
+| [Guide : alertes](guides/alertes.md)                       | Configurer la pastille d'alertes                    |
