@@ -16,13 +16,17 @@ async function modalContent(title: Locator) {
   return content;
 }
 
-// Appui long sur la lumière du séjour, juste avant sa clim « 22° » : le bouton
-// de la lumière n'a pas de nom.
-async function openSalonLight(page: Page) {
-  const climate = page.getByRole('button', {name: '22°', exact: true}).first();
-  const box = (await climate
-    .locator('xpath=../preceding-sibling::div[1]//button')
-    .boundingBox())!;
+// La lumière du séjour porte le nom par défaut du mock, commun à plusieurs
+// lumières : on la trouve juste avant sa clim « 22° ».
+const salonLight = (page: Page) =>
+  page
+    .getByRole('button', {name: '22°', exact: true})
+    .first()
+    .locator('xpath=../preceding-sibling::div[1]//button');
+
+// Un appui long sur le bouton d'une lumière ouvre sa modale.
+async function openLight(page: Page, light: Locator) {
+  const box = (await light.boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.waitForTimeout(500);
@@ -58,6 +62,15 @@ async function luminance(page: Page, locator: Locator) {
     return sum / (data.length / 4);
   }, png.toString('base64'));
 }
+
+// Luminance de la couleur de texte d'un élément.
+const textLuminance = (locator: Locator) =>
+  locator.evaluate(element => {
+    const [r, g, b] = getComputedStyle(element)
+      .color.match(/[\d.]+/g)!
+      .map(Number);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  });
 
 test.describe('modale du volet', () => {
   test.beforeEach(async ({page}) => {
@@ -128,7 +141,7 @@ test.describe('modale de la lumière', () => {
   });
 
   test('allumer la lumière met à jour sa luminosité', async ({page}) => {
-    const modal = await openSalonLight(page);
+    const modal = await openLight(page, salonLight(page));
     await expect(modal.getByText('0 %', {exact: true})).toBeVisible();
 
     await salonLightSwitch(modal).click();
@@ -140,7 +153,7 @@ test.describe('modale de la lumière', () => {
     await page.evaluate(() => localStorage.setItem('theme', 'light'));
     await page.reload();
     await waitForScene(page);
-    const modal = await openSalonLight(page);
+    const modal = await openLight(page, salonLight(page));
     // La jauge est le bouton sous le pourcentage affiché.
     const gauge = modal
       .getByText(/^\d+ %$/)
@@ -157,7 +170,7 @@ test.describe('modale de la lumière', () => {
   test('les curseurs des autres lumières suivent leur température', async ({
     page,
   }) => {
-    const modal = await openSalonLight(page);
+    const modal = await openLight(page, salonLight(page));
     // Les onglets n'ont qu'une icône : on passe par leur valeur.
     await modal.locator('button[value="color_temp"]').click();
 
@@ -172,5 +185,83 @@ test.describe('modale de la lumière', () => {
     };
     await expect.poll(height).toBeGreaterThan(0.25);
     expect(await height()).toBeLessThan(0.45);
+  });
+
+  test('une lumière variable sans couleur garde interrupteur et luminosité', async ({
+    page,
+  }) => {
+    const modal = await openLight(
+      page,
+      page.getByRole('button', {name: 'Variateur de l’entrée'}),
+    );
+
+    await expect(modal.getByRole('group')).toBeVisible();
+    await expect(modal.getByText('50 %', {exact: true})).toBeVisible();
+  });
+
+  test('une lumière tout-ou-rien allumée s’affiche en couleur', async ({
+    page,
+  }) => {
+    const light = page.getByRole('button', {name: 'Interrupteur du débarras'});
+    // Allumée, l'icône du bouton prend la couleur de la lumière.
+    expect(await textLuminance(light)).toBeGreaterThan(100);
+
+    const modal = await openLight(page, light);
+    const card = modal
+      .getByRole('heading', {name: /^Lumières/})
+      .locator('xpath=following-sibling::div[1]/div[1]');
+    expect(await luminance(page, card)).toBeGreaterThan(100);
+  });
+});
+
+test.describe('ouverture de la modale de la lumière', () => {
+  test.use({viewport: {width: 1280, height: 800}});
+
+  test('elle s’ouvre sans sortir de l’écran ni s’étirer', async ({page}) => {
+    // Horloge pilotée : on suit l'ouverture image par image, même en rendu
+    // logiciel où le navigateur saute des images.
+    await page.clock.install();
+    await page.goto('/');
+    await waitForScene(page);
+    await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000);
+    const box = (await salonLight(page).boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.clock.runFor(500);
+    await page.mouse.up();
+
+    const frames = [];
+    for (let i = 0; i < 100; i++) {
+      await page.clock.runFor(16);
+      frames.push(
+        await page.evaluate(() => {
+          const title = [...document.querySelectorAll('h5')].find(
+            h => h.textContent === 'Lumière',
+          )!;
+          const container = title.parentElement!.parentElement!;
+          const content = container.children[1];
+          const ratio = (element: Element) => {
+            const {width, height} = element.getBoundingClientRect();
+            return width / height;
+          };
+          return {
+            top: container.getBoundingClientRect().top,
+            bottom: container.getBoundingClientRect().bottom,
+            title: ratio(title),
+            content: ratio(content),
+            visible: Number(getComputedStyle(content).opacity) > 0.05,
+          };
+        }),
+      );
+    }
+
+    const last = frames[frames.length - 1];
+    for (const frame of frames) {
+      expect(frame.top).toBeGreaterThanOrEqual(0);
+      expect(frame.bottom).toBeLessThanOrEqual(800);
+      // Rapport largeur / hauteur constant : ni texte ni contenu étiré.
+      expect(frame.title / last.title).toBeCloseTo(1, 1);
+      if (frame.visible) expect(frame.content / last.content).toBeCloseTo(1, 1);
+    }
   });
 });
