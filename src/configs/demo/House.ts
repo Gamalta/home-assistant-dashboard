@@ -36,17 +36,17 @@ export const SideBarConfig: SideBarConfigType = {
     powerStatusEntityId: 'binary_sensor.rpi_power_status',
     graphs: [
       {
-        color: 'error',
+        color: 'red',
         label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
-        color: 'warning',
+        color: 'orange',
         label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
-        color: 'info',
+        color: 'cyan',
         label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },

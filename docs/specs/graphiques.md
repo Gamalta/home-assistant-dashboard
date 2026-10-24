@@ -77,6 +77,6 @@ Tous les graphiques du dashboard ont le même design, celui de l'historique Clim
 
 ## Impacts
 
-- Config : `SystemGraphConfigType.color` accepte une couleur de la palette (`'error'`, `'warning'`, `'info'`…) en plus d'une couleur CSS. La config `demo` s'en sert et perd les deux-points de ses libellés, désormais placés au-dessus de la valeur.
+- Config : `SystemGraphConfigType.color` accepte une couleur de la palette (`'error'`, `'warning'`, `'info'`…) en plus d'une couleur CSS. La config `demo` garde ses couleurs CSS et perd les deux-points de ses libellés, désormais placés au-dessus de la valeur.
 - Mock : l'historique simulé suit une marche aléatoire au lieu de valeurs tirées au hasard, comme un vrai capteur.
 - Performance : un historique est ramené à un point par quart d'heure, soit 96 points sur 24 h au plus, quel que soit le nombre d'états reçus.

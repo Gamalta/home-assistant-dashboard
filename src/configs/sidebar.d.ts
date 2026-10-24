@@ -12,7 +12,6 @@ type SideBarConfigType = {
 };
 
 type SystemGraphConfigType = {
-  /** Couleur de la palette (`'warning'`, `'info'`…) ou couleur CSS. */
   color: string;
   label: string;
   sensorEntityId: FilterByDomain<EntityName, 'sensor'>;
