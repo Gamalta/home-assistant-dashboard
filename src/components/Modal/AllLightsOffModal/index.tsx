@@ -4,11 +4,11 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {Modal, ModalProps} from '..';
-import type {AllLightsOffShortcutConfigType} from '../../../configs/sidebar';
+import type {AllLightsOffActionConfigType} from '../../../configs/sidebar';
 
 type AllLightsOffModalProps = Omit<ModalProps, 'children'> & {
   lights: HassEntityWithService<'light'>[];
-  scriptEntityId: AllLightsOffShortcutConfigType['scriptEntityId'];
+  scriptEntityId: AllLightsOffActionConfigType['scriptEntityId'];
 };
 
 export function AllLightsOffModal(props: AllLightsOffModalProps) {
@@ -34,9 +34,7 @@ export function AllLightsOffModal(props: AllLightsOffModalProps) {
             ))}
           </Stack>
         ) : (
-          <Typography color="text.secondary">
-            Aucune lumière allumée.
-          </Typography>
+          <Typography color="textSecondary">Aucune lumière allumée.</Typography>
         )}
         <Button
           variant="contained"

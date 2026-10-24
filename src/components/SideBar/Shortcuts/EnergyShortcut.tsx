@@ -1,5 +1,6 @@
 import {useEntity} from '@hakit/core';
 import BoltIcon from '@mui/icons-material/BoltRounded';
+import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
 import {
@@ -9,7 +10,7 @@ import {
   TARIFF_PERIODS,
 } from '../../../utils/energy';
 import {EnergyModal} from '../../Modal/EnergyModal';
-import {ShortcutTile} from './ShortcutTile';
+import {ShortcutCard} from './ShortcutCard';
 
 type EnergyShortcutProps = {
   id: string;
@@ -33,17 +34,18 @@ export function EnergyShortcut(props: EnergyShortcutProps) {
 
   return (
     <>
-      <ShortcutTile
+      <ShortcutCard
         id={id}
         icon={<BoltIcon sx={{color: period && TARIFF_PERIODS[period].color}} />}
         label="Énergie"
-        value={
-          period
-            ? `${powerLabel} · ${TARIFF_PERIODS[period].short}`
-            : powerLabel
-        }
         onClick={() => setOpen(true)}
-      />
+      >
+        <Typography component="span">
+          {period
+            ? `${powerLabel} · ${TARIFF_PERIODS[period].short}`
+            : powerLabel}
+        </Typography>
+      </ShortcutCard>
       <EnergyModal
         id={id}
         open={open}
