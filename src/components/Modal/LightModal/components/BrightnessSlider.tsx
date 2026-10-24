@@ -6,6 +6,7 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import Typography from '@mui/material/Typography';
+import type {Theme} from '@mui/material/styles';
 
 export function BrightnessSlider() {
   const [sliderAnchor, setSliderAnchor] = useState<HTMLButtonElement | null>(
@@ -21,10 +22,11 @@ export function BrightnessSlider() {
   const handleSliderMove = (_: Event, newBrightness: number | number[]) =>
     setBrightness(newBrightness as number);
 
+  const activeBrightness = activeEntities[0]?.custom.brightnessValue ?? 100;
   useEffect(() => {
     if (activeEntities.length === 0) return;
-    setBrightness(Math.round(activeEntities[0]?.custom.brightnessValue ?? 100));
-  }, [activeEntities.length]);
+    setBrightness(Math.round(activeBrightness));
+  }, [activeEntities.length, activeBrightness]);
 
   return (
     <>
@@ -54,8 +56,7 @@ export function BrightnessSlider() {
               bottom: 0,
               width: '100%',
               height: `${brightness}%`,
-              background:
-                'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
+              background: gauge,
             }}
           />
         </Button>
@@ -97,8 +98,7 @@ export function BrightnessSlider() {
                 width: '100%',
                 color: 'transparent',
                 border: 0,
-                background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
+                background: gauge,
               },
               '& .MuiSlider-thumb, .MuiSlider-rail': {
                 opacity: 0,
@@ -123,6 +123,12 @@ export function BrightnessSlider() {
       </Popover>
     </>
   );
+}
+
+// Dans la couleur du texte, pour rester visible en mode clair.
+function gauge(theme: Theme) {
+  const color = (theme.vars ?? theme).palette.text.primary;
+  return `linear-gradient(180deg, ${theme.alpha(color, 0.8)} 0%, ${theme.alpha(color, 0.1)} 100%)`;
 }
 
 function BrightnessDisplay({brightness}: {brightness: number}) {

@@ -1,4 +1,4 @@
-import {HassEntityWithService} from '@hakit/core';
+import {HassEntityWithService, temperature2rgb} from '@hakit/core';
 
 export enum LightEntityFeature {
   EFFECT = 4,
@@ -49,4 +49,12 @@ export function lightsHasColor(entities: HassEntityWithService<'light'>[]) {
       entity.attributes.supported_color_modes?.includes(colorMode),
     ),
   );
+}
+
+// Sans couleur ni variateur, @hakit/core donne [33, 33, 33], presque noir : on
+// prend le blanc chaud qu'il donne aux lumières variables.
+export function lightColor(entity: HassEntityWithService<'light'>) {
+  return lightHasBrightness(entity)
+    ? entity.custom.color
+    : temperature2rgb(2000);
 }
