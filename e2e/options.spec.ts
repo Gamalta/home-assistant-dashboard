@@ -28,3 +28,11 @@ test('garde une option graphique après rechargement', async ({page}) => {
   await openSystemModal(page);
   await expect(option(page, 'Murs transparents')).not.toBeChecked();
 });
+
+// Trop lourds pour la tablette, remplacés par le ciel et le soleil (ADR 0030).
+test('ne propose plus les reflets d’environnement', async ({page}) => {
+  await page.goto('/');
+  await openSystemModal(page);
+  await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
+  await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
+});
