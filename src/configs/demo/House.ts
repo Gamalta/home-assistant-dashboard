@@ -52,7 +52,10 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  shortcuts: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'allLightsOff'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {
