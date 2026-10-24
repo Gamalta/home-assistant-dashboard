@@ -123,7 +123,8 @@ export const getCoordFromColorTemp = (
   if (!canvas) return {x: 0, y: 0};
   const diameter = canvas.clientWidth;
   const fraction = (temperature - minKelvin) / (maxKelvin - minKelvin);
-  return {x: diameter / 2, y: fraction * diameter};
+  // Comme drawColorTempWheel, la plage de Kelvin tient dans 90 % du rayon.
+  return {x: diameter / 2, y: (0.5 + (fraction - 0.5) * 0.9) * diameter};
 };
 
 export const getColorFromCoord = (x: number, y: number) => {
