@@ -1,6 +1,6 @@
 # 0021 — Consommation électrique tirée des statistiques à long terme
 
-- Statut : Proposé
+- Statut : Proposé, complété par l'[ADR 0037](0037-comparaison-de-consommation-par-periode.md) pour les périodes et les comparaisons
 - Date : 2026-10-24
 - Issue : #19
 
