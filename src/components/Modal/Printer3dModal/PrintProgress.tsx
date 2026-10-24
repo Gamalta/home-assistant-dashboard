@@ -51,7 +51,7 @@ export function PrintProgress(props: PrintProgressProps) {
           color={STATUS_COLORS[status?.state ?? ''] ?? 'default'}
         />
         {active && stage && (
-          <Typography variant="body2" color="text.secondary" noWrap>
+          <Typography variant="body2" color="textSecondary" noWrap>
             {currentStageLabel(stage.state)}
           </Typography>
         )}
@@ -68,11 +68,11 @@ export function PrintProgress(props: PrintProgressProps) {
       {active && (
         <>
           <Stack direction="row" sx={{justifyContent: 'space-between'}}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="textSecondary">
               Couche {layer?.state ?? '--'} / {totalLayers?.state ?? '--'}
             </Typography>
             {remainingTime && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="textSecondary">
                 Reste {remainingTime}
               </Typography>
             )}
