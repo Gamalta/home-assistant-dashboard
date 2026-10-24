@@ -47,6 +47,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - `waitForScene(page)` attend que la scène 3D soit montée (`window.__dashboardBenchmark` défini). L'appeler avant d'interagir avec la scène ou d'ouvrir une modale : tant que la scène charge, la page est trop occupée et les animations prennent du retard.
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
+- Pour simuler un événement (détecteur qui se déclenche, tablette débranchée), changer l'état d'une entité du mock depuis la page : `await page.evaluate(() => window.__mockSetState?.('binary_sensor.x', 'on'))`.
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
 - En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée.
 
