@@ -1,7 +1,11 @@
 import type {HassEntityWithService} from '@hakit/core';
+import AssessmentIcon from '@mui/icons-material/AssessmentOutlined';
+import TuneIcon from '@mui/icons-material/TuneRounded';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import {useState} from 'react';
 import {Modal, ModalProps} from '..';
 import type {PlugConfigType} from '../../../configs/house';
 import {formatPower, plugStateLabel} from '../../../utils/entity/plug';
@@ -15,14 +19,41 @@ type PlugModalProps = Omit<ModalProps, 'children'> & {
 
 export function PlugModal(props: PlugModalProps) {
   const {plug, power, plugConfig, ...modalProps} = props;
+  const [tab, setTab] = useState<'control' | 'history'>('control');
   const on = plug.state === 'on';
 
   return (
-    <Modal {...modalProps}>
-      <Stack spacing={2} sx={{width: 360}}>
+    <Modal
+      {...modalProps}
+      action={
+        plugConfig.powerEntityId &&
+        {
+          control: (
+            <IconButton
+              aria-label="Historique"
+              onClick={() => setTab('history')}
+            >
+              <AssessmentIcon />
+            </IconButton>
+          ),
+          history: (
+            <IconButton aria-label="Réglage" onClick={() => setTab('control')}>
+              <TuneIcon />
+            </IconButton>
+          ),
+        }[tab]
+      }
+    >
+      {tab === 'history' && plugConfig.powerEntityId ? (
+        <PowerHistory entityId={plugConfig.powerEntityId} />
+      ) : (
         <Stack
           direction="row"
-          sx={{justifyContent: 'space-between', alignItems: 'center'}}
+          sx={{
+            width: 360,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
           <Stack>
             {on && power !== null && (
@@ -38,10 +69,7 @@ export function PlugModal(props: PlugModalProps) {
             slotProps={{input: {'aria-label': 'Marche'}}}
           />
         </Stack>
-        {plugConfig.powerEntityId && (
-          <PowerHistory entityId={plugConfig.powerEntityId} />
-        )}
-      </Stack>
+      )}
     </Modal>
   );
 }
