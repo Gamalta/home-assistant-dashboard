@@ -5,6 +5,8 @@ import {expect, test} from './fixtures';
 
 // Budget de l'ADR 0009 sur la démo. Seuls des comptes sont vérifiés : ils ne
 // dépendent pas de la vitesse de la machine, contrairement aux durées.
+// En rendu logiciel, chaque image est lente et l'inertie de la caméra se compte
+// en images : les rotations sont des gestes courts, avec un délai triplé.
 
 test('reste sous 150 draw calls par image au repos', async ({page}) => {
   await openHouse(page, 'demo');
@@ -13,10 +15,9 @@ test('reste sous 150 draw calls par image au repos', async ({page}) => {
 });
 
 test('ne compile aucun programme pendant une rotation', async ({page}) => {
-  // L'inertie de la caméra se compte en images, lentes en rendu logiciel.
   test.slow();
   await openHouse(page, 'demo');
-  expect((await rotate(page)).programs).toBe(0);
+  expect((await rotate(page, 10)).programs).toBe(0);
 });
 
 test('ne compile aucun programme pendant une rotation, avec les ombres', async ({
@@ -28,7 +29,7 @@ test('ne compile aucun programme pendant une rotation, avec les ombres', async (
   test.fail();
   test.slow();
   await openHouse(page, 'demo', {shadows: true});
-  expect((await rotate(page)).programs).toBe(0);
+  expect((await rotate(page, 10)).programs).toBe(0);
 });
 
 test('garde le modèle de la démo sous 2 Mo', () => {

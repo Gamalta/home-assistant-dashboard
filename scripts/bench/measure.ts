@@ -113,7 +113,7 @@ export async function benchmarkAtRest(page: Page, frames = 60) {
 
 // Vraie rotation à la souris (OrbitControls), jusqu'au retour au repos : la
 // fin de l'inertie et de la qualité réduite fait partie du geste.
-export async function rotate(page: Page) {
+export async function rotate(page: Page, moves = 60) {
   const box = (await page.locator('canvas').boundingBox())!;
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
@@ -135,8 +135,8 @@ export async function rotate(page: Page) {
   // 300 px vers la droite, en accélérant puis en ralentissant, comme un doigt.
   await page.mouse.move(x, y);
   await page.mouse.down();
-  for (let i = 1; i <= 60; i++) {
-    await page.mouse.move(x + 150 * (1 - Math.cos((Math.PI * i) / 60)), y);
+  for (let i = 1; i <= moves; i++) {
+    await page.mouse.move(x + 150 * (1 - Math.cos((Math.PI * i) / moves)), y);
     await page.waitForTimeout(16);
   }
   await page.mouse.up();
