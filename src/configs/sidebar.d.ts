@@ -23,7 +23,9 @@ type AllLightsOffActionConfigType = {
   scriptEntityId?: FilterByDomain<EntityName, 'script'>;
 };
 
-type ShortcutConfigType = MediaShortcutConfigType;
+type ShortcutConfigType =
+  | MediaShortcutConfigType
+  | ShoppingListShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
@@ -46,4 +48,11 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type ShoppingListShortcutConfigType = {
+  type: 'shoppingList';
+  todoEntityId: `todo.${string}`;
+  /** Libellé de la carte, `Courses` par défaut. */
+  label?: string;
 };
