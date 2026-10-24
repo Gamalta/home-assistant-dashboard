@@ -14,9 +14,13 @@ const LED = {
 };
 
 // useLongPress ouvre la modale quand le bouton reste enfoncé plus de 300 ms.
+// On ne relâche qu'une fois la modale ouverte : sous charge, un relâchement
+// traité avant le minuteur compterait comme un appui court.
 async function openPlugModal(page: Page, name: string) {
-  await plugButton(page, name).click({delay: 600});
+  await plugButton(page, name).hover();
+  await page.mouse.down();
   await expect(page.getByRole('heading', {name})).toBeVisible();
+  await page.mouse.up();
   // L'illustration est un bouton, qui bascule la prise.
   return page.getByRole('button', {name: 'Prise', exact: true});
 }
