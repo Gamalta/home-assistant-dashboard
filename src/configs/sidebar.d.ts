@@ -7,6 +7,14 @@ type SideBarConfigType = {
   system?: {
     uptimeEntityId?: FilterByDomain<EntityName, 'sensor'>;
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+    internetEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+    lastBackupEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    lastBackupAttemptEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    nextBackupEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    backupStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    tabletBatteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    tabletBatteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+    tabletChargerTypeEntityId?: FilterByDomain<EntityName, 'sensor'>;
     graphs: SystemGraphConfigType[];
   };
 };
