@@ -8,6 +8,7 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {energyEntities} from './mockEnergy';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -298,4 +299,6 @@ export const entities: HassEntities = {
       unit_of_measurement: '%',
     },
   }),
+
+  ...energyEntities,
 } as const;
