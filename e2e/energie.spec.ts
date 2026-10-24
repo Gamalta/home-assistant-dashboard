@@ -5,11 +5,11 @@ test.beforeEach(async ({page}) => {
   await waitForScene(page);
 });
 
-test('la tuile « Énergie » affiche la puissance et la période tarifaire', async ({
+test('la carte « Énergie » affiche la puissance, la période et le coût du jour', async ({
   page,
 }) => {
   await expect(page.getByRole('button', {name: /^Énergie/})).toContainText(
-    /\d+(,\d)? k?VA · H[PC]/,
+    /^Énergie\d+(,\d)? k?VAHeures (pleines|creuses)Aujourd’hui : \d+,\d{2}\s€$/,
   );
 });
 

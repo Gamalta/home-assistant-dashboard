@@ -9,7 +9,7 @@ Avec un compteur Linky en option heures pleines / heures creuses, savoir ce que 
 
 ## Objectif
 
-Une tuile « Énergie » donne d'un coup d'œil la puissance instantanée et la période tarifaire ; sa modale donne la consommation et le coût du jour et de la veille, l'historique sur 7 et 30 jours et la charge par rapport à la puissance souscrite.
+Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un coup d'œil la puissance instantanée, la période tarifaire et le coût du jour ; sa modale donne la consommation et le coût du jour et de la veille, l'historique sur 7 et 30 jours et la charge par rapport à la puissance souscrite.
 
 ## Hors périmètre
 
@@ -20,16 +20,16 @@ Une tuile « Énergie » donne d'un coup d'œil la puissance instantanée et la 
 
 ## Comportement attendu
 
-### Scénario : la tuile affiche la puissance et la période tarifaire
+### Scénario : la carte affiche la puissance, la période tarifaire et le coût du jour
 
-- **Étant donné** une maison configurée avec la tuile `energy`
+- **Étant donné** une maison configurée avec la carte `energy`
 - **Quand** la barre latérale s'affiche
-- **Alors** la tuile « Énergie » indique la puissance instantanée (« 850 VA », « 1,2 kVA ») et « HP » ou « HC », avec une icône orange en heures pleines et bleue en heures creuses
+- **Alors** la carte « Énergie » indique en grand la puissance instantanée (« 850 VA », « 1,2 kVA »), puis « Heures pleines » en orange ou « Heures creuses » en bleu, avec une icône de la même couleur, et le coût estimé du jour (« Aujourd’hui : 1,15 € »)
 
 ### Scénario : la modale affiche la consommation du jour et son coût
 
 - **Étant donné** les statistiques de Home Assistant pour les deux index
-- **Quand** l'utilisateur touche la tuile
+- **Quand** l'utilisateur touche la carte
 - **Alors** la carte « Aujourd'hui » affiche le coût estimé et la consommation en heures pleines et en heures creuses depuis minuit
 
 ### Scénario : la modale affiche la consommation de la veille
@@ -52,7 +52,7 @@ Une tuile « Énergie » donne d'un coup d'œil la puissance instantanée et la 
 
 ### Scénario : charge par rapport à la puissance souscrite
 
-- **Étant donné** une tuile configurée avec `subscribedCurrentEntityId`
+- **Étant donné** une carte configurée avec `subscribedCurrentEntityId`
 - **Quand** la modale est ouverte
 - **Alors** elle affiche « Charge : 1,5 kVA sur 6 kVA souscrits » et une jauge ; sans cette entité, la charge n'apparaît pas
 
@@ -65,6 +65,6 @@ Une tuile « Énergie » donne d'un coup d'œil la puissance instantanée et la 
 
 ## Impacts
 
-- Config : type de tuile `energy` dans `ShortcutConfigType`.
+- Config : type de carte `energy` dans `ShortcutConfigType`.
 - Mock : un compteur fictif (`src/mock/mocks/mockEnergy.ts`) dont la puissance varie toutes les 5 s, avec des index cohérents et 30 jours de statistiques simulées.
-- Performance : aucun impact sur la scène 3D. La modale fait une requête à son ouverture ; la tuile n'en fait aucune.
+- Performance : aucun impact sur la scène 3D. La modale fait une requête à son ouverture, et la carte une seule à son affichage, pour l'index de fin de veille.

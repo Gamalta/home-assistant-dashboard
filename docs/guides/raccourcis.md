@@ -70,7 +70,7 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 }
 ```
 
-La tuile affiche la puissance instantanée et la période tarifaire en cours (« 1,2 kVA · HC »). Un appui ouvre la consommation et le coût estimé du jour et de la veille, en heures pleines et en heures creuses, un historique sur 7 ou 30 jours et, si l'intensité souscrite est fournie, la charge en cours.
+La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui ouvre la consommation et le coût estimé du jour et de la veille, en heures pleines et en heures creuses, un historique sur 7 ou 30 jours et, si l'intensité souscrite est fournie, la charge en cours.
 
 | Option                      | Rôle                                                                                                                        |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
