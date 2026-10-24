@@ -64,6 +64,15 @@ export const SideBarConfig: SideBarConfigType = {
     },
     {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
     {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
+    {
+      type: 'energy',
+      powerEntityId: 'sensor.meter_apparent_power',
+      tariffPeriodEntityId: 'sensor.meter_tariff_period',
+      peakIndexEntityId: 'sensor.meter_peak_index',
+      offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+      subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+      prices: {peak: 0.27, offPeak: 0.21},
+    },
   ],
 };
 

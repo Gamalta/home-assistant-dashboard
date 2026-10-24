@@ -16,6 +16,7 @@ import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createWledStrip} from './createWledStrip';
 import {createAmbilight} from './createAmbilight';
 import {createTrain} from './createTrain';
+import {energyEntities} from './mockEnergy';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -371,4 +372,5 @@ export const entities: HassEntities = {
     departureIn: 51,
     trainNum: '6607',
   }),
+  ...energyEntities,
 } as const;

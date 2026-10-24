@@ -4,6 +4,7 @@ import {AllLightsOffShortcut} from './AllLightsOffShortcut';
 import {MortgageShortcut} from './MortgageShortcut';
 import {ShoppingListShortcut} from './ShoppingListShortcut';
 import {TrainsShortcut} from './TrainsShortcut';
+import {EnergyShortcut} from './EnergyShortcut';
 
 type ShortcutsProps = {
   shortcuts: ShortcutConfigType[];
@@ -46,6 +47,10 @@ export function Shortcuts(props: ShortcutsProps) {
           case 'trains':
             return (
               <TrainsShortcut key={id} id={id} shortcutConfig={shortcut} />
+            );
+          case 'energy':
+            return (
+              <EnergyShortcut key={id} id={id} shortcutConfig={shortcut} />
             );
         }
       })}
