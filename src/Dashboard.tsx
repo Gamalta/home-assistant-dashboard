@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
+import {Screensaver} from './components/Screensaver';
 import {
   Group,
   Panel,
@@ -80,6 +81,7 @@ export default function Dashboard() {
           <House />
         </Panel>
       </Group>
+      <Screensaver />
     </HouseProvider>
   );
 }
