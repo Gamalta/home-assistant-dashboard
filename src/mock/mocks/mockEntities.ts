@@ -8,6 +8,7 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {energyEntities} from './mockEnergy';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 
@@ -301,6 +302,7 @@ export const entities: HassEntities = {
     },
   }),
 
+  ...energyEntities,
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {

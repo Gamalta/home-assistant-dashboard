@@ -32,6 +32,7 @@ import {mockCallApi} from './mocks/fake-call-api';
 import {logs} from './mocks/mockLogs';
 import {dailyForecast, hourlyForecast} from './mocks/mockWeather';
 import {generateMockHistory} from './mock-history';
+import {getMockStatistics, tickEnergyMeter} from './mocks/mockEnergy';
 interface HassProviderProps {
   children: (ready: boolean) => ReactNode;
   hassUrl: string;
@@ -220,6 +221,21 @@ class MockConnection extends Connection {
   async sendMessagePromise<Result>(message: MessageBase): Promise<Result> {
     if (message.type === 'get_config') {
       return fakeConfig as Result;
+    }
+    if (message.type === 'recorder/statistics_during_period') {
+      const {statistic_ids, start_time, end_time, period} =
+        message as MessageBase & {
+          statistic_ids: string[];
+          start_time: string;
+          end_time?: string;
+          period: 'day' | 'month';
+        };
+      return getMockStatistics(
+        statistic_ids,
+        start_time,
+        end_time,
+        period,
+      ) as Result;
     }
     if (message.type === 'config/auth/list') {
       const users: AuthUser[] = [
@@ -444,6 +460,15 @@ function HassProvider({children}: HassProviderProps) {
     return () => {
       window.removeEventListener('hashchange', onHashChange);
     };
+  }, []);
+
+  useEffect(() => {
+    // Le compteur fictif relève sa puissance toutes les 5 s, comme un vrai.
+    const timer = setInterval(() => {
+      const {entities, setEntities} = useHass.getState() as InternalStore;
+      setEntities(tickEnergyMeter(entities, 5));
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
