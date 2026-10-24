@@ -21,10 +21,11 @@ export function BrightnessSlider() {
   const handleSliderMove = (_: Event, newBrightness: number | number[]) =>
     setBrightness(newBrightness as number);
 
+  const activeBrightness = activeEntities[0]?.custom.brightnessValue ?? 100;
   useEffect(() => {
     if (activeEntities.length === 0) return;
-    setBrightness(Math.round(activeEntities[0]?.custom.brightnessValue ?? 100));
-  }, [activeEntities.length]);
+    setBrightness(Math.round(activeBrightness));
+  }, [activeEntities.length, activeBrightness]);
 
   return (
     <>
