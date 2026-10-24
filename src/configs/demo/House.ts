@@ -7,6 +7,21 @@ export const ConfigName = 'Démo';
 export const SideBarConfig: SideBarConfigType = {
   weatherEntityId: 'weather.home',
   pets: ['Tom', 'Jerry'],
+  alerts: {
+    smokeEntityIds: [
+      'binary_sensor.hallway_smoke_detector_smoke',
+      'binary_sensor.hallway_smoke_detector_heat',
+    ],
+    batteryLowEntityIds: ['binary_sensor.hallway_smoke_detector_battery_low'],
+    batteryLevelEntityIds: [
+      'sensor.kitchen_button_battery',
+      'sensor.bedroom_button_battery',
+      'sensor.cellar_sensor_battery',
+    ],
+    internetEntityId: 'binary_sensor.router_wan_status',
+    zigbeeEntityId: 'binary_sensor.zigbee_bridge_connection_state',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+  },
   persons: [
     {
       name: 'Juliette',
@@ -34,24 +49,56 @@ export const SideBarConfig: SideBarConfigType = {
   system: {
     uptimeEntityId: 'sensor.system_monitor_last_boot',
     powerStatusEntityId: 'binary_sensor.rpi_power_status',
+    internetEntityId: 'binary_sensor.router_wan_status',
+    lastBackupEntityId: 'sensor.backup_last_successful',
+    lastBackupAttemptEntityId: 'sensor.backup_last_attempted',
+    nextBackupEntityId: 'sensor.backup_next_scheduled',
+    backupStateEntityId: 'sensor.backup_manager_state',
+    tabletBatteryLevelEntityId: 'sensor.wall_tablet_battery_level',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+    tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
-        color: 'red',
-        label: 'Mémoire:',
+        color: 'error',
+        label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
-        color: 'orange',
-        label: 'Température:',
+        color: 'warning',
+        label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
-        color: 'cyan',
-        label: 'Processeur:',
+        color: 'info',
+        label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],
   },
+  actions: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+    {
+      type: 'mortgage',
+      principal: 250_000,
+      annualRate: 1.45,
+      durationMonths: 300,
+      firstPaymentDate: '2021-06-05',
+      monthlyInsurance: 28,
+    },
+    {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
+    {
+      type: 'energy',
+      powerEntityId: 'sensor.meter_apparent_power',
+      tariffPeriodEntityId: 'sensor.meter_tariff_period',
+      peakIndexEntityId: 'sensor.meter_peak_index',
+      offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+      subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+      prices: {peak: 0.27, offPeak: 0.21},
+    },
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {
@@ -84,6 +131,34 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.salon_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
+        {
+          type: 'plug',
+          switchEntityId: 'switch.tv_plug',
+          powerEntityId: 'sensor.tv_plug_power',
+          position: {x: -3.3, y: 0.3, z: 4.3},
+        },
+        {
+          type: 'media',
+          mediaPlayerEntityId: 'media_player.living_room_tv',
+          remoteEntityId: 'remote.living_room_tv',
+          position: {x: -3.3, y: 1.4, z: 4.4},
+        },
+        {
+          type: 'light',
+          lightEntityId: 'light.salon_strip',
+          position: {x: -3.0, y: 0.4, z: 5.6},
+        },
+        {
+          type: 'ambilight',
+          lightEntityId: 'light.tv_ambilight',
+          position: {x: -3.3, y: 2.6, z: 4.0},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur du séjour',
+          batteryEntityId: 'sensor.salon_button_battery',
+          position: {x: 1.4, y: 1.1, z: 1.6},
+        },
       ],
     },
     {
@@ -106,12 +181,18 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: -0.6, y: 1.5, z: -7.2},
+          position: {x: 1.0, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: -2.5, y: 1.3, z: -4.2},
+          position: {x: -2.5, y: 0.8, z: -4.2},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la cuisine',
+          batteryEntityId: 'sensor.kitchen_button_battery',
+          position: {x: 1.4, y: 1.1, z: -5},
         },
       ],
     },
@@ -148,6 +229,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
           position: {x: -5.6, y: 1.3, z: 4},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la chambre',
+          batteryEntityId: 'sensor.bedroom_button_battery',
+          position: {x: -3.9, y: 1.1, z: 0.9},
         },
       ],
     },
@@ -204,6 +291,11 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.bedroom_2_shutter',
           position: {x: 4.2, y: 1.3, z: -5},
         },
+        {
+          type: 'printer3d',
+          prefix: 'p1s_demo',
+          position: {x: 6.2, y: 1.1, z: -1.8},
+        },
       ],
     },
     {
@@ -227,6 +319,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_3_shutter',
           position: {x: 6.5, y: 1.3, z: 4.2},
+        },
+        {
+          type: 'plug',
+          switchEntityId: 'switch.desk_plug',
+          powerEntityId: 'sensor.desk_plug_power',
+          position: {x: 5.8, y: 0.8, z: 1.2},
         },
       ],
     },
@@ -271,6 +369,17 @@ export const HouseConfig: HouseConfigType = {
           roomDisplay: true,
           lightEntityId: 'light.corridor_light',
         },
+        {
+          type: 'smoke',
+          smokeEntityId: 'binary_sensor.hallway_smoke_detector_smoke',
+          heatEntityId: 'binary_sensor.hallway_smoke_detector_heat',
+          batteryEntityId: 'sensor.hallway_smoke_detector_battery',
+          batteryLowEntityId:
+            'binary_sensor.hallway_smoke_detector_battery_low',
+          tamperEntityId: 'binary_sensor.hallway_smoke_detector_tamper',
+          testEntityId: 'button.hallway_smoke_detector_test',
+          position: {x: 2.9, y: 2.4, z: -1.1},
+        },
       ],
     },
     {
@@ -282,6 +391,30 @@ export const HouseConfig: HouseConfigType = {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.toilet_light',
+        },
+      ],
+    },
+    {
+      id: 'Hallway',
+      name: 'Entrée',
+      position: {x: 1.5, y: 2.5, z: 4},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.hallway_dimmer',
+        },
+      ],
+    },
+    {
+      id: 'Storage',
+      name: 'Débarras',
+      position: {x: 4, y: 2.5, z: 4.6},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.storage_switch',
         },
       ],
     },

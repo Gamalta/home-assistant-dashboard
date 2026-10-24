@@ -13,6 +13,7 @@ import {
   mix,
   materialOpacity,
 } from 'three/tsl';
+import {FADE_RADIUS} from '../common';
 
 type WallMaterial = THREE.MeshStandardMaterial | THREE.MeshLambertMaterial;
 
@@ -31,7 +32,7 @@ function createVariant(source: WallMaterial, fadeVariant: boolean) {
   material.side = source.side;
   material.opacity = source.opacity;
 
-  const fadeRadius = uniform(8.0);
+  const fadeRadius = uniform(FADE_RADIUS);
   const minOpacity = uniform(0.05);
   const nearFadeDistance = uniform(6.0);
   const dist = distance(cameraPosition, positionWorld);

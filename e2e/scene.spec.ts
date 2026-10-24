@@ -31,3 +31,16 @@ test('rend la maison en 3D', async ({page}) => {
     .poll(() => countCanvasColors(page), {timeout: 30_000})
     .toBeGreaterThan(1000);
 });
+
+test('affiche le chargeur jusqu’à ce que la scène soit prête', async ({
+  page,
+}) => {
+  // La carte du crédit, dans le carrousel, a aussi une barre de progression.
+  const loader = page.getByRole('progressbar', {
+    name: 'Chargement de la vue 3D',
+  });
+  await page.goto('/');
+  await expect(loader).toBeVisible();
+  await waitForScene(page);
+  await expect(loader).toHaveCount(0);
+});

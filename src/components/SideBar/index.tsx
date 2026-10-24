@@ -4,6 +4,7 @@ import {PersonCard} from './PersonCard';
 import {PetCard} from './PetCard';
 import {useRef} from 'react';
 import {SideBarDock} from './SideBarDock';
+import {Shortcuts} from './Shortcuts';
 import {useHouseContext} from '../../contexts/HouseContext';
 
 export function SideBar() {
@@ -25,7 +26,11 @@ export function SideBar() {
         p: theme => theme.spacing(4, 0, 4, 2),
       }}
     >
-      <HeaderCard weather={sideBarConfig?.weatherEntityId} />
+      <HeaderCard
+        weather={sideBarConfig?.weatherEntityId}
+        alerts={sideBarConfig?.alerts}
+        actions={sideBarConfig?.actions}
+      />
       <Stack
         spacing={2}
         sx={{p: 2, bgcolor: 'background.paper', borderRadius: 2}}
@@ -44,9 +49,16 @@ export function SideBar() {
           bgcolor: 'background.paper',
           borderRadius: 2,
           width: '100%',
-          height: '100%',
+          // Prend la place restante, sans plus : la page ne doit pas
+          // s'allonger sous la scène 3D.
+          flex: 1,
+          minHeight: 0,
         }}
-      />
+      >
+        {sideBarConfig?.shortcuts && (
+          <Shortcuts shortcuts={sideBarConfig.shortcuts} />
+        )}
+      </Stack>
       <SideBarDock sideBarRef={sideBarRef} />
     </Stack>
   );

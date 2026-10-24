@@ -28,19 +28,14 @@ import {
   lightsHasColor,
   lightsHasColorTemp,
   lightsHasEffect,
+  LightTab,
+  supportedLightTab,
 } from '../../../utils/entity/light';
 import Box from '@mui/material/Box';
 
 type LightModalProps = Omit<ModalProps, 'children'> & {
   originLight: HassEntityWithService<'light'> | null;
 };
-
-enum LightTab {
-  ON_OFF = 'on-off',
-  COLOR = 'color',
-  COLOR_TEMP = 'color_temp',
-  EFFECT = 'effect',
-}
 
 export function LightModal(props: LightModalProps) {
   const {originLight, ...modalProps} = props;
@@ -59,19 +54,7 @@ export function LightModal(props: LightModalProps) {
   //TODO only onoff light
 
   function moveToSupportedTab(entities: HassEntityWithService<'light'>[]) {
-    if (lightsHasColor(entities)) {
-      setTab(LightTab.COLOR);
-      return;
-    }
-    if (lightsHasColorTemp(entities)) {
-      setTab(LightTab.COLOR_TEMP);
-      return;
-    }
-    if (lightsHasEffect(entities)) {
-      setTab(LightTab.EFFECT);
-      return;
-    }
-    setTab(LightTab.ON_OFF);
+    setTab(supportedLightTab(entities));
   }
 
   useEffect(() => {
@@ -124,7 +107,7 @@ export function LightModal(props: LightModalProps) {
             {hasColorTemp && <ColorTempTab />}
             {hasEffect && <EffectTab />}
           </Stack>
-          {(hasColor || hasColorTemp || hasEffect) && (
+          {(hasColor || hasColorTemp || hasEffect || hasBrightness) && (
             <Stack direction="row" sx={{justifyContent: 'space-between'}}>
               <ToggleButtonGroup
                 exclusive
@@ -164,7 +147,7 @@ export function LightModal(props: LightModalProps) {
                   <ToggleButton
                     value={LightTab.EFFECT}
                     key="buttonEffect"
-                    disabled
+                    aria-label="Effets"
                   >
                     <AutoAwesomeIcon />
                   </ToggleButton>
@@ -176,7 +159,7 @@ export function LightModal(props: LightModalProps) {
           <Stack spacing={1}>
             <Typography variant="h6" sx={{display: 'flex', gap: 1}}>
               Lumières
-              <Box color="text.secondary">
+              <Box sx={{color: 'text.secondary'}}>
                 {entities.length > 1 && entities.length}
               </Box>
             </Typography>

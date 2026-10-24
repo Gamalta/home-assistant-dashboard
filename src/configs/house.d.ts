@@ -5,6 +5,8 @@ type Position3dType = {x: number; y: number; z: number};
 type HouseConfigType = {
   model?: string;
   camera?: string;
+  /** Azimut vers lequel pointe l'axe -Z du modèle, en degrés (0 : le nord). */
+  orientation?: number;
   rooms: {
     id: string;
     name: string;
@@ -18,7 +20,13 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | Printer3dConfigType
+  | PlugConfigType
+  | MediaConfigType
+  | AmbilightConfigType
+  | BatteryConfigType
+  | SmokeConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +74,46 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type Printer3dConfigType = BaseItemConfigType & {
+  type: 'printer3d';
+  // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
+  prefix: string;
+};
+
+type PlugConfigType = BaseItemConfigType & {
+  type: 'plug';
+  switchEntityId: FilterByDomain<EntityName, 'switch'>;
+  powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  // En W : sous ce seuil, la prise allumée est « en veille » (5 W par défaut).
+  standbyThreshold?: number;
+};
+
+type MediaConfigType = BaseItemConfigType & {
+  type: 'media';
+  mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
+  // Pavé directionnel, avec les commandes de l'Apple TV (ADR 0028).
+  remoteEntityId?: FilterByDomain<EntityName, 'remote'>;
+};
+
+type AmbilightConfigType = BaseItemConfigType & {
+  type: 'ambilight';
+  lightEntityId: FilterByDomain<EntityName, 'light'>;
+};
+
+type BatteryConfigType = BaseItemConfigType & {
+  type: 'battery';
+  name: string;
+  batteryEntityId: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type SmokeConfigType = BaseItemConfigType & {
+  type: 'smoke';
+  smokeEntityId: FilterByDomain<EntityName, 'binary_sensor'>;
+  heatEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  batteryEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  batteryLowEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  tamperEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  testEntityId?: FilterByDomain<EntityName, 'button'>;
 };

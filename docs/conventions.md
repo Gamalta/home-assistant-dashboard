@@ -42,7 +42,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 - Changer les `defines` d'un matériau, le nombre de lumières visibles ou le nombre de lumières qui projettent une ombre recompile les shaders. On l'évite pendant une interaction : on préfère un uniform.
 - Chaque entité lumière pilote la **première** lumière du modèle dont le nom commence par l'identifiant de l'entité, sans le domaine.
 - Le code propre à WebGL ou à WebGPU vit dans `src/rendering/backends/` et `src/rendering/shaders/<Matériau>/{WebGL,WebGPU}/`, derrière l'interface `RenderBackend`.
-- Toute modification du rendu se mesure (benchmark intégré, [guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md).
+- Toute modification du rendu se mesure ([guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md). Joindre la sortie de `pnpm bench --compare` à toute PR qui touche au rendu.
 
 ## TypeScript
 
