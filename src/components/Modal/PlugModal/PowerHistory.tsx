@@ -1,74 +1,56 @@
 import {EntityName, FilterByDomain, useEntity} from '@hakit/core';
-import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import {
-  AreaPlot,
-  ChartsContainer,
-  ChartsTooltip,
-  LinePlot,
-} from '@mui/x-charts';
+  alignHistories,
+  formatTime,
+  isHistoryLoading,
+} from '../../../utils/chart';
 import {formatPower, parsePower} from '../../../utils/entity/plug';
+import {Chart} from '../../Charts/Chart';
 
 type PowerHistoryProps = {
   entityId: FilterByDomain<EntityName, 'sensor'>;
 };
 
-// Composant à part : l'historique n'est demandé qu'à l'ouverture de la modale.
+// Composant à part : l'historique n'est demandé qu'à l'ouverture de l'onglet.
 export function PowerHistory(props: PowerHistoryProps) {
   const {entityId} = props;
-  const history = useEntity(entityId, {
+  const entity = useEntity(entityId, {
     returnNullIfNotFound: true,
     historyOptions: {disable: false, hoursToShow: 24},
-  })?.history;
-
-  const dataset = (history?.entityHistory ?? []).flatMap(data => {
-    const power = parsePower(data.s);
-    return power === null ? [] : [{timestamp: data.lu * 1000, power}];
   });
-  if (dataset.length < 2) return null;
+  if (!entity) return null;
+
+  // Un pas de 5 min garde les pics courts, fréquents sur une prise.
+  const {
+    x,
+    data: [power],
+  } = alignHistories([entity.history?.entityHistory ?? []], 5 * 60 * 1000);
+  const current = parsePower(entity.state);
 
   return (
-    <Stack
-      role="img"
-      aria-label="Puissance des dernières 24 h"
-      sx={{
-        height: 150,
-        bgcolor: 'background.tertiary',
-        borderRadius: 1,
-        overflow: 'hidden',
-      }}
+    <Chart
+      bleed
+      loading={isHistoryLoading(entity.history)}
+      x={x}
+      min={0}
+      formatX={formatTime}
+      series={[
+        {
+          id: 'power',
+          label: 'Puissance',
+          data: power,
+          color: 'warning',
+          step: true,
+          format: formatPower,
+        },
+      ]}
+      // Largeur de l'onglet réglage (260 + 24 + 300) : la modale garde sa taille.
+      sx={{height: 300, width: 584}}
     >
-      <ChartsContainer
-        margin={0}
-        dataset={dataset}
-        series={[
-          {
-            type: 'line',
-            dataKey: 'power',
-            label: 'Puissance',
-            curve: 'stepAfter',
-            area: true,
-            color: 'orange',
-            valueFormatter: value => (value === null ? '' : formatPower(value)),
-          },
-        ]}
-        xAxis={[
-          {
-            dataKey: 'timestamp',
-            scaleType: 'time',
-            height: 0,
-            valueFormatter: (value: number) =>
-              new Date(value).toLocaleTimeString('fr', {
-                hour: '2-digit',
-                minute: '2-digit',
-              }),
-          },
-        ]}
-        yAxis={[{width: 0, min: 0}]}
-      >
-        <AreaPlot opacity={0.2} />
-        <LinePlot />
-        <ChartsTooltip />
-      </ChartsContainer>
-    </Stack>
+      <Typography variant="h4">
+        {current === null ? '—' : formatPower(current)}
+      </Typography>
+    </Chart>
   );
 }

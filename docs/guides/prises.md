@@ -1,13 +1,23 @@
 # Prises connectées
 
-L'élément `plug` affiche une prise connectée dans une pièce : un bouton dans la scène 3D, qui montre si elle est allumée et ce qu'elle consomme, et une modale avec l'historique de sa puissance ([spec](../specs/prises-connectees.md)).
+L'élément `plug` affiche une prise connectée dans une pièce : un bouton dans la scène 3D, qui montre si elle est allumée et ce qu'elle consomme, et une modale qui l'illustre, avec l'historique de sa puissance ([spec](../specs/prises-connectees.md)).
 
 ## Utiliser la prise
 
 - **Appui court** sur le bouton : allume ou éteint la prise.
-- **Appui long** : ouvre la modale, avec la puissance, l'état (« Allumée », « En veille » ou « Éteinte »), un interrupteur et le graphe des dernières 24 h.
+- **Appui long** : ouvre la modale.
 
 Allumée, l'icône est en couleur et le bouton affiche la puissance (« 85 W », « 0,8 W » sous 10 W). Éteinte, il ne montre que l'icône.
+
+La modale montre à gauche une prise murale, dessinée en SVG (`PlugModal/PlugView.tsx`), et à droite l'état en grand (« Allumée », « En veille » ou « Éteinte »), la puissance et l'interrupteur « Marche ». L'illustration suit l'état :
+
+| État      | Voyant | Fiche    |
+| --------- | ------ | -------- |
+| Allumée   | bleu   | branchée |
+| En veille | orange | branchée |
+| Éteinte   | gris   | absente  |
+
+Toucher l'illustration bascule aussi la prise : la fiche se branche ou se débranche. L'icône « Historique » de l'en-tête ouvre l'onglet Consommation, la puissance des dernières 24 h tracée par le composant commun `Chart` ([guide des graphiques](graphiques.md)) ; l'icône « Réglage » revient à l'illustration.
 
 ## Configurer l'élément
 
