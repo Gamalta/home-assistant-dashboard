@@ -166,8 +166,8 @@ export function PlugView(props: PlugViewProps) {
 
       <circle cx={270} cy={277} r={80} fill="url(#plug-well)" />
       <circle cx={270} cy={277} r={80} fill="url(#plug-well-rim)" />
-      <circle cx={236} cy={270} r={12} fill="url(#plug-hole)" />
-      <circle cx={304} cy={270} r={12} fill="url(#plug-hole)" />
+      <circle cx={236} cy={277} r={12} fill="url(#plug-hole)" />
+      <circle cx={304} cy={277} r={12} fill="url(#plug-hole)" />
       <circle cx={272} cy={237} r={14} fill="url(#plug-fiche-shadow)" />
       <circle cx={270} cy={232} r={12.5} fill="url(#plug-pin)" />
 
