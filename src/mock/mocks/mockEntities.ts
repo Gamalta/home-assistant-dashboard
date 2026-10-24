@@ -84,6 +84,7 @@ export const entities: HassEntities = {
   ...createLight('light.salon_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Plafonnier du séjour',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -91,6 +92,7 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.salon_hue_play', {
     attributes: {
+      friendly_name: 'Hue Play du séjour',
       icon: 'hue:play-bar-v',
       color_mode: 'hs',
       hs_color: [240, 100],
@@ -99,6 +101,7 @@ export const entities: HassEntities = {
   ...createLight('light.kitchen_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Cuisine',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -106,17 +109,24 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.dining_light', {
     attributes: {
+      friendly_name: 'Salle à manger',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
     },
   }),
   ...createLight('light.bedroom_light', {
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_dressing_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Dressing',
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -124,30 +134,61 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.bedroom_bathroom_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Salle de bain de la chambre',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bathroom_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Salle de bain',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_2_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre 2',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_3_light', {
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre 3',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.cellar_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Cellier',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.toilet_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-candle', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Toilettes',
+      icon: 'hue:bulb-candle',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.corridor_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Couloir',
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],
