@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {formatPower, parsePower, plugStateLabel} from './plug';
+import {formatPower, parsePower, plugStatus} from './plug';
 
 describe('parsePower', () => {
   it('lit la puissance du capteur', () => {
@@ -26,22 +26,22 @@ describe('formatPower', () => {
   });
 });
 
-describe('plugStateLabel', () => {
-  it('dit « en veille » quand la prise allumée consomme moins que le seuil', () => {
-    expect(plugStateLabel(true, 0.8)).toBe('En veille');
-    expect(plugStateLabel(true, 85)).toBe('Allumée');
+describe('plugStatus', () => {
+  it('est en veille quand la prise allumée consomme moins que le seuil', () => {
+    expect(plugStatus(true, 0.8)).toBe('standby');
+    expect(plugStatus(true, 85)).toBe('on');
   });
 
   it('suit le seuil configuré', () => {
-    expect(plugStateLabel(true, 8, 10)).toBe('En veille');
-    expect(plugStateLabel(true, 3, 2)).toBe('Allumée');
+    expect(plugStatus(true, 8, 10)).toBe('standby');
+    expect(plugStatus(true, 3, 2)).toBe('on');
   });
 
-  it('ne dit jamais « en veille » pour une prise éteinte', () => {
-    expect(plugStateLabel(false, 0)).toBe('Éteinte');
+  it('n’est jamais en veille quand la prise est éteinte', () => {
+    expect(plugStatus(false, 0)).toBe('off');
   });
 
-  it('dit « allumée » quand la puissance est inconnue', () => {
-    expect(plugStateLabel(true, null)).toBe('Allumée');
+  it('est allumée quand la puissance est inconnue', () => {
+    expect(plugStatus(true, null)).toBe('on');
   });
 });
