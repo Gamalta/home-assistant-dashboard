@@ -5,6 +5,8 @@ type Position3dType = {x: number; y: number; z: number};
 type HouseConfigType = {
   model?: string;
   camera?: string;
+  /** Azimut vers lequel pointe l'axe -Z du modèle, en degrés (0 : le nord). */
+  orientation?: number;
   rooms: {
     id: string;
     name: string;

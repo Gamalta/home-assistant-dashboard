@@ -1,4 +1,5 @@
 import {Canvas} from '@react-three/fiber';
+import * as THREE from 'three';
 import {useRef} from 'react';
 import {
   GizmoHelper,
@@ -12,14 +13,12 @@ import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
 import {Scene} from './Scene';
-import {AmbientLight} from './AmbientLight';
+import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
 import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
-import {EnvironmentLighting} from './EnvironmentLighting';
 import {LightShadows} from './LightShadows';
-import nightEnvironment from '../assets/dikhololo_night_1k.hdr?url';
 
 type HouseSceneProps = {
   backend: RenderBackend;
@@ -40,8 +39,10 @@ export function HouseScene(props: HouseSceneProps) {
       key={`config-${houseConfig?.id ?? 0}-${backend.kind}`}
       frameloop="demand"
       camera={{position: camera.position, fov: camera.fov}}
-      flat
       gl={backend.createRenderer}
+      // Garde la teinte des lampes et adoucit leurs zones saturées. R3F
+      // n'impose son tone mapping qu'à la création.
+      onCreated={({gl}) => (gl.toneMapping = THREE.NeutralToneMapping)}
     >
       <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
         {configuration.debug && (
@@ -65,23 +66,17 @@ export function HouseScene(props: HouseSceneProps) {
           backend={backend}
           hideWalls={configuration.hideWallsShader}
           heatmap={configuration.heatmapShader}
-          diffuseOnly={!configuration.environmentReflections}
           rooms={rooms}
         />
         <LightShadows
           scene={scene}
           enabled={configuration.shadows}
-          reflections={configuration.environmentReflections}
           moving={moving}
         />
-        <AmbientLight />
+        <Daylight orientation={houseConfig?.house.orientation} />
         {rooms.map(room => (
           <Room3d key={room.id} room={room} />
         ))}
-        <EnvironmentLighting
-          file={nightEnvironment}
-          reflections={configuration.environmentReflections}
-        />
       </PerformanceMonitor>
     </Canvas>
   );

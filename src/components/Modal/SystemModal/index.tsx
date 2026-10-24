@@ -54,11 +54,6 @@ export function SystemModal(props: SystemModalProps) {
             option="hideWallsShader"
             disabled={!is3d}
           />
-          <OptionRow
-            label="Reflets d'environnement"
-            option="environmentReflections"
-            disabled={!is3d}
-          />
           <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
           <OptionRow
             label="Carte des températures"
