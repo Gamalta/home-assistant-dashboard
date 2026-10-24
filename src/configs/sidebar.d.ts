@@ -88,7 +88,7 @@ type PersonConfigType = {
 
 type MortgageShortcutConfigType = Mortgage & {
   type: 'mortgage';
-  /** Libellé de la tuile, pour distinguer plusieurs prêts. */
+  /** Libellé de la carte, pour distinguer plusieurs prêts. */
   label?: string;
 };
 

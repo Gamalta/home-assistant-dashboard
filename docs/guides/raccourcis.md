@@ -82,7 +82,7 @@ La carte affiche le nombre d'articles à acheter et les 3 premiers. La modale pe
 }
 ```
 
-La tuile affiche la part du capital déjà remboursée. La modale détaille le capital restant dû, la courbe d'amortissement, la mensualité, les échéances payées, les intérêts payés et restants, et la date de fin. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+La carte affiche le capital restant dû et la part déjà remboursée. La modale montre une maison qui se remplit jusqu'à cette part et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
 
 | Option             | Rôle                                                                                        |
 | ------------------ | ------------------------------------------------------------------------------------------- |
@@ -91,7 +91,7 @@ La tuile affiche la part du capital déjà remboursée. La modale détaille le c
 | `durationMonths`   | Nombre d'échéances                                                                          |
 | `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
 | `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
-| `label`            | Libellé de la tuile, `Crédit` par défaut ; utile pour plusieurs prêts                       |
+| `label`            | Libellé de la carte, `Crédit` par défaut ; utile pour plusieurs prêts                       |
 
 Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
 ## Liste de courses

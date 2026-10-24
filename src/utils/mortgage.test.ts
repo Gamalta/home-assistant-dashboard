@@ -78,6 +78,20 @@ describe('mortgageStatus', () => {
     );
     expect(status.endDate).toEqual(new Date(2044, 11, 5));
   });
+
+  it('compte les intérêts payés comme un tableau d’amortissement mois par mois', () => {
+    let remaining = mortgage.principal;
+    let interest = 0;
+    for (let month = 0; month < 61; month++) {
+      const monthInterest = remaining * (0.035 / 12);
+      interest += monthInterest;
+      remaining -= monthlyPayment(mortgage) - monthInterest;
+    }
+
+    const status = mortgageStatus(mortgage, new Date(2025, 0, 5));
+    expect(status.paidInterest).toBeCloseTo(interest, 6);
+    expect(status.remainingPrincipal).toBeCloseTo(remaining, 6);
+  });
 });
 
 describe('yearlyBalance', () => {

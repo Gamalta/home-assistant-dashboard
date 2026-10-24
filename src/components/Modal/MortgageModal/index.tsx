@@ -1,70 +1,49 @@
-import LinearProgress from '@mui/material/LinearProgress';
+import AssessmentIcon from '@mui/icons-material/AssessmentOutlined';
+import HouseIcon from '@mui/icons-material/HouseRounded';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import {useState} from 'react';
 import {Modal, ModalProps} from '..';
-import {
-  formatEuros,
-  type Mortgage,
-  type mortgageStatus,
-} from '../../../utils/mortgage';
-import {InfoRow} from '../SystemModal/InfoRow';
+import type {Mortgage, MortgageStatus} from '../../../utils/mortgage';
 import {MortgageChart} from './MortgageChart';
+import {MortgageFigures} from './MortgageFigures';
+import {MortgageHouse} from './MortgageHouse';
 
 type MortgageModalProps = Omit<ModalProps, 'children'> & {
   mortgage: Mortgage;
-  status: ReturnType<typeof mortgageStatus>;
+  status: MortgageStatus;
 };
 
 export function MortgageModal(props: MortgageModalProps) {
   const {mortgage, status, ...modalProps} = props;
-  const repaid = Math.floor(status.repaidRatio * 100);
-  const insurance = mortgage.monthlyInsurance;
+  const [tab, setTab] = useState<'progress' | 'history'>('progress');
 
   return (
-    <Modal {...modalProps}>
-      <Stack spacing={2} sx={{width: 420, maxWidth: '100%'}}>
-        <Stack spacing={1}>
-          <Stack direction="row" sx={{justifyContent: 'space-between'}}>
-            <Typography variant="h4">
-              {formatEuros(status.remainingPrincipal)}
-            </Typography>
-            <Typography color="textSecondary">{repaid} % remboursé</Typography>
-          </Stack>
-          <Typography variant="caption" color="textSecondary">
-            Capital restant dû sur {formatEuros(mortgage.principal)}
-          </Typography>
-          <LinearProgress variant="determinate" value={repaid} />
+    <Modal
+      {...modalProps}
+      action={
+        tab === 'progress' ? (
+          <IconButton aria-label="Historique" onClick={() => setTab('history')}>
+            <AssessmentIcon />
+          </IconButton>
+        ) : (
+          <IconButton
+            aria-label="Avancement"
+            onClick={() => setTab('progress')}
+          >
+            <HouseIcon />
+          </IconButton>
+        )
+      }
+    >
+      {tab === 'progress' ? (
+        <Stack direction="row" spacing={3}>
+          <MortgageHouse ratio={status.repaidRatio} />
+          <MortgageFigures mortgage={mortgage} status={status} />
         </Stack>
-        <MortgageChart mortgage={mortgage} />
-        <Stack spacing={1}>
-          <InfoRow
-            label="Mensualité"
-            value={
-              formatEuros(status.monthlyPayment) +
-              (insurance ? ` + ${formatEuros(insurance)} d'assurance` : '')
-            }
-          />
-          <InfoRow
-            label="Échéances payées"
-            value={`${status.paymentsMade} / ${mortgage.durationMonths}`}
-          />
-          <InfoRow
-            label="Intérêts payés"
-            value={formatEuros(status.paidInterest)}
-          />
-          <InfoRow
-            label="Intérêts restants"
-            value={formatEuros(status.remainingInterest)}
-          />
-          <InfoRow
-            label="Fin du prêt"
-            value={status.endDate.toLocaleDateString('fr-FR', {
-              month: 'long',
-              year: 'numeric',
-            })}
-          />
-        </Stack>
-      </Stack>
+      ) : (
+        <MortgageChart mortgage={mortgage} status={status} />
+      )}
     </Modal>
   );
 }
