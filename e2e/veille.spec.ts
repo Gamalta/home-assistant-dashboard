@@ -1,5 +1,4 @@
-import {Page} from '@playwright/test';
-import {expect, test, waitForScene} from './fixtures';
+import {expect, openSystemModal, test, waitForScene} from './fixtures';
 
 test('se met en veille, puis se réveille sans actionner ce qui est dessous', async ({
   page,
@@ -27,15 +26,6 @@ test('se met en veille, puis se réveille sans actionner ce qui est dessous', as
   await expect(screensaver).toBeHidden();
   await expect(page.getByRole('heading', {name: 'Climatisation'})).toBeHidden();
 });
-
-async function openSystemModal(page: Page) {
-  await waitForScene(page);
-  await page.mouse.move(150, 700);
-  const button = page.getByRole('button', {name: 'Système'});
-  // Un clic pendant l'animation d'entrée du dock peut tomber à côté.
-  await expect(button.locator('..')).toHaveCSS('opacity', '1');
-  await button.click();
-}
 
 test('règle le délai de veille depuis la modale Système', async ({page}) => {
   await page.goto('/');
