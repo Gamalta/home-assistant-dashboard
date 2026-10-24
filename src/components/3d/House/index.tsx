@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import {Suspense, useEffect, useState} from 'react';
+import {useGLTF} from '@react-three/drei';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
@@ -25,6 +26,11 @@ export default function House() {
       cancelled = true;
     };
   }, [configuration.webGPU]);
+
+  // Hors du rendu : sinon useGLTF met à jour ModelLoader pendant le rendu de HouseScene.
+  useEffect(() => {
+    if (model) useGLTF.preload(model);
+  }, [model]);
 
   if (!webGLSupported || !model) {
     return (

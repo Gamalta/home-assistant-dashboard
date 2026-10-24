@@ -20,6 +20,7 @@ type RoomItemConfigType =
   | ShutterConfigType
   | DestkopConfigType
   | OutletConfigType;
+  | Printer3dConfigType;
 
 type BaseItemConfigType =
   | {
@@ -73,4 +74,10 @@ type OutletConfigType = BaseItemConfigType & {
   type: 'outlet';
   switchEntityId: FilterByDomain<EntityName, 'switch'>;
   powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type Printer3dConfigType = BaseItemConfigType & {
+  type: 'printer3d';
+  // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
+  prefix: string;
 };

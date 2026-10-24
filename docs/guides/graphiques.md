@@ -170,7 +170,6 @@ const last = Math.floor(status.paymentsMade / 12);
   bleed
   x={points.map(point => point.date.getTime())}
   min={0}
-  max={mortgage.principal}
   formatX={time => String(new Date(time).getFullYear())}
   series={[
     {

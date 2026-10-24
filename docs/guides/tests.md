@@ -19,14 +19,14 @@ pnpm typecheck            # tsc --noEmit (src, e2e et fichiers de config)
 pnpm lint                 # gts lint
 
 pnpm exec playwright install chromium   # une seule fois, avant le premier E2E
-pnpm test:e2e                           # build + preview + tests E2E
+pnpm test:e2e                           # build + preview + serveur de dev + tests E2E
 pnpm test:e2e e2e/scene.spec.ts         # un seul fichier
 pnpm test:e2e -g "modale"               # les tests dont le titre contient « modale »
 ```
 
 `pnpm test:e2e` builde l'application (`vite build`) puis la sert avec `vite preview` sur le port **4317**, avec Home Assistant simulé (`VITE_MOCK_HOME_ASSISTANT=true`), la seule config `demo` (`VITE_HOUSE_CONFIGS='["demo"]'`) et `SENTRY_AUTH_TOKEN` vide pour ne rien uploader. Ces variables sont fixées dans `playwright.config.ts` et priment sur le fichier `.env`.
 
-Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en dev le double montage de `StrictMode` coupe aujourd'hui la vue 3D au bout de 2 s environ.
+Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.spec.ts` (projet Playwright `dev`) tourne sur le serveur de dev (`vite`), lancé sur le port **4318** avec les mêmes variables : il vérifie que la vue 3D survit au double montage de `StrictMode`, qui n'a lieu qu'en dev ([ADR 0013](../adr/0013-react-three-fiber-9-8.md)). Ce projet sert aussi de filet pour les avertissements que React n'affiche qu'en dev.
 
 ## Écrire un test unitaire
 
@@ -43,7 +43,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - Un fichier `e2e/<sujet>.spec.ts`.
 - Importer `test` et `expect` depuis `./fixtures`, pas depuis `@playwright/test`. Ces fixtures :
   - interceptent Sentry et Matomo, pour ne pas polluer leurs données ;
-  - font échouer le test sur toute erreur console ou exception non rattrapée, sauf celles de `KNOWN_ERRORS`. Cette liste doit rester courte : retirer une entrée dès que l'erreur est corrigée.
+  - font échouer le test sur toute erreur console ou exception non rattrapée, sans liste d'exceptions : une erreur se corrige, elle ne se masque pas.
 - `waitForScene(page)` attend que la scène 3D soit montée (`window.__dashboardBenchmark` défini). L'appeler avant d'interagir avec la scène ou d'ouvrir une modale : tant que la scène charge, la page est trop occupée et les animations prennent du retard.
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
@@ -57,7 +57,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - Après un échec, la trace est gardée dans `test-results/` : `pnpm exec playwright show-trace test-results/<test>/trace.zip` (DOM, réseau, console et captures à chaque étape).
 - `pnpm exec playwright show-report` ouvre le rapport HTML du dernier lancement (`playwright-report/`).
 - En CI, le rapport est publié comme artefact `playwright-report` quand le job échoue : le télécharger depuis la page du run, le décompresser, puis `pnpm exec playwright show-report <dossier>`.
-- En local, un serveur déjà lancé sur le port 4317 est réutilisé tel quel : s'il sert un ancien build, l'arrêter avant de relancer les tests. Pour lancer deux suites en parallèle (deux worktrees, par exemple), donner à chacune son port : `E2E_PORT=4330 pnpm test:e2e`.
+- En local, un serveur déjà lancé sur le port 4317 (ou 4318) est réutilisé tel quel : s'il sert un ancien build, l'arrêter avant de relancer les tests. Pour lancer deux suites en parallèle (deux worktrees, par exemple), donner à chacune son port : `E2E_PORT=4330 pnpm test:e2e` sert le build sur 4330 et le dev sur 4331.
 - Pour regarder l'application telle que les E2E la voient :
 
   ```sh

@@ -9,6 +9,7 @@ import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
+import {createPrinter3d} from './createPrinter3d';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -276,4 +277,5 @@ export const entities: HassEntities = {
     state: '0.8',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
+  ...createPrinter3d('p1s_demo'),
 } as const;

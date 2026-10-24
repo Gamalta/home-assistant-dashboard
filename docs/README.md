@@ -11,3 +11,4 @@
 | [Guide : ajouter une maison](guides/ajouter-une-maison.md) | Brancher un nouveau modèle 3D et ses entités        |
 | [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance       |
 | [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun       |
+| [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)   |

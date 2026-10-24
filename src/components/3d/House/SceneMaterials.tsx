@@ -1,9 +1,10 @@
-import {useThree} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
 import {useHeatmapPoints} from '../../../hooks/useHeatmapPoints';
+import {createWallFade} from '../../../rendering/wallFade';
 
 type SceneMaterialsProps = {
   scene: THREE.Object3D;
@@ -25,6 +26,7 @@ type MeshUserData = {
 const baseName = (material: THREE.Material) =>
   material.name.toLowerCase().replace(/\.\d+$/, '');
 
+// Même règle dans scripts/optimize-model.sh, qui ne fusionne pas deux rôles.
 function getMaterialKind(material: THREE.Material): MaterialKind {
   const name = baseName(material);
   if (name.startsWith('room_')) return 'ground';
@@ -79,11 +81,11 @@ export function SceneMaterials(props: SceneMaterialsProps) {
   heatmapPointsRef.current = heatmapPoints;
   const heatmapMaterials = useRef<THREE.Material[]>([]);
   const showHeatmap = heatmap && heatmapPoints.length > 0;
+  const wallFade = useRef<ReturnType<typeof createWallFade>>(undefined);
+  const sortedFrom = useRef(new THREE.Vector3());
 
   useEffect(() => {
     const createdMaterials: THREE.Material[] = [];
-
-    const overlays: THREE.Mesh[] = [];
 
     // Pour les murs, `fade` dessine la zone qui s'efface près de la caméra
     // (voir createHideWallsMaterials).
@@ -138,6 +140,8 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     };
 
     const meshes: THREE.Mesh[] = [];
+    const walls: {mesh: THREE.Mesh; color: THREE.Color}[] = [];
+    let fade: THREE.Material | undefined;
     scene.traverse(object => {
       if (object instanceof THREE.Mesh) meshes.push(object);
     });
@@ -150,22 +154,34 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         mesh.material = original.map(material => transform(material).material);
         return;
       }
-      const {material, fade} = transform(original);
-      mesh.material = material;
-      if (fade) {
-        // Même géométrie, rendue une seconde fois avec le matériau de fondu.
-        const overlay = new THREE.Mesh(mesh.geometry, fade);
-        // Reçoit les ombres comme le mur, sans en projeter une seconde fois.
-        overlay.userData.fadeOverlay = true;
-        overlay.receiveShadow = mesh.receiveShadow;
-        mesh.add(overlay);
-        overlays.push(overlay);
+      const transformed = transform(original);
+      mesh.material = transformed.material;
+      if (transformed.fade && original instanceof THREE.MeshStandardMaterial) {
+        walls.push({mesh, color: original.color});
+        fade ??= transformed.fade;
       }
     });
+    let overlay: THREE.Mesh | undefined;
+    if (fade) {
+      // Un seul calque de fondu pour tous les murs, qui ne diffèrent que par
+      // leur couleur, passée par les sommets (voir createWallFade). Le fondu
+      // d'un mur est un matériau Lambert ou Standard, d'où le `as`.
+      (fade as THREE.MeshLambertMaterial).color.set('white');
+      fade.vertexColors = true;
+      wallFade.current = createWallFade(walls);
+      overlay = new THREE.Mesh(wallFade.current.geometry, fade);
+      // Reçoit les ombres comme les murs, sans en projeter une seconde fois.
+      overlay.userData.fadeOverlay = true;
+      overlay.receiveShadow = walls[0].mesh.receiveShadow;
+      scene.add(overlay);
+      sortedFrom.current.set(Infinity, 0, 0);
+    }
     invalidate();
 
     return () => {
-      overlays.forEach(overlay => overlay.removeFromParent());
+      overlay?.removeFromParent();
+      wallFade.current?.geometry.dispose();
+      wallFade.current = undefined;
       meshes.forEach(mesh => {
         mesh.material = (mesh.userData as MeshUserData).originalMaterial!;
       });
@@ -174,6 +190,14 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       invalidate();
     };
   }, [scene, backend, hideWalls, showHeatmap, diffuseOnly, invalidate]);
+
+  // Le fondu est transparent : les murs se dessinent du plus loin au plus
+  // proche de la caméra (voir createWallFade).
+  useFrame(({camera}) => {
+    if (!wallFade.current || camera.position.equals(sortedFrom.current)) return;
+    sortedFrom.current.copy(camera.position);
+    wallFade.current.sort(camera);
+  });
 
   const heatmapPointsKey = JSON.stringify(heatmapPoints);
   useEffect(() => {
