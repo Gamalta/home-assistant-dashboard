@@ -1,5 +1,5 @@
 import {useFrame, useThree} from '@react-three/fiber';
-import {useEffect, useRef} from 'react';
+import {useEffect, useLayoutEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
@@ -84,7 +84,9 @@ export function SceneMaterials(props: SceneMaterialsProps) {
   const wallFade = useRef<ReturnType<typeof createWallFade>>(undefined);
   const sortedFrom = useRef(new THREE.Vector3());
 
-  useEffect(() => {
+  // Avant la première image : sinon elle compile et affiche les matériaux
+  // d'origine, aussitôt remplacés.
+  useLayoutEffect(() => {
     const createdMaterials: THREE.Material[] = [];
 
     // Pour les murs, `fade` dessine la zone qui s'efface près de la caméra
