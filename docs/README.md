@@ -9,3 +9,4 @@
 | [Guide : tests](guides/tests.md)                           | Lancer et écrire les tests unitaires et E2E         |
 | [Guide : performance](guides/performance.md)               | Mesurer le rendu et simuler la tablette             |
 | [Guide : ajouter une maison](guides/ajouter-une-maison.md) | Brancher un nouveau modèle 3D et ses entités        |
+| [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et ambilight HyperHDR    |
