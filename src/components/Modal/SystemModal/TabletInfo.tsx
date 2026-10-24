@@ -2,7 +2,7 @@ import {useEntity} from '@hakit/core';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import {SideBarConfigType} from '../../../configs/sidebar';
-import {isUnplugged} from '../../../utils/system';
+import {isUnplugged} from '../../../utils/tablet';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
 
 // États et chargeurs de l'application Companion Android.

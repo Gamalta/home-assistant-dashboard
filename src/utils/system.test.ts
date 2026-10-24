@@ -1,11 +1,6 @@
 import type {HassEntity} from 'home-assistant-js-websocket';
 import {afterEach, describe, expect, it, vi} from 'vitest';
-import {
-  formatRelative,
-  getPendingUpdates,
-  hasBackupFailed,
-  isUnplugged,
-} from './system';
+import {formatRelative, getPendingUpdates, hasBackupFailed} from './system';
 
 const entity = (entity_id: string, state: string) =>
   ({entity_id, state, attributes: {}}) as HassEntity;
@@ -23,18 +18,6 @@ describe('getPendingUpdates', () => {
     };
 
     expect(getPendingUpdates(entities)).toEqual([entities['update.core']]);
-  });
-});
-
-describe('isUnplugged', () => {
-  it('signale la tablette qui ne charge pas', () => {
-    expect(isUnplugged('discharging')).toBe(true);
-  });
-
-  it('accepte la charge, la batterie pleine et la charge en pause', () => {
-    expect(isUnplugged('charging')).toBe(false);
-    expect(isUnplugged('full')).toBe(false);
-    expect(isUnplugged('not_charging')).toBe(false);
   });
 });
 

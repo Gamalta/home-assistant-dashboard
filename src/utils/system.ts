@@ -8,11 +8,6 @@ export function getPendingUpdates(entities: HassEntities) {
   );
 }
 
-// Application Companion Android : `discharging` veut dire débranchée.
-// `not_charging` (branchée, charge en pause) est normal sur une tablette murale.
-export const isUnplugged = (batteryState: string) =>
-  batteryState === 'discharging';
-
 // État d'un capteur `timestamp` en relatif : « il y a 3 jours », « demain ».
 export function formatRelative(state: string) {
   const date = new Date(state);
