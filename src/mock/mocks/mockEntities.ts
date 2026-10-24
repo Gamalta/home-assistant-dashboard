@@ -13,6 +13,8 @@ import {createSwitch} from './createSwitch';
 import {createMediaPlayer} from './createMediaPlayer';
 import {createRemote} from './createRemote';
 import {MediaPlayerFeature} from '../../utils/entity/media';
+import {createWledStrip} from './createWledStrip';
+import {createAmbilight} from './createAmbilight';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -306,4 +308,6 @@ export const entities: HassEntities = {
     },
   }),
   ...createRemote('remote.living_room_tv'),
+  ...createWledStrip('light.salon_strip'),
+  ...createAmbilight('light.tv_ambilight'),
 } as const;

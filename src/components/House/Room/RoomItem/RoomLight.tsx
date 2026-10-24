@@ -49,6 +49,7 @@ export function RoomLight(props: RoomLightProps) {
         <Button
           variant="contained"
           color="secondary"
+          aria-label={light.attributes.friendly_name}
           sx={{
             height: '100%',
             minWidth: 0,

@@ -1,4 +1,5 @@
 import {RoomItemConfigType} from '../../../../configs/house';
+import {RoomAmbilight} from './RoomAmbilight';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
@@ -33,6 +34,8 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomPlug id={id} plugConfig={itemConfig} />;
     case 'media':
       return <RoomMedia id={id} mediaConfig={itemConfig} />;
+    case 'ambilight':
+      return <RoomAmbilight id={id} ambilightConfig={itemConfig} />;
     default:
       return <></>;
   }

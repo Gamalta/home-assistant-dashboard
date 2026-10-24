@@ -21,7 +21,8 @@ type RoomItemConfigType =
   | DestkopConfigType
   | Printer3dConfigType
   | PlugConfigType
-  | MediaConfigType;
+  | MediaConfigType
+  | AmbilightConfigType;
 
 type BaseItemConfigType =
   | {
@@ -90,4 +91,9 @@ type MediaConfigType = BaseItemConfigType & {
   mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
   // Pavé directionnel, avec les commandes de l'Apple TV (ADR 0028).
   remoteEntityId?: FilterByDomain<EntityName, 'remote'>;
+};
+
+type AmbilightConfigType = BaseItemConfigType & {
+  type: 'ambilight';
+  lightEntityId: FilterByDomain<EntityName, 'light'>;
 };

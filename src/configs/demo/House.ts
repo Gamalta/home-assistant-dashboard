@@ -96,6 +96,16 @@ export const HouseConfig: HouseConfigType = {
           remoteEntityId: 'remote.living_room_tv',
           position: {x: -3.3, y: 1.4, z: 4.4},
         },
+        {
+          type: 'light',
+          lightEntityId: 'light.salon_strip',
+          position: {x: -3.0, y: 0.4, z: 4.6},
+        },
+        {
+          type: 'ambilight',
+          lightEntityId: 'light.tv_ambilight',
+          position: {x: -3.3, y: 1.1, z: 3.9},
+        },
       ],
     },
     {
