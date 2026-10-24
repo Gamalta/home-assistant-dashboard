@@ -8,7 +8,7 @@ import {
 
 type OptionRowProps = {
   label: string;
-  option: Exclude<keyof ConfigurationOptions, 'lightingStyle'>;
+  option: keyof ConfigurationOptions;
   disabled?: boolean;
 };
 

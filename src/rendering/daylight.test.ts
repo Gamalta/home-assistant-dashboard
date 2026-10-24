@@ -38,13 +38,6 @@ describe('sunDirection', () => {
     expect(sunDirection({elevation: 90, azimuth: 180}).y).toBeCloseTo(1);
     expect(sunDirection({elevation: -10, azimuth: 180}).y).toBeCloseTo(0);
   });
-
-  it('tient compte de l’orientation du modèle', () => {
-    // -Z du modèle tourné vers l'est : un soleil à l'est arrive par -Z.
-    const east = sunDirection({elevation: 0, azimuth: 90}, 90);
-    expect(east.x).toBeCloseTo(0);
-    expect(east.z).toBeCloseTo(-1);
-  });
 });
 
 describe('sunAtHour', () => {

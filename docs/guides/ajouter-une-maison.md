@@ -24,7 +24,6 @@ Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
 - `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`) ;
-- `HouseConfig.orientation` (optionnel) : l'azimut, en degrés, vers lequel pointe l'axe -Z du modèle (0 : le nord, 90 : l'est). Le soleil éclaire alors les façades réellement exposées ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.

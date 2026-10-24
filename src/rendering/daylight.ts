@@ -24,14 +24,11 @@ export function daylightFactor(elevation: number) {
   return THREE.MathUtils.smoothstep(elevation, -6, 10);
 }
 
-/**
- * Direction du soleil dans le repère du modèle, où -Z pointe vers l'azimut
- * `orientation` (0 : le nord) et +X vers sa droite.
- */
-export function sunDirection(sun: SunPosition, orientation = 0) {
+/** Direction du soleil dans le repère du modèle, où -Z pointe vers le nord. */
+export function sunDirection(sun: SunPosition) {
   // Sous l'horizon, le crépuscule éclaire encore, mais pas par en dessous.
   const elevation = THREE.MathUtils.degToRad(Math.max(sun.elevation, 0));
-  const azimuth = THREE.MathUtils.degToRad(sun.azimuth - orientation);
+  const azimuth = THREE.MathUtils.degToRad(sun.azimuth);
   return new THREE.Vector3(
     Math.sin(azimuth) * Math.cos(elevation),
     Math.sin(elevation),

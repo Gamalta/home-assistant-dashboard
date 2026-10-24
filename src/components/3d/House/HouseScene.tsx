@@ -11,10 +11,6 @@ import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
-import {
-  lightingStyles,
-  type LightingStyle,
-} from '../../../rendering/lightingStyles';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
@@ -36,9 +32,6 @@ export function HouseScene(props: HouseSceneProps) {
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
   const moving = useRef(false);
-  // Une valeur stockée d'une ambiance retirée retombe sur le soleil réel.
-  const style: LightingStyle =
-    lightingStyles[configuration.lightingStyle] ?? lightingStyles.soleil;
 
   return (
     <Canvas
@@ -69,8 +62,6 @@ export function HouseScene(props: HouseSceneProps) {
           backend={backend}
           hideWalls={configuration.hideWallsShader}
           heatmap={configuration.heatmapShader}
-          floorTint={style.floorTint}
-          wallTint={style.wallTint}
           rooms={rooms}
         />
         <LightShadows
@@ -78,7 +69,7 @@ export function HouseScene(props: HouseSceneProps) {
           enabled={configuration.shadows}
           moving={moving}
         />
-        <Daylight style={style} orientation={houseConfig?.house.orientation} />
+        <Daylight />
         {rooms.map(room => (
           <Room3d key={room.id} room={room} />
         ))}

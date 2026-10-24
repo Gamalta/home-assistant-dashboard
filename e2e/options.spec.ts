@@ -40,28 +40,14 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
 // Le panneau d'essai se pose sur la vue 3D, à la place de la modale.
 async function openLightingTrial(page: Page) {
   await openSystemModal(page);
-  await page.getByRole('button', {name: 'Essayer les ambiances'}).click();
-  const trial = page.getByRole('region', {name: 'Essai des ambiances'});
+  await page
+    .getByRole('button', {name: "Essayer l'éclairage selon l'heure"})
+    .click();
+  const trial = page.getByRole('region', {name: "Essai de l'éclairage"});
   await expect(trial).toBeVisible();
   await expect(page.getByRole('heading', {name: 'Système'})).toBeHidden();
   return trial;
 }
-
-test('change d’ambiance et la garde après rechargement', async ({page}) => {
-  await page.goto('/');
-  let trial = await openLightingTrial(page);
-  const ambiance = trial.getByRole('combobox', {name: 'Ambiance'});
-  await expect(ambiance).toHaveText('B · Soleil réel');
-  await ambiance.click();
-  await page.getByRole('option', {name: 'D · Cosy'}).click();
-  await expect(ambiance).toHaveText('D · Cosy');
-
-  await page.reload();
-  trial = await openLightingTrial(page);
-  await expect(trial.getByRole('combobox', {name: 'Ambiance'})).toHaveText(
-    'D · Cosy',
-  );
-});
 
 test('simule une heure pour essayer le jour et la nuit', async ({page}) => {
   // L'heure opposée à la période réelle, pour voir le thème basculer.

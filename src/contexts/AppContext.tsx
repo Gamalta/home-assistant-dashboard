@@ -6,7 +6,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import type {LightingStyleId} from '../rendering/lightingStyles';
 
 export type ConfigurationOptions = {
   debug: boolean;
@@ -14,7 +13,6 @@ export type ConfigurationOptions = {
   heatmapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
-  lightingStyle: LightingStyleId;
 };
 
 export type RendererInfo = {
@@ -33,7 +31,7 @@ type AppContextType = {
   /** Heure d'essai de l'éclairage et du thème, non mémorisée ; `null` : l'heure réelle. */
   simulatedHour: number | null;
   setSimulatedHour: Dispatch<SetStateAction<number | null>>;
-  /** Panneau d'essai des ambiances ouvert sur la vue 3D. */
+  /** Panneau d'essai de l'éclairage, ouvert sur la vue 3D. */
   lightingTrial: boolean;
   setLightingTrial: Dispatch<SetStateAction<boolean>>;
 };
@@ -68,7 +66,6 @@ const defaultConfiguration: ConfigurationOptions = {
   heatmapShader: false,
   shadows: false,
   webGPU: webGPUSupported,
-  lightingStyle: 'soleil',
 };
 
 const defaultRendererInfo: RendererInfo = {

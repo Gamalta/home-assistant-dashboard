@@ -4,29 +4,35 @@ import {useEntity} from '@hakit/core';
 import * as THREE from 'three';
 import {
   daylightFactor,
-  sunDirection,
   sunAtHour,
+  sunDirection,
   sunFromHour,
   type SunPosition,
 } from '../../../rendering/daylight';
-import type {LightingStyle} from '../../../rendering/lightingStyles';
 import {useAppContext} from '../../../contexts/AppContext';
 
-const NIGHT_SKY = new THREE.Color('#c8c4bc');
-const LOW_SUN = new THREE.Color('#ffb070');
-
-type DaylightProps = {
-  style: LightingStyle;
-  /** Azimut vers lequel pointe l'axe -Z du modèle, en degrés. */
-  orientation?: number;
+// Jour doux et chaud, nuit sombre et contrastée : le choix du propriétaire
+// parmi dix ambiances essayées (ADR 0030).
+const DAY = {
+  sky: new THREE.Color('#fff3e3'),
+  ground: new THREE.Color('#d9b48a'),
+  skyIntensity: 1.1,
+  exposure: 1.2,
 };
+const NIGHT = {
+  sky: new THREE.Color('#c8c4bc'),
+  ground: new THREE.Color('#8a7660'),
+  skyIntensity: 0.45,
+  exposure: 1,
+};
+// Soleil haut et fixe : il adoucit les volumes sans écraser une façade.
+const SUN = sunDirection({elevation: 75, azimuth: 200}).multiplyScalar(20);
 
 /**
- * Ciel et soleil, placés d'après `sun.sun` ou, à défaut, l'heure. Le nombre
- * de lumières ne change jamais : le jour qui passe ne recompile aucun shader.
+ * Ciel et soleil, plus ou moins forts selon `sun.sun` ou, à défaut, l'heure.
+ * Seuls des uniforms suivent l'heure : aucun shader n'est recompilé.
  */
-export function Daylight(props: DaylightProps) {
-  const {style, orientation} = props;
+export function Daylight() {
   const {gl, invalidate} = useThree();
   const sunEntity = useEntity('sun.sun', {returnNullIfNotFound: true});
   const {simulatedHour} = useAppContext();
@@ -40,13 +46,6 @@ export function Daylight(props: DaylightProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Avant la première image : le tone mapping fait partie des shaders.
-  useLayoutEffect(() => {
-    gl.toneMapping = style.toneMapping;
-    gl.toneMappingExposure = style.exposure ?? 1;
-    invalidate();
-  }, [gl, style, invalidate]);
-
   const elevation = Number(sunEntity?.attributes.elevation);
   const sun: SunPosition =
     simulatedHour !== null
@@ -55,36 +54,31 @@ export function Daylight(props: DaylightProps) {
         ? hourSun
         : {elevation, azimuth: Number(sunEntity!.attributes.azimuth)};
   const day = daylightFactor(sun.elevation);
-  const fixedSun = style.sunElevation !== undefined;
-  const direction = fixedSun
-    ? sunDirection({
-        elevation: style.sunElevation!,
-        azimuth: style.sunAzimuth ?? 180,
-      })
-    : sunDirection(sun, orientation);
-  const sunColor = new THREE.Color(style.sun);
-  if (!fixedSun) {
-    sunColor.lerp(
-      LOW_SUN,
-      1 - THREE.MathUtils.smoothstep(sun.elevation, 0, 30),
-    );
-  }
 
-  useEffect(() => invalidate(), [sun.elevation, sun.azimuth, invalidate]);
+  // Avant la première image : le tone mapping fait partie des shaders,
+  // l'exposition n'est qu'un uniform.
+  useLayoutEffect(() => {
+    gl.toneMapping = THREE.NeutralToneMapping;
+    gl.toneMappingExposure = THREE.MathUtils.lerp(
+      NIGHT.exposure,
+      DAY.exposure,
+      day,
+    );
+    invalidate();
+  }, [gl, day, invalidate]);
 
   return (
     <>
-      <ambientLight intensity={(style.ambient ?? 0) * day} />
       <hemisphereLight
-        color={NIGHT_SKY.clone().lerp(new THREE.Color(style.sky), day)}
-        groundColor={style.ground}
-        intensity={THREE.MathUtils.lerp(0.45, style.skyIntensity, day)}
+        color={NIGHT.sky.clone().lerp(DAY.sky, day)}
+        groundColor={NIGHT.ground.clone().lerp(DAY.ground, day)}
+        intensity={THREE.MathUtils.lerp(
+          NIGHT.skyIntensity,
+          DAY.skyIntensity,
+          day,
+        )}
       />
-      <directionalLight
-        position={direction.multiplyScalar(20)}
-        color={sunColor}
-        intensity={style.sunIntensity * day}
-      />
+      <directionalLight position={SUN} color="#fff0d8" intensity={0.35 * day} />
     </>
   );
 }

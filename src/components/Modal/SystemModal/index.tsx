@@ -63,7 +63,7 @@ export function SystemModal(props: SystemModalProps) {
               modalProps.onClose();
             }}
           >
-            Essayer les ambiances
+            Essayer l'éclairage selon l'heure
           </Button>
           <OptionRow
             label="Murs transparents"
