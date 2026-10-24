@@ -34,9 +34,7 @@ export function AllLightsOffModal(props: AllLightsOffModalProps) {
             ))}
           </Stack>
         ) : (
-          <Typography color="text.secondary">
-            Aucune lumière allumée.
-          </Typography>
+          <Typography color="textSecondary">Aucune lumière allumée.</Typography>
         )}
         <Button
           variant="contained"
