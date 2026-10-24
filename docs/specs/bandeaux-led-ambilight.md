@@ -21,14 +21,19 @@ Choisir un effet sur n'importe quelle lumière qui en propose, régler un bandea
 
 ## Comportement attendu
 
-### Scénario : choisir un effet et régler un bandeau LED
+### Scénario : choisir un effet
 
-- **Étant donné** la modale du bandeau WLED, seul sélectionné, sur l'onglet « Effets », avec l'effet « Solid » mis en évidence
-- **Quand** je touche « Rainbow », que je choisis le préréglage « Cinéma », puis que je pousse la vitesse au maximum
-- **Alors** le bandeau joue « Rainbow », qui est mis en évidence à la place de « Solid » ;
-- **et** le préréglage « Cinéma » est affiché, et la vitesse vaut 255.
+- **Étant donné** la modale du bandeau WLED sur l'onglet « Effets », avec l'effet « Solid » mis en évidence
+- **Quand** je touche « Rainbow »
+- **Alors** le bandeau joue « Rainbow », qui est mis en évidence à la place de « Solid ».
 
 L'onglet « Effets » vaut pour toute lumière qui expose une liste d'effets (WLED, Hue, HyperHDR…). Si plusieurs lumières sont liées, il propose tous leurs effets, et chacun n'est envoyé qu'aux lumières qui le connaissent.
+
+### Scénario : régler un bandeau LED
+
+- **Étant donné** la modale du bandeau WLED, seul sélectionné, sur l'onglet « Effets »
+- **Quand** je choisis le préréglage « Cinéma », puis que je pousse la vitesse au maximum
+- **Alors** le préréglage « Cinéma » est affiché, et la vitesse vaut 255.
 
 Les listes « Préréglage », « Playlist » et « Palette » et les curseurs « Vitesse » et « Intensité » n'apparaissent que si la lumière a les entités correspondantes. Une lumière Hue qui a une vitesse d'effet (`number.<lumière>_effect_speed`) affiche aussi « Vitesse ». Ces réglages disparaissent quand plusieurs lumières sont liées, puisqu'ils ne valent que pour un appareil.
 

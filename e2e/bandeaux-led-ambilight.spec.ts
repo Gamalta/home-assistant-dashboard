@@ -16,21 +16,24 @@ test.beforeEach(async ({page}) => {
   await page.goto('/');
 });
 
-test('choisit un effet et règle un bandeau LED', async ({page}) => {
+async function openStripEffects(page: Page) {
   await openModal(page, 'Bandeau LED', 'Lumière');
   await page.getByRole('button', {name: 'Effets'}).click();
+}
 
+test('choisit un effet', async ({page}) => {
+  await openStripEffects(page);
+
+  const solid = page.getByRole('button', {name: 'Solid'});
   const rainbow = page.getByRole('button', {name: 'Rainbow', exact: true});
-  await expect(page.getByRole('button', {name: 'Solid'})).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
+  await expect(solid).toHaveAttribute('aria-pressed', 'true');
   await rainbow.click();
   await expect(rainbow).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('button', {name: 'Solid'})).toHaveAttribute(
-    'aria-pressed',
-    'false',
-  );
+  await expect(solid).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('règle un bandeau LED', async ({page}) => {
+  await openStripEffects(page);
 
   const preset = page.getByRole('combobox', {name: 'Préréglage'});
   await preset.click();
