@@ -400,6 +400,18 @@ useHass.setState({
   },
 });
 
+declare global {
+  interface Window {
+    // Pour les E2E : simuler un changement d'état depuis `page.evaluate`.
+    __mockSetState?: (entityId: string, state: string) => void;
+  }
+}
+
+window.__mockSetState = (entityId, state) => {
+  const {entities, setEntities} = useHass.getState() as InternalStore;
+  setEntities({...entities, [entityId]: {...entities[entityId], state}});
+};
+
 function HassProvider({children}: HassProviderProps) {
   const ready = useHass(s => s.ready);
   const _hash = useHass(s => s.hash);
