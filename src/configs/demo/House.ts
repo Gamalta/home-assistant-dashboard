@@ -84,6 +84,12 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.salon_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
+        {
+          type: 'media',
+          mediaPlayerEntityId: 'media_player.living_room_tv',
+          remoteEntityId: 'remote.living_room_tv',
+          position: {x: -3.3, y: 1.4, z: 4.4},
+        },
       ],
     },
     {

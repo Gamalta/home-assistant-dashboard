@@ -18,7 +18,8 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | MediaConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +67,11 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type MediaConfigType = BaseItemConfigType & {
+  type: 'media';
+  mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
+  // Pavé directionnel, avec les commandes de l'Apple TV (ADR 0028).
+  remoteEntityId?: FilterByDomain<EntityName, 'remote'>;
 };

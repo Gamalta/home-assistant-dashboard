@@ -8,6 +8,9 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createMediaPlayer} from './createMediaPlayer';
+import {createRemote} from './createRemote';
+import {MediaPlayerFeature} from '../../utils/entity/media';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -257,4 +260,30 @@ export const entities: HassEntities = {
       unit_of_measurement: '%',
     },
   }),
+
+  ...createMediaPlayer('media_player.living_room_tv', {
+    state: 'playing',
+    attributes: {
+      friendly_name: 'TV du séjour',
+      supported_features:
+        MediaPlayerFeature.PAUSE |
+        MediaPlayerFeature.PLAY |
+        MediaPlayerFeature.PREVIOUS_TRACK |
+        MediaPlayerFeature.NEXT_TRACK |
+        MediaPlayerFeature.VOLUME_SET |
+        MediaPlayerFeature.VOLUME_MUTE |
+        MediaPlayerFeature.TURN_ON |
+        MediaPlayerFeature.TURN_OFF |
+        MediaPlayerFeature.SELECT_SOURCE,
+      volume_level: 0.3,
+      is_volume_muted: false,
+      media_title: 'My Way',
+      media_artist: 'Calvin Harris',
+      app_name: 'YouTube Music',
+      entity_picture: 'media/demo_cover.svg',
+      source: 'Apple TV',
+      source_list: ['Apple TV', 'Freebox', 'Console'],
+    },
+  }),
+  ...createRemote('remote.living_room_tv'),
 } as const;
