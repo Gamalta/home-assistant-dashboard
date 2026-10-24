@@ -72,7 +72,11 @@ export default function House() {
         }
       >
         <Suspense fallback={<ModelLoader />}>
-          <HouseScene backend={backend} model={model} />
+          <HouseScene
+            key={`${houseConfig?.id}-${backend.kind}`}
+            backend={backend}
+            model={model}
+          />
         </Suspense>
       </ErrorBoundary>
     </Stack>
