@@ -5,7 +5,7 @@ export function getWeatherIcon(
   displayMoon: boolean = false,
 ) {
   if (!condition || condition === 'unknown') condition = 'sunny';
-  if (condition === 'execptional') condition = 'lightning-rainy';
+  if (condition === 'exceptional') condition = 'lightning-rainy';
   if (condition === 'windy-variant') condition = 'windy';
 
   if (displayMoon) {

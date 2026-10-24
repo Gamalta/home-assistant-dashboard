@@ -28,6 +28,10 @@ describe('getWeatherIcon', () => {
     at(12);
     expect(getWeatherIcon('sunny', true)).toBe('sunny');
   });
+
+  it('affiche un orage pour une condition exceptionnelle', () => {
+    expect(getWeatherIcon('exceptional')).toBe('lightning-rainy');
+  });
 });
 
 describe('getWeatherIconPath', () => {
