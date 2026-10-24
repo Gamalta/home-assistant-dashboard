@@ -14,6 +14,8 @@ export type ConfigurationOptions = {
   environmentReflections: boolean;
   shadows: boolean;
   webGPU: boolean;
+  // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
+  hiddenCategories: string[];
 };
 
 export type RendererInfo = {
@@ -62,6 +64,7 @@ const defaultConfiguration: ConfigurationOptions = {
   environmentReflections: false,
   shadows: false,
   webGPU: webGPUSupported,
+  hiddenCategories: [],
 };
 
 const defaultRendererInfo: RendererInfo = {
