@@ -41,7 +41,7 @@ Les tests de rotation ont un délai triplé (`test.slow()`) : l'inertie de la ca
 
 - Une PR qui dépasse 150 draw calls ou recompile pendant un geste sur la démo échoue en CI, avant d'atteindre la tablette.
 - Le défaut connu des ombres (10 programmes au premier geste, 5 au début et 5 à la fin) reste visible dans `e2e/budget.spec.ts`, en `test.fail`. Une fois #39 fusionnée, le test passe et Playwright le signale : il faut alors retirer `test.fail`.
-- Les E2E durent plus longtemps : en CI, la suite passe d'environ 1 min 25 à 2 min 35, et le job complet à 3 min 30. En local, chaque test de rotation prend près d'une minute.
+- Les E2E durent plus longtemps. En CI, la suite a pris 2 min 35 sur un runner seul, et 4 min 45 quand les runs du push et de la pull request tournent en même temps (job complet : 6 min). En local, chaque test de rotation prend de 40 à 50 s. Les rotations des E2E sont donc des gestes courts (10 mouvements au lieu de 60) : ils déclenchent toujours le début et la fin du mouvement.
 - Une durée ne se compare qu'à une autre durée mesurée sur la même machine, avec le même Chrome et le même `--cpu`. La sortie de `--compare` le rappelle quand l'environnement diffère. D'un lancement à l'autre, une durée varie de quelques dixièmes de milliseconde : seul un écart net compte. Les programmes au démarrage varient aussi de quelques unités, selon l'ordre de chargement (HDR, états des entités) : ils n'ont pas de budget.
 - `apartment` ne se mesure qu'en local, quand le sous-module est présent.
 - Les compteurs couvrent `drawArrays`, `drawElements` et leurs variantes instanciées, en WebGL seulement : le bench force `webGPU: false`, et un `BatchedMesh` (extension `WEBGL_multi_draw`) ne serait pas compté.
