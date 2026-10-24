@@ -5,179 +5,171 @@ type PlugViewProps = {
 };
 
 const LED_COLORS: Record<PlugStatus, string> = {
-  on: '#2f8cff',
+  on: '#399fff',
   standby: '#ff9f0a',
-  off: '#c7c7cc',
+  off: '#9da2a9',
 };
-const ANTHRACITE = '#2c2c2e';
+const GLOW_OPACITY: Record<PlugStatus, number> = {on: 1, standby: 0.8, off: 0};
 
-// Prise murale vue de face. La plaque reste blanche en mode sombre, comme une vraie prise.
+// Prise murale française vue de face. La plaque reste blanche en mode sombre, comme une vraie prise.
 export function PlugView(props: PlugViewProps) {
   const {status} = props;
   const plugged = status !== 'off';
   const led = LED_COLORS[status];
+  const glow = {
+    fill: 'url(#plug-glow)',
+    style: {opacity: GLOW_OPACITY[status], transition: 'opacity 0.4s'},
+  };
 
   return (
-    <svg width={260} height={300} viewBox="0 0 260 300" aria-hidden>
+    <svg width={240} height={310} viewBox="96 90 348 450" aria-hidden>
       <defs>
-        <filter id="plug-shadow" x="-20%" y="-20%" width="140%" height="150%">
-          <feDropShadow dx={0} dy={8} stdDeviation={9} floodOpacity={0.22} />
+        <filter id="plug-shadow" x="-20%" y="-20%" width="150%" height="150%">
+          <feDropShadow dx={6} dy={12} stdDeviation={11} floodOpacity={0.47} />
         </filter>
         {/* Halo et ombre de la fiche en dégradés : un filtre serait recalculé à chaque image de l'animation. */}
         <radialGradient id="plug-glow">
-          {[1, 0.5, 0].map((opacity, i) => (
+          {[1, 0.4, 0.1, 0].map((opacity, i) => (
             <stop
               key={i}
-              offset={i / 2}
+              offset={i / 3}
               stopOpacity={opacity}
               style={{stopColor: led, transition: 'stop-color 0.4s'}}
             />
           ))}
         </radialGradient>
+        <linearGradient id="plug-plate" x2={0.6} y2={1}>
+          <stop offset={0} stopColor="#fefefe" />
+          <stop offset={1} stopColor="#e8e8e6" />
+        </linearGradient>
+        <linearGradient id="plug-frame" x2={0.6} y2={1}>
+          <stop offset={0} stopColor="#fefefe" />
+          <stop offset={1} stopColor="#ececea" />
+        </linearGradient>
+        <radialGradient id="plug-well" cx={0.4} cy={0.3} r={0.8}>
+          <stop offset={0} stopColor="#ececea" />
+          <stop offset={0.35} stopColor="#e6e6e3" />
+          <stop offset={1} stopColor="#cbcbc9" />
+        </radialGradient>
+        {/* Ombre portée par le bord haut du puits, enfoncé dans la plaque. */}
+        <radialGradient id="plug-well-rim" cx={0.53} cy={0.57} r={0.55}>
+          <stop offset={0.86} stopOpacity={0} />
+          <stop offset={0.95} stopOpacity={0.1} />
+          <stop offset={1} stopOpacity={0.35} />
+        </radialGradient>
+        <radialGradient id="plug-pin" cx={0.38} cy={0.3} r={0.7}>
+          <stop offset={0} stopColor="#f8f8f7" />
+          <stop offset={0.5} stopColor="#e2e2e0" />
+          <stop offset={0.85} stopColor="#b9b9b7" />
+          <stop offset={1} stopColor="#8a8a88" />
+        </radialGradient>
+        <radialGradient id="plug-hole" cx={0.45} cy={0.3} r={0.7}>
+          <stop offset={0} stopColor="#444442" />
+          <stop offset={1} stopColor="#161615" />
+        </radialGradient>
         <radialGradient id="plug-fiche-shadow">
-          <stop offset={0.72} stopOpacity={0.35} />
+          <stop offset={0.75} stopOpacity={0.45} />
           <stop offset={1} stopOpacity={0} />
         </radialGradient>
-        <linearGradient id="plug-plate" x2={0} y2={1}>
-          <stop offset={0} stopColor="#ffffff" />
-          <stop offset={1} stopColor="#f0f0f2" />
+        <linearGradient id="plug-cable-shadow">
+          <stop offset={0} stopOpacity={0.25} />
+          <stop offset={1} stopOpacity={0} />
         </linearGradient>
-        <linearGradient id="plug-frame" x2={0} y2={1}>
-          <stop offset={0} stopColor="#ececef" />
-          <stop offset={1} stopColor="#f8f8fa" />
+        <linearGradient id="plug-body" x2={0.6} y2={1}>
+          <stop offset={0} stopColor="#4b5054" />
+          <stop offset={1} stopColor="#3a3e41" />
         </linearGradient>
-        <radialGradient id="plug-well" cy={0.62} r={0.6}>
-          <stop offset={0.55} stopColor="#ffffff" />
-          <stop offset={1} stopColor="#d6d6db" />
-        </radialGradient>
-        <radialGradient id="plug-screw" cx={0.35} cy={0.3} r={0.8}>
-          <stop offset={0} stopColor="#fafafa" />
-          <stop offset={1} stopColor="#9a9aa0" />
-        </radialGradient>
-        <radialGradient id="plug-body" cx={0.4} cy={0.3} r={0.8}>
-          <stop offset={0} stopColor="#5a5a5f" />
-          <stop offset={1} stopColor="#2a2a2d" />
-        </radialGradient>
-        <linearGradient id="plug-grip" x2={0} y2={1}>
-          <stop offset={0} stopColor="#4a4a4f" />
-          <stop offset={1} stopColor="#2a2a2d" />
+        <linearGradient id="plug-bevel" x2={0} y2={1}>
+          <stop offset={0} stopColor="#62676b" />
+          <stop offset={1} stopColor="#2a2d30" />
         </linearGradient>
-        <linearGradient id="plug-relief">
-          <stop offset={0} stopColor="#2a2a2d" />
-          <stop offset={0.45} stopColor="#55555a" />
-          <stop offset={1} stopColor="#2a2a2d" />
+        {/* Arête, col, crans et câble : des cylindres éclairés de face. */}
+        <linearGradient id="plug-cylinder">
+          <stop offset={0} stopColor="#33373a" />
+          <stop offset={0.5} stopColor="#565b60" />
+          <stop offset={1} stopColor="#2e3235" />
         </linearGradient>
-        {/* Le câble s'efface en sortant de l'illustration. */}
-        <linearGradient
-          id="plug-cable"
-          y1={230}
-          x2={0}
-          y2={296}
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop offset={0} stopColor={ANTHRACITE} />
-          <stop offset={1} stopColor={ANTHRACITE} stopOpacity={0} />
-        </linearGradient>
-        <linearGradient
-          id="plug-cable-light"
-          y1={230}
-          x2={0}
-          y2={296}
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop offset={0} stopColor="#fff" stopOpacity={0.22} />
-          <stop offset={1} stopColor="#fff" stopOpacity={0} />
+        <linearGradient id="plug-grip">
+          <stop offset={0} stopColor="#282b2d" />
+          <stop offset={0.5} stopColor="#373b3e" />
+          <stop offset={1} stopColor="#2b2e31" />
         </linearGradient>
       </defs>
 
+      {/* La lumière du voyant déborde sur le mur, au-dessus de la plaque. */}
+      <ellipse
+        cx={270}
+        cy={128}
+        rx={130}
+        ry={32}
+        fillOpacity={0.45}
+        {...glow}
+      />
       <rect
-        x={20}
-        y={12}
-        width={220}
-        height={220}
-        rx={13}
+        x={114}
+        y={114}
+        width={312}
+        height={312}
+        rx={14}
         fill="url(#plug-plate)"
-        stroke="#e3e3e8"
+        stroke="#000"
+        strokeOpacity={0.05}
         filter="url(#plug-shadow)"
       />
       <rect
-        x={48}
-        y={40}
-        width={164}
-        height={164}
-        rx={9}
+        x={115}
+        y={115}
+        width={310}
+        height={310}
+        rx={13}
         fill="none"
-        stroke="#000"
-        strokeOpacity={0.06}
+        stroke="#fff"
+        strokeOpacity={0.6}
       />
       <rect
-        x={49}
-        y={41}
-        width={162}
-        height={162}
-        rx={8}
+        x={150}
+        y={167}
+        width={240}
+        height={223}
+        rx={10}
         fill="url(#plug-frame)"
-        stroke="#fff"
-        strokeWidth={2}
+        stroke="#000"
+        strokeOpacity={0.07}
       />
 
-      <circle
-        cx={130}
-        cy={122}
-        r={45}
-        fill="url(#plug-well)"
-        stroke="#cfcfd4"
-      />
-      <rect x={123} y={80} width={14} height={6} rx={2} fill="#b4b4b9" />
-      <rect x={123} y={158} width={14} height={6} rx={2} fill="#b4b4b9" />
-      <circle cx={110} cy={122} r={6.5} fill="#1d1d1f" />
-      <circle cx={150} cy={122} r={6.5} fill="#1d1d1f" />
-      <circle
-        cx={130}
-        cy={122}
-        r={5}
-        fill="url(#plug-screw)"
-        stroke="#8e8e93"
-        strokeWidth={0.6}
-      />
-      <path
-        d="M127.3 122h5.4M130 119.3v5.4"
-        stroke="#636366"
-        strokeWidth={1.2}
-        strokeLinecap="round"
-      />
-
-      <ellipse
-        cx={130}
-        cy={26.5}
-        rx={30}
-        ry={12}
-        fill="url(#plug-glow)"
+      <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
+      <rect
+        data-testid="voyant"
+        x={251}
+        y={137}
+        width={38}
+        height={8}
+        rx={4}
+        strokeWidth={6}
         style={{
-          opacity: {on: 0.8, standby: 0.6, off: 0}[status],
-          transition: 'opacity 0.4s',
+          fill: led,
+          // Le trait, à moitié hors du voyant, l'auréole.
+          stroke: led,
+          strokeOpacity: GLOW_OPACITY[status] * 0.3,
+          transition: 'fill 0.4s, stroke 0.4s, stroke-opacity 0.4s',
         }}
       />
       <rect
-        data-testid="voyant"
-        x={119}
-        y={23}
-        width={22}
-        height={7}
-        rx={3.5}
-        stroke="#000"
-        strokeOpacity={0.08}
-        style={{fill: led, transition: 'fill 0.4s'}}
-      />
-      <rect
-        x={122.5}
-        y={24.3}
-        width={15}
-        height={2}
-        rx={1}
+        x={253}
+        y={138}
+        width={34}
+        height={3.5}
+        rx={1.75}
         fill="#fff"
-        opacity={0.5}
+        opacity={0.15}
       />
+
+      <circle cx={270} cy={277} r={80} fill="url(#plug-well)" />
+      <circle cx={270} cy={277} r={80} fill="url(#plug-well-rim)" />
+      <circle cx={236} cy={270} r={12} fill="url(#plug-hole)" />
+      <circle cx={304} cy={270} r={12} fill="url(#plug-hole)" />
+      <circle cx={272} cy={237} r={14} fill="url(#plug-fiche-shadow)" />
+      <circle cx={270} cy={232} r={12.5} fill="url(#plug-pin)" />
 
       <g
         data-testid="fiche"
@@ -185,86 +177,93 @@ export function PlugView(props: PlugViewProps) {
           opacity: plugged ? 1 : 0,
           // Débranchée, la fiche s'éloigne du mur, vers le bas.
           transform: plugged ? 'none' : 'translateY(16px) scale(1.1)',
-          transformOrigin: '130px 122px',
+          transformOrigin: '270px 277px',
           transition:
             'opacity 0.4s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
         }}
       >
+        <circle cx={276} cy={284} r={92} fill="url(#plug-fiche-shadow)" />
         <ellipse
-          cx={130}
-          cy={128}
-          rx={68}
-          ry={62}
+          cx={282}
+          cy={368}
+          rx={46}
+          ry={64}
           fill="url(#plug-fiche-shadow)"
         />
-        <path d="M130 200V300" stroke="url(#plug-cable)" strokeWidth={11} />
-        <path
-          d="M127.5 200V300"
-          stroke="url(#plug-cable-light)"
-          strokeWidth={2}
-        />
-        <path d="M119 168h22l-4 36h-14z" fill="url(#plug-relief)" />
-        <path
-          d="M121 176h18M121.7 182h16.6M122.3 188h15.4M123 194h14M123.7 200h12.6"
-          stroke="#1c1c1e"
-          strokeWidth={1.5}
-        />
         <rect
-          x={70}
-          y={100}
-          width={24}
-          height={44}
-          rx={9}
-          fill="url(#plug-grip)"
+          x={281}
+          y={455}
+          width={14}
+          height={85}
+          fill="url(#plug-cable-shadow)"
         />
+
         <rect
-          x={166}
-          y={100}
-          width={24}
-          height={44}
-          rx={9}
-          fill="url(#plug-grip)"
+          x={259}
+          y={455}
+          width={22}
+          height={85}
+          fill="url(#plug-cylinder)"
         />
+        <path d="M250 404h40l-3 58h-34z" fill="#2b2f32" />
+        {[403, 412, 421, 430, 439, 448].map(y => (
+          <rect
+            key={y}
+            x={246}
+            y={y - 3}
+            width={48}
+            height={6}
+            rx={3}
+            fill="url(#plug-cylinder)"
+          />
+        ))}
+        <rect
+          x={251}
+          y={454}
+          width={38}
+          height={6}
+          rx={3}
+          fill="url(#plug-cylinder)"
+        />
+
         <circle
-          cx={130}
-          cy={122}
-          r={50}
+          cx={270}
+          cy={277}
+          r={72}
           fill="url(#plug-body)"
-          stroke="#1c1c1e"
-        />
-        <circle
-          cx={130}
-          cy={122}
-          r={43}
-          fill="none"
-          stroke="#fff"
-          strokeOpacity={0.07}
-          strokeWidth={1.5}
-        />
-        <path
-          d="M91 108a41 41 0 0 1 30-27"
-          fill="none"
-          stroke="#fff"
-          strokeOpacity={0.18}
+          stroke="url(#plug-bevel)"
           strokeWidth={3}
-          strokeLinecap="round"
+        />
+        {/* L'arête suit le bord du corps. */}
+        <path
+          d="M245 208a73.5 73.5 0 0 1 50 0V314h-50z"
+          fill="url(#plug-cylinder)"
+          stroke="#232628"
         />
         <rect
-          x={121}
-          y={80}
-          width={18}
-          height={90}
-          rx={9}
-          fill="url(#plug-relief)"
-          stroke="#1c1c1e"
+          x={191}
+          y={248}
+          width={27}
+          height={59}
+          rx={10}
+          fill="url(#plug-grip)"
+        />
+        <rect
+          x={322}
+          y={248}
+          width={27}
+          height={59}
+          rx={10}
+          fill="url(#plug-grip)"
+        />
+
+        <path
+          d="M240 306h60l11 28v60q0 10-10 10h-62q-10 0-10-10v-60z"
+          fill="url(#plug-cylinder)"
+          stroke="#232628"
           strokeOpacity={0.6}
         />
-        <path
-          d="M126 90v70M134 90v70"
-          stroke="#1c1c1e"
-          strokeOpacity={0.7}
-          strokeWidth={1.2}
-        />
+        <path d="M240 306h60l11 28h-82z" fill="#fff" opacity={0.04} />
       </g>
     </svg>
   );

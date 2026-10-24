@@ -8,9 +8,9 @@ const plugButton = (page: Page, name: string) =>
 
 // Couleurs du voyant de l'illustration (PlugView).
 const LED = {
-  on: 'rgb(47, 140, 255)',
+  on: 'rgb(57, 159, 255)',
   standby: 'rgb(255, 159, 10)',
-  off: 'rgb(199, 199, 204)',
+  off: 'rgb(157, 162, 169)',
 };
 
 // useLongPress ouvre la modale quand le bouton reste enfoncé plus de 300 ms.
