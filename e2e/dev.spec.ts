@@ -1,5 +1,10 @@
 import {expect, test, waitForScene} from './fixtures';
 
+// En dev seulement : le démontage simulé du Canvas par StrictMode démonte les
+// étiquettes <Html> de drei, qui démontent leur racine React pendant le rendu.
+// Avertissement de React sans effet visible, absent du build.
+test.use({consoleErrorsAllowed: [/synchronously unmount a root/]});
+
 test('garde la vue 3D après le double montage de StrictMode', async ({
   page,
 }) => {
