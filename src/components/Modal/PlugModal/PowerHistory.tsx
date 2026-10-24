@@ -45,8 +45,8 @@ export function PowerHistory(props: PowerHistoryProps) {
           format: formatPower,
         },
       ]}
-      // Largeur de l'onglet réglage (260 + 24 + 300) : la modale garde sa taille.
-      sx={{height: 300, width: 584}}
+      // Largeur de l'onglet réglage, celle de l'illustration : la modale garde sa largeur.
+      sx={{height: 300, width: 240}}
     >
       <Typography variant="h4">
         {current === null ? '—' : formatPower(current)}
