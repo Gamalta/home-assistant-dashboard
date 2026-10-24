@@ -20,7 +20,7 @@ Un seul code de mesure, `scripts/bench/measure.ts`, sert à deux outils. Il ne s
 
 - **Au repos** : plus aucun draw call ni compilation pendant 1 s, ce qui revient à attendre que `frameloop="demand"` ne dessine plus rien.
 - **Draw calls au repos** : les draw calls de chaque image affichée pendant `__dashboardBenchmark`. On retient la valeur la plus fréquente, celle d'un seul rendu, car le benchmark rend parfois plusieurs fois dans une même image.
-- **Rotation** : un glissé de 300 px sur le canvas, du premier appui jusqu'au retour au repos. L'inertie et la fin du mouvement (retour du DPR plein, ombres rétablies) font partie du geste. C'est le premier geste après le chargement, le seul qui compile tant que les variantes de shaders ne sont pas en cache : c'est le pire cas, celui que l'on veut voir.
+- **Rotation** : un glissé de 300 px sur le canvas, du premier appui jusqu'au retour au repos. L'inertie et la fin du mouvement (retour du DPR plein, ombres rétablies) font partie du geste. On mesure le premier geste après le chargement : les suivants trouvent les variantes de shaders en cache et ne compilent plus. C'est le pire cas, celui de la tablette après chaque rechargement.
 
 **En CI, seulement des comptes** : `e2e/budget.spec.ts`, sur la démo, avec les autres E2E sous SwiftShader ([ADR 0010](0010-strategie-de-tests.md)).
 
@@ -41,7 +41,7 @@ Les tests de rotation ont un délai triplé (`test.slow()`) : l'inertie de la ca
 
 - Une PR qui dépasse 150 draw calls ou recompile pendant un geste sur la démo échoue en CI, avant d'atteindre la tablette.
 - Le défaut connu des ombres (10 programmes au premier geste, 5 au début et 5 à la fin) reste visible dans `e2e/budget.spec.ts`, en `test.fail`. Une fois #39 fusionnée, le test passe et Playwright le signale : il faut alors retirer `test.fail`.
-- Les E2E durent plus longtemps : les trois tests de budget ajoutent environ une minute en local et deux en CI.
+- Les E2E durent plus longtemps : en CI, la suite passe d'environ 1 min 25 à 2 min 35, et le job complet à 3 min 30. En local, chaque test de rotation prend près d'une minute.
 - Une durée ne se compare qu'à une autre durée mesurée sur la même machine, avec le même Chrome et le même `--cpu`. La sortie de `--compare` le rappelle quand l'environnement diffère. D'un lancement à l'autre, une durée varie de quelques dixièmes de milliseconde : seul un écart net compte. Les programmes au démarrage varient aussi de quelques unités, selon l'ordre de chargement (HDR, états des entités) : ils n'ont pas de budget.
 - `apartment` ne se mesure qu'en local, quand le sous-module est présent.
 - Les compteurs couvrent `drawArrays`, `drawElements` et leurs variantes instanciées, en WebGL seulement : le bench force `webGPU: false`, et un `BatchedMesh` (extension `WEBGL_multi_draw`) ne serait pas compté.
