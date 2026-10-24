@@ -41,6 +41,11 @@ export function HouseScene(props: HouseSceneProps) {
       frameloop="demand"
       camera={{position: camera.position, fov: camera.fov}}
       flat
+      // R3F réapplique `shadows` à gl.shadowMap à chaque rendu du Canvas :
+      // sans la prop, il éteint les ombres. PCF explicite : three remplace
+      // PCFSoft, obsolète, au premier rendu d'ombre, ce qui change la clé
+      // des programmes.
+      shadows={configuration.shadows && 'percentage'}
       gl={backend.createRenderer}
     >
       <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
