@@ -1,4 +1,4 @@
-const DEFAULT_STANDBY_THRESHOLD = 5;
+export const DEFAULT_STANDBY_THRESHOLD = 5;
 
 export type PlugStatus = 'on' | 'standby' | 'off';
 

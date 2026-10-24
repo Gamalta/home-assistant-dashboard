@@ -9,7 +9,7 @@ L'élément `plug` affiche une prise connectée dans une pièce : un bouton dans
 
 Allumée, l'icône est en couleur et le bouton affiche la puissance (« 85 W », « 0,8 W » sous 10 W). Éteinte, il ne montre que l'icône.
 
-La modale montre à gauche une prise murale, dessinée en SVG (`PlugModal/PlugView.tsx`), et à droite l'état en grand (« Allumée », « En veille » ou « Éteinte »), la puissance et l'interrupteur « Marche ». L'illustration suit l'état :
+La modale montre en haut une prise murale, dessinée en SVG (`PlugModal/PlugView.tsx`), et en dessous l'état en grand (« Allumée », « En veille » ou « Éteinte »), la puissance et l'interrupteur « ⚡ Marche ». L'illustration suit l'état, et son infobulle explique la couleur du voyant :
 
 | État      | Voyant | Fiche    |
 | --------- | ------ | -------- |

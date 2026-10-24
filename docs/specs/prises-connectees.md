@@ -33,10 +33,10 @@ La puissance s'affiche avec une décimale sous 10 W (« 0,8 W ») et au watt au-
 
 - **Étant donné** la prise « Prise bureau » allumée
 - **Quand** je garde le doigt sur son bouton
-- **Alors** la modale « Prise bureau » s'ouvre : à gauche, l'illustration d'une prise murale blanche, fiche branchée et voyant bleu allumé ; à droite, l'état « Allumée » en grand, la puissance « 85 W » et l'interrupteur « Marche » ;
+- **Alors** la modale « Prise bureau » s'ouvre : en haut, l'illustration d'une prise murale blanche, fiche branchée et voyant bleu allumé ; en dessous, l'état « Allumée » en grand, la puissance « 85 W » et l'interrupteur « ⚡ Marche » ;
 - **quand** j'actionne l'interrupteur, l'état passe à « Éteinte », la puissance disparaît, la fiche se débranche et le voyant s'éteint en gris.
 
-La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. La plaque reste blanche en mode sombre, comme une vraie prise.
+La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. Une infobulle sur l'illustration explique la couleur du voyant. La plaque reste blanche en mode sombre, comme une vraie prise.
 
 ### Scénario : basculer la prise en touchant l'illustration
 
