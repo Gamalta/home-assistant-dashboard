@@ -24,7 +24,7 @@ Le rendu passe en tone mapping Neutral (Khronos PBR Neutral). Il garde la teinte
 
 ### Ambiances à l'essai
 
-Le propriétaire trouve le rendu du soleil réel trop réaliste et peu flatteur. Il veut un beau rendu, plus doux et léger. Dix ambiances (`src/rendering/lightingStyles.ts`) se choisissent donc dans la modale Système, le temps qu'il en retienne une :
+Le propriétaire trouve le rendu du soleil réel trop réaliste et peu flatteur. Il veut un beau rendu, plus doux et léger. Dix ambiances (`src/rendering/lightingStyles.ts`) s'essaient donc dans un panneau posé sur la vue 3D, ouvert depuis la modale Système, le temps qu'il en retienne une. Le panneau a aussi un curseur d'heure, non mémorisé, pour les voir de jour comme de nuit :
 
 - chacune règle les mêmes lumières fixes : ciel, sol, lumière ambiante, soleil réel ou fixe ;
 - elle fixe aussi le tone mapping ;

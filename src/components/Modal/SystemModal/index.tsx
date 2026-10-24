@@ -1,7 +1,7 @@
 import {Modal, ModalProps} from '..';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
-import {LightingStyleRow} from './LightingStyleRow';
 import {OptionRow} from './OptionRow';
 import {BenchmarkRow} from './BenchmarkRow';
 import {InfoRow} from './InfoRow';
@@ -18,8 +18,13 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
-  const {configuration, webGLSupported, webGPUSupported, rendererInfo} =
-    useAppContext();
+  const {
+    configuration,
+    webGLSupported,
+    webGPUSupported,
+    rendererInfo,
+    setLightingTrial,
+  } = useAppContext();
   const {houseConfig} = useHouseContext();
   const house = houseConfig?.house;
   const is3d = webGLSupported && !!house?.model;
@@ -50,7 +55,16 @@ export function SystemModal(props: SystemModalProps) {
             Affichage
           </Typography>
           <BenchmarkRow />
-          <LightingStyleRow disabled={!is3d} />
+          <Button
+            variant="outlined"
+            disabled={!is3d}
+            onClick={() => {
+              setLightingTrial(true);
+              modalProps.onClose();
+            }}
+          >
+            Essayer les ambiances
+          </Button>
           <OptionRow
             label="Murs transparents"
             option="hideWallsShader"

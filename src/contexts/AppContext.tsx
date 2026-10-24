@@ -30,6 +30,12 @@ type AppContextType = {
   webGPUSupported: boolean;
   rendererInfo: RendererInfo;
   setRendererInfo: Dispatch<SetStateAction<RendererInfo>>;
+  /** Heure d'essai de l'éclairage et du thème, non mémorisée ; `null` : l'heure réelle. */
+  simulatedHour: number | null;
+  setSimulatedHour: Dispatch<SetStateAction<number | null>>;
+  /** Panneau d'essai des ambiances ouvert sur la vue 3D. */
+  lightingTrial: boolean;
+  setLightingTrial: Dispatch<SetStateAction<boolean>>;
 };
 
 const STORAGE_KEY = 'graphics-options';
@@ -89,6 +95,10 @@ export const AppContext = createContext<AppContextType>({
   webGPUSupported,
   rendererInfo: defaultRendererInfo,
   setRendererInfo: () => {},
+  simulatedHour: null,
+  setSimulatedHour: () => {},
+  lightingTrial: false,
+  setLightingTrial: () => {},
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -96,6 +106,8 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
   const [configuration, setConfiguration] = useState(loadConfiguration);
   const [rendererInfo, setRendererInfo] = useState(defaultRendererInfo);
+  const [simulatedHour, setSimulatedHour] = useState<number | null>(null);
+  const [lightingTrial, setLightingTrial] = useState(false);
 
   useEffect(() => {
     try {
@@ -114,6 +126,10 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
         webGPUSupported,
         rendererInfo,
         setRendererInfo,
+        simulatedHour,
+        setSimulatedHour,
+        lightingTrial,
+        setLightingTrial,
       }}
     >
       {children}

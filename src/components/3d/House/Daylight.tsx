@@ -5,10 +5,12 @@ import * as THREE from 'three';
 import {
   daylightFactor,
   sunDirection,
+  sunAtHour,
   sunFromHour,
   type SunPosition,
 } from '../../../rendering/daylight';
 import type {LightingStyle} from '../../../rendering/lightingStyles';
+import {useAppContext} from '../../../contexts/AppContext';
 
 const NIGHT_SKY = new THREE.Color('#c8c4bc');
 const LOW_SUN = new THREE.Color('#ffb070');
@@ -27,6 +29,7 @@ export function Daylight(props: DaylightProps) {
   const {style, orientation} = props;
   const {gl, invalidate} = useThree();
   const sunEntity = useEntity('sun.sun', {returnNullIfNotFound: true});
+  const {simulatedHour} = useAppContext();
   const [hourSun, setHourSun] = useState(() => sunFromHour(new Date()));
 
   useEffect(() => {
@@ -45,9 +48,12 @@ export function Daylight(props: DaylightProps) {
   }, [gl, style, invalidate]);
 
   const elevation = Number(sunEntity?.attributes.elevation);
-  const sun: SunPosition = isNaN(elevation)
-    ? hourSun
-    : {elevation, azimuth: Number(sunEntity!.attributes.azimuth)};
+  const sun: SunPosition =
+    simulatedHour !== null
+      ? sunAtHour(simulatedHour)
+      : isNaN(elevation)
+        ? hourSun
+        : {elevation, azimuth: Number(sunEntity!.attributes.azimuth)};
   const day = daylightFactor(sun.elevation);
   const fixedSun = style.sunElevation !== undefined;
   const direction = fixedSun

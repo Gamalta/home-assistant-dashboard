@@ -37,18 +37,57 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
   await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });
 
+// Le panneau d'essai se pose sur la vue 3D, à la place de la modale.
+async function openLightingTrial(page: Page) {
+  await openSystemModal(page);
+  await page.getByRole('button', {name: 'Essayer les ambiances'}).click();
+  const trial = page.getByRole('region', {name: 'Essai des ambiances'});
+  await expect(trial).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'Système'})).toBeHidden();
+  return trial;
+}
+
 test('change d’ambiance et la garde après rechargement', async ({page}) => {
   await page.goto('/');
-  await openSystemModal(page);
-  const ambiance = page.getByRole('combobox', {name: 'Ambiance'});
+  let trial = await openLightingTrial(page);
+  const ambiance = trial.getByRole('combobox', {name: 'Ambiance'});
   await expect(ambiance).toHaveText('B · Soleil réel');
   await ambiance.click();
   await page.getByRole('option', {name: 'D · Cosy'}).click();
   await expect(ambiance).toHaveText('D · Cosy');
 
   await page.reload();
-  await openSystemModal(page);
-  await expect(page.getByRole('combobox', {name: 'Ambiance'})).toHaveText(
+  trial = await openLightingTrial(page);
+  await expect(trial.getByRole('combobox', {name: 'Ambiance'})).toHaveText(
     'D · Cosy',
   );
+});
+
+test('simule une heure pour essayer le jour et la nuit', async ({page}) => {
+  // L'heure opposée à la période réelle, pour voir le thème basculer.
+  const hour = new Date().getHours();
+  const day = hour >= 6 && hour < 16;
+  const [simulated, label, theme] = day
+    ? [22, 'Heure 22:00', /dark/]
+    : [12, 'Heure 12:00', /light/];
+  await page.goto('/');
+  const trial = await openLightingTrial(page);
+  await expect(trial.getByText('Heure réelle')).toBeVisible();
+
+  // Début de la journée, puis 10 h par PageUp et 15 min par flèche.
+  await trial.getByRole('slider', {name: /^Heure/}).focus();
+  await page.keyboard.press('Home');
+  for (let i = 0; i < Math.floor(simulated / 10); i++) {
+    await page.keyboard.press('PageUp');
+  }
+  for (let i = 0; i < (simulated % 10) * 4; i++) {
+    await page.keyboard.press('ArrowRight');
+  }
+  await expect(trial.getByText(label)).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(theme);
+
+  // Fermer l'essai revient à l'heure réelle.
+  await trial.getByRole('button', {name: "Fermer l'essai"}).click();
+  await expect(trial).toBeHidden();
+  await expect(page.locator('html')).not.toHaveClass(theme);
 });
