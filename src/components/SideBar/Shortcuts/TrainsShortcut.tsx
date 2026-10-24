@@ -1,5 +1,6 @@
 import {useEntities} from '@hakit/core';
 import TrainIcon from '@mui/icons-material/TrainRounded';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {useEffect, useState} from 'react';
 import type {TrainsShortcutConfigType} from '../../../configs/sidebar';
@@ -33,7 +34,6 @@ export function TrainsShortcut(props: TrainsShortcutProps) {
     historyOptions: {disable: true},
   });
   const departures = upcomingDepartures(trains, now);
-  const next = departures[0];
 
   return (
     <>
@@ -43,14 +43,48 @@ export function TrainsShortcut(props: TrainsShortcutProps) {
         label={shortcutConfig.label}
         onClick={() => setOpen(true)}
       >
-        <Typography
-          component="span"
-          sx={{color: next ? departureStatus(next).color : 'text.secondary'}}
-        >
-          {next
-            ? `${formatTime(next.scheduled)} · ${departureStatus(next).label}`
-            : 'Aucun départ'}
-        </Typography>
+        {departures.length ? (
+          <Stack spacing={0.5}>
+            {departures.slice(0, 3).map(departure => {
+              const status = departureStatus(departure);
+              return (
+                <Stack
+                  key={departure.entityId}
+                  direction="row"
+                  spacing={1.5}
+                  sx={{alignItems: 'baseline'}}
+                >
+                  <Typography
+                    variant="h6"
+                    component={departure.cancelled ? 's' : 'span'}
+                  >
+                    {formatTime(departure.scheduled)}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    noWrap
+                    sx={{flex: 1, color: status.color}}
+                  >
+                    {status.label}
+                  </Typography>
+                  {departure.platform && (
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      sx={{color: 'text.secondary'}}
+                    >
+                      Voie {departure.platform}
+                    </Typography>
+                  )}
+                </Stack>
+              );
+            })}
+          </Stack>
+        ) : (
+          <Typography component="span" sx={{color: 'text.secondary'}}>
+            Aucun départ
+          </Typography>
+        )}
       </ShortcutCard>
       <TrainsModal
         id={id}

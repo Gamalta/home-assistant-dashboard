@@ -1,12 +1,14 @@
 import {expect, test, waitForScene} from './fixtures';
 
 // Les horaires du mock suivent l'heure courante : on vérifie leur forme.
-test('la tuile affiche le prochain départ', async ({page}) => {
+test('la carte affiche les trois prochains départs', async ({page}) => {
   await page.goto('/');
 
   await expect(
     page.getByRole('button', {name: /^Vers le travail/}),
-  ).toContainText(/^Vers le travail\d{2}:\d{2} · à l'heure$/);
+  ).toContainText(
+    /^Vers le travail\d{2}:\d{2}à l'heureVoie B\d{2}:\d{2}\+5 min\d{2}:\d{2}supprimé$/,
+  );
 });
 
 test('la modale liste les départs, avec le retard et le supprimé', async ({
