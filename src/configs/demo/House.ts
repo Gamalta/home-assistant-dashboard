@@ -207,7 +207,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'printer3d',
           prefix: 'p1s_demo',
-          position: {x: 6.2, y: 1.1, z: -2.6},
+          position: {x: 6.2, y: 1.1, z: -1.8},
         },
       ],
     },
