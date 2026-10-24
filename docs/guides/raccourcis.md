@@ -21,6 +21,35 @@ La tuile affiche le nombre de lumières allumées. Un appui ouvre la liste de ce
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `scriptEntityId` | Script Home Assistant lancé à la place, par exemple pour éteindre aussi la TV ou les prises. Le dashboard n'éteint alors rien lui-même. |
 
+## Énergie
+
+```ts
+{
+  type: 'energy',
+  powerEntityId: 'sensor.compteur_papp',
+  tariffPeriodEntityId: 'sensor.compteur_ptec',
+  peakIndexEntityId: 'sensor.compteur_hchp',
+  offPeakIndexEntityId: 'sensor.compteur_hchc',
+  subscribedCurrentEntityId: 'sensor.compteur_isousc',
+  prices: {peak: 0.27, offPeak: 0.21},
+}
+```
+
+La tuile affiche la puissance instantanée et la période tarifaire en cours (« 1,2 kVA · HC »). Un appui ouvre la consommation et le coût estimé du jour et de la veille, en heures pleines et en heures creuses, un historique sur 7 ou 30 jours et, si l'intensité souscrite est fournie, la charge en cours.
+
+| Option                      | Rôle                                                                                                                        |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `powerEntityId`             | Puissance instantanée, en VA (PAPP du Linky) ou en W.                                                                       |
+| `tariffPeriodEntityId`      | Période tarifaire en cours : PTEC du mode historique (« HP.. », « HC.. ») ou libellé du mode standard (« HEURES CREUSES »). |
+| `peakIndexEntityId`         | Index heures pleines (HCHP), en Wh, kWh ou MWh.                                                                             |
+| `offPeakIndexEntityId`      | Index heures creuses (HCHC), en Wh, kWh ou MWh.                                                                             |
+| `subscribedCurrentEntityId` | Facultatif. Intensité souscrite en A (ISOUSC) : la puissance souscrite vaut 200 V par ampère, soit 6 kVA pour 30 A.         |
+| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses. Le coût n'inclut pas l'abonnement.       |
+
+Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
+
+Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md)) : les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
+
 ## Ajouter un type de tuile
 
 1. Ajouter son type à l'union `ShortcutConfigType` de `src/configs/sidebar.d.ts`.
