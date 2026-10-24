@@ -116,12 +116,12 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: -0.6, y: 1.5, z: -7.2},
+          position: {x: 1.0, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: -2.5, y: 1.3, z: -4.2},
+          position: {x: -2.5, y: 0.8, z: -4.2},
         },
       ],
     },
