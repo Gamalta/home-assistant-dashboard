@@ -8,7 +8,11 @@ export type SunPosition = {elevation: number; azimuth: number};
  * et se couche à l'ouest à 18 h.
  */
 export function sunFromHour(date: Date): SunPosition {
-  const hour = date.getHours() + date.getMinutes() / 60;
+  return sunAtHour(date.getHours() + date.getMinutes() / 60);
+}
+
+/** Même calcul pour une heure décimale (14,5 : 14 h 30). */
+export function sunAtHour(hour: number): SunPosition {
   return {
     elevation: 50 * Math.sin((Math.PI * (hour - 6)) / 12),
     azimuth: 90 + (hour - 6) * 15,

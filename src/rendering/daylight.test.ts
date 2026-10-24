@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {daylightFactor, sunDirection, sunFromHour} from './daylight';
+import {daylightFactor, sunAtHour, sunDirection, sunFromHour} from './daylight';
 
 describe('sunFromHour', () => {
   it('place le soleil au sud et au plus haut à midi', () => {
@@ -44,5 +44,11 @@ describe('sunDirection', () => {
     const east = sunDirection({elevation: 0, azimuth: 90}, 90);
     expect(east.x).toBeCloseTo(0);
     expect(east.z).toBeCloseTo(-1);
+  });
+});
+
+describe('sunAtHour', () => {
+  it('donne la même position que l’heure de la journée', () => {
+    expect(sunAtHour(14.5)).toEqual(sunFromHour(new Date(2026, 5, 21, 14, 30)));
   });
 });

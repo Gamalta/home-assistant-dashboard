@@ -2,18 +2,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useAppContext} from '../../../contexts/AppContext';
+import {useAppContext} from '../../contexts/AppContext';
 import {
   lightingStyles,
   type LightingStyleId,
-} from '../../../rendering/lightingStyles';
+} from '../../rendering/lightingStyles';
 
-type LightingStyleRowProps = {
-  disabled?: boolean;
-};
-
-export function LightingStyleRow(props: LightingStyleRowProps) {
-  const {disabled} = props;
+export function LightingStyleRow() {
   const {configuration, setConfiguration} = useAppContext();
 
   return (
@@ -21,16 +16,10 @@ export function LightingStyleRow(props: LightingStyleRowProps) {
       direction="row"
       sx={{justifyContent: 'space-between', alignItems: 'center'}}
     >
-      <Typography
-        id="lighting-style-label"
-        color={disabled ? 'textDisabled' : undefined}
-      >
-        Ambiance
-      </Typography>
+      <Typography id="lighting-style-label">Ambiance</Typography>
       <Select
         size="small"
         labelId="lighting-style-label"
-        disabled={disabled}
         value={configuration.lightingStyle}
         onChange={event =>
           setConfiguration(prev => ({

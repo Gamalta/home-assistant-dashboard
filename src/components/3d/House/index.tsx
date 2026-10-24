@@ -9,9 +9,11 @@ import {ErrorBoundary} from '../../ErrorBoundary';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
 import {LabelFilter} from './LabelFilter';
+import {LightingTrial} from '../../LightingTrial';
 
 export default function House() {
-  const {configuration, setConfiguration, webGLSupported} = useAppContext();
+  const {configuration, setConfiguration, webGLSupported, lightingTrial} =
+    useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -80,6 +82,7 @@ export default function House() {
           />
         </Suspense>
         <LabelFilter rooms={houseConfig?.house.rooms ?? []} />
+        {lightingTrial && <LightingTrial />}
       </ErrorBoundary>
     </Stack>
   );
