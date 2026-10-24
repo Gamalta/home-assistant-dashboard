@@ -32,7 +32,7 @@ Pour compter les draw calls et les compilations, enregistrer une trace dans l'on
 
 ## Éclairage
 
-Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uniforms ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)). Ajouter ou retirer une lumière, même éteinte, change la clé des programmes et recompile tous les matériaux. Une lumière s'éteint par son intensité, pas en la démontant.
+Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uniforms ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)). Ajouter ou retirer une lumière, ou la rendre invisible, change la clé des programmes et recompile tous les matériaux : le ciel et le soleil ne varient donc que par leur intensité. Les lampes des pièces, elles, sont rendues invisibles quand elles sont éteintes pour épargner le GPU ([ADR 0005](../adr/0005-qualite-adaptative-en-mouvement.md)) : allumer ou éteindre une lampe recompile.
 
 ## Simuler la tablette
 
