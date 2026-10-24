@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {formatPower, parsePower, plugStatus} from './plug';
+import {formatPower, parsePower, outletStatus} from './outlet';
 
 describe('parsePower', () => {
   it('lit la puissance du capteur', () => {
@@ -26,22 +26,22 @@ describe('formatPower', () => {
   });
 });
 
-describe('plugStatus', () => {
+describe('outletStatus', () => {
   it('est en veille quand la prise allumée consomme moins que le seuil', () => {
-    expect(plugStatus(true, 0.8)).toBe('standby');
-    expect(plugStatus(true, 85)).toBe('on');
+    expect(outletStatus(true, 0.8)).toBe('standby');
+    expect(outletStatus(true, 85)).toBe('on');
   });
 
   it('suit le seuil configuré', () => {
-    expect(plugStatus(true, 8, 10)).toBe('standby');
-    expect(plugStatus(true, 3, 2)).toBe('on');
+    expect(outletStatus(true, 8, 10)).toBe('standby');
+    expect(outletStatus(true, 3, 2)).toBe('on');
   });
 
   it('n’est jamais en veille quand la prise est éteinte', () => {
-    expect(plugStatus(false, 0)).toBe('off');
+    expect(outletStatus(false, 0)).toBe('off');
   });
 
   it('est allumée quand la puissance est inconnue', () => {
-    expect(plugStatus(true, null)).toBe('on');
+    expect(outletStatus(true, null)).toBe('on');
   });
 });

@@ -8,27 +8,27 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import {useState} from 'react';
 import {Modal, ModalProps} from '..';
-import type {PlugConfigType} from '../../../configs/house';
+import type {OutletConfigType} from '../../../configs/house';
 import {
   DEFAULT_STANDBY_THRESHOLD,
   formatPower,
-  plugStatus,
-} from '../../../utils/entity/plug';
-import {PlugView} from './PlugView';
+  outletStatus,
+} from '../../../utils/entity/outlet';
+import {OutletView} from './OutletView';
 import {PowerHistory} from './PowerHistory';
 
-type PlugModalProps = Omit<ModalProps, 'children'> & {
-  plug: HassEntityWithService<'switch'>;
+type OutletModalProps = Omit<ModalProps, 'children'> & {
+  outlet: HassEntityWithService<'switch'>;
   power: number | null;
-  plugConfig: PlugConfigType;
+  outletConfig: OutletConfigType;
 };
 
-export function PlugModal(props: PlugModalProps) {
-  const {plug, power, plugConfig, ...modalProps} = props;
+export function OutletModal(props: OutletModalProps) {
+  const {outlet, power, outletConfig, ...modalProps} = props;
   const [tab, setTab] = useState<'control' | 'history'>('control');
-  const on = plug.state === 'on';
-  const {standbyThreshold = DEFAULT_STANDBY_THRESHOLD} = plugConfig;
-  const status = plugStatus(on, power, standbyThreshold);
+  const on = outlet.state === 'on';
+  const {standbyThreshold = DEFAULT_STANDBY_THRESHOLD} = outletConfig;
+  const status = outletStatus(on, power, standbyThreshold);
   const ledHint = {
     on: 'Voyant bleu : allumée',
     standby: `Voyant orange : en veille, moins de ${formatPower(standbyThreshold)}`,
@@ -39,7 +39,7 @@ export function PlugModal(props: PlugModalProps) {
     <Modal
       {...modalProps}
       action={
-        plugConfig.powerEntityId &&
+        outletConfig.powerEntityId &&
         {
           control: (
             <IconButton
@@ -57,8 +57,8 @@ export function PlugModal(props: PlugModalProps) {
         }[tab]
       }
     >
-      {tab === 'history' && plugConfig.powerEntityId ? (
-        <PowerHistory entityId={plugConfig.powerEntityId} />
+      {tab === 'history' && outletConfig.powerEntityId ? (
+        <PowerHistory entityId={outletConfig.powerEntityId} />
       ) : (
         <Stack spacing={3} sx={{px: 1}}>
           {/* La fiche qui se branche suffit comme retour : pas d'onde. */}
@@ -66,9 +66,9 @@ export function PlugModal(props: PlugModalProps) {
             aria-label="Prise"
             aria-pressed={on}
             disableRipple
-            onClick={() => plug.service.toggle()}
+            onClick={() => outlet.service.toggle()}
           >
-            <PlugView status={status} ledHint={ledHint} />
+            <OutletView status={status} ledHint={ledHint} />
           </ButtonBase>
           {/* Mêmes actions que la modale des volets. */}
           <Stack
@@ -84,7 +84,7 @@ export function PlugModal(props: PlugModalProps) {
             <IconButton
               aria-label="Allumer"
               sx={{borderRadius: 1}}
-              onClick={() => plug.service.turnOn()}
+              onClick={() => outlet.service.turnOn()}
             >
               ⚡
             </IconButton>
@@ -92,7 +92,7 @@ export function PlugModal(props: PlugModalProps) {
             <IconButton
               aria-label="Éteindre"
               sx={{borderRadius: 1}}
-              onClick={() => plug.service.turnOff()}
+              onClick={() => outlet.service.turnOff()}
             >
               <PowerSettingsNewIcon />
             </IconButton>

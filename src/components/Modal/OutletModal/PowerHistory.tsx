@@ -5,7 +5,7 @@ import {
   formatTime,
   isHistoryLoading,
 } from '../../../utils/chart';
-import {formatPower, parsePower} from '../../../utils/entity/plug';
+import {formatPower, parsePower} from '../../../utils/entity/outlet';
 import {Chart} from '../../Charts/Chart';
 
 type PowerHistoryProps = {

@@ -259,20 +259,20 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createSwitch('switch.desk_plug', {
+  ...createSwitch('switch.desk_outlet', {
     state: 'on',
     attributes: {friendly_name: 'Prise bureau'},
   }),
-  ...createSensor('sensor.desk_plug_power', {
+  ...createSensor('sensor.desk_outlet_power', {
     state: '85.4',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
   // TV éteinte à la télécommande : la prise reste allumée et consomme peu.
-  ...createSwitch('switch.tv_plug', {
+  ...createSwitch('switch.tv_outlet', {
     state: 'on',
     attributes: {friendly_name: 'Prise TV'},
   }),
-  ...createSensor('sensor.tv_plug_power', {
+  ...createSensor('sensor.tv_outlet_power', {
     state: '0.8',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),

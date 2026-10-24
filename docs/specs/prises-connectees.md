@@ -52,7 +52,7 @@ La fiche se branche et se débranche en glissant et en fondu, le voyant change d
 - **Quand** j'ouvre sa modale
 - **Alors** le bouton de la scène affiche « 0,8 W », et la modale montre la fiche branchée et le voyant orange, dont l'infobulle dit « Voyant orange : en veille, moins de 5 W ».
 
-Le seuil vaut 5 W par défaut et se règle par prise. Une prise éteinte n'est jamais « en veille », et une prise allumée dont la puissance est inconnue est « Allumée ». Ces règles se testent en unitaire (`src/utils/entity/plug.test.ts`).
+Le seuil vaut 5 W par défaut et se règle par prise. Une prise éteinte n'est jamais « en veille », et une prise allumée dont la puissance est inconnue est « Allumée ». Ces règles se testent en unitaire (`src/utils/entity/outlet.test.ts`).
 
 ### Scénario : afficher la consommation dans un second onglet
 
@@ -65,7 +65,7 @@ Une prise sans capteur de puissance n'a pas d'onglet Consommation.
 
 ## Critères d'acceptation
 
-- [x] L'élément `plug` se configure par l'entité `switch`, et en option le capteur de puissance et le seuil de veille.
+- [x] L'élément `outlet` se configure par l'entité `switch`, et en option le capteur de puissance et le seuil de veille.
 - [x] L'historique de puissance n'est demandé à Home Assistant qu'à l'ouverture de l'onglet Consommation.
 - [x] Le graphique passe par le composant commun `Chart` ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).
 - [x] La démo contient deux prises fictives, dont celle de la TV en veille.
@@ -73,6 +73,6 @@ Une prise sans capteur de puissance n'a pas d'onglet Consommation.
 
 ## Impacts
 
-- Configuration des maisons : nouvel élément `plug` ([guide](../guides/prises.md)).
-- Mock Home Assistant : prises `switch.desk_plug` et `switch.tv_plug`, avec leurs capteurs `sensor.*_power`. La bascule passe par le service `toggle` générique du mock.
+- Configuration des maisons : nouvel élément `outlet` ([guide](../guides/prises.md)).
+- Mock Home Assistant : prises `switch.desk_outlet` et `switch.tv_outlet`, avec leurs capteurs `sensor.*_power`. La bascule passe par le service `toggle` générique du mock.
 - Performance : aucun changement mesuré sur la démo (46 draw calls au repos, 0 programme compilé pendant le benchmark, aucune tâche longue en rotation).

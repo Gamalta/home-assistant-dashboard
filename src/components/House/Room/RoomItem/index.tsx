@@ -2,7 +2,7 @@ import {RoomItemConfigType} from '../../../../configs/house';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
-import {RoomPlug} from './RoomPlug';
+import {RoomOutlet} from './RoomOutlet';
 import {RoomShutter} from './RoomShutter';
 import {RoomTemperature} from './RoomTemperature';
 
@@ -25,8 +25,8 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomShutter id={id} shutterConfig={itemConfig} />;
     case 'desktop':
       return <RoomDesktop id={id} desktopConfig={itemConfig} />;
-    case 'plug':
-      return <RoomPlug id={id} plugConfig={itemConfig} />;
+    case 'outlet':
+      return <RoomOutlet id={id} outletConfig={itemConfig} />;
     default:
       return <></>;
   }
