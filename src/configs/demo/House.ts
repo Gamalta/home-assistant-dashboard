@@ -63,6 +63,7 @@ export const SideBarConfig: SideBarConfigType = {
       monthlyInsurance: 28,
     },
     {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
   ],
 };
 

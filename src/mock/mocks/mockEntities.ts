@@ -15,6 +15,7 @@ import {createRemote} from './createRemote';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createWledStrip} from './createWledStrip';
 import {createAmbilight} from './createAmbilight';
+import {createTrain} from './createTrain';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -351,4 +352,23 @@ export const entities: HassEntities = {
   ...createRemote('remote.living_room_tv'),
   ...createWledStrip('light.salon_strip'),
   ...createAmbilight('light.tv_ambilight'),
+  ...createTrain('sensor.sncf_paris_lyon_train_1', {
+    departureIn: 6,
+    trainNum: '6601',
+    platform: 'B',
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_2', {
+    departureIn: 21,
+    trainNum: '6603',
+    delay: 5,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_3', {
+    departureIn: 36,
+    trainNum: '6605',
+    cancelled: true,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_4', {
+    departureIn: 51,
+    trainNum: '6607',
+  }),
 } as const;

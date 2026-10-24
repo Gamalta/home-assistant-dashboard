@@ -9,11 +9,19 @@ type ShortcutTileProps = {
   icon: ReactNode;
   label: string;
   value?: string;
+  valueColor?: string;
   onClick: () => void;
 };
 
 export function ShortcutTile(props: ShortcutTileProps) {
-  const {id, icon, label, value, onClick} = props;
+  const {
+    id,
+    icon,
+    label,
+    value,
+    valueColor = 'text.secondary',
+    onClick,
+  } = props;
 
   return (
     <motion.div layoutId={id}>
@@ -38,7 +46,7 @@ export function ShortcutTile(props: ShortcutTileProps) {
             <Typography
               variant="caption"
               component="span"
-              color="textSecondary"
+              sx={{color: valueColor}}
             >
               {value}
             </Typography>
