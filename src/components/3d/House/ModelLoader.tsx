@@ -1,5 +1,5 @@
 import {useProgress} from '@react-three/drei';
-import { CircularProgress, Typography, Stack } from '@mui/material';
+import {CircularProgress, Typography, Stack} from '@mui/material';
 
 export function ModelLoader() {
   const {progress} = useProgress();
