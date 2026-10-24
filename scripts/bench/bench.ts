@@ -132,17 +132,14 @@ try {
         const cdp = await context.newCDPSession(page);
         await cdp.send('Emulation.setCPUThrottlingRate', {rate: cpuSlowdown});
       }
-      const {drawsPerFrame, cpuMs, gpuMs} = await benchmarkAtRest(page);
-      const rotation = await rotate(page);
+      const atRest = await benchmarkAtRest(page);
+      const {programs, ...rotation} = await rotate(page);
       run.rows.push(
         toRow(house, name, {
           startupPrograms,
-          drawsPerFrame,
-          cpuMs,
-          gpuMs,
-          rotationPrograms: rotation.programs,
-          longTasks: rotation.longTasks,
-          frameIntervals: rotation.frameIntervals,
+          ...atRest,
+          rotationPrograms: programs,
+          ...rotation,
         }),
       );
       await context.close();
