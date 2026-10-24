@@ -16,6 +16,7 @@ export function Html({children, ...dreiProps}: HtmlProps) {
 
   return (
     <DreiHtml center zIndexRange={[0]} {...dreiProps}>
+      {/* eslint-disable-next-line react-hooks/static-components -- mémoïsé par drei, stable entre les rendus */}
       <ContextBridge>
         <ThemeProvider theme={theme}>
           <Stack>{children}</Stack>

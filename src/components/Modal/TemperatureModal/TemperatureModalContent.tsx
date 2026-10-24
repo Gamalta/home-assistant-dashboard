@@ -23,11 +23,17 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
 
   const temperatureHistory = useEntity(
     temperatureEntity.entity_id as EntityName,
-    {returnNullIfNotFound: true, historyOptions: {disable: false, hoursToShow: 24}},
+    {
+      returnNullIfNotFound: true,
+      historyOptions: {disable: false, hoursToShow: 24},
+    },
   )?.history;
   const humidityHistory = useEntity(
     (humidityEntity?.entity_id ?? 'unknown') as EntityName,
-    {returnNullIfNotFound: true, historyOptions: {disable: false, hoursToShow: 24}},
+    {
+      returnNullIfNotFound: true,
+      historyOptions: {disable: false, hoursToShow: 24},
+    },
   )?.history;
 
   const temperatureMap = Object.fromEntries(
