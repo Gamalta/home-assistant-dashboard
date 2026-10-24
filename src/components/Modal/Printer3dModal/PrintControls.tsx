@@ -4,7 +4,6 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrowRounded';
 import StopIcon from '@mui/icons-material/StopRounded';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import type {Printer3dEntityIds} from '../../../utils/entity/printer3d';
 
@@ -25,32 +24,20 @@ export function PrintControls(props: PrintControlsProps) {
   const running = status?.state === 'running';
   if (!running && status?.state !== 'pause') return null;
 
-  // Un arrêt ne se reprend pas : on le confirme.
+  // Un arrêt ne se reprend pas : on le confirme. Fermer la modale l'annule.
   if (confirmStop)
     return (
-      <Stack spacing={1}>
-        <Typography>Arrêter l'impression ?</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button
-            variant="outlined"
-            sx={{flex: 1}}
-            onClick={() => setConfirmStop(false)}
-          >
-            Annuler
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            sx={{flex: 1}}
-            onClick={() => {
-              stop?.service.press();
-              setConfirmStop(false);
-            }}
-          >
-            Oui, arrêter
-          </Button>
-        </Stack>
-      </Stack>
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<StopIcon />}
+        onClick={() => {
+          stop?.service.press();
+          setConfirmStop(false);
+        }}
+      >
+        Confirmer l'arrêt
+      </Button>
     );
 
   return (

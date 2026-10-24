@@ -67,15 +67,26 @@ test('met l’impression en pause puis la reprend', async ({page}) => {
 
 test('arrête l’impression après confirmation', async ({page}) => {
   await openPrinterModal(page);
+  const pause = page.getByRole('button', {name: 'Pause', exact: true});
   const stop = page.getByRole('button', {name: 'Arrêter', exact: true});
+  const confirm = page.getByRole('button', {name: "Confirmer l'arrêt"});
 
   await stop.click();
-  await expect(page.getByText("Arrêter l'impression ?")).toBeVisible();
-  await page.getByRole('button', {name: 'Annuler'}).click();
+  await expect(confirm).toBeVisible();
+  await expect(pause).toBeHidden();
+  // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
+  await page
+    .getByRole('heading', {name: 'Imprimante 3D'})
+    .locator('..')
+    .getByRole('button')
+    .last()
+    .click();
+  await openPrinterModal(page);
+  await expect(pause).toBeVisible();
   await expect(page.getByText('En cours', {exact: true})).toBeVisible();
 
   await stop.click();
-  await page.getByRole('button', {name: 'Oui, arrêter'}).click();
+  await confirm.click();
   await expect(page.getByText('Interrompue')).toBeVisible();
   await expect(printerButton(page)).not.toContainText('%');
 });
