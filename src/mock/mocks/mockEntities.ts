@@ -55,6 +55,25 @@ export const entities: HassEntities = {
     last_updated: new Date(0).toISOString(),
   }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createBinarySensor('binary_sensor.router_wan_status', {
+    state: 'on',
+    attributes: {friendly_name: 'Connexion internet'},
+  }),
+  ...createSensor('sensor.wall_tablet_battery_level', {
+    state: '64',
+    attributes: {
+      friendly_name: 'Batterie de la tablette murale',
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.wall_tablet_battery_state', {
+    state: 'charging',
+    attributes: {friendly_name: 'Charge de la tablette murale'},
+  }),
+  ...createSensor('sensor.wall_tablet_charger_type', {
+    state: 'ac',
+    attributes: {friendly_name: 'Chargeur de la tablette murale'},
+  }),
   ...createSensor('sensor.system_monitor_memory_usage', {
     state: '50',
     attributes: {
