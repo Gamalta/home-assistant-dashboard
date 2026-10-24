@@ -56,19 +56,7 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
 
-### Liste de courses
-
-`{type: 'shoppingList', todoEntityId: 'todo.shopping_list'}`
-
-La carte affiche le nombre d'articles à acheter et les 3 premiers. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
-
-| Option         | Rôle                                                                                    |
-| -------------- | --------------------------------------------------------------------------------------- |
-| `todoEntityId` | Liste `todo` de Home Assistant, par exemple celle de l'intégration « Liste de courses » |
-| `label`        | Libellé de la carte, `Courses` par défaut                                               |
-
-## Ajouter un type de carte
-## Crédit immobilier
+### Crédit immobilier
 
 ```ts
 {
@@ -94,31 +82,34 @@ La carte affiche le capital restant dû et la part déjà remboursée. La modale
 | `label`            | Libellé de la carte, `Crédit` par défaut ; utile pour plusieurs prêts                       |
 
 Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
-## Liste de courses
+
+### Liste de courses
 
 `{type: 'shoppingList', todoEntityId: 'todo.shopping_list'}`
 
-La tuile affiche le nombre d'articles à acheter. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
+La carte affiche le nombre d'articles à acheter et les 3 premiers. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
 
 | Option         | Rôle                                                                                    |
 | -------------- | --------------------------------------------------------------------------------------- |
 | `todoEntityId` | Liste `todo` de Home Assistant, par exemple celle de l'intégration « Liste de courses » |
-| `label`        | Libellé de la tuile, `Courses` par défaut                                               |
-## Prochains trains
+| `label`        | Libellé de la carte, `Courses` par défaut                                               |
+
+### Prochains trains
 
 `{type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'}`
 
-Une tuile par trajet de l'intégration HACS [sncf_trains](https://github.com/Master13011/SNCF-API-HA). Elle affiche le prochain départ, « 07:42 · à l'heure », « 07:42 · +5 min » en orange ou « 07:42 · supprimé » en rouge. Un appui ouvre la liste des départs à venir : heure réelle en grand, heure prévue barrée en cas de retard, voie, train et heure d'arrivée. Les trains partis disparaissent d'eux-mêmes.
+Une carte par trajet de l'intégration HACS [sncf_trains](https://github.com/Master13011/SNCF-API-HA). Elle affiche les trois prochains départs : « 07:42 à l'heure », « 07:42 +5 min » en orange ou l'heure barrée et « supprimé » en rouge, et la voie si elle est connue. Un appui ouvre la liste des départs à venir : heure réelle en grand, heure prévue barrée en cas de retard, voie, train et heure d'arrivée. Les trains partis disparaissent d'eux-mêmes.
 
 | Option   | Rôle                                                                                                                                                        |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `label`  | Titre de la tuile et de la modale.                                                                                                                          |
+| `label`  | Titre de la carte et de la modale.                                                                                                                          |
 | `prefix` | Début des capteurs du trajet, sans le domaine ni `_train_<n>` : `sncf_paris_lyon` pour `sensor.sncf_paris_lyon_train_1`. Les capteurs absents sont ignorés. |
 
 Pour trouver le préfixe, chercher `_train_1` dans **Paramètres → Entités** : l'intégration nomme ses capteurs `sensor.sncf_<départ>_<arrivée>_train_<n>`, avec `n` de 1 au nombre de trains choisi pour le trajet. Garder ces identifiants d'origine. Les capteurs `sncf_tous_les_trains_ligne`, `sncf_trajets` et le calendrier ne servent pas.
 
 Le retard affiché est celui au départ, recalculé à partir des heures réelle et prévue : l'attribut `delay_minutes` de l'intégration est le retard à l'arrivée. sncf_trains 1.3.3 ne publie ni la voie ni les suppressions, et un train supprimé disparaît simplement de la liste. Le dashboard les affiche si un capteur porte les attributs `platform` (texte) ou `cancelled` (booléen), comme ceux du mock ([ADR 0027](../adr/0027-trains-sncf-par-prefixe.md)).
-## Énergie
+
+### Énergie
 
 ```ts
 {
@@ -152,9 +143,9 @@ La carte affiche la puissance instantanée, la période tarifaire en cours et le
 
 Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
 
-Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md)) : les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
+Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md), [ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)), par jour ou par mois : on remonte aussi loin qu'elles existent. Les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
 
-## Ajouter un type de tuile
+## Ajouter un type de carte
 
 1. Ajouter son type à l'union `ShortcutConfigType` de `src/configs/sidebar.d.ts`.
 2. Créer `src/components/SideBar/Shortcuts/<Type>Shortcut.tsx`. Il rend un `ShortcutCard` et sa modale, avec le même `id`.
