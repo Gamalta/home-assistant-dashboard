@@ -70,7 +70,13 @@ function ModalWindow(props: ModalProps) {
         <>
           <Backdrop />
           <Container id={id}>
-            <Stack direction="row" sx={{justifyContent: 'space-between'}}>
+            {/* Avec layout, le ressort du conteneur n'étire plus son contenu. */}
+            <Stack
+              direction="row"
+              component={motion.div}
+              layout="position"
+              sx={{justifyContent: 'space-between'}}
+            >
               <Typography variant="h5">{title}</Typography>
               <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
                 {action}
@@ -81,6 +87,7 @@ function ModalWindow(props: ModalProps) {
             </Stack>
             <Stack
               component={motion.div}
+              layout="position"
               initial="hidden"
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
