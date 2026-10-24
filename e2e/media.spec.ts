@@ -92,11 +92,11 @@ test('pilote le lecteur avec le pavé directionnel', async ({page}) => {
 test('éteint puis rallume le lecteur', async ({page}) => {
   await openMediaModal(page);
 
-  await page.getByRole('button', {name: 'Éteindre'}).click();
+  await page.getByRole('button', {name: 'Éteindre', exact: true}).click();
   await expect(page.getByText('Éteint', {exact: true})).toBeVisible();
   await expect(tvButton(page)).toHaveText('');
 
-  await page.getByRole('button', {name: 'Allumer'}).click();
+  await page.getByRole('button', {name: 'Allumer', exact: true}).click();
   await expect(
     page.getByRole('button', {name: 'Pause', exact: true}),
   ).toBeVisible();
