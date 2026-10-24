@@ -19,6 +19,7 @@ type RoomItemConfigType =
   | TemperatureConfigType
   | ShutterConfigType
   | DestkopConfigType
+  | OutletConfigType;
   | Printer3dConfigType;
 
 type BaseItemConfigType =
@@ -67,6 +68,12 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type OutletConfigType = BaseItemConfigType & {
+  type: 'outlet';
+  switchEntityId: FilterByDomain<EntityName, 'switch'>;
+  powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
 };
 
 type Printer3dConfigType = BaseItemConfigType & {

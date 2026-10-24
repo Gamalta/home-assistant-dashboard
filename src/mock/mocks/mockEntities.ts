@@ -8,6 +8,7 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
 
 export const entities: HassEntities = {
@@ -259,5 +260,22 @@ export const entities: HassEntities = {
     },
   }),
 
+  ...createSwitch('switch.desk_outlet', {
+    state: 'on',
+    attributes: {friendly_name: 'Prise bureau'},
+  }),
+  ...createSensor('sensor.desk_outlet_power', {
+    state: '85.4',
+    attributes: {unit_of_measurement: 'W', device_class: 'power'},
+  }),
+  // TV éteinte à la télécommande : la prise reste allumée et consomme peu.
+  ...createSwitch('switch.tv_outlet', {
+    state: 'on',
+    attributes: {friendly_name: 'Prise TV'},
+  }),
+  ...createSensor('sensor.tv_outlet_power', {
+    state: '0.8',
+    attributes: {unit_of_measurement: 'W', device_class: 'power'},
+  }),
   ...createPrinter3d('p1s_demo'),
 } as const;
