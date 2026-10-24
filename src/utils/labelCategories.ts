@@ -33,7 +33,7 @@ export const labelCategories: LabelCategory[] = [
   {id: 'media', label: 'Médias', icon: TvIcon, types: ['media', 'ambilight']},
   {
     id: 'printer3d',
-    label: 'Imprimante 3D',
+    label: 'Imprimantes',
     icon: PrintIcon,
     types: ['printer3d'],
   },
