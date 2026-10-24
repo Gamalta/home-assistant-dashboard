@@ -13,6 +13,8 @@ test.beforeEach(async ({page}) => {
   await page.addInitScript(() => localStorage.setItem('theme', 'light'));
   await page.goto('/');
   await waitForScene(page);
+  // Les piles sont masquées par défaut : on les affiche par leur puce.
+  await page.getByRole('button', {name: 'Piles', exact: true}).click();
 });
 
 // Un test par scénario de docs/specs/appareils-sur-pile.md.

@@ -5,7 +5,7 @@ Deux éléments de pièce montrent les appareils passifs dans la scène 3D ([spe
 - `battery` : un appareil sur pile (interrupteur sans fil, télécommande, capteur), avec son niveau de pile ;
 - `smoke` : un détecteur de fumée, avec son état et sa pile.
 
-Une pile est faible sous **20 %** : l'étiquette passe alors en rouge.
+Une pile est faible sous **20 %** : l'étiquette passe alors en rouge. Les étiquettes de pile sont masquées par défaut : la puce « Piles », en haut de la vue 3D, les affiche ([filtre des étiquettes](filtrer-les-etiquettes.md)).
 
 ## Trouver les entités
 

@@ -20,12 +20,12 @@ Voir d'un coup d'œil, dans la scène 3D, le niveau de pile de chaque appareil p
 
 ## Comportement attendu
 
-Sous **20 %**, une pile est faible. Les éléments se configurent dans la pièce ([guide](../guides/appareils-sur-pile.md)).
+Sous **20 %**, une pile est faible. Les éléments se configurent dans la pièce ([guide](../guides/appareils-sur-pile.md)). Les étiquettes de pile sont masquées par défaut : la puce « Piles » du [filtre des étiquettes](filtres-entites.md) les affiche. Le détecteur de fumée n'a pas de puce et reste toujours affiché.
 
 ### Scénario : affiche le niveau de pile dans la scène
 
 - **Étant donné** la démo, avec les interrupteurs du séjour à 54 %, de la cuisine à 12 % et de la chambre à 85 %
-- **Quand** j'ouvre le dashboard
+- **Quand** j'ouvre le dashboard et que j'affiche les piles par leur puce
 - **Alors** chaque interrupteur a une étiquette avec une icône de pile remplie selon le niveau et le pourcentage ;
 - **et** l'étiquette de la cuisine, sous 20 %, est en rouge, les autres dans la couleur habituelle des étiquettes.
 
