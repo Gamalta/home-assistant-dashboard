@@ -52,6 +52,7 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
+  shortcuts: [{type: 'allLightsOff'}],
 };
 
 export const HouseConfig: HouseConfigType = {

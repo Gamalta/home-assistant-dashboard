@@ -9,6 +9,15 @@ type SideBarConfigType = {
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
     graphs: SystemGraphConfigType[];
   };
+  shortcuts?: ShortcutConfigType[];
+};
+
+type ShortcutConfigType = AllLightsOffShortcutConfigType;
+
+type AllLightsOffShortcutConfigType = {
+  type: 'allLightsOff';
+  /** Script Home Assistant à lancer à la place de l'extinction des lumières de la maison. */
+  scriptEntityId?: FilterByDomain<EntityName, 'script'>;
 };
 
 type SystemGraphConfigType = {
