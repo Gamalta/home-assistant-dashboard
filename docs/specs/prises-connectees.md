@@ -37,7 +37,7 @@ Le bouton ne montre que l'icône : la puissance se lit dans la modale. Une prise
 - **quand** je touche le bouton, la fiche se débranche, le voyant s'éteint en gris et la puissance disparaît ;
 - **quand** je le touche de nouveau, la fiche se rebranche et le voyant redevient bleu.
 
-La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. Le voyant n'a que deux états : bleu, prise allumée, et éteint, prise éteinte. La modale garde la même taille, prise allumée ou éteinte, et dans les deux onglets. La plaque reste blanche en mode sombre, comme une vraie prise.
+La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. Le voyant n'a que deux états : bleu, prise allumée, et éteint, prise éteinte. La modale garde la même taille, prise allumée ou éteinte. Elle s'élargit sur l'onglet Consommation, comme la modale Climat. La plaque reste blanche en mode sombre, comme une vraie prise.
 
 ### Scénario : basculer la prise en touchant l'illustration
 
