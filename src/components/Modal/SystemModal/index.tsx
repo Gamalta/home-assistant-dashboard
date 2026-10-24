@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useHouseContext} from '../../../contexts/HouseContext';
-import { SystemGraphDisplay } from './SystemGraphDisplay';
+import {SystemGraphDisplay} from './SystemGraphDisplay';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];

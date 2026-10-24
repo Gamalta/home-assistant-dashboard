@@ -24,6 +24,17 @@ export default [
     }
   },
   {
-    ignores: ['node_modules/', 'dist/', 'eslint.config.js'],
+    // Les fixtures Playwright appellent `use`, qui n'est pas le hook React.
+    files: ['e2e/**'],
+    rules: {"react-hooks/rules-of-hooks": "off"},
+  },
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'playwright-report/',
+      'test-results/',
+      'eslint.config.js',
+    ],
   },
 ];
