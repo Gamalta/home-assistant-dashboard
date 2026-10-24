@@ -4,6 +4,7 @@ import {SystemInfoDisplay} from './SystemInfoDisplay';
 import {OptionRow} from './OptionRow';
 import {BenchmarkRow} from './BenchmarkRow';
 import {InfoRow} from './InfoRow';
+import {ScreensaverRow} from './ScreensaverRow';
 import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -71,6 +72,7 @@ export function SystemModal(props: SystemModalProps) {
             disabled={!is3d || !webGPUSupported}
           />
           <OptionRow label="Debug" option="debug" disabled={!is3d} />
+          <ScreensaverRow />
           {is3d && configuration.debug && (
             <>
               <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />

@@ -13,3 +13,4 @@
 | [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance       |
 | [Guide : TV et médias](guides/medias.md)                   | Piloter un téléviseur, une Apple TV et ses médias   |
 | [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et ambilight HyperHDR    |
+| [Guide : mode veille](guides/mode-veille.md) | Mettre la tablette murale en veille après inactivité |
