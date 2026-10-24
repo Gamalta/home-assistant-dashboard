@@ -28,3 +28,40 @@ test('garde une option graphique après rechargement', async ({page}) => {
   await openSystemModal(page);
   await expect(option(page, 'Murs transparents')).not.toBeChecked();
 });
+
+// Capture du canvas, sans les boutons des pièces.
+const canvasShot = (page: Page) =>
+  page
+    .locator('canvas')
+    .screenshot({style: 'div:has(> canvas) ~ div {visibility: hidden}'});
+
+test('redessine la scène après un changement d’option', async ({page}) => {
+  await page.goto('/');
+  await waitForScene(page);
+  // Attend la fin du fondu d'allumage des lumières.
+  let before = await canvasShot(page);
+  await expect
+    .poll(
+      async () => {
+        const previous = before;
+        before = await canvasShot(page);
+        return before.equals(previous);
+      },
+      {timeout: 30_000},
+    )
+    .toBe(true);
+
+  await openSystemModal(page);
+  await option(page, 'Murs transparents').uncheck();
+  await expect(page.getByRole('progressbar')).toHaveCount(0);
+  // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
+  const title = page.getByRole('heading', {name: 'Système'});
+  await title.locator('..').getByRole('button').last().click();
+  await expect(title).toBeHidden();
+
+  await expect
+    .poll(async () => (await canvasShot(page)).equals(before), {
+      timeout: 30_000,
+    })
+    .toBe(false);
+});
