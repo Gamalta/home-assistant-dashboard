@@ -153,6 +153,35 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
+  ...createLight('light.hallway_dimmer', {
+    state: 'off',
+    attributes: {
+      friendly_name: 'Variateur de l’entrée',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'brightness',
+      supported_color_modes: ['brightness'],
+      supported_features: 0,
+      brightness: 128,
+      hs_color: undefined,
+      rgb_color: undefined,
+      xy_color: undefined,
+      color_temp_kelvin: undefined,
+    },
+  }),
+  ...createLight('light.storage_switch', {
+    attributes: {
+      friendly_name: 'Interrupteur du débarras',
+      icon: 'hue:bulb-candle',
+      color_mode: 'onoff',
+      supported_color_modes: ['onoff'],
+      supported_features: 0,
+      brightness: undefined,
+      hs_color: undefined,
+      rgb_color: undefined,
+      xy_color: undefined,
+      color_temp_kelvin: undefined,
+    },
+  }),
 
   ...createClimate('climate.salon'),
   ...createClimate('climate.kitchen', {
