@@ -56,7 +56,7 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
             ))}
           </List>
         ) : (
-          <Typography color="text.secondary">La liste est vide.</Typography>
+          <Typography color="textSecondary">La liste est vide.</Typography>
         )}
         {completed.length > 0 && (
           <Button onClick={todo.removeCompleted}>
