@@ -76,7 +76,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
             prices={prices}
           />
         </Stack>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" color="textSecondary">
           Coût estimé aux tarifs configurés, hors abonnement.
         </Typography>
       </Stack>

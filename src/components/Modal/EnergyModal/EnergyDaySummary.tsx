@@ -25,7 +25,7 @@ export function EnergyDaySummary(props: EnergyDaySummaryProps) {
       aria-label={title}
       sx={{flex: 1, p: 1.5, borderRadius: 1, bgcolor: 'background.tertiary'}}
     >
-      <Typography variant="subtitle2" color="text.secondary">
+      <Typography variant="subtitle2" color="textSecondary">
         {title}
       </Typography>
       <Typography variant="h5">{formatCost(getCost(day, prices))}</Typography>
