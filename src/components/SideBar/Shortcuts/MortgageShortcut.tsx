@@ -1,9 +1,10 @@
 import HouseIcon from '@mui/icons-material/HouseRounded';
+import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import type {MortgageShortcutConfigType} from '../../../configs/sidebar';
 import {mortgageStatus} from '../../../utils/mortgage';
 import {MortgageModal} from '../../Modal/MortgageModal';
-import {ShortcutTile} from './ShortcutTile';
+import {ShortcutCard} from './ShortcutCard';
 
 type MortgageShortcutProps = {
   id: string;
@@ -18,13 +19,16 @@ export function MortgageShortcut(props: MortgageShortcutProps) {
 
   return (
     <>
-      <ShortcutTile
+      <ShortcutCard
         id={id}
         icon={<HouseIcon />}
         label={label}
-        value={`${Math.floor(status.repaidRatio * 100)} % remboursé`}
         onClick={() => setOpen(true)}
-      />
+      >
+        <Typography component="span">
+          {`${Math.floor(status.repaidRatio * 100)} % remboursé`}
+        </Typography>
+      </ShortcutCard>
       <MortgageModal
         id={id}
         open={open}

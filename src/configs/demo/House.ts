@@ -52,8 +52,10 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
+  actions: [{type: 'allLightsOff'}],
   shortcuts: [
-    {type: 'allLightsOff'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
     {
       type: 'mortgage',
       principal: 250_000,
