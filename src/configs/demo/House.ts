@@ -90,6 +90,12 @@ export const HouseConfig: HouseConfigType = {
           powerEntityId: 'sensor.tv_plug_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
         },
+        {
+          type: 'media',
+          mediaPlayerEntityId: 'media_player.living_room_tv',
+          remoteEntityId: 'remote.living_room_tv',
+          position: {x: -3.3, y: 1.4, z: 4.4},
+        },
       ],
     },
     {

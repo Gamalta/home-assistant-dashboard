@@ -20,7 +20,8 @@ type RoomItemConfigType =
   | ShutterConfigType
   | DestkopConfigType
   | Printer3dConfigType
-  | PlugConfigType;
+  | PlugConfigType
+  | MediaConfigType;
 
 type BaseItemConfigType =
   | {
@@ -82,4 +83,11 @@ type PlugConfigType = BaseItemConfigType & {
   powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
   // En W : sous ce seuil, la prise allumée est « en veille » (5 W par défaut).
   standbyThreshold?: number;
+};
+
+type MediaConfigType = BaseItemConfigType & {
+  type: 'media';
+  mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
+  // Pavé directionnel, avec les commandes de l'Apple TV (ADR 0028).
+  remoteEntityId?: FilterByDomain<EntityName, 'remote'>;
 };

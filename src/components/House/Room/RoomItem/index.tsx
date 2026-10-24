@@ -4,6 +4,7 @@ import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
 import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomPlug} from './RoomPlug';
+import {RoomMedia} from './RoomMedia';
 import {RoomShutter} from './RoomShutter';
 import {RoomTemperature} from './RoomTemperature';
 
@@ -30,6 +31,8 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomPrinter3d id={id} printer3dConfig={itemConfig} />;
     case 'plug':
       return <RoomPlug id={id} plugConfig={itemConfig} />;
+    case 'media':
+      return <RoomMedia id={id} mediaConfig={itemConfig} />;
     default:
       return <></>;
   }
