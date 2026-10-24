@@ -30,6 +30,12 @@ La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesu
 
 Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md).
 
+## Mesurer le démarrage
+
+Au chargement, la scène reste masquée par le chargeur jusqu'à la fin de la compilation des shaders, faite en arrière-plan ([ADR 0015](../adr/0015-compilation-asynchrone.md)). Pour vérifier qu'aucune tâche longue ne fige l'écran, observer les entrées `longtask` (`PerformanceObserver`) depuis la navigation, ou enregistrer le chargement dans l'onglet Performance.
+
+Chrome et le pilote gardent les programmes compilés en cache : un second chargement ne dit rien du premier lancement sur la tablette. Mesurer avec un profil neuf, et rendre chaque shader unique (par exemple, un uniform inutilisé ajouté par un script d'initialisation) pour contourner le cache du pilote.
+
 ## Simuler la tablette
 
 Dans les DevTools, onglet Performance, régler **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
