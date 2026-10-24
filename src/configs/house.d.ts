@@ -18,7 +18,8 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | Printer3dConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +67,10 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type Printer3dConfigType = BaseItemConfigType & {
+  type: 'printer3d';
+  // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
+  prefix: string;
 };
