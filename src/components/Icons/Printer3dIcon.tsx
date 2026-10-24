@@ -5,7 +5,7 @@ export function Printer3dIcon(props: SvgIconProps) {
     <SvgIcon
       {...props}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 493.423 493.423"
+      viewBox="-51 -51 614 614"
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
