@@ -30,6 +30,10 @@ La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesu
 
 Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md).
 
+## Éclairage
+
+Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uniforms ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)). Ajouter ou retirer une lumière, même éteinte, change la clé des programmes et recompile tous les matériaux. Une lumière s'éteint par son intensité, pas en la démontant.
+
 ## Simuler la tablette
 
 Dans les DevTools, onglet Performance, régler **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
