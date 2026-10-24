@@ -23,11 +23,18 @@ type AllLightsOffActionConfigType = {
   scriptEntityId?: FilterByDomain<EntityName, 'script'>;
 };
 
-type ShortcutConfigType = MediaShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType | TrainsShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
   mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
+};
+
+type TrainsShortcutConfigType = {
+  type: 'trains';
+  label: string;
+  /** Début des capteurs sncf_trains du trajet : `sncf_paris_lyon` pour `sensor.sncf_paris_lyon_train_1`. */
+  prefix: string;
 };
 
 type SystemGraphConfigType = {
