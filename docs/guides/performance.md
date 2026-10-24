@@ -28,7 +28,7 @@ La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesu
 | `browserFps` bien inférieur à `fps`               | Coût hors rendu : React, étiquettes HTML, layout                                          |
 | `worstMs` élevé dans `__dashboardMotionBenchmark` | Saccade : recompilation de shader ou tâche longue                                         |
 
-Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md).
+Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md). `pnpm test` vérifie le poids et le nombre de primitives des modèles `.glb`, que `pnpm optimize-model` fusionne pour tenir le budget de draw calls ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
 
 ## Simuler la tablette
 
