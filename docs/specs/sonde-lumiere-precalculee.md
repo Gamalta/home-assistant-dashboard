@@ -1,7 +1,7 @@
 # Sonde de lumière précalculée
 
 - Issue : #11
-- Statut : Livrée
+- Statut : Remplacée par [Éclairage réaliste](eclairage-realiste.md) (ADR 0030)
 
 ## Problème
 

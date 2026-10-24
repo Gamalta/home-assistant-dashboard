@@ -37,7 +37,6 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Les espions `vi.spyOn` sont restaurés automatiquement après chaque test (`restoreMocks`). Penser à `vi.useRealTimers()` après `vi.useFakeTimers()`.
 - Pas de scène React Three Fiber en unitaire : jsdom n'a pas de WebGL. La 3D se teste en E2E, la logique qu'elle utilise (shaders, calculs) en unitaire.
 - Tester un comportement ou une règle qui peut casser, pas recopier l'implémentation.
-- Un fichier versionné peut servir d'instantané (`toMatchFileSnapshot`), comme `src/rendering/environment/nightLightProbe.json`, que l'application importe. `pnpm run test -u` le regénère ; `pnpm test -u` ne transmet pas l'option à Vitest.
 
 ## Écrire un test E2E
 
@@ -49,7 +48,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
-- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée. Seul `e2e/ombres.spec.ts` active les ombres. Il le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
+- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres) : la page y devient trop lente pour être pilotée. Seul `e2e/ombres.spec.ts` active les ombres. Il le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
 - Pour vérifier une animation image par image, le rendu logiciel saute trop d'images : piloter l'horloge (`page.clock.install()` avant `goto`, puis `pauseAt` et `runFor(16)` entre deux mesures), comme le test d'ouverture de `e2e/modales-lumiere-volet.spec.ts`.
 
 ## Déboguer un E2E

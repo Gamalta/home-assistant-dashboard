@@ -40,6 +40,10 @@ Au chargement, la scène reste masquée par le chargeur jusqu'à la fin de la co
 
 Chrome et le pilote gardent les programmes compilés en cache : un second chargement ne dit rien du premier lancement sur la tablette. Mesurer avec un profil neuf, et rendre chaque shader unique (par exemple, un uniform inutilisé ajouté par un script d'initialisation) pour contourner le cache du pilote.
 
+## Éclairage
+
+Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uniforms ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)). Ajouter ou retirer une lumière, ou la rendre invisible, change la clé des programmes et recompile tous les matériaux : le ciel et le soleil ne varient donc que par leur intensité. Les lampes des pièces, elles, sont rendues invisibles quand elles sont éteintes pour épargner le GPU ([ADR 0005](../adr/0005-qualite-adaptative-en-mouvement.md)) : allumer ou éteindre une lampe recompile.
+
 ## Simuler la tablette
 
 Dans les DevTools, onglet Performance, régler **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
