@@ -47,6 +47,16 @@ La tuile affiche la part du capital déjà remboursée. La modale détaille le c
 | `label`            | Libellé de la tuile, `Crédit` par défaut ; utile pour plusieurs prêts                       |
 
 Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
+## Liste de courses
+
+`{type: 'shoppingList', todoEntityId: 'todo.shopping_list'}`
+
+La tuile affiche le nombre d'articles à acheter. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
+
+| Option         | Rôle                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `todoEntityId` | Liste `todo` de Home Assistant, par exemple celle de l'intégration « Liste de courses » |
+| `label`        | Libellé de la tuile, `Courses` par défaut                                               |
 
 ## Ajouter un type de tuile
 

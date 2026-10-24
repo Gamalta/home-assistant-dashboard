@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import type {ShortcutConfigType} from '../../../configs/sidebar';
 import {AllLightsOffShortcut} from './AllLightsOffShortcut';
 import {MortgageShortcut} from './MortgageShortcut';
+import {ShoppingListShortcut} from './ShoppingListShortcut';
 
 type ShortcutsProps = {
   shortcuts: ShortcutConfigType[];
@@ -32,6 +33,14 @@ export function Shortcuts(props: ShortcutsProps) {
           case 'mortgage':
             return (
               <MortgageShortcut key={id} id={id} shortcutConfig={shortcut} />
+            );
+          case 'shoppingList':
+            return (
+              <ShoppingListShortcut
+                key={id}
+                id={id}
+                shortcutConfig={shortcut}
+              />
             );
         }
       })}

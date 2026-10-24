@@ -62,6 +62,7 @@ export const SideBarConfig: SideBarConfigType = {
       firstPaymentDate: '2021-06-05',
       monthlyInsurance: 28,
     },
+    {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
   ],
 };
 

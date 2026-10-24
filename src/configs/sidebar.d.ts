@@ -15,7 +15,8 @@ type SideBarConfigType = {
 
 type ShortcutConfigType =
   | AllLightsOffShortcutConfigType
-  | MortgageShortcutConfigType;
+  | MortgageShortcutConfigType
+  | ShoppingListShortcutConfigType;
 
 type AllLightsOffShortcutConfigType = {
   type: 'allLightsOff';
@@ -44,5 +45,12 @@ type PersonConfigType = {
 type MortgageShortcutConfigType = Mortgage & {
   type: 'mortgage';
   /** Libellé de la tuile, pour distinguer plusieurs prêts. */
+  label?: string;
+};
+
+type ShoppingListShortcutConfigType = {
+  type: 'shoppingList';
+  todoEntityId: `todo.${string}`;
+  /** Libellé de la tuile, `Courses` par défaut. */
   label?: string;
 };
