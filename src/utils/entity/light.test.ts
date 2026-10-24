@@ -1,6 +1,6 @@
 import type {HassEntityWithService} from '@hakit/core';
 import {describe, expect, it} from 'vitest';
-import {LightTab, supportedLightTab} from './light';
+import {LightTab, lightExtraEntityIds, supportedLightTab} from './light';
 
 const EFFECT = 4;
 
@@ -39,5 +39,18 @@ describe('onglet adapté à la lumière', () => {
     const plug = light({supported_color_modes: ['onoff']});
 
     expect(supportedLightTab([plug])).toBe(LightTab.ON_OFF);
+  });
+});
+
+describe('réglages dérivés du nom de la lumière', () => {
+  it('nomme les entités WLED et Hue comme leurs intégrations', () => {
+    expect(lightExtraEntityIds('light.salon_strip')).toEqual({
+      preset: 'select.salon_strip_preset',
+      playlist: 'select.salon_strip_playlist',
+      palette: 'select.salon_strip_color_palette',
+      speed: 'number.salon_strip_speed',
+      effectSpeed: 'number.salon_strip_effect_speed',
+      intensity: 'number.salon_strip_intensity',
+    });
   });
 });

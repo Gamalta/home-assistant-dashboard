@@ -84,6 +84,11 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.salon_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
+        {
+          type: 'light',
+          lightEntityId: 'light.salon_strip',
+          position: {x: -3.0, y: 0.4, z: 4.6},
+        },
       ],
     },
     {

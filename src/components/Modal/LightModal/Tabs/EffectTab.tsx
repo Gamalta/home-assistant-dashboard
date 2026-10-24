@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import {useLightModalContext} from '../../../../contexts/LightModalContext';
 import {lightHasEffect} from '../../../../utils/entity/light';
 import {EffectList} from '../components/EffectList';
+import {LightExtras} from '../components/LightExtras';
 
 export function EffectTab() {
   const {entities, activeEntityIds} = useLightModalContext();
@@ -27,6 +28,13 @@ export function EffectTab() {
           overflowY: 'auto',
         }}
       >
+        {/* Les réglages d'un bandeau ne valent que pour lui seul. */}
+        {activeEntities.length === 1 && (
+          <LightExtras
+            key={activeEntities[0].entity_id}
+            lightEntityId={activeEntities[0].entity_id}
+          />
+        )}
         <EffectList
           effects={effects}
           activeEffects={activeEntities.map(entity => entity.attributes.effect)}
