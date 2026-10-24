@@ -38,7 +38,7 @@ export function ShortcutTile(props: ShortcutTileProps) {
             <Typography
               variant="caption"
               component="span"
-              color="text.secondary"
+              color="textSecondary"
             >
               {value}
             </Typography>
