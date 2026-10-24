@@ -8,6 +8,8 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createMediaPlayer} from './createMediaPlayer';
+import {MediaPlayerFeature} from '../../utils/entity/media';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -84,6 +86,7 @@ export const entities: HassEntities = {
   ...createLight('light.salon_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Plafonnier du séjour',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -91,6 +94,7 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.salon_hue_play', {
     attributes: {
+      friendly_name: 'Hue Play du séjour',
       icon: 'hue:play-bar-v',
       color_mode: 'hs',
       hs_color: [240, 100],
@@ -99,6 +103,7 @@ export const entities: HassEntities = {
   ...createLight('light.kitchen_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Cuisine',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -106,17 +111,24 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.dining_light', {
     attributes: {
+      friendly_name: 'Salle à manger',
       icon: 'hue:bulb-sultan',
       color_mode: 'hs',
       hs_color: [28, 64],
     },
   }),
   ...createLight('light.bedroom_light', {
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_dressing_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Dressing',
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -124,30 +136,61 @@ export const entities: HassEntities = {
   }),
   ...createLight('light.bedroom_bathroom_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Salle de bain de la chambre',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bathroom_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Salle de bain',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_2_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre 2',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.bedroom_3_light', {
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Chambre 3',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.cellar_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-sultan', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Cellier',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.toilet_light', {
     state: 'off',
-    attributes: {icon: 'hue:bulb-candle', color_mode: 'hs', hs_color: [28, 64]},
+    attributes: {
+      friendly_name: 'Toilettes',
+      icon: 'hue:bulb-candle',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
   }),
   ...createLight('light.corridor_light', {
     state: 'off',
     attributes: {
+      friendly_name: 'Couloir',
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -255,6 +298,45 @@ export const entities: HassEntities = {
     state: '55',
     attributes: {
       unit_of_measurement: '%',
+    },
+  }),
+
+  ...createMediaPlayer('media_player.living_room_tv', {
+    state: 'playing',
+    attributes: {
+      friendly_name: 'TV du séjour',
+      supported_features:
+        MediaPlayerFeature.PAUSE |
+        MediaPlayerFeature.PLAY |
+        MediaPlayerFeature.PREVIOUS_TRACK |
+        MediaPlayerFeature.NEXT_TRACK |
+        MediaPlayerFeature.VOLUME_SET |
+        MediaPlayerFeature.VOLUME_MUTE |
+        MediaPlayerFeature.TURN_ON |
+        MediaPlayerFeature.TURN_OFF |
+        MediaPlayerFeature.SELECT_SOURCE,
+      volume_level: 0.3,
+      is_volume_muted: false,
+      media_title: 'My Way',
+      media_artist: 'Calvin Harris',
+      app_name: 'YouTube Music',
+      entity_picture: 'media/demo_cover.svg',
+      source: 'Apple TV',
+      source_list: ['Apple TV', 'Freebox', 'Console'],
+    },
+  }),
+  ...createMediaPlayer('media_player.bedroom_speaker', {
+    state: 'paused',
+    attributes: {
+      friendly_name: 'Enceinte de la chambre',
+      supported_features:
+        MediaPlayerFeature.PAUSE |
+        MediaPlayerFeature.PLAY |
+        MediaPlayerFeature.NEXT_TRACK,
+      media_title: 'Human',
+      media_artist: "Rag'n'Bone Man",
+      app_name: 'Spotify',
+      entity_picture: 'media/demo_cover.svg',
     },
   }),
 } as const;
