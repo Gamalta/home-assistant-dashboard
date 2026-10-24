@@ -1,5 +1,6 @@
 import {Canvas} from '@react-three/fiber';
 import {useRef} from 'react';
+import {PCFShadowMap} from 'three';
 import {
   GizmoHelper,
   GizmoViewport,
@@ -40,6 +41,9 @@ export function HouseScene(props: HouseSceneProps) {
       frameloop="demand"
       camera={{position: camera.position, fov: camera.fov}}
       flat
+      // R3F réapplique `shadows` à chaque rendu du Canvas, PCFSoftShadowMap
+      // (obsolète) par défaut : la carte d'ombre se règle donc ici.
+      shadows={{enabled: configuration.shadows, type: PCFShadowMap}}
       gl={backend.createRenderer}
     >
       <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>

@@ -20,7 +20,6 @@ export function LightShadows(props: LightShadowsProps) {
   const {scene, enabled, reflections, moving} = props;
   const gl = useThree(state => state.gl);
   const invalidate = useThree(state => state.invalidate);
-  const shadowLights = useRef<ShadowLight[]>([]);
   const suspended = useRef(false);
 
   const lights = useMemo(() => {
@@ -35,11 +34,11 @@ export function LightShadows(props: LightShadowsProps) {
   useEffect(() => {
     if (!enabled) return;
     enableSingleTapShadows();
-    gl.shadowMap.enabled = true;
+    suspended.current = moving.current;
     scene.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
       object.castShadow = !object.userData.fadeOverlay;
-      object.receiveShadow = true;
+      object.receiveShadow = !suspended.current;
     });
 
     const maxTextures =
@@ -65,11 +64,7 @@ export function LightShadows(props: LightShadowsProps) {
         light.shadow.focus = SPOT_SHADOW_FOCUS;
       }
     });
-    shadowLights.current = lights.slice(0, budget);
-    suspended.current = moving.current;
-    shadowLights.current.forEach(
-      light => (light.castShadow = !suspended.current),
-    );
+    lights.slice(0, budget).forEach(light => (light.castShadow = true));
     invalidate();
 
     return () => {
@@ -82,18 +77,19 @@ export function LightShadows(props: LightShadowsProps) {
         light.castShadow = false;
         light.shadow.dispose();
       });
-      gl.shadowMap.enabled = false;
-      shadowLights.current = [];
       invalidate();
     };
   }, [enabled, reflections, gl, scene, lights, moving, invalidate]);
 
+  // Le nombre d'ombres fait partie de la clé de programme, receiveShadow est un
+  // uniform : suspendre la lecture des ombres ne recompile aucun shader.
   useFrame(() => {
-    if (moving.current === suspended.current) return;
+    if (!enabled || moving.current === suspended.current) return;
     suspended.current = moving.current;
-    shadowLights.current.forEach(
-      light => (light.castShadow = !suspended.current),
-    );
+    scene.traverse(object => {
+      if (!(object instanceof THREE.Mesh)) return;
+      object.receiveShadow = !suspended.current;
+    });
   });
 
   return null;

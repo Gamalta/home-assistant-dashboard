@@ -49,7 +49,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
-- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée.
+- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée. Seul `e2e/ombres.spec.ts` active les ombres. Il le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
 
 ## Déboguer un E2E
 
