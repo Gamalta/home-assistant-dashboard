@@ -24,7 +24,9 @@ type RoomItemConfigType =
   | Printer3dConfigType
   | PlugConfigType
   | MediaConfigType
-  | AmbilightConfigType;
+  | AmbilightConfigType
+  | BatteryConfigType
+  | SmokeConfigType;
 
 type BaseItemConfigType =
   | {
@@ -98,4 +100,20 @@ type MediaConfigType = BaseItemConfigType & {
 type AmbilightConfigType = BaseItemConfigType & {
   type: 'ambilight';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
+};
+
+type BatteryConfigType = BaseItemConfigType & {
+  type: 'battery';
+  name: string;
+  batteryEntityId: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type SmokeConfigType = BaseItemConfigType & {
+  type: 'smoke';
+  smokeEntityId: FilterByDomain<EntityName, 'binary_sensor'>;
+  heatEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  batteryEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  batteryLowEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  tamperEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  testEntityId?: FilterByDomain<EntityName, 'button'>;
 };

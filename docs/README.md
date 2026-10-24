@@ -18,3 +18,4 @@
 | [Guide : alertes](guides/alertes.md)                               | Configurer la pastille d'alertes                     |
 | [Guide : ajouter un graphique](guides/graphiques.md)               | Tracer un historique avec le composant commun        |
 | [Guide : filtrer les étiquettes](guides/filtrer-les-etiquettes.md) | Afficher seulement certaines étiquettes de la vue 3D |
+| [Guide : appareils sur pile](guides/appareils-sur-pile.md)         | Afficher les piles et le détecteur de fumée          |

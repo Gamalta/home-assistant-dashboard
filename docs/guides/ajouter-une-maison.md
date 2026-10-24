@@ -28,7 +28,7 @@ Le modèle doit respecter le [budget de performance](../adr/0009-budget-performa
 Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`. Il exporte :
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
-- `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`plug`](prises.md), [`media`](medias.md), [`ambilight`](bandeaux-led-ambilight.md)) ;
+- `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`plug`](prises.md), [`media`](medias.md), [`ambilight`](bandeaux-led-ambilight.md), [`battery` et `smoke`](appareils-sur-pile.md)) ;
 - `HouseConfig.orientation` (optionnel) : l'azimut, en degrés, vers lequel pointe l'axe -Z du modèle (0 : le nord, 90 : l'est). Le soleil éclaire alors les façades réellement exposées ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 

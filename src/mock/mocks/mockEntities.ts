@@ -454,7 +454,9 @@ export const entities: HassEntities = {
     trainNum: '6607',
   }),
   ...energyEntities,
-  // Alertes de la démo : une pile faible et un capteur indisponible.
+  // Alertes et appareils sur pile de la démo : des interrupteurs sans fil,
+  // dont un à changer, le détecteur de fumée du couloir et un capteur
+  // indisponible.
   ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
     attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
   }),
@@ -491,5 +493,31 @@ export const entities: HassEntities = {
   ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
     state: 'on',
     attributes: {friendly_name: 'Pont Zigbee'},
+  }),
+  ...createSensor('sensor.salon_button_battery', {
+    state: '54',
+    attributes: {
+      friendly_name: 'Bouton du séjour',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_tamper', {
+    attributes: {
+      friendly_name: 'Autoprotection du détecteur du couloir',
+      device_class: 'tamper',
+    },
+  }),
+  ...createSensor('sensor.hallway_smoke_detector_battery', {
+    state: '90',
+    attributes: {
+      friendly_name: 'Pile du détecteur du couloir',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('button.hallway_smoke_detector_test', {
+    state: 'unknown',
+    attributes: {friendly_name: 'Test du détecteur du couloir'},
   }),
 } as const;

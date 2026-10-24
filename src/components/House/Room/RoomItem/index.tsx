@@ -1,5 +1,6 @@
 import {RoomItemConfigType} from '../../../../configs/house';
 import {RoomAmbilight} from './RoomAmbilight';
+import {RoomBattery} from './RoomBattery';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
@@ -7,6 +8,7 @@ import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomPlug} from './RoomPlug';
 import {RoomMedia} from './RoomMedia';
 import {RoomShutter} from './RoomShutter';
+import {RoomSmoke} from './RoomSmoke';
 import {RoomTemperature} from './RoomTemperature';
 
 type RoomItemProps = {
@@ -36,6 +38,10 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomMedia id={id} mediaConfig={itemConfig} />;
     case 'ambilight':
       return <RoomAmbilight id={id} ambilightConfig={itemConfig} />;
+    case 'battery':
+      return <RoomBattery id={id} batteryConfig={itemConfig} />;
+    case 'smoke':
+      return <RoomSmoke id={id} smokeConfig={itemConfig} />;
     default:
       return <></>;
   }
