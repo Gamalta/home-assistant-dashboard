@@ -10,7 +10,7 @@ type OptionRowProps = {
   label: string;
   option: Exclude<
     keyof ConfigurationOptions,
-    'screensaverMinutes' | 'hiddenCategories'
+    'screensaverMinutes' | 'hiddenCategories' | 'lightingStyle'
   >;
   disabled?: boolean;
 };

@@ -1,5 +1,4 @@
 import {Canvas} from '@react-three/fiber';
-import * as THREE from 'three';
 import Stack from '@mui/material/Stack';
 import {useRef, useState} from 'react';
 import {
@@ -13,6 +12,10 @@ import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
+import {
+  lightingStyles,
+  type LightingStyle,
+} from '../../../rendering/lightingStyles';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
@@ -36,12 +39,16 @@ export function HouseScene(props: HouseSceneProps) {
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
   const moving = useRef(false);
+  // Une valeur stockée d'une ambiance retirée retombe sur le soleil réel.
+  const style: LightingStyle =
+    lightingStyles[configuration.lightingStyle] ?? lightingStyles.soleil;
   // Options qui changent les shaders : la scène ne s'affiche qu'une fois
   // compilée pour celles en cours.
   const graphics = [
     configuration.hideWallsShader,
     configuration.heatmapShader,
     configuration.shadows,
+    configuration.lightingStyle,
   ].join();
   const [compiled, setCompiled] = useState<string>();
   const ready = compiled === graphics;
@@ -69,9 +76,6 @@ export function HouseScene(props: HouseSceneProps) {
         // des programmes.
         shadows={configuration.shadows && 'percentage'}
         gl={backend.createRenderer}
-        // Garde la teinte des lampes et adoucit leurs zones saturées. R3F
-        // n'impose son tone mapping qu'à la création.
-        onCreated={({gl}) => (gl.toneMapping = THREE.NeutralToneMapping)}
       >
         <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
           {configuration.debug && (
@@ -95,6 +99,8 @@ export function HouseScene(props: HouseSceneProps) {
             backend={backend}
             hideWalls={configuration.hideWallsShader}
             heatmap={configuration.heatmapShader}
+            floorTint={style.floorTint}
+            wallTint={style.wallTint}
             rooms={rooms}
           />
           <LightShadows
@@ -102,7 +108,10 @@ export function HouseScene(props: HouseSceneProps) {
             enabled={configuration.shadows}
             moving={moving}
           />
-          <Daylight orientation={houseConfig?.house.orientation} />
+          <Daylight
+            style={style}
+            orientation={houseConfig?.house.orientation}
+          />
           {rooms.map(room => (
             <Room3d key={room.id} room={room} model={scene} />
           ))}

@@ -64,3 +64,19 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
   await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
   await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });
+
+test('change d’ambiance et la garde après rechargement', async ({page}) => {
+  await page.goto('/');
+  await openSystemModal(page);
+  const ambiance = page.getByRole('combobox', {name: 'Ambiance'});
+  await expect(ambiance).toHaveText('B · Soleil réel');
+  await ambiance.click();
+  await page.getByRole('option', {name: 'D · Cosy'}).click();
+  await expect(ambiance).toHaveText('D · Cosy');
+
+  await page.reload();
+  await openSystemModal(page);
+  await expect(page.getByRole('combobox', {name: 'Ambiance'})).toHaveText(
+    'D · Cosy',
+  );
+});

@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import type {LightingStyleId} from '../rendering/lightingStyles';
 
 export type ConfigurationOptions = {
   debug: boolean;
@@ -17,6 +18,7 @@ export type ConfigurationOptions = {
   screensaverMinutes: number;
   // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
   hiddenCategories: string[];
+  lightingStyle: LightingStyleId;
 };
 
 export type RendererInfo = {
@@ -67,6 +69,7 @@ const defaultConfiguration: ConfigurationOptions = {
   screensaverMinutes: 0,
   // Les piles sont une information de diagnostic, affichée à la demande.
   hiddenCategories: ['battery'],
+  lightingStyle: 'soleil',
 };
 
 const defaultRendererInfo: RendererInfo = {

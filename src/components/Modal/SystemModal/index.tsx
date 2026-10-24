@@ -1,6 +1,7 @@
 import {Modal, ModalProps} from '..';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
+import {LightingStyleRow} from './LightingStyleRow';
 import {OptionRow} from './OptionRow';
 import {BenchmarkRow} from './BenchmarkRow';
 import {InfoRow} from './InfoRow';
@@ -54,6 +55,7 @@ export function SystemModal(props: SystemModalProps) {
               Affichage
             </Typography>
             <BenchmarkRow />
+            <LightingStyleRow disabled={!is3d} />
             <OptionRow
               label="Murs transparents"
               option="hideWallsShader"

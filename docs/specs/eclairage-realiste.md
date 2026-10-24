@@ -48,6 +48,12 @@ Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, d
 - **Quand** le soleil est à un azimut donné
 - **Alors** il éclaire les façades réellement exposées
 
+### Scénario : essayer une ambiance
+
+- **Étant donné** la modale Système
+- **Quand** on choisit une ambiance dans « Ambiance » (A à J : plat, soleil réel, doux et chaud, cosy, maquette, fin d'après-midi, studio, chaud et saturé, et deux variantes qui teintent sols et murs)
+- **Alors** la maison change d'éclairage sans recharger la page, et le choix est gardé sur l'appareil
+
 ### Scénario : plus de reflets d'environnement
 
 - **Étant donné** la modale Système
@@ -58,6 +64,7 @@ Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, d
 
 - [x] Le soleil et le ciel sont deux lumières fixes : la nuit qui tombe ne recompile aucun shader (`e2e/eclairage.spec.ts`).
 - [x] La maison est plus sombre la nuit que le jour (`e2e/eclairage.spec.ts`).
+- [x] L'ambiance se choisit dans la modale Système et reste après rechargement (`e2e/options.spec.ts`).
 - [x] Position et intensité du soleil testées (`src/rendering/daylight.test.ts`).
 - [x] L'option a disparu de la modale Système et aucun `.hdr` n'est demandé (`e2e/options.spec.ts`, `e2e/eclairage.spec.ts`).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : GPU égal au repos, mêmes programmes au démarrage.
