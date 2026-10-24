@@ -18,7 +18,8 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | PlugConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +67,12 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type PlugConfigType = BaseItemConfigType & {
+  type: 'plug';
+  switchEntityId: FilterByDomain<EntityName, 'switch'>;
+  powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  // En W : sous ce seuil, la prise allumée est « en veille » (5 W par défaut).
+  standbyThreshold?: number;
 };
