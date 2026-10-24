@@ -35,7 +35,6 @@ export function LightShadows(props: LightShadowsProps) {
   useEffect(() => {
     if (!enabled) return;
     enableSingleTapShadows();
-    gl.shadowMap.enabled = true;
     scene.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
       object.castShadow = !object.userData.fadeOverlay;
@@ -82,7 +81,6 @@ export function LightShadows(props: LightShadowsProps) {
         light.castShadow = false;
         light.shadow.dispose();
       });
-      gl.shadowMap.enabled = false;
       shadowLights.current = [];
       invalidate();
     };
