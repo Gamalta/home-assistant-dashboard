@@ -36,41 +36,34 @@ async function openLight(page: Page, light: Locator) {
   );
 }
 
-// Interrupteur du plafonnier du séjour, éteint : la première carte sous le
-// titre « Lumières ».
-const salonLightSwitch = (modal: Locator) =>
+// Variateur de l'entrée, éteint et sans lumière dans le modèle 3D : l'allumer
+// ne recompile aucun shader, ce qui figerait la page plusieurs secondes.
+const dimmer = (page: Page) =>
+  page.getByRole('button', {name: 'Variateur de l’entrée'});
+
+// Interrupteur de la première carte, sous le titre « Lumières ».
+const firstCardSwitch = (modal: Locator) =>
   modal
     .getByRole('heading', {name: /^Lumières/})
     .locator('..')
     .getByRole('switch')
     .first();
 
-// Luminance moyenne de l'élément, lue sur une capture.
-async function luminance(page: Page, locator: Locator) {
-  const png = await locator.screenshot();
-  return page.evaluate(async base64 => {
-    const blob = await (await fetch(`data:image/png;base64,${base64}`)).blob();
-    const bitmap = await createImageBitmap(blob);
-    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
-    const context = canvas.getContext('2d')!;
-    context.drawImage(bitmap, 0, 0);
-    const {data} = context.getImageData(0, 0, bitmap.width, bitmap.height);
-    let sum = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
-    }
-    return sum / (data.length / 4);
-  }, png.toString('base64'));
-}
+// Les couleurs se lisent dans les styles calculés : en rendu logiciel, une
+// capture d'écran prend plusieurs secondes et fait dépasser le délai en CI.
+const style = (
+  locator: Locator,
+  property: 'color' | 'backgroundColor' | 'backgroundImage',
+) =>
+  locator.evaluate(
+    (element, property) => getComputedStyle(element)[property],
+    property,
+  );
 
-// Luminance de la couleur de texte d'un élément.
-const textLuminance = (locator: Locator) =>
-  locator.evaluate(element => {
-    const [r, g, b] = getComputedStyle(element)
-      .color.match(/[\d.]+/g)!
-      .map(Number);
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  });
+// Composantes de « rgb(r, g, b) » ou « rgba(r, g, b, a) ».
+const channels = (css: string) => css.match(/[\d.]+/g)!.map(Number);
+
+const luminance = ([r, g, b]: number[]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
 test.describe('modale du volet', () => {
   test.beforeEach(async ({page}) => {
@@ -141,30 +134,12 @@ test.describe('modale de la lumière', () => {
   });
 
   test('allumer la lumière met à jour sa luminosité', async ({page}) => {
-    const modal = await openLight(page, salonLight(page));
+    const modal = await openLight(page, dimmer(page));
     await expect(modal.getByText('0 %', {exact: true})).toBeVisible();
 
-    await salonLightSwitch(modal).click();
+    await firstCardSwitch(modal).click();
 
-    await expect(modal.getByText('100 %', {exact: true})).toBeVisible();
-  });
-
-  test('la jauge de luminosité se voit en mode clair', async ({page}) => {
-    await page.evaluate(() => localStorage.setItem('theme', 'light'));
-    await page.reload();
-    await waitForScene(page);
-    const modal = await openLight(page, salonLight(page));
-    // La jauge est le bouton sous le pourcentage affiché.
-    const gauge = modal
-      .getByText(/^\d+ %$/)
-      .locator('..')
-      .getByRole('button');
-    const off = await luminance(page, gauge);
-
-    await salonLightSwitch(modal).click();
-    await expect(modal.getByText('100 %', {exact: true})).toBeVisible();
-
-    expect(Math.abs((await luminance(page, gauge)) - off)).toBeGreaterThan(40);
+    await expect(modal.getByText('50 %', {exact: true})).toBeVisible();
   });
 
   test('les curseurs des autres lumières suivent leur température', async ({
@@ -190,13 +165,10 @@ test.describe('modale de la lumière', () => {
   test('une lumière variable sans couleur garde interrupteur et luminosité', async ({
     page,
   }) => {
-    const modal = await openLight(
-      page,
-      page.getByRole('button', {name: 'Variateur de l’entrée'}),
-    );
+    const modal = await openLight(page, dimmer(page));
 
     await expect(modal.getByRole('group')).toBeVisible();
-    await expect(modal.getByText('50 %', {exact: true})).toBeVisible();
+    await expect(modal.getByText('0 %', {exact: true})).toBeVisible();
   });
 
   test('une lumière tout-ou-rien allumée s’affiche en couleur', async ({
@@ -204,13 +176,44 @@ test.describe('modale de la lumière', () => {
   }) => {
     const light = page.getByRole('button', {name: 'Interrupteur du débarras'});
     // Allumée, l'icône du bouton prend la couleur de la lumière.
-    expect(await textLuminance(light)).toBeGreaterThan(100);
+    expect(luminance(channels(await style(light, 'color')))).toBeGreaterThan(
+      100,
+    );
 
     const modal = await openLight(page, light);
     const card = modal
       .getByRole('heading', {name: /^Lumières/})
-      .locator('xpath=following-sibling::div[1]/div[1]');
-    expect(await luminance(page, card)).toBeGreaterThan(100);
+      .locator('xpath=following-sibling::div[1]/div[1]/div[1]');
+    expect(
+      luminance(channels(await style(card, 'backgroundColor'))),
+    ).toBeGreaterThan(100);
+  });
+});
+
+test.describe('modale de la lumière, en mode clair', () => {
+  test.beforeEach(async ({page}) => {
+    await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+    await page.goto('/');
+    await waitForScene(page);
+  });
+
+  test('la jauge de luminosité se voit en mode clair', async ({page}) => {
+    const modal = await openLight(page, dimmer(page));
+    await firstCardSwitch(modal).click();
+    // La jauge est le bouton sous le pourcentage, sa partie pleine son seul div.
+    const fill = modal
+      .getByText('50 %', {exact: true})
+      .locator('..')
+      .getByRole('button')
+      .locator('div');
+    expect((await fill.boundingBox())!.height).toBeGreaterThan(0);
+
+    // Haut du dégradé de la jauge, posé sur le fond de la modale.
+    const gradient = await style(fill, 'backgroundImage');
+    const [r, g, b, a = 1] = channels(gradient.match(/rgba?\([^)]+\)/)![0]);
+    const paper = channels(await style(modal.locator('..'), 'backgroundColor'));
+    const top = [r, g, b].map((value, i) => a * value + (1 - a) * paper[i]);
+    expect(Math.abs(luminance(top) - luminance(paper))).toBeGreaterThan(40);
   });
 });
 

@@ -40,15 +40,15 @@ Les deux modales s'ouvrent, se ferment et se rouvrent proprement, et leurs contr
 
 ### Scénario : allumer la lumière met à jour sa luminosité
 
-- **Étant donné** la modale de la lumière ouverte sur une lumière éteinte, affichée à 0 %
+- **Étant donné** la modale ouverte sur une lumière variable éteinte, réglée à 50 % et affichée à 0 %
 - **Quand** l'utilisateur allume cette lumière
-- **Alors** la luminosité affichée passe à 100 %
+- **Alors** la luminosité affichée passe à 50 %
 
 ### Scénario : la jauge de luminosité se voit en mode clair
 
 - **Étant donné** le mode clair et la modale de la lumière ouverte
-- **Quand** la lumière active passe de 0 à 100 %
-- **Alors** la jauge se remplit d'un dégradé sombre, visible sur le fond clair
+- **Quand** la lumière active s'allume à 50 %
+- **Alors** la jauge se remplit d'un dégradé sombre, qui tranche sur le fond clair
 
 ### Scénario : les curseurs des autres lumières suivent leur température
 
@@ -58,9 +58,9 @@ Les deux modales s'ouvrent, se ferment et se rouvrent proprement, et leurs contr
 
 ### Scénario : une lumière variable sans couleur garde interrupteur et luminosité
 
-- **Étant donné** une lumière variable sans couleur ni effet, seule dans sa pièce, allumée à 50 %
+- **Étant donné** une lumière variable sans couleur ni effet, seule dans sa pièce
 - **Quand** l'utilisateur ouvre sa modale
-- **Alors** l'interrupteur général et la jauge de luminosité, à 50 %, sont présents
+- **Alors** l'interrupteur général et la jauge de luminosité sont présents
 
 ### Scénario : une lumière tout-ou-rien allumée s'affiche en couleur
 
@@ -83,5 +83,5 @@ Les deux modales s'ouvrent, se ferment et se rouvrent proprement, et leurs contr
 
 - La base des modales change pour toutes : une modale fermée ignore les rendus de son parent, son fond flouté laisse passer les appuis pendant qu'il s'efface, et son ouverture rebondit moins fort, sans étirer l'en-tête ni le contenu.
 - Une lumière tout-ou-rien allumée prend le même blanc chaud sur sa carte, sur son bouton et dans la scène 3D.
-- Le mock et la démo gagnent deux lumières fictives, chacune dans sa pièce : `light.hallway_dimmer` (variable, sans couleur, « Entrée ») et `light.storage_switch` (tout-ou-rien, « Débarras »). Elles n'ont pas de lumière dans le modèle 3D de la démo.
+- Le mock et la démo gagnent deux lumières fictives, chacune dans sa pièce : `light.hallway_dimmer` (variable, sans couleur, éteinte, « Entrée ») et `light.storage_switch` (tout-ou-rien, « Débarras »). Elles n'ont pas de lumière dans le modèle 3D de la démo.
 - Le bouton d'une lumière prend son nom comme libellé accessible.

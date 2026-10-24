@@ -154,6 +154,7 @@ export const entities: HassEntities = {
     },
   }),
   ...createLight('light.hallway_dimmer', {
+    state: 'off',
     attributes: {
       friendly_name: 'Variateur de l’entrée',
       icon: 'hue:bulb-sultan',
