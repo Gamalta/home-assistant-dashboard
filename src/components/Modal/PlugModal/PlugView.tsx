@@ -23,18 +23,21 @@ export function PlugView(props: PlugViewProps) {
         <filter id="plug-shadow" x="-20%" y="-20%" width="140%" height="150%">
           <feDropShadow dx={0} dy={8} stdDeviation={9} floodOpacity={0.22} />
         </filter>
-        <filter
-          id="plug-fiche-shadow"
-          x="-30%"
-          y="-30%"
-          width="160%"
-          height="160%"
-        >
-          <feDropShadow dx={0} dy={5} stdDeviation={5} floodOpacity={0.35} />
-        </filter>
-        <filter id="plug-glow" x="-100%" y="-200%" width="300%" height="500%">
-          <feGaussianBlur stdDeviation={6} />
-        </filter>
+        {/* Halo et ombre de la fiche en dégradés : un filtre serait recalculé à chaque image de l'animation. */}
+        <radialGradient id="plug-glow">
+          {[1, 0.5, 0].map((opacity, i) => (
+            <stop
+              key={i}
+              offset={i / 2}
+              stopOpacity={opacity}
+              style={{stopColor: led, transition: 'stop-color 0.4s'}}
+            />
+          ))}
+        </radialGradient>
+        <radialGradient id="plug-fiche-shadow">
+          <stop offset={0.72} stopOpacity={0.35} />
+          <stop offset={1} stopOpacity={0} />
+        </radialGradient>
         <linearGradient id="plug-plate" x2={0} y2={1}>
           <stop offset={0} stopColor="#ffffff" />
           <stop offset={1} stopColor="#f0f0f2" />
@@ -147,13 +150,12 @@ export function PlugView(props: PlugViewProps) {
       <ellipse
         cx={130}
         cy={26.5}
-        rx={24}
-        ry={9}
-        filter="url(#plug-glow)"
+        rx={30}
+        ry={12}
+        fill="url(#plug-glow)"
         style={{
-          fill: led,
           opacity: {on: 0.8, standby: 0.6, off: 0}[status],
-          transition: 'fill 0.4s, opacity 0.4s',
+          transition: 'opacity 0.4s',
         }}
       />
       <rect
@@ -179,7 +181,6 @@ export function PlugView(props: PlugViewProps) {
 
       <g
         data-testid="fiche"
-        filter="url(#plug-fiche-shadow)"
         style={{
           opacity: plugged ? 1 : 0,
           // Débranchée, la fiche s'éloigne du mur, vers le bas.
@@ -189,6 +190,13 @@ export function PlugView(props: PlugViewProps) {
             'opacity 0.4s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
         }}
       >
+        <ellipse
+          cx={130}
+          cy={128}
+          rx={68}
+          ry={62}
+          fill="url(#plug-fiche-shadow)"
+        />
         <path d="M130 200V300" stroke="url(#plug-cable)" strokeWidth={11} />
         <path
           d="M127.5 200V300"
