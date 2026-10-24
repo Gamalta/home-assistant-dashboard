@@ -2,10 +2,10 @@
 
 Deux niveaux de tests, choisis dans l'[ADR 0010](../adr/0010-strategie-de-tests.md) :
 
-| Type      | Outil                                     | Emplacement                              | Commande        |
-| --------- | ----------------------------------------- | ---------------------------------------- | --------------- |
-| Unitaires | Vitest, Testing Library, jsdom            | `src/**/*.test.ts(x)`, à côté du fichier | `pnpm test`     |
-| E2E       | Playwright (Chromium, WebGL SwiftShader)  | `e2e/*.spec.ts`                          | `pnpm test:e2e` |
+| Type      | Outil                                    | Emplacement                              | Commande        |
+| --------- | ---------------------------------------- | ---------------------------------------- | --------------- |
+| Unitaires | Vitest, Testing Library, jsdom           | `src/**/*.test.ts(x)`, à côté du fichier | `pnpm test`     |
+| E2E       | Playwright (Chromium, WebGL SwiftShader) | `e2e/*.spec.ts`                          | `pnpm test:e2e` |
 
 La CI (`.github/workflows/ci.yml`) lance, dans l'ordre, `pnpm lint`, `pnpm typecheck`, `pnpm test` et `pnpm test:e2e`, à chaque push et sur chaque pull request.
 
@@ -57,7 +57,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - Après un échec, la trace est gardée dans `test-results/` : `pnpm exec playwright show-trace test-results/<test>/trace.zip` (DOM, réseau, console et captures à chaque étape).
 - `pnpm exec playwright show-report` ouvre le rapport HTML du dernier lancement (`playwright-report/`).
 - En CI, le rapport est publié comme artefact `playwright-report` quand le job échoue : le télécharger depuis la page du run, le décompresser, puis `pnpm exec playwright show-report <dossier>`.
-- En local, un serveur déjà lancé sur le port 4317 est réutilisé tel quel : s'il sert un ancien build, l'arrêter avant de relancer les tests.
+- En local, un serveur déjà lancé sur le port 4317 est réutilisé tel quel : s'il sert un ancien build, l'arrêter avant de relancer les tests. Pour lancer deux suites en parallèle (deux worktrees, par exemple), donner à chacune son port : `E2E_PORT=4330 pnpm test:e2e`.
 - Pour regarder l'application telle que les E2E la voient :
 
   ```sh
