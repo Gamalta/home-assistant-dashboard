@@ -21,6 +21,33 @@ La tuile affiche le nombre de lumières allumées. Un appui ouvre la liste de ce
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `scriptEntityId` | Script Home Assistant lancé à la place, par exemple pour éteindre aussi la TV ou les prises. Le dashboard n'éteint alors rien lui-même. |
 
+## Crédit immobilier
+
+```ts
+{
+  type: 'mortgage',
+  label: 'Crédit maison',
+  principal: 250_000,
+  annualRate: 1.45,
+  durationMonths: 300,
+  firstPaymentDate: '2021-06-05',
+  monthlyInsurance: 28,
+}
+```
+
+La tuile affiche la part du capital déjà remboursée. La modale détaille le capital restant dû, la courbe d'amortissement, la mensualité, les échéances payées, les intérêts payés et restants, et la date de fin. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+
+| Option             | Rôle                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `principal`        | Montant emprunté, en euros                                                                  |
+| `annualRate`       | Taux nominal annuel, en %                                                                   |
+| `durationMonths`   | Nombre d'échéances                                                                          |
+| `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
+| `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
+| `label`            | Libellé de la tuile, `Crédit` par défaut ; utile pour plusieurs prêts                       |
+
+Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
+
 ## Ajouter un type de tuile
 
 1. Ajouter son type à l'union `ShortcutConfigType` de `src/configs/sidebar.d.ts`.

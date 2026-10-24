@@ -1,4 +1,5 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
+import type {Mortgage} from '../utils/mortgage';
 
 type SideBarConfigType = {
   weatherEntityId: FilterByDomain<EntityName, 'weather'>;
@@ -12,7 +13,9 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = AllLightsOffShortcutConfigType;
+type ShortcutConfigType =
+  | AllLightsOffShortcutConfigType
+  | MortgageShortcutConfigType;
 
 type AllLightsOffShortcutConfigType = {
   type: 'allLightsOff';
@@ -36,4 +39,10 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type MortgageShortcutConfigType = Mortgage & {
+  type: 'mortgage';
+  /** Libellé de la tuile, pour distinguer plusieurs prêts. */
+  label?: string;
 };

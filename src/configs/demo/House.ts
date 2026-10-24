@@ -52,7 +52,17 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  shortcuts: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'allLightsOff'},
+    {
+      type: 'mortgage',
+      principal: 250_000,
+      annualRate: 1.45,
+      durationMonths: 300,
+      firstPaymentDate: '2021-06-05',
+      monthlyInsurance: 28,
+    },
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {
