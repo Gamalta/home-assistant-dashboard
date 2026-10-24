@@ -1,5 +1,6 @@
 import {useEntities} from '@hakit/core';
 import TrainIcon from '@mui/icons-material/TrainRounded';
+import Typography from '@mui/material/Typography';
 import {useEffect, useState} from 'react';
 import type {TrainsShortcutConfigType} from '../../../configs/sidebar';
 import {
@@ -9,7 +10,7 @@ import {
   upcomingDepartures,
 } from '../../../utils/trains';
 import {TrainsModal} from '../../Modal/TrainsModal';
-import {ShortcutTile} from './ShortcutTile';
+import {ShortcutCard} from './ShortcutCard';
 
 type TrainsShortcutProps = {
   id: string;
@@ -36,18 +37,21 @@ export function TrainsShortcut(props: TrainsShortcutProps) {
 
   return (
     <>
-      <ShortcutTile
+      <ShortcutCard
         id={id}
         icon={<TrainIcon />}
         label={shortcutConfig.label}
-        value={
-          next
-            ? `${formatTime(next.scheduled)} · ${departureStatus(next).label}`
-            : 'Aucun départ'
-        }
-        valueColor={next && departureStatus(next).color}
         onClick={() => setOpen(true)}
-      />
+      >
+        <Typography
+          component="span"
+          sx={{color: next ? departureStatus(next).color : 'text.secondary'}}
+        >
+          {next
+            ? `${formatTime(next.scheduled)} · ${departureStatus(next).label}`
+            : 'Aucun départ'}
+        </Typography>
+      </ShortcutCard>
       <TrainsModal
         id={id}
         open={open}
