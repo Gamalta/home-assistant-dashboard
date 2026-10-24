@@ -1,23 +1,30 @@
-import {render, screen, waitFor, within} from '@testing-library/react';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {createTheme} from '@mui/material/styles';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
-import {dayStart} from '../../../utils/energy';
+import {getBuckets} from '../../../utils/energy';
 import {EnergyModalContent} from './EnergyModalContent';
 
-type State = {state: string; attributes: {unit_of_measurement?: string}};
+type StatisticsMessage = {
+  statistic_ids: string[];
+  start_time: string;
+  end_time: string;
+  period: 'day' | 'month';
+};
 
-const {states, connection} = vi.hoisted(() => ({
-  states: {} as Record<string, State>,
+// Sans ThemeProvider, MUI prend son thème par défaut.
+const {palette} = createTheme();
+
+const {connection} = vi.hoisted(() => ({
   connection: {sendMessagePromise: vi.fn()},
 }));
 
+// Index indisponibles : le jour en cours reste vide, seuls comptent les jours passés.
 vi.mock('@hakit/core', () => ({
-  useEntity: (entityId: string) => states[entityId] ?? null,
+  useEntity: () => null,
   useHass: (selector: (store: {connection: unknown}) => unknown) =>
     selector({connection}),
 }));
-// jsdom ne mesure pas le SVG : le graphe est vérifié en E2E.
-vi.mock('./EnergyHistoryChart', () => ({EnergyHistoryChart: () => null}));
 
 const config: EnergyShortcutConfigType = {
   type: 'energy',
@@ -28,90 +35,145 @@ const config: EnergyShortcutConfigType = {
   prices: {peak: 0.25, offPeak: 0.2},
 };
 
-const yesterday = (change: number, state: number) => [
-  {start: dayStart(new Date(), -1), change, state},
-];
+// Par jour : 6 kWh en heures pleines et 4 en heures creuses en octobre, 5 et 3 les autres mois.
+async function statistics(message: StatisticsMessage) {
+  const {statistic_ids, start_time, end_time, period} = message;
+  const buckets = getBuckets(
+    {start: Date.parse(start_time), end: Date.parse(end_time)},
+    period,
+  ).filter(bucket => bucket.end <= Date.now());
+  return Object.fromEntries(
+    statistic_ids.map(id => [
+      id,
+      buckets.map(({start}) => {
+        const october = new Date(start).getMonth() === 9;
+        const peak = id === 'sensor.index_hp';
+        return {start, change: october ? (peak ? 6 : 4) : peak ? 5 : 3};
+      }),
+    ]),
+  );
+}
+
+const requests = () =>
+  connection.sendMessagePromise.mock.calls.map(([message]) => {
+    const {start_time, end_time, period} = message as StatisticsMessage;
+    return {start: new Date(start_time), end: new Date(end_time), period};
+  });
 
 describe('EnergyModalContent', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    Object.assign(states, {
-      'sensor.puissance': {
-        state: '1500',
-        attributes: {unit_of_measurement: 'VA'},
-      },
-      'sensor.index_hp': {
-        state: '1002',
-        attributes: {unit_of_measurement: 'kWh'},
-      },
-      'sensor.index_hc': {
-        state: '501000',
-        attributes: {unit_of_measurement: 'Wh'},
-      },
-      'sensor.isousc': {state: '30', attributes: {unit_of_measurement: 'A'}},
-    });
-    connection.sendMessagePromise.mockResolvedValue({
-      'sensor.index_hp': yesterday(4, 1000),
-      'sensor.index_hc': yesterday(5, 500),
-    });
+    vi.useFakeTimers({toFake: ['Date']});
+    vi.setSystemTime(new Date('2026-11-10T15:00'));
+    connection.sendMessagePromise.mockImplementation(statistics);
   });
 
-  it('affiche la consommation et le coût du jour et de la veille', async () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('charge le mois en cours et le mois précédent jour par jour, puis l’année mois par mois', async () => {
     render(<EnergyModalContent shortcutConfig={config} />);
+    await screen.findByText(/par rapport à octobre 2026/);
 
-    const today = screen.getByRole('region', {name: 'Aujourd’hui'});
-    expect(await within(today).findByText(/^0,70\s€$/)).toBeInTheDocument();
-    expect(
-      within(today).getByText('Heures pleines : 2 kWh'),
-    ).toBeInTheDocument();
-    expect(
-      within(today).getByText('Heures creuses : 1 kWh'),
-    ).toBeInTheDocument();
-
-    const before = screen.getByRole('region', {name: 'Hier'});
-    expect(within(before).getByText(/^2,00\s€$/)).toBeInTheDocument();
-    expect(
-      within(before).getByText('Heures pleines : 4 kWh'),
-    ).toBeInTheDocument();
-
+    // La veille du mois en cours donne l'index de départ du jour.
+    expect(requests()).toEqual([
+      {
+        start: new Date('2026-10-31T00:00'),
+        end: new Date('2026-12-01T00:00'),
+        period: 'day',
+      },
+      {
+        start: new Date('2026-10-01T00:00'),
+        end: new Date('2026-11-01T00:00'),
+        period: 'day',
+      },
+    ]);
     expect(connection.sendMessagePromise).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'recorder/statistics_during_period',
         statistic_ids: ['sensor.index_hp', 'sensor.index_hc'],
-        period: 'day',
+        types: ['change', 'state'],
         units: {energy: 'kWh'},
       }),
     );
+
+    connection.sendMessagePromise.mockClear();
+    fireEvent.click(screen.getByRole('button', {name: 'Année'}));
+    await screen.findByText(/par rapport à 2025/);
+    expect(requests()).toEqual([
+      {
+        start: new Date('2025-12-01T00:00'),
+        end: new Date('2027-01-01T00:00'),
+        period: 'month',
+      },
+      {
+        start: new Date('2025-01-01T00:00'),
+        end: new Date('2026-01-01T00:00'),
+        period: 'month',
+      },
+    ]);
+    expect(screen.getByRole('button', {name: 'Un an avant'})).toBeDisabled();
+  });
+
+  it('affiche le total, le coût et l’écart d’un mois écoulé avec le précédent', async () => {
+    render(<EnergyModalContent shortcutConfig={config} />);
+    fireEvent.click(screen.getByRole('button', {name: 'Période précédente'}));
+
+    expect(await screen.findByText('310 kWh')).toBeInTheDocument();
+    expect(screen.getByText(/^71,30\s€$/)).toBeInTheDocument();
+    // En orange : on consomme plus.
+    expect(
+      screen.getByText(/^\+29\s% par rapport à septembre 2026$/).parentElement,
+    ).toHaveStyle({color: palette.warning.main});
+    const totals = screen.getByRole('region', {name: 'Totaux'});
+    expect(totals).toHaveTextContent(/Mois précédent240 kWh55,50\s€/);
+  });
+
+  it('compare le mois en cours au même mois un an avant, à date égale', async () => {
+    render(<EnergyModalContent shortcutConfig={config} />);
+    await screen.findByText(/par rapport à octobre 2026/);
+    const calls = connection.sendMessagePromise.mock.calls.length;
+
+    fireEvent.click(screen.getByRole('button', {name: 'Un an avant'}));
+
+    // 72 kWh du 1er au 9 novembre, contre 77 kWh jusqu'au 10 novembre 2025 à 15 h.
+    // En vert : on consomme moins.
+    expect(
+      (
+        await screen.findByText(
+          /^−6\s% par rapport à novembre 2025, à date égale$/,
+        )
+      ).parentElement,
+    ).toHaveStyle({color: palette.success.main});
+    // Seule la période comparée est rechargée.
+    expect(connection.sendMessagePromise).toHaveBeenCalledTimes(calls + 1);
+    expect(requests().pop()?.start).toEqual(new Date('2025-11-01T00:00'));
+  });
+
+  it('recule et avance d’une période, sans dépasser la période en cours', async () => {
+    render(<EnergyModalContent shortcutConfig={config} />);
+    const previous = screen.getByRole('button', {name: 'Période précédente'});
+    const next = screen.getByRole('button', {name: 'Période suivante'});
+    expect(screen.getByText('novembre 2026')).toBeInTheDocument();
+    expect(next).toBeDisabled();
+
+    fireEvent.click(previous);
+    fireEvent.click(previous);
+    expect(screen.getByText('septembre 2026')).toBeInTheDocument();
+    expect(next).toBeEnabled();
+
+    fireEvent.click(next);
+    fireEvent.click(next);
+    expect(screen.getByText('novembre 2026')).toBeInTheDocument();
+    expect(next).toBeDisabled();
+    await screen.findByText(/par rapport à octobre 2026/);
   });
 
   it('affiche des tirets sans statistiques', async () => {
     connection.sendMessagePromise.mockResolvedValue({});
     render(<EnergyModalContent shortcutConfig={config} />);
-    await waitFor(() =>
-      expect(connection.sendMessagePromise).toHaveBeenCalled(),
-    );
 
-    const today = screen.getByRole('region', {name: 'Aujourd’hui'});
-    expect(within(today).getByText('—')).toBeInTheDocument();
-    expect(within(today).getByText('Heures pleines : —')).toBeInTheDocument();
-  });
-
-  it('affiche la charge si l’intensité souscrite est configurée', async () => {
-    const {rerender} = render(<EnergyModalContent shortcutConfig={config} />);
-    await screen.findByText(/^0,70\s€$/);
-    expect(screen.queryByText(/^Charge/)).not.toBeInTheDocument();
-
-    rerender(
-      <EnergyModalContent
-        shortcutConfig={{...config, subscribedCurrentEntityId: 'sensor.isousc'}}
-      />,
-    );
-    expect(
-      screen.getByText('Charge : 1,5 kVA sur 6 kVA souscrits'),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('progressbar', {name: 'Charge'})).toHaveAttribute(
-      'aria-valuenow',
-      '25',
-    );
+    expect(await screen.findAllByText('—')).not.toHaveLength(0);
+    expect(screen.queryByText(/par rapport à/)).not.toBeInTheDocument();
   });
 });

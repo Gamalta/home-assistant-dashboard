@@ -1,21 +1,36 @@
-import {useEntity} from '@hakit/core';
-import LinearProgress from '@mui/material/LinearProgress';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
+import {useState} from 'react';
 import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
-import {useEnergyStatistics} from '../../../hooks/useEnergyStatistics';
+import {useEnergyConsumption} from '../../../hooks/useEnergyConsumption';
 import {
-  formatPower,
-  getDailyConsumption,
-  getSubscribedPower,
-  parseState,
-  toKWh,
+  type Comparison,
+  formatPeriod,
+  getBuckets,
+  getComparisonPeriod,
+  getPeriod,
+  type Scale,
+  STATISTICS_PERIOD,
 } from '../../../utils/energy';
-import {EnergyDaySummary} from './EnergyDaySummary';
-import {EnergyHistoryChart} from './EnergyHistoryChart';
+import {EnergyChart} from './EnergyChart';
+import {EnergyTotals} from './EnergyTotals';
 
-const HISTORY_DAYS = 30;
-const ENTITY_OPTIONS = {returnNullIfNotFound: true} as const;
+const SCALES: Record<Scale, string> = {
+  week: 'Semaine',
+  month: 'Mois',
+  year: 'Année',
+};
+
+const PREVIOUS: Record<Scale, string> = {
+  week: 'Semaine précédente',
+  month: 'Mois précédent',
+  year: 'Année précédente',
+};
 
 type EnergyModalContentProps = {
   shortcutConfig: EnergyShortcutConfigType;
@@ -23,76 +38,118 @@ type EnergyModalContentProps = {
 
 export function EnergyModalContent(props: EnergyModalContentProps) {
   const {shortcutConfig} = props;
-  const {
-    powerEntityId,
-    peakIndexEntityId,
-    offPeakIndexEntityId,
-    subscribedCurrentEntityId,
-    prices,
-  } = shortcutConfig;
-  const power = useEntity(powerEntityId, ENTITY_OPTIONS);
-  const peakIndex = useEntity(peakIndexEntityId, ENTITY_OPTIONS);
-  const offPeakIndex = useEntity(offPeakIndexEntityId, ENTITY_OPTIONS);
-  const subscribedCurrent = useEntity(
-    subscribedCurrentEntityId ?? 'unknown',
-    ENTITY_OPTIONS,
-  );
-  const statistics = useEnergyStatistics(
-    peakIndexEntityId,
-    offPeakIndexEntityId,
-    HISTORY_DAYS,
-  );
+  const {peakIndexEntityId, offPeakIndexEntityId, prices} = shortcutConfig;
+  const [scale, setScale] = useState<Scale>('month');
+  const [comparison, setComparison] = useState<Comparison>('previous');
+  // 0 pour la période en cours, -1 pour la précédente…
+  const [offset, setOffset] = useState(0);
 
-  const days = getDailyConsumption(
-    statistics,
-    {
-      peak: toKWh(peakIndex?.state, peakIndex?.attributes.unit_of_measurement),
-      offPeak: toKWh(
-        offPeakIndex?.state,
-        offPeakIndex?.attributes.unit_of_measurement,
-      ),
-    },
-    HISTORY_DAYS,
-    new Date(),
+  const now = new Date();
+  const unit = STATISTICS_PERIOD[scale];
+  const period = getPeriod(scale, now, offset);
+  const referencePeriod = getComparisonPeriod(scale, period, comparison);
+  const current = useEnergyConsumption(
+    peakIndexEntityId,
+    offPeakIndexEntityId,
+    getBuckets(period, unit),
+    unit,
+    now.getTime(),
   );
-  const powerValue = parseState(power?.state);
-  const powerUnit = power?.attributes.unit_of_measurement ?? 'VA';
-  const subscribedPower = getSubscribedPower(
-    parseState(subscribedCurrent?.state),
+  const reference = useEnergyConsumption(
+    peakIndexEntityId,
+    offPeakIndexEntityId,
+    getBuckets(referencePeriod, unit),
+    unit,
+    now.getTime(),
   );
+  // En année, l'année précédente est aussi celle d'un an avant.
+  const shownComparison = scale === 'year' ? 'previous' : comparison;
+  const comparisonLabel =
+    shownComparison === 'previous' ? PREVIOUS[scale] : 'Un an avant';
 
   return (
-    <Stack spacing={2} sx={{width: 500}}>
-      <Stack spacing={1}>
-        <Stack direction="row" spacing={2}>
-          <EnergyDaySummary
-            title="Aujourd’hui"
-            day={days[HISTORY_DAYS - 1]}
-            prices={prices}
-          />
-          <EnergyDaySummary
-            title="Hier"
-            day={days[HISTORY_DAYS - 2]}
-            prices={prices}
-          />
-        </Stack>
-        <Typography variant="caption" color="textSecondary">
-          Coût estimé aux tarifs configurés, hors abonnement.
-        </Typography>
-      </Stack>
-      {subscribedPower !== null && (
-        <Stack spacing={1}>
-          <Typography variant="body2">
-            {`Charge : ${formatPower(powerValue, powerUnit)} sur ${formatPower(subscribedPower, 'VA')} souscrits`}
+    <Stack direction="row" spacing={5}>
+      <EnergyChart
+        scale={scale}
+        current={current}
+        reference={reference}
+        referencePeriod={referencePeriod}
+        now={now.getTime()}
+        comparisonLabel={comparisonLabel}
+        prices={prices}
+      />
+      <Stack spacing={3} sx={{width: 300}}>
+        <ToggleButtonGroup
+          exclusive
+          fullWidth
+          value={scale}
+          onChange={(_, value: Scale | null) => {
+            if (!value) return;
+            setScale(value);
+            setOffset(0);
+          }}
+        >
+          {Object.entries(SCALES).map(([value, label]) => (
+            <ToggleButton key={value} value={value}>
+              {label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+        <Stack
+          direction="row"
+          sx={{alignItems: 'center', justifyContent: 'space-between'}}
+        >
+          <IconButton
+            aria-label="Période précédente"
+            onClick={() => setOffset(offset - 1)}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+          <Typography
+            variant="subtitle1"
+            sx={{'&::first-letter': {textTransform: 'uppercase'}}}
+          >
+            {formatPeriod(scale, period)}
           </Typography>
-          <LinearProgress
-            variant="determinate"
-            aria-label="Charge"
-            value={Math.min(100, ((powerValue ?? 0) / subscribedPower) * 100)}
-          />
+          <IconButton
+            aria-label="Période suivante"
+            disabled={offset === 0}
+            onClick={() => setOffset(offset + 1)}
+          >
+            <ChevronRightIcon />
+          </IconButton>
         </Stack>
-      )}
-      <EnergyHistoryChart days={days} />
+        <Stack spacing={1}>
+          <Typography variant="subtitle2" color="textSecondary">
+            Comparer à
+          </Typography>
+          {/* Largeur selon le libellé : « Semaine précédente » ne tient pas dans une moitié. */}
+          <ToggleButtonGroup
+            exclusive
+            value={shownComparison}
+            onChange={(_, value: Comparison | null) =>
+              value && setComparison(value)
+            }
+          >
+            <ToggleButton value="previous" sx={{flex: 'auto'}}>
+              {PREVIOUS[scale]}
+            </ToggleButton>
+            <ToggleButton
+              value="lastYear"
+              disabled={scale === 'year'}
+              sx={{flex: 'auto'}}
+            >
+              Un an avant
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
+        <EnergyTotals
+          current={current}
+          reference={reference}
+          comparisonLabel={comparisonLabel}
+          prices={prices}
+        />
+      </Stack>
     </Stack>
   );
 }
