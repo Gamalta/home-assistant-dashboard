@@ -113,6 +113,8 @@ export function ColorTempTab() {
               mode="temperature"
               canvasRef={canvasRef}
               entity={entity}
+              minKelvin={entitiesMinSupportedKelvin}
+              maxKelvin={entitiesMaxSupportedKelvin}
             />
           ))}
         <ActivePicker
