@@ -18,7 +18,8 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | AmbilightConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +67,9 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type AmbilightConfigType = BaseItemConfigType & {
+  type: 'ambilight';
+  lightEntityId: FilterByDomain<EntityName, 'light'>;
 };
