@@ -31,7 +31,7 @@ export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
       sx={{justifyContent: 'space-between', alignItems: 'center'}}
     >
       <Typography>{label}</Typography>
-      <Typography color={isWarning?.(entity) ? 'error' : 'text.secondary'}>
+      <Typography color={isWarning?.(entity) ? 'error' : 'textSecondary'}>
         {formatEntity(entity)}
       </Typography>
     </Stack>

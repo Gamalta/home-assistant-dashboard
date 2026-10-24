@@ -35,7 +35,7 @@ export function TabletInfo(props: TabletInfoProps) {
   return (
     <>
       <Divider />
-      <Typography variant="subtitle2" color="text.secondary">
+      <Typography variant="subtitle2" color="textSecondary">
         Tablette murale
       </Typography>
       <SystemInfoDisplay

@@ -26,7 +26,7 @@ export function BackupInfo(props: BackupInfoProps) {
   return (
     <>
       <Divider />
-      <Typography variant="subtitle2" color="text.secondary">
+      <Typography variant="subtitle2" color="textSecondary">
         Sauvegardes
       </Typography>
       <SystemInfoDisplay

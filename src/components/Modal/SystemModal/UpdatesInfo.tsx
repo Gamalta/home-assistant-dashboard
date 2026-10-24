@@ -15,7 +15,7 @@ export function UpdatesInfo() {
         sx={{justifyContent: 'space-between', alignItems: 'center'}}
       >
         <Typography>Mises à jour</Typography>
-        <Typography color="text.secondary">
+        <Typography color="textSecondary">
           {updates.length === 0
             ? 'Aucune'
             : `${updates.length} disponible${updates.length > 1 ? 's' : ''}`}
@@ -25,7 +25,7 @@ export function UpdatesInfo() {
         <Typography
           key={update.entity_id}
           variant="body2"
-          color="text.secondary"
+          color="textSecondary"
         >
           {update.attributes.friendly_name} :{' '}
           {update.attributes.installed_version} →{' '}
