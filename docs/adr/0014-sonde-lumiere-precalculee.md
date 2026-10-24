@@ -1,6 +1,6 @@
 # 0014 — Sonde de lumière précalculée, HDR chargé avec les reflets seulement
 
-- Statut : Proposé
+- Statut : Remplacé par 0030
 - Date : 2026-10-24
 - Issue : #11
 

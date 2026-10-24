@@ -18,24 +18,6 @@ test('garde une option graphique après rechargement', async ({page}) => {
   await expect(option(page, 'Murs transparents')).not.toBeChecked();
 });
 
-test('ne télécharge pas le HDR avec les options par défaut', async ({page}) => {
-  const hdrRequests: string[] = [];
-  page.on('request', request => {
-    if (request.url().includes('.hdr')) hdrRequests.push(request.url());
-  });
-  await page.goto('/');
-  await waitForScene(page);
-  expect(hdrRequests).toEqual([]);
-});
-
-test('télécharge le HDR dès que les reflets sont activés', async ({page}) => {
-  await page.goto('/');
-  await openSystemModal(page);
-  const hdrRequest = page.waitForRequest(/\.hdr$/);
-  await option(page, "Reflets d'environnement").check();
-  await hdrRequest;
-});
-
 // Capture du canvas, sans les boutons des pièces.
 const canvasShot = (page: Page) =>
   page
@@ -71,4 +53,12 @@ test('redessine la scène après un changement d’option', async ({page}) => {
       timeout: 30_000,
     })
     .toBe(false);
+});
+
+// Trop lourds pour la tablette, remplacés par le ciel et le soleil (ADR 0030).
+test('ne propose plus les reflets d’environnement', async ({page}) => {
+  await page.goto('/');
+  await openSystemModal(page);
+  await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
+  await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });

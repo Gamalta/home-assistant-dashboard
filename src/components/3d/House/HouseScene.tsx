@@ -1,4 +1,5 @@
 import {Canvas} from '@react-three/fiber';
+import * as THREE from 'three';
 import Stack from '@mui/material/Stack';
 import {useRef, useState} from 'react';
 import {
@@ -13,12 +14,11 @@ import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
 import {Scene} from './Scene';
-import {AmbientLight} from './AmbientLight';
+import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
 import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
-import {EnvironmentLighting} from './EnvironmentLighting';
 import {LightShadows} from './LightShadows';
 import {Precompile} from './Precompile';
 import {ModelLoader} from './ModelLoader';
@@ -41,7 +41,6 @@ export function HouseScene(props: HouseSceneProps) {
   const graphics = [
     configuration.hideWallsShader,
     configuration.heatmapShader,
-    configuration.environmentReflections,
     configuration.shadows,
   ].join();
   const [compiled, setCompiled] = useState<string>();
@@ -64,13 +63,15 @@ export function HouseScene(props: HouseSceneProps) {
       <Canvas
         frameloop={ready ? 'demand' : 'never'}
         camera={{position: camera.position, fov: camera.fov}}
-        flat
         // R3F réapplique `shadows` à gl.shadowMap à chaque rendu du Canvas :
         // sans la prop, il éteint les ombres. PCF explicite : three remplace
         // PCFSoft, obsolète, au premier rendu d'ombre, ce qui change la clé
         // des programmes.
         shadows={configuration.shadows && 'percentage'}
         gl={backend.createRenderer}
+        // Garde la teinte des lampes et adoucit leurs zones saturées. R3F
+        // n'impose son tone mapping qu'à la création.
+        onCreated={({gl}) => (gl.toneMapping = THREE.NeutralToneMapping)}
       >
         <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
           {configuration.debug && (
@@ -94,22 +95,17 @@ export function HouseScene(props: HouseSceneProps) {
             backend={backend}
             hideWalls={configuration.hideWallsShader}
             heatmap={configuration.heatmapShader}
-            diffuseOnly={!configuration.environmentReflections}
             rooms={rooms}
           />
           <LightShadows
             scene={scene}
             enabled={configuration.shadows}
-            reflections={configuration.environmentReflections}
             moving={moving}
           />
-          <AmbientLight />
+          <Daylight orientation={houseConfig?.house.orientation} />
           {rooms.map(room => (
             <Room3d key={room.id} room={room} model={scene} />
           ))}
-          <EnvironmentLighting
-            reflections={configuration.environmentReflections}
-          />
           <Precompile
             key={graphics}
             backend={backend}

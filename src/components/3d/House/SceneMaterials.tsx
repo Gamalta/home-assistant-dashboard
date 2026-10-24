@@ -11,8 +11,6 @@ type SceneMaterialsProps = {
   backend: RenderBackend;
   hideWalls: boolean;
   heatmap: boolean;
-  /** Éclairage diffus seul (Lambert) : voir `toLambert`. */
-  diffuseOnly: boolean;
   rooms: HouseConfigType['rooms'];
 };
 
@@ -73,7 +71,7 @@ function toLambert(source: THREE.Material) {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {scene, backend, hideWalls, heatmap, diffuseOnly, rooms} = props;
+  const {scene, backend, hideWalls, heatmap, rooms} = props;
   const invalidate = useThree(state => state.invalidate);
 
   const heatmapPoints = useHeatmapPoints(rooms);
@@ -105,11 +103,8 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         return {material};
       }
 
-      let original = gltfMaterial;
-      if (diffuseOnly) {
-        original = toLambert(gltfMaterial);
-        if (original !== gltfMaterial) createdMaterials.push(original);
-      }
+      const original = toLambert(gltfMaterial);
+      if (original !== gltfMaterial) createdMaterials.push(original);
 
       let material = original;
       let fade: THREE.Material | undefined;
@@ -191,7 +186,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       heatmapMaterials.current = [];
       invalidate();
     };
-  }, [scene, backend, hideWalls, showHeatmap, diffuseOnly, invalidate]);
+  }, [scene, backend, hideWalls, showHeatmap, invalidate]);
 
   // Le fondu est transparent : les murs se dessinent du plus loin au plus
   // proche de la caméra (voir createWallFade).

@@ -6,7 +6,6 @@ import {enableSingleTapShadows} from './shadowSampling';
 type LightShadowsProps = {
   scene: THREE.Object3D;
   enabled: boolean;
-  reflections: boolean;
   moving: RefObject<boolean>;
 };
 
@@ -17,7 +16,7 @@ const SPOT_SHADOW_FOCUS = 0.8;
 const SHADOW_FAR = 20;
 
 export function LightShadows(props: LightShadowsProps) {
-  const {scene, enabled, reflections, moving} = props;
+  const {scene, enabled, moving} = props;
   const gl = useThree(state => state.gl);
   const invalidate = useThree(state => state.invalidate);
   const suspended = useRef(false);
@@ -45,7 +44,7 @@ export function LightShadows(props: LightShadowsProps) {
       gl instanceof THREE.WebGLRenderer
         ? gl.capabilities.maxTextures
         : Infinity;
-    const budget = maxTextures - 1 - (reflections ? 1 : 0);
+    const budget = maxTextures - 1;
     if (lights.length > budget) {
       console.warn(
         `Ombres limitées à ${budget} lumières sur ${lights.length} (unités de texture).`,
@@ -79,7 +78,7 @@ export function LightShadows(props: LightShadowsProps) {
       });
       invalidate();
     };
-  }, [enabled, reflections, gl, scene, lights, moving, invalidate]);
+  }, [enabled, gl, scene, lights, moving, invalidate]);
 
   // Le nombre d'ombres fait partie de la clé de programme, receiveShadow est un
   // uniform : suspendre la lecture des ombres ne recompile aucun shader.

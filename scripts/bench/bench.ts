@@ -22,7 +22,6 @@ import {formatReport, toRow, type BenchRun} from './report.ts';
 const SCENARIOS: Record<string, GraphicsOptions> = {
   defaut: {},
   ombres: {shadows: true},
-  reflets: {environmentReflections: true},
   chaleur: {heatmapShader: true},
 };
 const VIEWPORT = {width: 1280, height: 800};
@@ -31,7 +30,7 @@ const {values: args} = parseArgs({
   options: {
     url: {type: 'string'},
     houses: {type: 'string'},
-    options: {type: 'string', default: 'defaut,ombres,reflets'},
+    options: {type: 'string', default: 'defaut,ombres'},
     cpu: {type: 'string', default: '1'},
     ci: {type: 'boolean', default: false},
     compare: {type: 'string'},
