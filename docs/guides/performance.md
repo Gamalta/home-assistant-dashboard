@@ -28,7 +28,11 @@ La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesu
 | `browserFps` bien inférieur à `fps`               | Coût hors rendu : React, étiquettes HTML, layout                                          |
 | `worstMs` élevé dans `__dashboardMotionBenchmark` | Saccade : recompilation de shader ou tâche longue                                         |
 
-Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md).
+Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. `e2e/ombres.spec.ts` montre comment compter les programmes liés (`linkProgram`) pendant une vraie rotation à la souris. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md).
+
+## Ombres
+
+Les ombres ne sont lues qu'au repos ([ADR 0005](../adr/0005-qualite-adaptative-en-mouvement.md)). Pendant un geste, `LightShadows` coupe l'uniform `receiveShadow` des meshes, sans toucher aux lumières ([ADR 0012](../adr/0012-suspendre-les-ombres-par-receiveshadow.md)). Pendant une interaction, changer `castShadow`, `gl.shadowMap` ou le nombre de lumières visibles recompile tous les matériaux.
 
 ## Simuler la tablette
 
