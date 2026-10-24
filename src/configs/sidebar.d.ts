@@ -12,12 +12,19 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = AllLightsOffShortcutConfigType;
+type ShortcutConfigType =
+  | AllLightsOffShortcutConfigType
+  | MediaShortcutConfigType;
 
 type AllLightsOffShortcutConfigType = {
   type: 'allLightsOff';
   /** Script Home Assistant à lancer à la place de l'extinction des lumières de la maison. */
   scriptEntityId?: FilterByDomain<EntityName, 'script'>;
+};
+
+type MediaShortcutConfigType = {
+  type: 'media';
+  mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
 };
 
 type SystemGraphConfigType = {

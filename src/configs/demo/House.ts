@@ -52,7 +52,11 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  shortcuts: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'allLightsOff'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {

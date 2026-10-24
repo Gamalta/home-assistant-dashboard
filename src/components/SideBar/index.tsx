@@ -45,11 +45,10 @@ export function SideBar() {
           bgcolor: 'background.paper',
           borderRadius: 2,
           width: '100%',
-          // Prend la place restante et défile : avec beaucoup de tuiles, la
-          // page ne doit pas s'allonger sous la scène 3D.
+          // Prend la place restante, sans plus : la page ne doit pas
+          // s'allonger sous la scène 3D.
           flex: 1,
           minHeight: 0,
-          overflowY: 'auto',
         }}
       >
         {sideBarConfig?.shortcuts && (

@@ -1,11 +1,12 @@
 import {useEntities} from '@hakit/core';
 import PowerIcon from '@mui/icons-material/PowerSettingsNewRounded';
+import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import type {AllLightsOffShortcutConfigType} from '../../../configs/sidebar';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {getHouseLightIds} from '../../../utils/house';
 import {AllLightsOffModal} from '../../Modal/AllLightsOffModal';
-import {ShortcutTile} from './ShortcutTile';
+import {ShortcutCard} from './ShortcutCard';
 
 type AllLightsOffShortcutProps = {
   id: string;
@@ -26,15 +27,18 @@ export function AllLightsOffShortcut(props: AllLightsOffShortcutProps) {
 
   return (
     <>
-      <ShortcutTile
+      <ShortcutCard
         id={id}
         icon={<PowerIcon />}
         label="Tout éteindre"
-        value={
-          count ? `${count} allumée${count > 1 ? 's' : ''}` : 'Tout est éteint'
-        }
         onClick={() => setOpen(true)}
-      />
+      >
+        <Typography component="span">
+          {count
+            ? `${count} allumée${count > 1 ? 's' : ''}`
+            : 'Tout est éteint'}
+        </Typography>
+      </ShortcutCard>
       <AllLightsOffModal
         id={id}
         open={open}
