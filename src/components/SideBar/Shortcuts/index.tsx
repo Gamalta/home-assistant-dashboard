@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import {useRef, useState} from 'react';
 import type {ShortcutConfigType} from '../../../configs/sidebar';
 import {carouselPage} from '../../../utils/carousel';
-import {AllLightsOffShortcut} from './AllLightsOffShortcut';
 import {MediaShortcut} from './MediaShortcut';
 
 type ShortcutsProps = {
@@ -52,14 +51,6 @@ export function Shortcuts(props: ShortcutsProps) {
         {shortcuts.map((shortcut, index) => {
           const id = `layoutid-shortcut-${index}`;
           switch (shortcut.type) {
-            case 'allLightsOff':
-              return (
-                <AllLightsOffShortcut
-                  key={id}
-                  id={id}
-                  shortcutConfig={shortcut}
-                />
-              );
             case 'media':
               return (
                 <MediaShortcut key={id} id={id} shortcutConfig={shortcut} />
