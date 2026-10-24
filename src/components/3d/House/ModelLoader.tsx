@@ -3,16 +3,18 @@ import {CircularProgress, Typography, Stack} from '@mui/material';
 
 export function ModelLoader() {
   const {progress} = useProgress();
+  // Une fois les fichiers téléchargés, il reste à compiler les shaders.
+  const downloading = progress < 100;
   return (
     <Stack
       spacing={1}
       sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
     >
       <CircularProgress
-        variant={progress === undefined ? 'indeterminate' : 'determinate'}
+        variant={downloading ? 'determinate' : 'indeterminate'}
         value={progress}
       />
-      {progress !== undefined && (
+      {downloading && (
         <Typography variant="caption">{Math.round(progress)} %</Typography>
       )}
     </Stack>
