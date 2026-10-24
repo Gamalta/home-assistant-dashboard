@@ -61,7 +61,7 @@ const defaultConfiguration: ConfigurationOptions = {
   heatmapShader: false,
   environmentReflections: false,
   shadows: false,
-  webGPU: webGPUSupported,
+  webGPU: false,
 };
 
 const defaultRendererInfo: RendererInfo = {

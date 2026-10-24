@@ -33,3 +33,7 @@ Pour compter les draw calls et les compilations, enregistrer une trace dans l'on
 ## Simuler la tablette
 
 Dans les DevTools, onglet Performance, régler **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
+
+## Moteur de rendu
+
+Le benchmark mesure le moteur actif. WebGL est le moteur par défaut ([ADR 0017](../adr/0017-webgl-par-defaut.md)). Pour comparer avec WebGPU, l'activer dans la modale Système, puis refaire la même mesure.
