@@ -1,6 +1,6 @@
 # 0016 — Tuiles de raccourcis dans la barre latérale
 
-- Statut : Proposé
+- Statut : Remplacé par [0035](0035-carrousel-de-cartes-et-actions.md)
 - Date : 2026-10-24
 - Issue : #15
 

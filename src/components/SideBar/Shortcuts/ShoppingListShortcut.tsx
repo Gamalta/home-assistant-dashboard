@@ -1,9 +1,10 @@
 import CartIcon from '@mui/icons-material/ShoppingCartRounded';
+import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import type {ShoppingListShortcutConfigType} from '../../../configs/sidebar';
 import {useTodoList} from '../../../hooks/useTodoList';
 import {ShoppingListModal} from '../../Modal/ShoppingListModal';
-import {ShortcutTile} from './ShortcutTile';
+import {ShortcutCard} from './ShortcutCard';
 
 type ShoppingListShortcutProps = {
   id: string;
@@ -21,13 +22,16 @@ export function ShoppingListShortcut(props: ShoppingListShortcutProps) {
 
   return (
     <>
-      <ShortcutTile
+      <ShortcutCard
         id={id}
         icon={<CartIcon />}
         label={label}
-        value={count ? `${count} article${count > 1 ? 's' : ''}` : 'Liste vide'}
         onClick={() => setOpen(true)}
-      />
+      >
+        <Typography component="span">
+          {count ? `${count} article${count > 1 ? 's' : ''}` : 'Liste vide'}
+        </Typography>
+      </ShortcutCard>
       <ShoppingListModal
         id={id}
         open={open}
