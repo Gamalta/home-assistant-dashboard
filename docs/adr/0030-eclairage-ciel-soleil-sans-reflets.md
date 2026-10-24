@@ -22,6 +22,16 @@ Les intensités suivent le soleil : le ciel varie de 0,45 la nuit à 0,6 le jour
 
 Le rendu passe en tone mapping Neutral (Khronos PBR Neutral). Il garde la teinte des lampes et adoucit leurs zones saturées ; ACES délavait les murs et AgX les couleurs. Il est fixé dans `onCreated`, car React Three Fiber n'impose le sien qu'à la création.
 
+### Ambiances à l'essai
+
+Le propriétaire trouve le rendu du soleil réel trop réaliste et peu flatteur. Il veut un beau rendu, plus doux et léger. Dix ambiances (`src/rendering/lightingStyles.ts`) se choisissent donc dans la modale Système, le temps qu'il en retienne une :
+
+- chacune règle les mêmes lumières fixes : ciel, sol, lumière ambiante, soleil réel ou fixe ;
+- elle fixe aussi le tone mapping ;
+- deux d'entre elles teintent en plus les sols et les murs.
+
+Changer d'ambiance ne recompile que si le tone mapping ou les teintes changent, et seulement au moment du choix. Une fois l'ambiance retenue, la table se réduit à elle, ou aux deux ou trois gardées comme option.
+
 ## Conséquences
 
 - Mesuré sur M4, en 1440 × 900 @2, au repos :

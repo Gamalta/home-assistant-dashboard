@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import type {LightingStyleId} from '../rendering/lightingStyles';
 
 export type ConfigurationOptions = {
   debug: boolean;
@@ -13,6 +14,7 @@ export type ConfigurationOptions = {
   heatmapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
+  lightingStyle: LightingStyleId;
 };
 
 export type RendererInfo = {
@@ -60,6 +62,7 @@ const defaultConfiguration: ConfigurationOptions = {
   heatmapShader: false,
   shadows: false,
   webGPU: webGPUSupported,
+  lightingStyle: 'soleil',
 };
 
 const defaultRendererInfo: RendererInfo = {
