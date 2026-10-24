@@ -19,7 +19,7 @@ type RoomItemConfigType =
   | TemperatureConfigType
   | ShutterConfigType
   | DestkopConfigType
-  | OutletConfigType;
+  | OutletConfigType
   | Printer3dConfigType;
 
 type BaseItemConfigType =
