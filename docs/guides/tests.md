@@ -52,6 +52,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
 - En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée. Seul `e2e/ombres.spec.ts` active les ombres. Il le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
 - Les tests de budget (`e2e/budget.spec.ts`) mesurent avec `scripts/bench/measure.ts`, comme `pnpm bench`. Ils ne vérifient que des comptes, jamais une durée ([ADR 0029](../adr/0029-budget-performance-automatise.md)).
+- Pour vérifier une animation image par image, le rendu logiciel saute trop d'images : piloter l'horloge (`page.clock.install()` avant `goto`, puis `pauseAt` et `runFor(16)` entre deux mesures), comme le test d'ouverture de `e2e/modales-lumiere-volet.spec.ts`.
 
 ## Déboguer un E2E
 

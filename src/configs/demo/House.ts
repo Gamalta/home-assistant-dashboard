@@ -363,5 +363,29 @@ export const HouseConfig: HouseConfigType = {
         },
       ],
     },
+    {
+      id: 'Hallway',
+      name: 'Entrée',
+      position: {x: 1.5, y: 2.5, z: 4},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.hallway_dimmer',
+        },
+      ],
+    },
+    {
+      id: 'Storage',
+      name: 'Débarras',
+      position: {x: 4, y: 2.5, z: 4.6},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.storage_switch',
+        },
+      ],
+    },
   ],
 };

@@ -1,6 +1,11 @@
 import type {HassEntityWithService} from '@hakit/core';
 import {describe, expect, it} from 'vitest';
-import {LightTab, lightExtraEntityIds, supportedLightTab} from './light';
+import {
+  LightTab,
+  lightColor,
+  lightExtraEntityIds,
+  supportedLightTab,
+} from './light';
 
 const EFFECT = 4;
 
@@ -52,5 +57,30 @@ describe('réglages dérivés du nom de la lumière', () => {
       effectSpeed: 'number.salon_strip_effect_speed',
       intensity: 'number.salon_strip_intensity',
     });
+  });
+});
+
+// Seuls les modes de couleur et la couleur calculée par @hakit/core comptent.
+const lightWithColor = (modes: string[], color: [number, number, number]) =>
+  ({
+    attributes: {supported_color_modes: modes},
+    custom: {color},
+  }) as unknown as HassEntityWithService<'light'>;
+
+describe('lightColor', () => {
+  it('garde la couleur d’une lumière de couleur', () => {
+    expect(lightColor(lightWithColor(['hs'], [0, 0, 255]))).toEqual([
+      0, 0, 255,
+    ]);
+  });
+
+  it('donne un blanc chaud à une lumière tout-ou-rien', () => {
+    const [red, green, blue] = lightColor(
+      lightWithColor(['onoff'], [33, 33, 33]),
+    );
+
+    expect(red).toBe(255);
+    expect(green).toBeGreaterThan(100);
+    expect(green).toBeGreaterThan(blue);
   });
 });

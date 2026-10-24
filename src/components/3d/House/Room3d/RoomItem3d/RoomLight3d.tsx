@@ -3,6 +3,7 @@ import {useFrame, useThree} from '@react-three/fiber';
 import {LightConfigType} from '../../../../../configs/house';
 import {useEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
+import {lightColor} from '../../../../../utils/entity/light';
 
 type RoomLight3dProps = {
   lightConfig: LightConfigType;
@@ -57,7 +58,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
       ? ((light?.attributes.brightness ?? 255) / 255) * maxIntensity
       : 0;
 
-  const color = light?.custom?.color;
+  const color = light ? lightColor(light) : undefined;
   const colorKey = color?.join(',');
   useEffect(() => {
     if (!color || !lightObject) return;
