@@ -18,7 +18,9 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | BatteryConfigType
+  | SmokeConfigType;
 
 type BaseItemConfigType =
   | {
@@ -66,4 +68,20 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type BatteryConfigType = BaseItemConfigType & {
+  type: 'battery';
+  name: string;
+  batteryEntityId: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type SmokeConfigType = BaseItemConfigType & {
+  type: 'smoke';
+  smokeEntityId: FilterByDomain<EntityName, 'binary_sensor'>;
+  heatEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  batteryEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  batteryLowEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  tamperEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  testEntityId?: FilterByDomain<EntityName, 'button'>;
 };
