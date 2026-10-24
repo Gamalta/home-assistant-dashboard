@@ -25,6 +25,7 @@ type MeshUserData = {
 const baseName = (material: THREE.Material) =>
   material.name.toLowerCase().replace(/\.\d+$/, '');
 
+// Même règle dans scripts/optimize-model.sh, qui ne fusionne pas deux rôles.
 function getMaterialKind(material: THREE.Material): MaterialKind {
   const name = baseName(material);
   if (name.startsWith('room_')) return 'ground';
