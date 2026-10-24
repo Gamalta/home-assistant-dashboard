@@ -37,17 +37,17 @@ export const SideBarConfig: SideBarConfigType = {
     graphs: [
       {
         color: 'red',
-        label: 'Mémoire:',
+        label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
         color: 'orange',
-        label: 'Température:',
+        label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
         color: 'cyan',
-        label: 'Processeur:',
+        label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],

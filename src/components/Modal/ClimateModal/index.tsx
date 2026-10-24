@@ -132,12 +132,15 @@ export default function ClimateModal(props: ClimateModalProps) {
         temperatureEntity &&
         {
           control: (
-            <IconButton onClick={() => setTab('history')}>
+            <IconButton
+              aria-label="Historique"
+              onClick={() => setTab('history')}
+            >
               <AssessmentIcon />
             </IconButton>
           ),
           history: (
-            <IconButton onClick={() => setTab('control')}>
+            <IconButton aria-label="Réglage" onClick={() => setTab('control')}>
               <TuneIcon />
             </IconButton>
           ),
