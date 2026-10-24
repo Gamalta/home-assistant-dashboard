@@ -19,3 +19,20 @@ test('éteint toutes les lumières allumées depuis la tuile « Tout éteindre �
   await expect(title).toBeHidden();
   await expect(tile).toContainText('Tout est éteint');
 });
+
+// Taille de la tablette murale en pixels CSS.
+test.describe('écran de la tablette', () => {
+  test.use({viewport: {width: 1280, height: 800}});
+
+  test('garde la page à la hauteur de l’écran, tuiles comprises', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await waitForScene(page);
+
+    const height = await page.evaluate(
+      () => document.documentElement.scrollHeight,
+    );
+    expect(height).toBeLessThanOrEqual(800);
+  });
+});
