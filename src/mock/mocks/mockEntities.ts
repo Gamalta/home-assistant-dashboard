@@ -257,4 +257,58 @@ export const entities: HassEntities = {
       unit_of_measurement: '%',
     },
   }),
+
+  // Appareils sur pile de la démo : trois interrupteurs sans fil, dont un à
+  // changer, et le détecteur de fumée du couloir.
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.salon_button_battery', {
+    state: '54',
+    attributes: {
+      friendly_name: 'Bouton du séjour',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_tamper', {
+    attributes: {
+      friendly_name: 'Autoprotection du détecteur du couloir',
+      device_class: 'tamper',
+    },
+  }),
+  ...createSensor('sensor.hallway_smoke_detector_battery', {
+    state: '90',
+    attributes: {
+      friendly_name: 'Pile du détecteur du couloir',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('button.hallway_smoke_detector_test', {
+    state: 'unknown',
+    attributes: {friendly_name: 'Test du détecteur du couloir'},
+  }),
 } as const;
