@@ -19,7 +19,6 @@ import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
 import {EnvironmentLighting} from './EnvironmentLighting';
 import {LightShadows} from './LightShadows';
-import nightEnvironment from '../assets/dikhololo_night_1k.hdr?url';
 
 type HouseSceneProps = {
   backend: RenderBackend;
@@ -79,7 +78,6 @@ export function HouseScene(props: HouseSceneProps) {
           <Room3d key={room.id} room={room} />
         ))}
         <EnvironmentLighting
-          file={nightEnvironment}
           reflections={configuration.environmentReflections}
         />
       </PerformanceMonitor>
