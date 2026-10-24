@@ -11,6 +11,7 @@ export function ModelLoader() {
       sx={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
     >
       <CircularProgress
+        aria-label="Chargement de la vue 3D"
         variant={downloading ? 'determinate' : 'indeterminate'}
         value={progress}
       />

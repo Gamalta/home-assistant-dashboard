@@ -42,7 +42,9 @@ test('redessine la scène après un changement d’option', async ({page}) => {
 
   await openSystemModal(page);
   await option(page, 'Murs transparents').uncheck();
-  await expect(page.getByRole('progressbar')).toHaveCount(0);
+  await expect(
+    page.getByRole('progressbar', {name: 'Chargement de la vue 3D'}),
+  ).toHaveCount(0);
   // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
   const title = page.getByRole('heading', {name: 'Système'});
   await title.locator('..').getByRole('button').last().click();

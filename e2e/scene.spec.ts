@@ -35,8 +35,12 @@ test('rend la maison en 3D', async ({page}) => {
 test('affiche le chargeur jusqu’à ce que la scène soit prête', async ({
   page,
 }) => {
+  // La carte du crédit, dans le carrousel, a aussi une barre de progression.
+  const loader = page.getByRole('progressbar', {
+    name: 'Chargement de la vue 3D',
+  });
   await page.goto('/');
-  await expect(page.getByRole('progressbar').first()).toBeVisible();
+  await expect(loader).toBeVisible();
   await waitForScene(page);
-  await expect(page.getByRole('progressbar')).toHaveCount(0);
+  await expect(loader).toHaveCount(0);
 });
