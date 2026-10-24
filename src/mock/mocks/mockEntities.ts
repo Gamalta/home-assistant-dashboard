@@ -520,4 +520,18 @@ export const entities: HassEntities = {
     state: 'unknown',
     attributes: {friendly_name: 'Test du détecteur du couloir'},
   }),
+  ...createMediaPlayer('media_player.bedroom_speaker', {
+    state: 'paused',
+    attributes: {
+      friendly_name: 'Enceinte de la chambre',
+      supported_features:
+        MediaPlayerFeature.PAUSE |
+        MediaPlayerFeature.PLAY |
+        MediaPlayerFeature.NEXT_TRACK,
+      media_title: 'Human',
+      media_artist: "Rag'n'Bone Man",
+      app_name: 'Spotify',
+      entity_picture: 'media/demo_cover.svg',
+    },
+  }),
 } as const;

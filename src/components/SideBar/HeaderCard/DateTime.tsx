@@ -1,8 +1,14 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useEffect, useState} from 'react';
+import {type ReactNode, useEffect, useState} from 'react';
 
-export function DateTime() {
+type DateTimeProps = {
+  /** Affiché à côté de l'heure. */
+  children?: ReactNode;
+};
+
+export function DateTime(props: DateTimeProps) {
+  const {children} = props;
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -32,9 +38,12 @@ export function DateTime() {
       <Typography variant="h4" color="primary">
         {date}
       </Typography>
-      <Typography variant="h5" color="textSecondary">
-        {time}
-      </Typography>
+      <Stack direction="row" spacing={2} sx={{alignItems: 'center'}}>
+        <Typography variant="h5" color="textSecondary">
+          {time}
+        </Typography>
+        {children}
+      </Stack>
     </Stack>
   );
 }
