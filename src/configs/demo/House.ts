@@ -59,18 +59,18 @@ export const SideBarConfig: SideBarConfigType = {
     tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
-        color: 'red',
-        label: 'Mémoire:',
+        color: 'error',
+        label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
-        color: 'orange',
-        label: 'Température:',
+        color: 'warning',
+        label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
-        color: 'cyan',
-        label: 'Processeur:',
+        color: 'info',
+        label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],
