@@ -4,6 +4,7 @@ import {PersonCard} from './PersonCard';
 import {PetCard} from './PetCard';
 import {useRef} from 'react';
 import {SideBarDock} from './SideBarDock';
+import {Shortcuts} from './Shortcuts';
 import {useHouseContext} from '../../contexts/HouseContext';
 
 export function SideBar() {
@@ -46,7 +47,11 @@ export function SideBar() {
           width: '100%',
           height: '100%',
         }}
-      />
+      >
+        {sideBarConfig?.shortcuts && (
+          <Shortcuts shortcuts={sideBarConfig.shortcuts} />
+        )}
+      </Stack>
       <SideBarDock sideBarRef={sideBarRef} />
     </Stack>
   );
