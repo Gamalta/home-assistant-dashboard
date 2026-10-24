@@ -12,12 +12,21 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = AllLightsOffShortcutConfigType;
+type ShortcutConfigType =
+  | AllLightsOffShortcutConfigType
+  | TrainsShortcutConfigType;
 
 type AllLightsOffShortcutConfigType = {
   type: 'allLightsOff';
   /** Script Home Assistant à lancer à la place de l'extinction des lumières de la maison. */
   scriptEntityId?: FilterByDomain<EntityName, 'script'>;
+};
+
+type TrainsShortcutConfigType = {
+  type: 'trains';
+  label: string;
+  /** Début des capteurs sncf_trains du trajet : `sncf_paris_lyon` pour `sensor.sncf_paris_lyon_train_1`. */
+  prefix: string;
 };
 
 type SystemGraphConfigType = {
