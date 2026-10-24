@@ -43,7 +43,7 @@ Le cœur de l'application est une scène React Three Fiber, avec des patchs de s
 ## Conséquences
 
 - Chaque push et chaque pull request vérifient le lint, les types, la logique (heatmap, roue des couleurs, météo, affichage des distances) et le parcours principal du dashboard dans un vrai navigateur. Une montée de version de three qui casserait le patch des ombres fait échouer `pnpm test`.
-- La suite E2E dure environ 20 s en local, build compris, et 26 s avec un seul worker comme en CI. En CI, il faut y ajouter l'installation de Chromium et de ses dépendances système.
+- La suite E2E dure de 20 à 35 s en local, build compris. Sur un runner GitHub, SwiftShader est plusieurs fois plus lent : la suite y prend de 1 min 05 à 1 min 25, et le job complet environ 2 min 30 avec l'installation de Chromium. D'où des délais larges, 60 s par test et 15 s par assertion. Une option lourde comme « Debug » y rend la page inutilisable, et les tests l'évitent.
 - Les E2E dépendent des données du mock et de la config `demo` (noms, températures, ordre des pièces). Modifier le mock peut demander d'adapter les tests.
 - Plusieurs éléments n'ont pas de nom accessible : le bouton de fermeture des modales, les interrupteurs des options et le dock. Certains locators passent donc par la structure du DOM ; ajouter des `aria-label` les simplifierait.
 - Le moteur WebGPU n'est pas couvert, car Chromium headless n'expose pas d'adaptateur. Le bug `StrictMode` du mode dev ne l'est pas non plus, puisque les E2E tournent sur le build.
