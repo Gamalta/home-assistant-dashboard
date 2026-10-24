@@ -5,7 +5,7 @@ import {
   formatTime,
   isHistoryLoading,
 } from '../../../utils/chart';
-import {formatPower, parsePower} from '../../../utils/entity/plug';
+import {formatPower, parsePower} from '../../../utils/entity/outlet';
 import {Chart} from '../../Charts/Chart';
 
 type PowerHistoryProps = {
@@ -45,8 +45,8 @@ export function PowerHistory(props: PowerHistoryProps) {
           format: formatPower,
         },
       ]}
-      // Largeur de l'onglet réglage (260 + 24 + 300) : la modale garde sa taille.
-      sx={{height: 300, width: 584}}
+      // Même taille que l'historique de la modale Climat : la modale s'élargit.
+      sx={{height: 300, width: 500}}
     >
       <Typography variant="h4">
         {current === null ? '—' : formatPower(current)}
