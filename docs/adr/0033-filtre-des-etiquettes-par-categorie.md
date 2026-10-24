@@ -51,7 +51,7 @@ Mesures sur le build de production de la démo (Chrome avec GPU, Mac, 1280 × 80
 Les colonnes « Avant » et « Après, tout affiché » ne diffèrent que par le bruit de mesure. Un appui sur une puce compile 0 programme, rend 1 ou 2 images, puis plus aucune. L'interaction dure de 24 à 56 ms (CPU ×4). Masquer ou réafficher les lumières ou le climat démonte ou remonte de 7 à 18 étiquettes : une tâche longue de 50 à 100 ms à CPU ×4, une seule fois, hors rotation. Pour les 6 volets, la tâche reste sous 50 ms.
 
 - Le budget de l'[ADR 0009](0009-budget-performance-tablette.md) est respecté, et masquer des étiquettes allège chaque image en mouvement.
-- Les puces occupent 148 × 52 px, à 16 px du haut de la vue 3D. Sur la démo, aucune étiquette n'y passe au repos.
+- Les puces occupent 148 × 52 px avec trois catégories, 340 × 52 px avec les sept de la démo, à 16 px du haut de la vue 3D. Avec les huit catégories de la table, la rangée reste sous la moitié de la vue et au-dessus de la maison. Sur la démo, aucune étiquette n'y passe au repos.
 - Une branche qui ajoute un type n'a qu'une ligne à écrire, et rien ne casse si elle l'oublie.
 - Les clés des étiquettes d'une pièce sont des index : masquer une catégorie peut remonter les étiquettes voisines de la même pièce. Le coût est compris dans les mesures ci-dessus.
 - En mode carte des températures, les puces des autres catégories restent visibles mais sans effet, puisque ce mode n'affiche déjà que le climat.

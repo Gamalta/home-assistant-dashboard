@@ -49,11 +49,11 @@ Choisir d'un appui quelles catégories d'étiquettes la vue 3D affiche, et retro
 
 - **Étant donné** la tablette (1280 × 800)
 - **Quand** la vue 3D s'affiche
-- **Alors** les puces forment une rangée courte en haut de la vue 3D, chacune d'au moins 40 × 40 px, et aucune étiquette ne passe dessous
+- **Alors** les puces forment une rangée en haut de la vue 3D, au-dessus de la maison et plus courte que la moitié de la vue, chacune d'au moins 40 × 40 px, et aucune étiquette ne passe dessous
 
 ## Critères d'acceptation
 
-- [x] Une puce par catégorie présente dans la maison : la démo, sans ordinateur, n'en affiche que trois.
+- [x] Une puce par catégorie présente dans la maison : la démo, sans ordinateur, en affiche sept.
 - [x] Chaque puce porte le nom de sa catégorie, affiché au toucher dans une infobulle.
 - [x] Un type d'élément qui n'a pas de catégorie reste toujours affiché.
 - [x] Masquer ou afficher une catégorie ne compile aucun shader et ne lance pas de rendu continu.
@@ -63,5 +63,5 @@ Choisir d'un appui quelles catégories d'étiquettes la vue 3D affiche, et retro
 ## Impacts
 
 - Configuration des maisons : aucune. Un nouveau type d'élément s'ajoute à la table `src/utils/labelCategories.ts` ([ADR 0033](../adr/0033-filtre-des-etiquettes-par-categorie.md)).
-- Options stockées : `graphics-options` gagne `hiddenCategories`, vide par défaut. Les options déjà enregistrées restent valables.
+- Options stockées : `graphics-options` gagne `hiddenCategories`, qui masque les piles par défaut. Les options déjà enregistrées restent valables.
 - Performance : voir l'ADR 0033.

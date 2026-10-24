@@ -10,6 +10,9 @@ const temperatures = (page: Page) =>
   labels(page).getByRole('button', {name: /°$/});
 const filter = (page: Page, name: string) =>
   page.getByRole('button', {name, exact: true});
+// Le dressing de la démo n'affiche qu'une lumière dans son étiquette.
+const dressing = (page: Page) =>
+  page.getByRole('button', {name: 'Dressing', exact: true});
 
 // Luminosité moyenne du canvas, sans les étiquettes : elle chute si des lumières s'éteignent.
 async function canvasBrightness(page: Page) {
@@ -36,34 +39,41 @@ test.beforeEach(async ({page}) => {
   await waitForScene(page);
 });
 
-// Démo : 12 pièces, 13 lumières, 7 climatisations et 6 volets.
+// Les comptes viennent de la scène chargée, pas de la démo, qui s'enrichit
+// à chaque nouveau type d'élément.
 test('masque puis réaffiche les étiquettes d’une catégorie', async ({page}) => {
-  await expect(labels(page).getByRole('button')).toHaveCount(26);
-  await expect(temperatures(page)).toHaveCount(7);
+  const buttons = labels(page).getByRole('button');
+  const all = await buttons.count();
+  const climate = await temperatures(page).count();
+  expect(climate).toBeGreaterThan(0);
 
   await filter(page, 'Volets').tap();
   await expect(filter(page, 'Volets')).toHaveAttribute('aria-pressed', 'false');
-  await expect(labels(page).getByRole('button')).toHaveCount(20);
-  await expect(temperatures(page)).toHaveCount(7);
+  await expect.poll(() => buttons.count()).toBeLessThan(all);
+  await expect(temperatures(page)).toHaveCount(climate);
 
   await filter(page, 'Climat').tap();
   await expect(temperatures(page)).toHaveCount(0);
-  await expect(labels(page).getByRole('button')).toHaveCount(13);
+  await expect(dressing(page)).toBeVisible();
 
   await filter(page, 'Volets').tap();
   await filter(page, 'Climat').tap();
-  await expect(labels(page).getByRole('button')).toHaveCount(26);
-  await expect(temperatures(page)).toHaveCount(7);
+  await expect(buttons).toHaveCount(all);
+  await expect(temperatures(page)).toHaveCount(climate);
 });
 
 test('retire l’étiquette d’une pièce dont tous les éléments sont masqués', async ({
   page,
 }) => {
-  await expect(labels(page)).toHaveCount(19);
-  // 5 pièces n'ont qu'une lumière, et celle du meuble TV a sa propre étiquette.
+  const climate = await temperatures(page).count();
+  await expect(dressing(page)).toBeVisible();
+
   await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(13);
-  await expect(temperatures(page)).toHaveCount(7);
+  await expect(dressing(page)).toHaveCount(0);
+  await expect(
+    labels(page).filter({hasNot: page.getByRole('button')}),
+  ).toHaveCount(0);
+  await expect(temperatures(page)).toHaveCount(climate);
 });
 
 test('garde les lumières 3D allumées quand leurs étiquettes sont masquées', async ({
@@ -83,13 +93,13 @@ test('garde les lumières 3D allumées quand leurs étiquettes sont masquées', 
     .toBe(0);
 
   await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(13);
+  await expect(dressing(page)).toHaveCount(0);
   expect(await canvasBrightness(page)).toBeCloseTo(before, 0);
 });
 
 test('mémorise le filtre après rechargement', async ({page}) => {
   await filter(page, 'Volets').tap();
-  await expect(labels(page)).toHaveCount(13);
+  await expect(filter(page, 'Volets')).toHaveAttribute('aria-pressed', 'false');
 
   await page.reload();
   await waitForScene(page);
@@ -98,7 +108,11 @@ test('mémorise le filtre après rechargement', async ({page}) => {
     'aria-pressed',
     'true',
   );
-  await expect(labels(page)).toHaveCount(13);
+  // Les volets étaient bien masqués : les réafficher ajoute des étiquettes.
+  const buttons = labels(page).getByRole('button');
+  const withoutShutters = await buttons.count();
+  await filter(page, 'Volets').tap();
+  await expect.poll(() => buttons.count()).toBeGreaterThan(withoutShutters);
 });
 
 test('reste utilisable au doigt à 1280 × 800 sans cacher la maison', async ({
@@ -110,7 +124,9 @@ test('reste utilisable au doigt à 1280 × 800 sans cacher la maison', async ({
   expect(bar.x).toBeGreaterThan(canvas.x);
   expect(bar.x + bar.width).toBeLessThan(canvas.x + canvas.width);
   expect(bar.y + bar.height).toBeLessThan(80);
-  expect(bar.width).toBeLessThan(canvas.width / 3);
+  // Une puce de 44 px par catégorie, huit au plus : la rangée tient dans la
+  // moitié de la vue, au-dessus de la maison.
+  expect(bar.width).toBeLessThan(canvas.width / 2);
 
   for (const name of ['Lumières', 'Climat', 'Volets']) {
     const button = (await filter(page, name).boundingBox())!;
