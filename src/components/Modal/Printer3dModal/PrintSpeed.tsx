@@ -17,7 +17,7 @@ export function PrintSpeed(props: PrintSpeedProps) {
   if (!speed || speed.state === 'unavailable') return null;
   return (
     <Stack spacing={0.5}>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="textSecondary">
         Vitesse
       </Typography>
       <ToggleButtonGroup
