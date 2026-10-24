@@ -3,17 +3,13 @@ import AssessmentIcon from '@mui/icons-material/AssessmentOutlined';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNewRounded';
 import TuneIcon from '@mui/icons-material/TuneRounded';
 import ButtonBase from '@mui/material/ButtonBase';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import {Modal, ModalProps} from '..';
 import type {OutletConfigType} from '../../../configs/house';
-import {
-  DEFAULT_STANDBY_THRESHOLD,
-  formatPower,
-  outletStatus,
-} from '../../../utils/entity/outlet';
+import {formatPower} from '../../../utils/entity/outlet';
 import {OutletView} from './OutletView';
 import {PowerHistory} from './PowerHistory';
 
@@ -27,34 +23,55 @@ export function OutletModal(props: OutletModalProps) {
   const {outlet, power, outletConfig, ...modalProps} = props;
   const [tab, setTab] = useState<'control' | 'history'>('control');
   const on = outlet.state === 'on';
-  const {standbyThreshold = DEFAULT_STANDBY_THRESHOLD} = outletConfig;
-  const status = outletStatus(on, power, standbyThreshold);
-  const ledHint = {
-    on: 'Voyant bleu : allumée',
-    standby: `Voyant orange : en veille, moins de ${formatPower(standbyThreshold)}`,
-    off: 'Voyant gris : éteinte',
-  }[status];
 
   return (
     <Modal
       {...modalProps}
       action={
-        outletConfig.powerEntityId &&
-        {
-          control: (
-            <IconButton
-              aria-label="Historique"
-              onClick={() => setTab('history')}
-            >
-              <AssessmentIcon />
-            </IconButton>
-          ),
-          history: (
-            <IconButton aria-label="Réglage" onClick={() => setTab('control')}>
-              <TuneIcon />
-            </IconButton>
-          ),
-        }[tab]
+        outletConfig.powerEntityId && (
+          // Cadre des actions, comme les autres modales.
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+              borderRadius: 1,
+              border: theme => `1px solid ${theme.palette.divider}`,
+              p: 1,
+            }}
+          >
+            {
+              {
+                // L'onglet Consommation affiche déjà la puissance, en grand.
+                control: (
+                  <>
+                    {on && power !== null && (
+                      <Typography color="textSecondary">
+                        {formatPower(power)}
+                      </Typography>
+                    )}
+                    <IconButton
+                      aria-label="Historique"
+                      sx={{p: 0}}
+                      onClick={() => setTab('history')}
+                    >
+                      <AssessmentIcon />
+                    </IconButton>
+                  </>
+                ),
+                history: (
+                  <IconButton
+                    aria-label="Réglage"
+                    sx={{p: 0}}
+                    onClick={() => setTab('control')}
+                  >
+                    <TuneIcon />
+                  </IconButton>
+                ),
+              }[tab]
+            }
+          </Stack>
+        )
       }
     >
       {tab === 'history' && outletConfig.powerEntityId ? (
@@ -68,7 +85,7 @@ export function OutletModal(props: OutletModalProps) {
             disableRipple
             onClick={() => outlet.service.toggle()}
           >
-            <OutletView status={status} ledHint={ledHint} />
+            <OutletView on={on} />
           </ButtonBase>
           {/* Mêmes actions que la modale des volets. */}
           <Stack
@@ -82,17 +99,10 @@ export function OutletModal(props: OutletModalProps) {
             }}
           >
             <IconButton
-              aria-label="Allumer"
-              sx={{borderRadius: 1}}
-              onClick={() => outlet.service.turnOn()}
-            >
-              ⚡
-            </IconButton>
-            <Divider orientation="vertical" sx={{height: '25px'}} />
-            <IconButton
-              aria-label="Éteindre"
-              sx={{borderRadius: 1}}
-              onClick={() => outlet.service.turnOff()}
+              aria-label="Marche"
+              aria-pressed={on}
+              sx={{borderRadius: 1, ...(on && {color: 'primary.main'})}}
+              onClick={() => outlet.service.toggle()}
             >
               <PowerSettingsNewIcon />
             </IconButton>

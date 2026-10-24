@@ -73,6 +73,4 @@ type OutletConfigType = BaseItemConfigType & {
   type: 'outlet';
   switchEntityId: FilterByDomain<EntityName, 'switch'>;
   powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
-  // En W : sous ce seuil, la prise allumée est « en veille » (5 W par défaut).
-  standbyThreshold?: number;
 };

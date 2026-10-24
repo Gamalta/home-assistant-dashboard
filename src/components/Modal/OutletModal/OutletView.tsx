@@ -1,30 +1,16 @@
-import Tooltip from '@mui/material/Tooltip';
-import type {OutletStatus} from '../../../utils/entity/outlet';
-
 type OutletViewProps = {
-  status: OutletStatus;
-  ledHint: string;
+  on: boolean;
 };
 
-const LED_COLORS: Record<OutletStatus, string> = {
-  on: '#399fff',
-  standby: '#ff9f0a',
-  off: '#9da2a9',
-};
-const GLOW_OPACITY: Record<OutletStatus, number> = {
-  on: 1,
-  standby: 0.8,
-  off: 0,
-};
+const LED_ON = '#399fff';
+const LED_OFF = '#9da2a9';
 
 // Prise murale française vue de face. La plaque reste blanche en mode sombre, comme une vraie prise.
 export function OutletView(props: OutletViewProps) {
-  const {status, ledHint} = props;
-  const plugged = status !== 'off';
-  const led = LED_COLORS[status];
+  const {on} = props;
   const glow = {
     fill: 'url(#outlet-glow)',
-    style: {opacity: GLOW_OPACITY[status], transition: 'opacity 0.4s'},
+    style: {opacity: on ? 1 : 0, transition: 'opacity 0.4s'},
   };
 
   return (
@@ -39,8 +25,8 @@ export function OutletView(props: OutletViewProps) {
             <stop
               key={i}
               offset={i / 3}
+              stopColor={LED_ON}
               stopOpacity={opacity}
-              style={{stopColor: led, transition: 'stop-color 0.4s'}}
             />
           ))}
         </radialGradient>
@@ -163,37 +149,32 @@ export function OutletView(props: OutletViewProps) {
         strokeOpacity={0.07}
       />
 
-      {/* Toucher le voyant explique sa couleur, sans basculer la prise. */}
-      <Tooltip title={ledHint} enterTouchDelay={0}>
-        <g onClick={event => event.stopPropagation()}>
-          <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
-          <rect
-            data-testid="voyant"
-            x={251}
-            y={137}
-            width={38}
-            height={8}
-            rx={4}
-            strokeWidth={6}
-            style={{
-              fill: led,
-              // Le trait, à moitié hors du voyant, l'auréole.
-              stroke: led,
-              strokeOpacity: GLOW_OPACITY[status] * 0.3,
-              transition: 'fill 0.4s, stroke 0.4s, stroke-opacity 0.4s',
-            }}
-          />
-          <rect
-            x={253}
-            y={138}
-            width={34}
-            height={3.5}
-            rx={1.75}
-            fill="#fff"
-            opacity={0.15}
-          />
-        </g>
-      </Tooltip>
+      <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
+      <rect
+        data-testid="voyant"
+        x={251}
+        y={137}
+        width={38}
+        height={8}
+        rx={4}
+        stroke={LED_ON}
+        strokeWidth={6}
+        style={{
+          fill: on ? LED_ON : LED_OFF,
+          // Le trait, à moitié hors du voyant, l'auréole.
+          strokeOpacity: on ? 0.3 : 0,
+          transition: 'fill 0.4s, stroke-opacity 0.4s',
+        }}
+      />
+      <rect
+        x={253}
+        y={138}
+        width={34}
+        height={3.5}
+        rx={1.75}
+        fill="#fff"
+        opacity={0.15}
+      />
 
       <circle cx={270} cy={277} r={80} fill="url(#outlet-well)" />
       <circle cx={270} cy={277} r={80} fill="url(#outlet-well-rim)" />
@@ -205,9 +186,9 @@ export function OutletView(props: OutletViewProps) {
       <g
         data-testid="fiche"
         style={{
-          opacity: plugged ? 1 : 0,
+          opacity: on ? 1 : 0,
           // Débranchée, la fiche s'éloigne du mur, vers le bas.
-          transform: plugged ? 'none' : 'translateY(16px) scale(1.1)',
+          transform: on ? 'none' : 'translateY(16px) scale(1.1)',
           transformOrigin: '270px 277px',
           transition:
             'opacity 0.4s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',

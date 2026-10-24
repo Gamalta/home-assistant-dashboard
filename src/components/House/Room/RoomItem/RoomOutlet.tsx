@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 import {useState} from 'react';
 import type {OutletConfigType} from '../../../../configs/house';
 import {useLongPress} from '../../../../hooks/useLongPress';
-import {formatPower, parsePower} from '../../../../utils/entity/outlet';
+import {parsePower} from '../../../../utils/entity/outlet';
 import {OutletModal} from '../../../Modal/OutletModal';
 
 type RoomOutletProps = {
@@ -47,7 +47,6 @@ export function RoomOutlet(props: RoomOutletProps) {
             height: '100%',
             minWidth: 0,
             px: '6px',
-            gap: 0.5,
             ...(on && {color: 'primary.main'}),
             cursor: unavailable ? 'not-allowed' : 'pointer',
             opacity: unavailable ? 0.5 : 1,
@@ -55,7 +54,6 @@ export function RoomOutlet(props: RoomOutletProps) {
           {...(!unavailable && outletLongPress)}
         >
           <PowerIcon />
-          {on && power !== null && formatPower(power)}
         </Button>
       </motion.div>
       <OutletModal
