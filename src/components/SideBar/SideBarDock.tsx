@@ -25,7 +25,7 @@ export function SideBarDock(props: SideBarDockProps) {
   const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
   const [configs, setConfigs] = useState<ConfigType[]>([]);
   const {themeMode, setTheme} = useThemeContext();
-  const {config, setConfig} = useHouseContext();
+  const {houseConfig, setHouseConfig} = useHouseContext();
 
   useEffect(() => {
     if (!sideBarRef.current) return;
@@ -88,7 +88,7 @@ export function SideBarDock(props: SideBarDockProps) {
 
   const handleConfigMenuClick = (newConfig: ConfigType) => {
     setConfigAnchor(null);
-    setConfig(newConfig);
+    setHouseConfig(newConfig);
 
     setTimeout(() => {
       setIsVisible(false);
@@ -167,7 +167,7 @@ export function SideBarDock(props: SideBarDockProps) {
                   <MenuItem
                     key={option.id}
                     onClick={() => handleConfigMenuClick(option)}
-                    selected={config?.id === option.id}
+                    selected={houseConfig?.id === option.id}
                   >
                     {option.name}
                   </MenuItem>
@@ -175,7 +175,7 @@ export function SideBarDock(props: SideBarDockProps) {
               </Menu>
             </>
           )}
-          {config?.sideBar.system && (
+          {houseConfig?.sideBar.system && (
             <>
               <Button onClick={() => setSystemModal(true)}>Système</Button>
               <motion.div layoutId="layoutid-system-modal" />
@@ -184,7 +184,7 @@ export function SideBarDock(props: SideBarDockProps) {
                 title="Système"
                 open={systemModal}
                 onClose={() => setSystemModal(false)}
-                systemConfig={config.sideBar.system}
+                systemConfig={houseConfig.sideBar.system}
               />
             </>
           )}

@@ -99,10 +99,6 @@ export default function ClimateModal(props: ClimateModalProps) {
     climateConfig.temperatureEntityId ?? 'unknown',
     {
       returnNullIfNotFound: true,
-      historyOptions: {
-        disable: false,
-        hoursToShow: 24,
-      },
     },
   );
 
@@ -110,10 +106,6 @@ export default function ClimateModal(props: ClimateModalProps) {
     climateConfig.humidityEntityId ?? 'unknown',
     {
       returnNullIfNotFound: true,
-      historyOptions: {
-        disable: false,
-        hoursToShow: 24,
-      },
     },
   );
 
