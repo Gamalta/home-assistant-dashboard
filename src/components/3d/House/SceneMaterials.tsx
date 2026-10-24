@@ -11,9 +11,6 @@ type SceneMaterialsProps = {
   backend: RenderBackend;
   hideWalls: boolean;
   heatmap: boolean;
-  /** Teintes des sols et des murs, multipliées à leur couleur. */
-  floorTint?: string;
-  wallTint?: string;
   rooms: HouseConfigType['rooms'];
 };
 
@@ -74,8 +71,7 @@ function toLambert(source: THREE.Material) {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {scene, backend, hideWalls, heatmap, floorTint, wallTint, rooms} =
-    props;
+  const {scene, backend, hideWalls, heatmap, rooms} = props;
   const invalidate = useThree(state => state.invalidate);
 
   const heatmapPoints = useHeatmapPoints(rooms);
@@ -107,18 +103,8 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         return {material};
       }
 
-      const tint = {ground: floorTint, wall: wallTint, other: undefined}[kind];
-      let original = toLambert(gltfMaterial);
-      // Jamais le matériau du modèle lui-même, partagé par le cache de useGLTF.
-      if (tint && original === gltfMaterial) original = gltfMaterial.clone();
+      const original = toLambert(gltfMaterial);
       if (original !== gltfMaterial) createdMaterials.push(original);
-      if (
-        tint &&
-        'color' in original &&
-        original.color instanceof THREE.Color
-      ) {
-        original.color.multiply(new THREE.Color(tint));
-      }
 
       let material = original;
       let fade: THREE.Material | undefined;
@@ -200,7 +186,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       heatmapMaterials.current = [];
       invalidate();
     };
-  }, [scene, backend, hideWalls, showHeatmap, floorTint, wallTint, invalidate]);
+  }, [scene, backend, hideWalls, showHeatmap, invalidate]);
 
   // Le fondu est transparent : les murs se dessinent du plus loin au plus
   // proche de la caméra (voir createWallFade).

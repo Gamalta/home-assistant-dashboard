@@ -1,20 +1,20 @@
-# Éclairage réaliste : ciel et soleil, sans reflets
+# Éclairage : doux et chaud le jour, contrasté la nuit, sans reflets
 
 - Issue : #56
 - Statut : Livrée
 
 ## Problème
 
-Les reflets d'environnement sont trop lourds : même sur Mac, le propriétaire ne parvient pas à les afficher. Sans eux, la maison est éclairée par une lumière ambiante uniforme : de jour, sols et murs ont la même teinte grise, les volumes se lisent mal et les zones éclairées par les lampes saturent.
+Les reflets d'environnement sont trop lourds : même sur Mac, le propriétaire ne parvient pas à les afficher. Sans eux, la maison est éclairée par une lumière ambiante uniforme : sols et murs ont la même teinte grise, et les zones éclairées par les lampes saturent.
 
 ## Objectif
 
-Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, des lampes qui dominent la nuit, pour un coût GPU égal à celui d'avant sur la tablette.
+Un beau rendu plutôt qu'un rendu réaliste, léger pour la tablette : doux et chaud le jour, sombre et contrasté la nuit, où les lampes dominent.
 
 ## Hors périmètre
 
 - Les ombres du soleil : seules les lampes projettent des ombres, avec l'option « Ombres ».
-- La météo : un ciel couvert n'atténue pas le soleil.
+- La direction réelle du soleil : le soleil reste haut et fixe, pour adoucir les volumes sans écraser une façade.
 
 ## Comportement attendu
 
@@ -22,7 +22,7 @@ Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, d
 
 - **Étant donné** l'entité `sun.sun` au-dessus de l'horizon
 - **Quand** la maison s'affiche
-- **Alors** le ciel l'éclaire par le haut, le soleil arrive de sa direction réelle et chaque mur prend une teinte selon son orientation ; au lever et au coucher, la lumière du soleil est orangée
+- **Alors** un ciel crème et un soleil doux venu d'en haut l'éclairent : murs crème, sols chauds, volumes lisibles
 
 ### Scénario : la nuit
 
@@ -34,31 +34,19 @@ Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, d
 
 - **Étant donné** la maison affichée en journée
 - **Quand** le soleil se couche
-- **Alors** l'éclairage baisse progressivement, sans recompiler de shader
+- **Alors** l'éclairage passe progressivement du jour à la nuit, sans recompiler de shader
 
 ### Scénario : sans l'entité `sun.sun`
 
 - **Étant donné** une instance sans l'intégration Sun, ou le mock
 - **Quand** la maison s'affiche
-- **Alors** la position du soleil est déduite de l'heure : à l'est à 6 h, au sud à midi, à l'ouest à 18 h
-
-### Scénario : orientation de la maison
-
-- **Étant donné** une maison dont la config donne `orientation`, l'azimut vers lequel pointe l'axe -Z du modèle
-- **Quand** le soleil est à un azimut donné
-- **Alors** il éclaire les façades réellement exposées
-
-### Scénario : essayer une ambiance
-
-- **Étant donné** le panneau d'essai, ouvert par « Essayer les ambiances » dans la modale Système et posé sur la vue 3D
-- **Quand** on choisit une ambiance dans « Ambiance » (A à J : plat, soleil réel, doux et chaud, cosy, maquette, fin d'après-midi, studio, chaud et saturé, et deux variantes qui teintent sols et murs)
-- **Alors** la maison change d'éclairage sans recharger la page, et le choix est gardé sur l'appareil
+- **Alors** la hauteur du soleil est déduite de l'heure : levé à 6 h, au plus haut à midi, couché à 18 h
 
 ### Scénario : essayer le jour et la nuit
 
-- **Étant donné** le panneau d'essai
+- **Étant donné** le panneau « Éclairage selon l'heure », ouvert depuis la modale Système et posé sur la vue 3D
 - **Quand** on fait glisser l'heure, de 0 h à 24 h par quart d'heure
-- **Alors** le soleil, le ciel et le thème du dashboard suivent cette heure ; fermer le panneau, ou recharger la page, revient à l'heure réelle
+- **Alors** l'éclairage et le thème du dashboard suivent cette heure ; fermer le panneau, ou recharger la page, revient à l'heure réelle
 
 ### Scénario : plus de reflets d'environnement
 
@@ -68,16 +56,14 @@ Une maison éclairée comme une vraie : un ciel et un soleil qui suit l'heure, d
 
 ## Critères d'acceptation
 
-- [x] Le soleil et le ciel sont deux lumières fixes : la nuit qui tombe ne recompile aucun shader (`e2e/eclairage.spec.ts`).
+- [x] La nuit qui tombe ne recompile aucun shader (`e2e/eclairage.spec.ts`).
 - [x] La maison est plus sombre la nuit que le jour (`e2e/eclairage.spec.ts`).
-- [x] L'ambiance se choisit dans le panneau d'essai et reste après rechargement (`e2e/options.spec.ts`).
 - [x] L'heure simulée change le thème, et fermer le panneau revient à l'heure réelle (`e2e/options.spec.ts`).
-- [x] Position et intensité du soleil testées (`src/rendering/daylight.test.ts`).
+- [x] Hauteur du soleil d'après l'heure testée (`src/rendering/daylight.test.ts`).
 - [x] L'option a disparu de la modale Système et aucun `.hdr` n'est demandé (`e2e/options.spec.ts`, `e2e/eclairage.spec.ts`).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : GPU égal au repos, mêmes programmes au démarrage.
 
 ## Impacts
 
-- Config des maisons : `orientation` est optionnelle, 0 par défaut (-Z vers le nord).
-- Options stockées : une valeur `environmentReflections` encore présente dans le stockage local est ignorée.
+- Options stockées : les valeurs `environmentReflections` et `lightingStyle` encore présentes dans le stockage local sont ignorées.
 - Le fichier `dikhololo_night_1k.hdr` (1,7 Mo) quitte le dépôt et le build.

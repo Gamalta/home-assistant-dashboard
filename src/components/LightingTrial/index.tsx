@@ -4,12 +4,11 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {useAppContext} from '../../contexts/AppContext';
-import {LightingStyleRow} from './LightingStyleRow';
 import {SimulatedHourRow} from './SimulatedHourRow';
 
 /**
- * Panneau d'essai des ambiances, posé sur la vue 3D pour voir la maison
- * pendant qu'on règle. Le fermer revient à l'heure réelle.
+ * Panneau d'essai de l'éclairage, posé sur la vue 3D pour voir la maison
+ * pendant qu'on règle l'heure. Le fermer revient à l'heure réelle.
  */
 export function LightingTrial() {
   const {setLightingTrial, setSimulatedHour} = useAppContext();
@@ -17,7 +16,7 @@ export function LightingTrial() {
   return (
     <Paper
       component="section"
-      aria-label="Essai des ambiances"
+      aria-label="Essai de l'éclairage"
       elevation={6}
       sx={{
         position: 'absolute',
@@ -35,7 +34,7 @@ export function LightingTrial() {
           direction="row"
           sx={{justifyContent: 'space-between', alignItems: 'center'}}
         >
-          <Typography variant="subtitle2">Essai des ambiances</Typography>
+          <Typography variant="subtitle2">Éclairage selon l'heure</Typography>
           <IconButton
             size="small"
             aria-label="Fermer l'essai"
@@ -47,7 +46,6 @@ export function LightingTrial() {
             <CloseIcon fontSize="small" />
           </IconButton>
         </Stack>
-        <LightingStyleRow />
         <SimulatedHourRow />
       </Stack>
     </Paper>

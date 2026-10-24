@@ -6,7 +6,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import type {LightingStyleId} from '../rendering/lightingStyles';
 
 export type ConfigurationOptions = {
   debug: boolean;
@@ -18,7 +17,6 @@ export type ConfigurationOptions = {
   screensaverMinutes: number;
   // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
   hiddenCategories: string[];
-  lightingStyle: LightingStyleId;
 };
 
 export type RendererInfo = {
@@ -37,7 +35,7 @@ type AppContextType = {
   /** Heure d'essai de l'éclairage et du thème, non mémorisée ; `null` : l'heure réelle. */
   simulatedHour: number | null;
   setSimulatedHour: Dispatch<SetStateAction<number | null>>;
-  /** Panneau d'essai des ambiances ouvert sur la vue 3D. */
+  /** Panneau d'essai de l'éclairage, ouvert sur la vue 3D. */
   lightingTrial: boolean;
   setLightingTrial: Dispatch<SetStateAction<boolean>>;
 };
@@ -75,7 +73,6 @@ const defaultConfiguration: ConfigurationOptions = {
   screensaverMinutes: 0,
   // Les piles sont une information de diagnostic, affichée à la demande.
   hiddenCategories: ['battery'],
-  lightingStyle: 'soleil',
 };
 
 const defaultRendererInfo: RendererInfo = {
