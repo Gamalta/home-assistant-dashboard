@@ -43,7 +43,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Un fichier `e2e/<sujet>.spec.ts`.
 - Importer `test` et `expect` depuis `./fixtures`, pas depuis `@playwright/test`. Ces fixtures :
   - interceptent Sentry et Matomo, pour ne pas polluer leurs données ;
-  - font échouer le test sur toute erreur console ou exception non rattrapée, sans liste d'exceptions : une erreur se corrige, elle ne se masque pas.
+  - font échouer le test sur toute erreur console ou exception non rattrapée. Une erreur se corrige, elle ne se masque pas : seul un avertissement sans effet visible peut être toléré, par le test qui le déclare dans `consoleErrorsAllowed` avec sa raison (voir `e2e/dev.spec.ts`).
 - `waitForScene(page)` attend que la scène 3D soit montée et ses shaders compilés (`window.__dashboardBenchmark` défini, retiré pendant la compilation qui suit un changement d'option). L'appeler avant d'interagir avec la scène ou d'ouvrir une modale : tant que la scène charge, la page est trop occupée et les animations prennent du retard.
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
