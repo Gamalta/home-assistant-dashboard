@@ -34,7 +34,7 @@ La modale lit les **statistiques quotidiennes** des deux index : une requête `r
 - Les index doivent avoir des statistiques à long terme (`state_class: total_increasing`, que Zigbee2MQTT pose sur les capteurs en kWh). Sinon, la modale affiche « — ».
 - Limites :
   - **relevé manqué** : sans statistique pour hier (capteur créé aujourd'hui, Home Assistant arrêté toute la journée d'hier), la consommation du jour reste vide plutôt que de cumuler plusieurs jours. Si Home Assistant est arrêté autour de minuit, l'index de fin de veille est le dernier connu : l'énergie consommée entre-temps est comptée dans aujourd'hui ;
-  - **remise à zéro ou remplacement du compteur** : un index courant inférieur à celui de la veille donne une consommation du jour vide, jusqu'au lendemain ;
+  - **remise à zéro ou remplacement du compteur** : comme Home Assistant, un index courant inférieur de plus de 10 % à celui de la veille est une remise à zéro et donne une consommation du jour vide, jusqu'au lendemain. Une baisse plus faible (arrondi, conversion Wh → kWh) compte zéro ;
   - les jours sont découpés selon le fuseau de Home Assistant et comparés à celui de la tablette : les deux doivent être identiques ;
   - les statistiques sont chargées à l'ouverture de la modale : laissée ouverte après minuit, elle calcule sur des statistiques d'hier incomplètes jusqu'à sa réouverture ;
   - le mock simule cette requête (`src/mock/mocks/mockEnergy.ts`) ; une évolution de l'API du recorder ne serait pas détectée par les tests.

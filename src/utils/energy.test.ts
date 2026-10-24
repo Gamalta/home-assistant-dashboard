@@ -147,6 +147,18 @@ describe('getDailyConsumption', () => {
     expect(afterReset).toMatchObject({peak: null, offPeak: 1});
   });
 
+  it('compte zéro, et non une remise à zéro, pour un index à peine inférieur à celui de la veille', () => {
+    const [today] = getDailyConsumption(
+      statistics,
+      {peak: 1010.9995, offPeak: 505.678},
+      1,
+      new Date('2026-10-23T05:00'),
+    );
+
+    expect(today.peak).toBe(0);
+    expect(today.offPeak).toBeCloseTo(0.678);
+  });
+
   it('laisse vide un jour passé absent des statistiques', () => {
     const withGap = {
       peak: [row('2026-10-20', 4, 1000), row('2026-10-22', 6, 1011)],

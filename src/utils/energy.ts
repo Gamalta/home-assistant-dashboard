@@ -70,9 +70,10 @@ function getConsumption(
   if (offset < 0) return findDay(statistics, now, offset)?.change ?? null;
   // La statistique du jour n'est compilée qu'à chaque heure : l'index courant est plus frais.
   const lastIndex = findDay(statistics, now, -1)?.state;
-  // Un index qui baisse signale un compteur remis à zéro ou remplacé.
-  if (index === null || lastIndex == null || index < lastIndex) return null;
-  return index - lastIndex;
+  if (index === null || lastIndex == null) return null;
+  // Comme Home Assistant : une baisse de plus de 10 % est un compteur remis à zéro ou remplacé, une plus faible un arrondi.
+  if (index < lastIndex * 0.9) return null;
+  return Math.max(index - lastIndex, 0);
 }
 
 /**
