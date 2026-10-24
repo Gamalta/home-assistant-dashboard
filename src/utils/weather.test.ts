@@ -47,4 +47,25 @@ describe('getWeatherIconPath', () => {
     expect(path).toBe('weather/partlycloudy.png');
     expect(existsSync(`public/${path}`)).toBe(true);
   });
+
+  // Conditions possibles d'une entité weather de Home Assistant.
+  it.each([
+    'clear-night',
+    'cloudy',
+    'exceptional',
+    'fog',
+    'hail',
+    'lightning',
+    'lightning-rainy',
+    'partlycloudy',
+    'pouring',
+    'rainy',
+    'snowy',
+    'snowy-rainy',
+    'sunny',
+    'windy',
+    'windy-variant',
+  ])('a une image pour la condition %s', condition => {
+    expect(existsSync(`public/${getWeatherIconPath(condition)}`)).toBe(true);
+  });
 });
