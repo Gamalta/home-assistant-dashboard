@@ -37,6 +37,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - Les espions `vi.spyOn` sont restaurés automatiquement après chaque test (`restoreMocks`). Penser à `vi.useRealTimers()` après `vi.useFakeTimers()`.
 - Pas de scène React Three Fiber en unitaire : jsdom n'a pas de WebGL. La 3D se teste en E2E, la logique qu'elle utilise (shaders, calculs) en unitaire.
 - Tester un comportement ou une règle qui peut casser, pas recopier l'implémentation.
+- Un fichier versionné peut servir d'instantané (`toMatchFileSnapshot`), comme `src/rendering/environment/nightLightProbe.json`, que l'application importe. `pnpm run test -u` le regénère ; `pnpm test -u` ne transmet pas l'option à Vitest.
 
 ## Écrire un test E2E
 
