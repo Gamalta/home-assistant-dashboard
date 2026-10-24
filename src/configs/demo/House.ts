@@ -84,6 +84,12 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.salon_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
+        {
+          type: 'plug',
+          switchEntityId: 'switch.tv_plug',
+          powerEntityId: 'sensor.tv_plug_power',
+          position: {x: -3.3, y: 0.3, z: 4.3},
+        },
       ],
     },
     {
@@ -232,6 +238,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_3_shutter',
           position: {x: 6.5, y: 1.3, z: 4.2},
+        },
+        {
+          type: 'plug',
+          switchEntityId: 'switch.desk_plug',
+          powerEntityId: 'sensor.desk_plug_power',
+          position: {x: 5.8, y: 0.8, z: 1.2},
         },
       ],
     },
