@@ -8,6 +8,9 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createUpdate} from './createUpdate';
+
+const DAY = 24 * 60 * 60 * 1000;
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -90,6 +93,36 @@ export const entities: HassEntities = {
     state: '50',
     attributes: {
       unit_of_measurement: '%',
+    },
+  }),
+  // Sauvegarde quotidienne : réussie il y a 3 jours, échouée hier.
+  ...createSensor('sensor.backup_last_successful', {
+    state: new Date(Date.now() - 3.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_last_attempted', {
+    state: new Date(Date.now() - 1.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_next_scheduled', {
+    state: new Date(Date.now() + 0.9 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_manager_state', {state: 'idle'}),
+  ...createUpdate('update.home_assistant_core_update', {
+    state: 'on',
+    attributes: {latest_version: '2026.10.2'},
+  }),
+  ...createUpdate('update.zigbee_bridge_update', {
+    state: 'on',
+    attributes: {
+      friendly_name: 'Pont Zigbee',
+      installed_version: '2.6.0',
+      latest_version: '2.7.0',
+    },
+  }),
+  ...createUpdate('update.home_assistant_operating_system_update', {
+    attributes: {
+      friendly_name: 'Home Assistant Operating System',
+      installed_version: '16.2',
+      latest_version: '16.2',
     },
   }),
 
