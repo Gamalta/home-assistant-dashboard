@@ -74,14 +74,7 @@ test('arrête l’impression après confirmation', async ({page}) => {
   await stop.click();
   await expect(confirm).toBeVisible();
   await expect(pause).toBeHidden();
-  // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
-  await page
-    .getByRole('heading', {name: 'Imprimante 3D'})
-    .locator('..')
-    .getByRole('button')
-    .last()
-    .click();
-  await openPrinterModal(page);
+  await page.getByRole('button', {name: 'Annuler'}).click();
   await expect(pause).toBeVisible();
   await expect(page.getByText('En cours', {exact: true})).toBeVisible();
 

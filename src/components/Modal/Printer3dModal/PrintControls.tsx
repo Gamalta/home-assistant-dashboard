@@ -24,20 +24,30 @@ export function PrintControls(props: PrintControlsProps) {
   const running = status?.state === 'running';
   if (!running && status?.state !== 'pause') return null;
 
-  // Un arrêt ne se reprend pas : on le confirme. Fermer la modale l'annule.
+  // Un arrêt ne se reprend pas : on le confirme.
   if (confirmStop)
     return (
-      <Button
-        variant="contained"
-        color="error"
-        startIcon={<StopIcon />}
-        onClick={() => {
-          stop?.service.press();
-          setConfirmStop(false);
-        }}
-      >
-        Confirmer l'arrêt
-      </Button>
+      <Stack direction="row" spacing={1}>
+        <Button
+          variant="outlined"
+          sx={{flex: 1}}
+          onClick={() => setConfirmStop(false)}
+        >
+          Annuler
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<StopIcon />}
+          sx={{flex: 2}}
+          onClick={() => {
+            stop?.service.press();
+            setConfirmStop(false);
+          }}
+        >
+          Confirmer l'arrêt
+        </Button>
+      </Stack>
     );
 
   return (

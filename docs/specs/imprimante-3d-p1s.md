@@ -48,8 +48,8 @@ La vitesse n'est proposée que lorsque l'intégration la rend disponible, c'est-
 
 - **Étant donné** une impression en cours ou en pause
 - **Quand** j'appuie sur « Arrêter »
-- **Alors** « Pause » (ou « Reprendre ») et « Arrêter » laissent la place à un seul large bouton « Confirmer l'arrêt », sans rien envoyer à l'imprimante ni changer la hauteur de la modale ;
-- **quand** je ferme la modale sans confirmer, l'impression continue et la modale rouvre sur « Pause » et « Arrêter » ;
+- **Alors** « Pause » (ou « Reprendre ») et « Arrêter » laissent la place à « Annuler » (un tiers de la largeur) et « Confirmer l'arrêt » (deux tiers), sans rien envoyer à l'imprimante ni changer la hauteur de la modale ;
+- **quand** j'appuie sur « Annuler », l'impression continue et « Pause » et « Arrêter » reviennent ;
 - **quand** j'appuie sur « Confirmer l'arrêt », l'impression s'arrête : l'état passe à « Interrompue » et le bouton de la scène ne montre plus de pourcentage.
 
 ### Scénario : signaler une erreur d'impression
