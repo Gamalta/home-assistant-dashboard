@@ -33,23 +33,24 @@ La puissance s'affiche avec une décimale sous 10 W (« 0,8 W ») et au watt au-
 
 - **Étant donné** la prise « Prise bureau » allumée
 - **Quand** je garde le doigt sur son bouton
-- **Alors** la modale « Prise bureau » s'ouvre : en haut, l'illustration d'une prise murale blanche, fiche branchée et voyant bleu allumé ; en dessous, l'état « Allumée » en grand, la puissance « 85 W » et l'interrupteur « ⚡ Marche » ;
-- **quand** j'actionne l'interrupteur, l'état passe à « Éteinte », la puissance disparaît, la fiche se débranche et le voyant s'éteint en gris.
+- **Alors** la modale « Prise bureau » s'ouvre : l'illustration d'une prise murale blanche, fiche branchée et voyant bleu allumé, et en dessous la barre d'actions « ⚡ Allumer » et « Éteindre », comme celle des volets ;
+- **quand** je touche « Éteindre », la fiche se débranche et le voyant s'éteint en gris ;
+- **quand** je touche « Allumer », la fiche se rebranche et le voyant redevient bleu.
 
-La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. Une infobulle sur l'illustration explique la couleur du voyant. La plaque reste blanche en mode sombre, comme une vraie prise.
+La fiche se branche et se débranche en glissant et en fondu, le voyant change de couleur en fondu. Toucher le voyant affiche une infobulle qui explique sa couleur (« Voyant bleu : allumée »), sans basculer la prise. La modale garde la même taille, prise allumée ou éteinte, et dans les deux onglets. La plaque reste blanche en mode sombre, comme une vraie prise.
 
 ### Scénario : basculer la prise en touchant l'illustration
 
 - **Étant donné** la modale « Prise bureau » ouverte, prise allumée
 - **Quand** je touche l'illustration
-- **Alors** la prise s'éteint : la fiche se débranche et l'interrupteur passe à l'arrêt ;
+- **Alors** la prise s'éteint : la fiche se débranche ;
 - **quand** je la touche de nouveau, la fiche se rebranche et la prise se rallume.
 
 ### Scénario : signaler une prise en veille
 
 - **Étant donné** la prise « Prise TV » allumée, qui consomme 0,8 W, sous le seuil de veille
 - **Quand** j'ouvre sa modale
-- **Alors** le bouton de la scène affiche « 0,8 W », et la modale affiche l'état « En veille », « 0,8 W », la fiche branchée et le voyant orange.
+- **Alors** le bouton de la scène affiche « 0,8 W », et la modale montre la fiche branchée et le voyant orange, dont l'infobulle dit « Voyant orange : en veille, moins de 5 W ».
 
 Le seuil vaut 5 W par défaut et se règle par prise. Une prise éteinte n'est jamais « en veille », et une prise allumée dont la puissance est inconnue est « Allumée ». Ces règles se testent en unitaire (`src/utils/entity/plug.test.ts`).
 
@@ -58,7 +59,7 @@ Le seuil vaut 5 W par défaut et se règle par prise. Une prise éteinte n'est j
 - **Étant donné** la modale « Prise bureau » ouverte
 - **Quand** je touche l'icône « Historique » de l'en-tête
 - **Alors** la modale montre la puissance des dernières 24 h, avec le graphique commun du dashboard (aire pleine largeur, sans axes) et la puissance actuelle en grand ;
-- **quand** je touche l'icône « Réglage », l'illustration et l'interrupteur reviennent.
+- **quand** je touche l'icône « Réglage », l'illustration et la barre d'actions reviennent.
 
 Une prise sans capteur de puissance n'a pas d'onglet Consommation.
 

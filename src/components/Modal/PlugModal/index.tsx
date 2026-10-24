@@ -1,20 +1,17 @@
 import type {HassEntityWithService} from '@hakit/core';
 import AssessmentIcon from '@mui/icons-material/AssessmentOutlined';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNewRounded';
 import TuneIcon from '@mui/icons-material/TuneRounded';
 import ButtonBase from '@mui/material/ButtonBase';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import {Modal, ModalProps} from '..';
 import type {PlugConfigType} from '../../../configs/house';
 import {
   DEFAULT_STANDBY_THRESHOLD,
   formatPower,
-  PLUG_STATUS_LABELS,
   plugStatus,
 } from '../../../utils/entity/plug';
 import {PlugView} from './PlugView';
@@ -63,42 +60,43 @@ export function PlugModal(props: PlugModalProps) {
       {tab === 'history' && plugConfig.powerEntityId ? (
         <PowerHistory entityId={plugConfig.powerEntityId} />
       ) : (
-        <Stack spacing={3} sx={{alignItems: 'center'}}>
-          <Tooltip title={ledHint} placement="right" describeChild>
-            {/* La fiche qui se branche suffit comme retour : pas d'onde. */}
-            <ButtonBase
-              aria-label="Prise"
-              aria-pressed={on}
-              disableRipple
-              onClick={() => plug.service.toggle()}
-            >
-              <PlugView status={status} />
-            </ButtonBase>
-          </Tooltip>
-          <Stack spacing={0.5} sx={{alignItems: 'center'}}>
-            <Typography variant="h4">{PLUG_STATUS_LABELS[status]}</Typography>
-            {on && power !== null && (
-              <Typography variant="h5" color="textSecondary">
-                {formatPower(power)}
-              </Typography>
-            )}
-          </Stack>
-          <FormControlLabel
-            label="⚡ Marche"
-            labelPlacement="start"
-            control={
-              <Switch checked={on} onChange={() => plug.service.toggle()} />
-            }
+        <Stack spacing={3} sx={{px: 1}}>
+          {/* La fiche qui se branche suffit comme retour : pas d'onde. */}
+          <ButtonBase
+            aria-label="Prise"
+            aria-pressed={on}
+            disableRipple
+            onClick={() => plug.service.toggle()}
+          >
+            <PlugView status={status} ledHint={ledHint} />
+          </ButtonBase>
+          {/* Mêmes actions que la modale des volets. */}
+          <Stack
+            direction="row"
+            spacing={1}
             sx={{
-              alignSelf: 'stretch',
-              m: 0,
-              pl: 2,
-              py: 1,
-              justifyContent: 'space-between',
+              justifyContent: 'center',
+              alignItems: 'center',
               bgcolor: 'background.tertiary',
               borderRadius: 1,
             }}
-          />
+          >
+            <IconButton
+              aria-label="Allumer"
+              sx={{borderRadius: 1}}
+              onClick={() => plug.service.turnOn()}
+            >
+              ⚡
+            </IconButton>
+            <Divider orientation="vertical" sx={{height: '25px'}} />
+            <IconButton
+              aria-label="Éteindre"
+              sx={{borderRadius: 1}}
+              onClick={() => plug.service.turnOff()}
+            >
+              <PowerSettingsNewIcon />
+            </IconButton>
+          </Stack>
         </Stack>
       )}
     </Modal>

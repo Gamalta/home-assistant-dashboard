@@ -1,7 +1,9 @@
+import Tooltip from '@mui/material/Tooltip';
 import type {PlugStatus} from '../../../utils/entity/plug';
 
 type PlugViewProps = {
   status: PlugStatus;
+  ledHint: string;
 };
 
 const LED_COLORS: Record<PlugStatus, string> = {
@@ -13,7 +15,7 @@ const GLOW_OPACITY: Record<PlugStatus, number> = {on: 1, standby: 0.8, off: 0};
 
 // Prise murale française vue de face. La plaque reste blanche en mode sombre, comme une vraie prise.
 export function PlugView(props: PlugViewProps) {
-  const {status} = props;
+  const {status, ledHint} = props;
   const plugged = status !== 'off';
   const led = LED_COLORS[status];
   const glow = {
@@ -22,7 +24,7 @@ export function PlugView(props: PlugViewProps) {
   };
 
   return (
-    <svg width={240} height={310} viewBox="96 90 348 450" aria-hidden>
+    <svg width={300} height={345} viewBox="96 90 348 400" aria-hidden>
       <defs>
         <filter id="plug-shadow" x="-20%" y="-20%" width="150%" height="150%">
           <feDropShadow dx={6} dy={12} stdDeviation={11} floodOpacity={0.47} />
@@ -75,6 +77,26 @@ export function PlugView(props: PlugViewProps) {
           <stop offset={0} stopOpacity={0.25} />
           <stop offset={1} stopOpacity={0} />
         </linearGradient>
+        {/* Le câble s'efface en sortant de l'illustration. */}
+        <linearGradient
+          id="plug-cable-fade"
+          y1={462}
+          x2={0}
+          y2={490}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset={0} stopColor="#fff" />
+          <stop offset={1} stopColor="#000" />
+        </linearGradient>
+        <mask id="plug-cable-mask">
+          <rect
+            x={250}
+            y={450}
+            width={50}
+            height={90}
+            fill="url(#plug-cable-fade)"
+          />
+        </mask>
         <linearGradient id="plug-body" x2={0.6} y2={1}>
           <stop offset={0} stopColor="#4b5054" />
           <stop offset={1} stopColor="#3a3e41" />
@@ -137,32 +159,37 @@ export function PlugView(props: PlugViewProps) {
         strokeOpacity={0.07}
       />
 
-      <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
-      <rect
-        data-testid="voyant"
-        x={251}
-        y={137}
-        width={38}
-        height={8}
-        rx={4}
-        strokeWidth={6}
-        style={{
-          fill: led,
-          // Le trait, à moitié hors du voyant, l'auréole.
-          stroke: led,
-          strokeOpacity: GLOW_OPACITY[status] * 0.3,
-          transition: 'fill 0.4s, stroke 0.4s, stroke-opacity 0.4s',
-        }}
-      />
-      <rect
-        x={253}
-        y={138}
-        width={34}
-        height={3.5}
-        rx={1.75}
-        fill="#fff"
-        opacity={0.15}
-      />
+      {/* Toucher le voyant explique sa couleur, sans basculer la prise. */}
+      <Tooltip title={ledHint} enterTouchDelay={0}>
+        <g onClick={event => event.stopPropagation()}>
+          <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
+          <rect
+            data-testid="voyant"
+            x={251}
+            y={137}
+            width={38}
+            height={8}
+            rx={4}
+            strokeWidth={6}
+            style={{
+              fill: led,
+              // Le trait, à moitié hors du voyant, l'auréole.
+              stroke: led,
+              strokeOpacity: GLOW_OPACITY[status] * 0.3,
+              transition: 'fill 0.4s, stroke 0.4s, stroke-opacity 0.4s',
+            }}
+          />
+          <rect
+            x={253}
+            y={138}
+            width={34}
+            height={3.5}
+            rx={1.75}
+            fill="#fff"
+            opacity={0.15}
+          />
+        </g>
+      </Tooltip>
 
       <circle cx={270} cy={277} r={80} fill="url(#plug-well)" />
       <circle cx={270} cy={277} r={80} fill="url(#plug-well-rim)" />
@@ -190,21 +217,22 @@ export function PlugView(props: PlugViewProps) {
           ry={64}
           fill="url(#plug-fiche-shadow)"
         />
-        <rect
-          x={281}
-          y={455}
-          width={14}
-          height={85}
-          fill="url(#plug-cable-shadow)"
-        />
-
-        <rect
-          x={259}
-          y={455}
-          width={22}
-          height={85}
-          fill="url(#plug-cylinder)"
-        />
+        <g mask="url(#plug-cable-mask)">
+          <rect
+            x={281}
+            y={455}
+            width={14}
+            height={35}
+            fill="url(#plug-cable-shadow)"
+          />
+          <rect
+            x={259}
+            y={455}
+            width={22}
+            height={35}
+            fill="url(#plug-cylinder)"
+          />
+        </g>
         <path d="M250 404h40l-3 58h-34z" fill="#2b2f32" />
         {[403, 412, 421, 430, 439, 448].map(y => (
           <rect

@@ -2,12 +2,6 @@ export const DEFAULT_STANDBY_THRESHOLD = 5;
 
 export type PlugStatus = 'on' | 'standby' | 'off';
 
-export const PLUG_STATUS_LABELS: Record<PlugStatus, string> = {
-  on: 'Allumée',
-  standby: 'En veille',
-  off: 'Éteinte',
-};
-
 // Puissance en W, ou null quand le capteur ne la connaît pas (`unavailable`, `unknown`).
 export function parsePower(state?: string) {
   const power = Number.parseFloat(state ?? '');

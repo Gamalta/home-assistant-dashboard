@@ -60,30 +60,35 @@ test('bascule la prise d’un appui court', async ({page}) => {
   await expect(plug).toHaveText('85 W');
 });
 
+// L'infobulle du voyant explique sa couleur.
+async function expectLedHint(illustration: Locator, hint: string) {
+  await illustration.getByTestId('voyant').hover();
+  await expect(illustration.page().getByRole('tooltip')).toHaveText(hint);
+}
+
 test('ouvre le détail de la prise d’un appui long', async ({page}) => {
   const illustration = await openPlugModal(page, 'Prise bureau');
-
-  await expect(page.getByRole('heading', {name: 'Allumée'})).toBeVisible();
-  await expect(page.getByRole('heading', {name: '85 W'})).toBeVisible();
   await expectIllustration(illustration, 'on');
+  await expectLedHint(illustration, 'Voyant bleu : allumée');
 
-  await page.getByRole('switch', {name: 'Marche'}).click();
-  await expect(page.getByRole('heading', {name: 'Éteinte'})).toBeVisible();
-  await expect(page.getByRole('heading', {name: '85 W'})).toBeHidden();
+  await page.getByRole('button', {name: 'Éteindre'}).click();
+  await expect(illustration).toHaveAttribute('aria-pressed', 'false');
   await expectIllustration(illustration, 'off');
+
+  await page.getByRole('button', {name: 'Allumer'}).click();
+  await expect(illustration).toHaveAttribute('aria-pressed', 'true');
+  await expectIllustration(illustration, 'on');
 });
 
 test('bascule la prise en touchant l’illustration', async ({page}) => {
   const illustration = await openPlugModal(page, 'Prise bureau');
-  const toggle = page.getByRole('switch', {name: 'Marche'});
 
   await illustration.click();
   await expect(illustration).toHaveAttribute('aria-pressed', 'false');
-  await expect(toggle).not.toBeChecked();
   await expectIllustration(illustration, 'off');
 
   await illustration.click();
-  await expect(toggle).toBeChecked();
+  await expect(illustration).toHaveAttribute('aria-pressed', 'true');
   await expectIllustration(illustration, 'on');
 });
 
@@ -91,9 +96,8 @@ test('signale une prise en veille', async ({page}) => {
   await expect(plugButton(page, 'Prise TV')).toHaveText('0,8 W');
   const illustration = await openPlugModal(page, 'Prise TV');
 
-  await expect(page.getByRole('heading', {name: 'En veille'})).toBeVisible();
-  await expect(page.getByRole('heading', {name: '0,8 W'})).toBeVisible();
   await expectIllustration(illustration, 'standby');
+  await expectLedHint(illustration, 'Voyant orange : en veille, moins de 5 W');
 });
 
 test('affiche la consommation dans un second onglet', async ({page}) => {
@@ -110,5 +114,5 @@ test('affiche la consommation dans un second onglet', async ({page}) => {
 
   await page.getByRole('button', {name: 'Réglage'}).click();
   await expect(chart).toBeHidden();
-  await expect(page.getByRole('switch', {name: 'Marche'})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Allumer'})).toBeVisible();
 });
