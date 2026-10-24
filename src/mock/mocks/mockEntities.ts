@@ -8,6 +8,8 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createWledStrip} from './createWledStrip';
+import {createAmbilight} from './createAmbilight';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -257,4 +259,6 @@ export const entities: HassEntities = {
       unit_of_measurement: '%',
     },
   }),
+  ...createWledStrip('light.salon_strip'),
+  ...createAmbilight('light.tv_ambilight'),
 } as const;

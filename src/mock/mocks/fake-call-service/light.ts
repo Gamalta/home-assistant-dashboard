@@ -91,6 +91,8 @@ export function lightUpdates({
           attributes.color_mode = 'white';
         }
 
+        if (serviceData?.effect) attributes.effect = serviceData.effect;
+
         return {
           ...entities,
           [target]: {
@@ -119,5 +121,8 @@ export function lightUpdates({
           },
         };
       });
+    default:
+      // Les autres services (turn_off…) passent par le traitement générique.
+      return true;
   }
 }
