@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 import {LightModal} from '../../../Modal/LightModal';
 import Button from '@mui/material/Button';
+import {lightColor} from '../../../../utils/entity/light';
 
 type RoomLightProps = {
   id: string;
@@ -49,14 +50,13 @@ export function RoomLight(props: RoomLightProps) {
         <Button
           variant="contained"
           color="secondary"
+          aria-label={light.attributes.friendly_name}
           sx={{
             height: '100%',
             minWidth: 0,
             px: '6px',
             ...(light?.state === 'on' && {
-              color: `rgb(${(light?.custom.color ?? [255, 255, 255]).join(
-                ',',
-              )})`,
+              color: `rgb(${lightColor(light).join(',')})`,
             }),
 
             cursor: unavailable ? 'not-allowed' : 'pointer',

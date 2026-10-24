@@ -124,7 +124,7 @@ export function LightModal(props: LightModalProps) {
             {hasColorTemp && <ColorTempTab />}
             {hasEffect && <EffectTab />}
           </Stack>
-          {(hasColor || hasColorTemp || hasEffect) && (
+          {(hasColor || hasColorTemp || hasEffect || hasBrightness) && (
             <Stack direction="row" sx={{justifyContent: 'space-between'}}>
               <ToggleButtonGroup
                 exclusive
