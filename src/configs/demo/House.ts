@@ -52,7 +52,18 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  shortcuts: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'allLightsOff'},
+    {
+      type: 'energy',
+      powerEntityId: 'sensor.meter_apparent_power',
+      tariffPeriodEntityId: 'sensor.meter_tariff_period',
+      peakIndexEntityId: 'sensor.meter_peak_index',
+      offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+      subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+      prices: {peak: 0.27, offPeak: 0.21},
+    },
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {
