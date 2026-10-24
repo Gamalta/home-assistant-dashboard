@@ -50,3 +50,17 @@ export function lightsHasColor(entities: HassEntityWithService<'light'>[]) {
     ),
   );
 }
+
+export enum LightTab {
+  ON_OFF = 'on-off',
+  COLOR = 'color',
+  COLOR_TEMP = 'color_temp',
+  EFFECT = 'effect',
+}
+
+export function supportedLightTab(entities: HassEntityWithService<'light'>[]) {
+  if (lightsHasColor(entities)) return LightTab.COLOR;
+  if (lightsHasColorTemp(entities)) return LightTab.COLOR_TEMP;
+  if (lightsHasEffect(entities)) return LightTab.EFFECT;
+  return LightTab.ON_OFF;
+}
