@@ -61,6 +61,8 @@ export function mortgageStatus(mortgage: Mortgage, date: Date) {
   };
 }
 
+export type MortgageStatus = ReturnType<typeof mortgageStatus>;
+
 /** Capital restant dû chaque année jusqu'à la fin du prêt, pour la courbe. */
 export function yearlyBalance(mortgage: Mortgage) {
   const first = dayjs(mortgage.firstPaymentDate);

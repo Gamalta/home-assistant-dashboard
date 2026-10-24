@@ -1,48 +1,54 @@
-import {useTheme} from '@mui/material/styles';
-import {LineChart, lineClasses} from '@mui/x-charts/LineChart';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import {
   formatEuros,
   type Mortgage,
+  type MortgageStatus,
   yearlyBalance,
 } from '../../../utils/mortgage';
+import {Chart} from '../../Charts/Chart';
 
 type MortgageChartProps = {
   mortgage: Mortgage;
+  status: MortgageStatus;
 };
 
 export function MortgageChart(props: MortgageChartProps) {
-  const {mortgage} = props;
-  const theme = useTheme();
+  const {mortgage, status} = props;
   const points = yearlyBalance(mortgage);
+  const balance = points.map(point => point.remaining);
+  // Les années écoulées et la projection se rejoignent au dernier anniversaire du prêt.
+  const last = Math.floor(status.paymentsMade / 12);
 
   return (
-    <LineChart
-      height={180}
-      xAxis={[
-        {
-          data: points.map(point => point.date),
-          scaleType: 'time',
-          valueFormatter: (date: Date) => String(date.getFullYear()),
-        },
-      ]}
-      yAxis={[
-        {
-          width: 56,
-          min: 0,
-          max: mortgage.principal,
-          valueFormatter: (value: number) => `${Math.round(value / 1000)} k€`,
-        },
-      ]}
+    <Chart
+      bleed
+      x={points.map(point => point.date.getTime())}
+      min={0}
+      formatX={time => String(new Date(time).getFullYear())}
       series={[
         {
-          data: points.map(point => point.remaining),
-          area: true,
-          showMark: false,
-          color: theme.palette.primary.main,
-          valueFormatter: value => formatEuros(value ?? 0),
+          id: 'balance',
+          label: 'Capital restant dû',
+          data: balance.map((value, i) => (i <= last ? value : null)),
+          format: formatEuros,
+        },
+        {
+          id: 'projection',
+          label: 'Projection',
+          data: balance.map((value, i) => (i >= last ? value : null)),
+          variant: 'comparison',
+          format: formatEuros,
         },
       ]}
-      sx={{[`& .${lineClasses.area}`]: {fillOpacity: 0.25}}}
-    />
+      sx={{height: 300, width: 564}}
+    >
+      <Stack>
+        <Typography variant="h4">
+          {formatEuros(status.remainingPrincipal)}
+        </Typography>
+        <Typography color="textSecondary">Capital restant dû</Typography>
+      </Stack>
+    </Chart>
   );
 }
