@@ -65,7 +65,8 @@ const defaultConfiguration: ConfigurationOptions = {
   shadows: false,
   webGPU: false,
   screensaverMinutes: 0,
-  hiddenCategories: [],
+  // Les piles sont une information de diagnostic, affichée à la demande.
+  hiddenCategories: ['battery'],
 };
 
 const defaultRendererInfo: RendererInfo = {
