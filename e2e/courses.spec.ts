@@ -1,12 +1,12 @@
 import {expect, test, waitForScene} from './fixtures';
 
-test('gère la liste de courses depuis sa tuile', async ({page}) => {
+test('gère la liste de courses depuis sa carte', async ({page}) => {
   await page.goto('/');
   await waitForScene(page);
 
-  const tile = page.getByRole('button', {name: /^Courses/});
-  await expect(tile).toContainText('3 articles');
-  await tile.click();
+  const card = page.getByRole('button', {name: /^Courses/});
+  await expect(card).toContainText('3 articlesLaitPainPommes');
+  await card.click();
   await expect(page.getByRole('heading', {name: 'Courses'})).toBeVisible();
   await expect(page.getByRole('checkbox', {name: 'Café'})).toBeChecked();
 
@@ -21,5 +21,5 @@ test('gère la liste de courses depuis sa tuile', async ({page}) => {
   await expect(page.getByRole('checkbox', {name: 'Lait'})).toBeHidden();
   await expect(page.getByRole('checkbox', {name: 'Café'})).toBeHidden();
   await expect(page.getByRole('checkbox')).toHaveCount(3);
-  await expect(tile).toContainText('3 articles');
+  await expect(card).toContainText('3 articlesPainPommesBeurre');
 });

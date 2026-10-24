@@ -53,6 +53,6 @@ type PersonConfigType = {
 type ShoppingListShortcutConfigType = {
   type: 'shoppingList';
   todoEntityId: `todo.${string}`;
-  /** Libellé de la tuile, `Courses` par défaut. */
+  /** Libellé de la carte, `Courses` par défaut. */
   label?: string;
 };
