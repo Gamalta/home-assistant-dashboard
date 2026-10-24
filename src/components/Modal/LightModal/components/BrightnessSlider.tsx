@@ -129,7 +129,7 @@ function BrightnessDisplay({brightness}: {brightness: number}) {
   return (
     <Typography
       variant="body2"
-      color="text.secondary"
+      color="textSecondary"
       sx={{
         position: 'absolute',
         bottom: '100%',
