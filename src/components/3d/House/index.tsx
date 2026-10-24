@@ -8,9 +8,11 @@ import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
+import {LightingTrial} from '../../LightingTrial';
 
 export default function House() {
-  const {configuration, setConfiguration, webGLSupported} = useAppContext();
+  const {configuration, setConfiguration, webGLSupported, lightingTrial} =
+    useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -72,8 +74,13 @@ export default function House() {
         }
       >
         <Suspense fallback={<ModelLoader />}>
-          <HouseScene backend={backend} model={model} />
+          <HouseScene
+            key={`${houseConfig?.id}-${backend.kind}`}
+            backend={backend}
+            model={model}
+          />
         </Suspense>
+        {lightingTrial && <LightingTrial />}
       </ErrorBoundary>
     </Stack>
   );

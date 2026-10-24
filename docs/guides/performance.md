@@ -28,8 +28,26 @@ La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesu
 | `browserFps` bien inférieur à `fps`               | Coût hors rendu : React, étiquettes HTML, layout                                          |
 | `worstMs` élevé dans `__dashboardMotionBenchmark` | Saccade : recompilation de shader ou tâche longue                                         |
 
-Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md). `pnpm test` vérifie le poids et le nombre de primitives des modèles `.glb`, que `pnpm optimize-model` fusionne pour tenir le budget de draw calls ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
+Pour compter les draw calls et les compilations, enregistrer une trace dans l'onglet Performance de Chrome, ou utiliser Spector.js. `e2e/ombres.spec.ts` montre comment compter les programmes liés (`linkProgram`) pendant une vraie rotation à la souris. Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance-tablette.md). `pnpm test` vérifie le poids et le nombre de primitives des modèles `.glb`, que `pnpm optimize-model` fusionne pour tenir le budget de draw calls ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
+
+## Ombres
+
+Les ombres ne sont lues qu'au repos ([ADR 0005](../adr/0005-qualite-adaptative-en-mouvement.md)). Pendant un geste, `LightShadows` coupe l'uniform `receiveShadow` des meshes, sans toucher aux lumières ([ADR 0012](../adr/0012-suspendre-les-ombres-par-receiveshadow.md)). Pendant une interaction, changer `castShadow`, `gl.shadowMap` ou le nombre de lumières visibles recompile tous les matériaux.
+
+## Mesurer le démarrage
+
+Au chargement, la scène reste masquée par le chargeur jusqu'à la fin de la compilation des shaders, faite en arrière-plan ([ADR 0015](../adr/0015-compilation-asynchrone.md)). Pour vérifier qu'aucune tâche longue ne fige l'écran, observer les entrées `longtask` (`PerformanceObserver`) depuis la navigation, ou enregistrer le chargement dans l'onglet Performance.
+
+Chrome et le pilote gardent les programmes compilés en cache : un second chargement ne dit rien du premier lancement sur la tablette. Mesurer avec un profil neuf, et rendre chaque shader unique (par exemple, un uniform inutilisé ajouté par un script d'initialisation) pour contourner le cache du pilote.
+
+## Éclairage
+
+Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uniforms ([ADR 0030](../adr/0030-eclairage-ciel-soleil-sans-reflets.md)). Ajouter ou retirer une lumière, ou la rendre invisible, change la clé des programmes et recompile tous les matériaux : le ciel et le soleil ne varient donc que par leur intensité. Les lampes des pièces, elles, sont rendues invisibles quand elles sont éteintes pour épargner le GPU ([ADR 0005](../adr/0005-qualite-adaptative-en-mouvement.md)) : allumer ou éteindre une lampe recompile.
 
 ## Simuler la tablette
 
 Dans les DevTools, onglet Performance, régler **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
+
+## Moteur de rendu
+
+Le benchmark mesure le moteur actif. WebGL est le moteur par défaut ([ADR 0017](../adr/0017-webgl-par-defaut.md)). Pour comparer avec WebGPU, l'activer dans la modale Système, puis refaire la même mesure.
