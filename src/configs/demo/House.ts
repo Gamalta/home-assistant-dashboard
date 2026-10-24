@@ -34,6 +34,14 @@ export const SideBarConfig: SideBarConfigType = {
   system: {
     uptimeEntityId: 'sensor.system_monitor_last_boot',
     powerStatusEntityId: 'binary_sensor.rpi_power_status',
+    internetEntityId: 'binary_sensor.router_wan_status',
+    lastBackupEntityId: 'sensor.backup_last_successful',
+    lastBackupAttemptEntityId: 'sensor.backup_last_attempted',
+    nextBackupEntityId: 'sensor.backup_next_scheduled',
+    backupStateEntityId: 'sensor.backup_manager_state',
+    tabletBatteryLevelEntityId: 'sensor.wall_tablet_battery_level',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+    tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
         color: 'red',
