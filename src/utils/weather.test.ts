@@ -29,6 +29,12 @@ describe('getWeatherIcon', () => {
     expect(getWeatherIcon('sunny', true)).toBe('sunny');
   });
 
+  it('ne remplace que le soleil par la lune avant 7 h', () => {
+    at(5);
+    expect(getWeatherIcon('sunny', true)).toBe('clear-night');
+    expect(getWeatherIcon('rainy', true)).toBe('rainy');
+  });
+
   it('affiche un orage pour une condition exceptionnelle', () => {
     expect(getWeatherIcon('exceptional')).toBe('lightning-rainy');
   });
