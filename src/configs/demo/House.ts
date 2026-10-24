@@ -87,12 +87,12 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           lightEntityId: 'light.salon_strip',
-          position: {x: -3.0, y: 0.4, z: 4.6},
+          position: {x: -3.0, y: 0.4, z: 5.6},
         },
         {
           type: 'ambilight',
           lightEntityId: 'light.tv_ambilight',
-          position: {x: -3.3, y: 1.1, z: 3.9},
+          position: {x: -3.3, y: 2.6, z: 4.0},
         },
       ],
     },
