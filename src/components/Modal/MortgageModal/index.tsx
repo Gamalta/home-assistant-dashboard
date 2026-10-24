@@ -28,9 +28,9 @@ export function MortgageModal(props: MortgageModalProps) {
             <Typography variant="h4">
               {formatEuros(status.remainingPrincipal)}
             </Typography>
-            <Typography color="text.secondary">{repaid} % remboursé</Typography>
+            <Typography color="textSecondary">{repaid} % remboursé</Typography>
           </Stack>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" color="textSecondary">
             Capital restant dû sur {formatEuros(mortgage.principal)}
           </Typography>
           <LinearProgress variant="determinate" value={repaid} />
