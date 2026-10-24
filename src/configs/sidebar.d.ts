@@ -12,7 +12,9 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = AllLightsOffShortcutConfigType;
+type ShortcutConfigType =
+  | AllLightsOffShortcutConfigType
+  | ShoppingListShortcutConfigType;
 
 type AllLightsOffShortcutConfigType = {
   type: 'allLightsOff';
@@ -36,4 +38,11 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type ShoppingListShortcutConfigType = {
+  type: 'shoppingList';
+  todoEntityId: `todo.${string}`;
+  /** Libellé de la tuile, `Courses` par défaut. */
+  label?: string;
 };

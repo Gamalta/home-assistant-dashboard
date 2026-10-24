@@ -52,7 +52,10 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  shortcuts: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'allLightsOff'},
+    {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {
