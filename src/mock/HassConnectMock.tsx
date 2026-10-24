@@ -223,11 +223,19 @@ class MockConnection extends Connection {
       return fakeConfig as Result;
     }
     if (message.type === 'recorder/statistics_during_period') {
-      const {statistic_ids, start_time} = message as MessageBase & {
-        statistic_ids: string[];
-        start_time: string;
-      };
-      return getMockStatistics(statistic_ids, start_time) as Result;
+      const {statistic_ids, start_time, end_time, period} =
+        message as MessageBase & {
+          statistic_ids: string[];
+          start_time: string;
+          end_time?: string;
+          period: 'day' | 'month';
+        };
+      return getMockStatistics(
+        statistic_ids,
+        start_time,
+        end_time,
+        period,
+      ) as Result;
     }
     if (message.type === 'config/auth/list') {
       const users: AuthUser[] = [

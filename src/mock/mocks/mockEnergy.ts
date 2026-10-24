@@ -10,39 +10,74 @@ const OFF_PEAK_INDEX = 'sensor.meter_off_peak_index';
 const isOffPeak = (date: Date) => date.getHours() >= 22 || date.getHours() < 6;
 const ptec = (date: Date) => (isOffPeak(date) ? 'HC..' : 'HP..');
 
+const DAY = 86_400_000;
 const now = new Date();
 const today = new Date(now);
 today.setHours(0, 0, 0, 0);
 
-// 30 jours de statistiques quotidiennes, variées mais identiques d'un lancement à l'autre.
-function dailyStatistics(firstIndex: number, change: (day: number) => number) {
-  let state = firstIndex;
-  return Array.from({length: 30}, (_, day) => {
-    const start = new Date(today);
-    start.setDate(start.getDate() + day - 30);
-    const consumption = change(day);
-    state += consumption;
-    return {start: start.getTime(), change: consumption, state};
-  });
+/**
+ * Consommation d'un jour en kWh, sans hasard pour les tests : plus en hiver (chauffage) et le week-end, le chauffe-eau
+ * en heures creuses la nuit, et 7 % de plus par an dans le passé, pour que l'écart avec l'an dernier soit une baisse.
+ */
+function dayConsumption(date: Date) {
+  const day = Math.round(date.getTime() / DAY);
+  // 1 à la mi-janvier, −1 à la mi-juillet.
+  const winter = Math.cos((2 * Math.PI * (day - 14)) / 365.25);
+  const weekend = date.getDay() === 0 || date.getDay() === 6 ? 1.5 : 0;
+  const trend = 1 + (0.07 * (today.getTime() - date.getTime())) / (365 * DAY);
+  return {
+    peak: (6 + 3 * winter + weekend + Math.sin(day * 2.1)) * trend,
+    offPeak: (4.5 + 2 * winter + 0.5 * Math.sin(day * 0.7)) * trend,
+  };
 }
 
-const peakStatistics = dailyStatistics(12_000, day => 6 + 2 * Math.sin(day));
-const offPeakStatistics = dailyStatistics(8_000, day => 3.5 + Math.cos(day));
-const statistics: Partial<Record<string, typeof peakStatistics>> = {
-  [PEAK_INDEX]: peakStatistics,
-  [OFF_PEAK_INDEX]: offPeakStatistics,
+type Row = {start: number; change: number; state: number};
+
+// Une ligne par jour, du 1er janvier d'il y a deux ans à hier.
+function dailyStatistics(firstIndex: number, tariff: 'peak' | 'offPeak') {
+  const rows: Row[] = [];
+  let state = firstIndex;
+  const date = new Date(today.getFullYear() - 2, 0, 1);
+  for (; date < today; date.setDate(date.getDate() + 1)) {
+    const change = dayConsumption(date)[tariff];
+    state += change;
+    rows.push({start: date.getTime(), change, state});
+  }
+  return rows;
+}
+
+// Les mois en cumulant les jours, comme Home Assistant : la variation s'additionne, l'index est celui de fin.
+function monthlyStatistics(days: Row[]) {
+  const months = new Map<number, Row>();
+  for (const {start, change, state} of days) {
+    const date = new Date(start);
+    const month = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const row = months.get(month);
+    months.set(month, {
+      start: month,
+      change: (row?.change ?? 0) + change,
+      state,
+    });
+  }
+  return [...months.values()];
+}
+
+const peakStatistics = dailyStatistics(12_000, 'peak');
+const offPeakStatistics = dailyStatistics(8_000, 'offPeak');
+const statistics: Record<'day' | 'month', Partial<Record<string, Row[]>>> = {
+  day: {[PEAK_INDEX]: peakStatistics, [OFF_PEAK_INDEX]: offPeakStatistics},
+  month: {
+    [PEAK_INDEX]: monthlyStatistics(peakStatistics),
+    [OFF_PEAK_INDEX]: monthlyStatistics(offPeakStatistics),
+  },
 };
 
-// Index de fin d'hier, plus 0,4 kWh par heure pleine et 0,3 kWh par heure creuse écoulées.
-function currentIndex(
-  rows: typeof peakStatistics,
-  kWhPerHour: number,
-  hours: number,
-) {
-  return (rows[rows.length - 1].state + kWhPerHour * hours).toFixed(3);
-}
+// Index de fin d'hier, plus la part écoulée de la consommation du jour : 16 heures pleines, 8 heures creuses.
 const hours = (now.getTime() - today.getTime()) / 3_600_000;
 const offPeakHours = Math.min(hours, 6) + Math.max(hours - 22, 0);
+const currentIndex = (rows: Row[], kWh: number, share: number) =>
+  (rows[rows.length - 1].state + kWh * share).toFixed(3);
+const consumption = dayConsumption(today);
 
 const indexAttributes = {
   unit_of_measurement: 'kWh',
@@ -63,11 +98,19 @@ export const energyEntities: HassEntities = {
     attributes: {friendly_name: 'Période tarifaire'},
   }),
   ...createSensor(PEAK_INDEX, {
-    state: currentIndex(peakStatistics, 0.4, hours - offPeakHours),
+    state: currentIndex(
+      peakStatistics,
+      consumption.peak,
+      (hours - offPeakHours) / 16,
+    ),
     attributes: {friendly_name: 'Index heures pleines', ...indexAttributes},
   }),
   ...createSensor(OFF_PEAK_INDEX, {
-    state: currentIndex(offPeakStatistics, 0.3, offPeakHours),
+    state: currentIndex(
+      offPeakStatistics,
+      consumption.offPeak,
+      offPeakHours / 8,
+    ),
     attributes: {friendly_name: 'Index heures creuses', ...indexAttributes},
   }),
   ...createSensor('sensor.meter_subscribed_current', {
@@ -80,12 +123,20 @@ export const energyEntities: HassEntities = {
 };
 
 /** Réponse de `recorder/statistics_during_period` pour les index du compteur. */
-export function getMockStatistics(statisticIds: string[], startTime: string) {
+export function getMockStatistics(
+  statisticIds: string[],
+  startTime: string,
+  endTime: string | undefined,
+  period: 'day' | 'month',
+) {
   const start = new Date(startTime).getTime();
+  const end = endTime ? new Date(endTime).getTime() : Infinity;
   return Object.fromEntries(
     statisticIds.map(id => [
       id,
-      (statistics[id] ?? []).filter(row => row.start >= start),
+      (statistics[period][id] ?? []).filter(
+        row => row.start >= start && row.start < end,
+      ),
     ]),
   );
 }
