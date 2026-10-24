@@ -4,11 +4,12 @@ import {expect, test, waitForScene} from './fixtures';
 test('se met en veille, puis se réveille sans actionner ce qui est dessous', async ({
   page,
 }) => {
-  // 0,05 min : 3 s, pour ne pas attendre une vraie minute.
+  // 0,2 min : 12 s. Le réveil relance ce délai : plus court, une page
+  // ralentie se rendort avant que le test ne la voie réveillée.
   await page.addInitScript(() =>
     localStorage.setItem(
       'graphics-options',
-      JSON.stringify({screensaverMinutes: 0.05}),
+      JSON.stringify({screensaverMinutes: 0.2}),
     ),
   );
   await page.goto('/');
