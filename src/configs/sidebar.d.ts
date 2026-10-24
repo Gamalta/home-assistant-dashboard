@@ -1,4 +1,5 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
+import type {Mortgage} from '../utils/mortgage';
 
 type SideBarConfigType = {
   weatherEntityId: FilterByDomain<EntityName, 'weather'>;
@@ -23,7 +24,7 @@ type AllLightsOffActionConfigType = {
   scriptEntityId?: FilterByDomain<EntityName, 'script'>;
 };
 
-type ShortcutConfigType = MediaShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType | MortgageShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
@@ -31,6 +32,7 @@ type MediaShortcutConfigType = {
 };
 
 type SystemGraphConfigType = {
+  /** Couleur de la palette (`'warning'`, `'info'`…) ou couleur CSS. */
   color: string;
   label: string;
   sensorEntityId: FilterByDomain<EntityName, 'sensor'>;
@@ -46,4 +48,10 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type MortgageShortcutConfigType = Mortgage & {
+  type: 'mortgage';
+  /** Libellé de la carte, pour distinguer plusieurs prêts. */
+  label?: string;
 };

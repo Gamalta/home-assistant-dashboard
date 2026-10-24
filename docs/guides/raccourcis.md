@@ -56,6 +56,33 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
 
+### Crédit immobilier
+
+```ts
+{
+  type: 'mortgage',
+  label: 'Crédit maison',
+  principal: 250_000,
+  annualRate: 1.45,
+  durationMonths: 300,
+  firstPaymentDate: '2021-06-05',
+  monthlyInsurance: 28,
+}
+```
+
+La carte affiche le capital restant dû et la part déjà remboursée. La modale montre une maison qui se remplit jusqu'à cette part et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+
+| Option             | Rôle                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `principal`        | Montant emprunté, en euros                                                                  |
+| `annualRate`       | Taux nominal annuel, en %                                                                   |
+| `durationMonths`   | Nombre d'échéances                                                                          |
+| `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
+| `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
+| `label`            | Libellé de la carte, `Crédit` par défaut ; utile pour plusieurs prêts                       |
+
+Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
+
 ## Ajouter un type de carte
 
 1. Ajouter son type à l'union `ShortcutConfigType` de `src/configs/sidebar.d.ts`.
