@@ -106,7 +106,7 @@ export function HouseScene(props: HouseSceneProps) {
           />
           <AmbientLight />
           {rooms.map(room => (
-            <Room3d key={room.id} room={room} />
+            <Room3d key={room.id} room={room} model={scene} />
           ))}
           <EnvironmentLighting
             file={nightEnvironment}
