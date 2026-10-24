@@ -11,7 +11,6 @@ export type ConfigurationOptions = {
   debug: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
-  environmentReflections: boolean;
   shadows: boolean;
   webGPU: boolean;
 };
@@ -59,7 +58,6 @@ const defaultConfiguration: ConfigurationOptions = {
   debug: false,
   hideWallsShader: true,
   heatmapShader: false,
-  environmentReflections: false,
   shadows: false,
   webGPU: webGPUSupported,
 };
