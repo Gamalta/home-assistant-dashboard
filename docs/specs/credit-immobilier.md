@@ -9,7 +9,7 @@ Savoir où en est le crédit de la maison (capital restant, intérêts déjà pa
 
 ## Objectif
 
-Une tuile qui montre d'un coup d'œil la part remboursée, et une modale qui détaille le prêt à la date du jour.
+Une carte du carrousel qui montre d'un coup d'œil le capital restant dû et la part remboursée, et une modale qui détaille le prêt à la date du jour.
 
 ## Hors périmètre
 
@@ -18,15 +18,15 @@ Une tuile qui montre d'un coup d'œil la part remboursée, et une modale qui dé
 
 ## Comportement attendu
 
-### Scénario : la tuile donne l'avancement
+### Scénario : la carte donne le capital restant et l'avancement
 
 - **Étant donné** un prêt configuré
 - **Quand** la barre latérale s'affiche
-- **Alors** la tuile « Crédit » (ou le libellé configuré) indique le pourcentage du capital déjà remboursé
+- **Alors** la carte « Crédit » (ou le libellé configuré) affiche en grand le capital restant dû, avec une barre et le pourcentage du capital déjà remboursé
 
 ### Scénario : la modale détaille le prêt
 
-- **Étant donné** la tuile
+- **Étant donné** la carte
 - **Quand** l'utilisateur la touche
 - **Alors** la modale affiche le capital restant dû sur le montant emprunté, une barre d'avancement, la courbe du capital restant année par année, la mensualité (et l'assurance si elle est configurée), les échéances payées sur le total, les intérêts payés et restants, et le mois de la dernière échéance
 
@@ -39,10 +39,10 @@ Une tuile qui montre d'un coup d'œil la part remboursée, et une modale qui dé
 ## Critères d'acceptation
 
 - [x] Mensualité, capital restant et intérêts conformes à un tableau d'amortissement à échéances constantes, taux nul compris (`utils/mortgage.test.ts`).
-- [x] Plusieurs prêts possibles : une tuile par prêt, avec `label`.
+- [x] Plusieurs prêts possibles : une carte par prêt, avec `label`.
 - [x] E2E `e2e/credit.spec.ts` sur la démo, avec un prêt fictif.
 
 ## Impacts
 
-- Config : type de tuile `mortgage` dans `SideBarConfigType.shortcuts`.
+- Config : type de carte `mortgage` dans `SideBarConfigType.shortcuts`.
 - Confidentialité : les montants réels restent dans la config privée de la maison.
