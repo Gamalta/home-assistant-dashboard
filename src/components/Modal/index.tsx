@@ -1,6 +1,6 @@
 import {IconButton, Stack, Typography} from '@mui/material';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
-import {useEffect, useRef, useState} from 'react';
+import {memo, useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import {Backdrop} from './Base/Backdrop';
@@ -37,7 +37,14 @@ const variants: Variants = {
   },
 };
 
-export function Modal(props: ModalProps) {
+// Fermée, la modale ignore les rendus de son parent : pendant la sortie, un
+// rendu relance la mesure du layout partagé et la modale vide réapparaît.
+export const Modal = memo(
+  ModalWindow,
+  (prev, next) => !prev.open && !next.open,
+);
+
+function ModalWindow(props: ModalProps) {
   const {open, id, title = '', children, action, onClose} = props;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [ready, setReady] = useState(false);
