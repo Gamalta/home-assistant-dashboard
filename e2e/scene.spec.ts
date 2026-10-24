@@ -26,5 +26,8 @@ test('rend la maison en 3D', async ({page}) => {
   await waitForScene(page);
 
   // Canvas vide : 1 couleur ; boutons seuls : ~300 ; maison : des dizaines de milliers.
-  await expect.poll(() => countCanvasColors(page)).toBeGreaterThan(1000);
+  // En CI, une capture du canvas peut prendre plusieurs secondes.
+  await expect
+    .poll(() => countCanvasColors(page), {timeout: 30_000})
+    .toBeGreaterThan(1000);
 });

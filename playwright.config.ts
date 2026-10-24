@@ -8,7 +8,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [[process.env.CI ? 'github' : 'list'], ['html', {open: 'never'}]],
   // Le rendu logiciel (SwiftShader) est lent, surtout sur les runners CI.
-  expect: {timeout: 10_000},
+  timeout: 60_000,
+  expect: {timeout: 15_000},
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure',
