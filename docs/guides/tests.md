@@ -4,7 +4,7 @@ Deux niveaux de tests, choisis dans l'[ADR 0010](../adr/0010-strategie-de-tests.
 
 | Type      | Outil                                    | Emplacement                              | Commande        |
 | --------- | ---------------------------------------- | ---------------------------------------- | --------------- |
-| Unitaires | Vitest, Testing Library, jsdom           | `src/**/*.test.ts(x)`, à côté du fichier | `pnpm test`     |
+| Unitaires | Vitest, Testing Library, jsdom           | `src/`, `scripts/`, à côté du code testé | `pnpm test`     |
 | E2E       | Playwright (Chromium, WebGL SwiftShader) | `e2e/*.spec.ts`                          | `pnpm test:e2e` |
 
 La CI (`.github/workflows/ci.yml`) lance, dans l'ordre, `pnpm lint`, `pnpm typecheck`, `pnpm test` et `pnpm test:e2e`, à chaque push et sur chaque pull request.
@@ -30,7 +30,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 
 ## Écrire un test unitaire
 
-- Un fichier `Nom.test.ts` (ou `.tsx`) à côté de `Nom.ts`. Vitest ne cherche que dans `src/`.
+- Un fichier `Nom.test.ts` (ou `.tsx`) à côté de `Nom.ts`. Vitest ne cherche que dans `src/` et `scripts/`.
 - Importer explicitement `describe`, `it`, `expect` et `vi` depuis `vitest` (pas de globales).
 - Titres en français, qui décrivent le comportement attendu : `it('borne la saturation au bord de la roue')`.
 - Composants : `render` et `screen` de `@testing-library/react`, en cherchant par rôle, texte ou libellé (`getByRole`, `getByText`, `getByLabelText`). Les matchers de `@testing-library/jest-dom` (`toBeInTheDocument`…) sont chargés par `vitest.setup.ts`. N'ajouter le `ThemeProvider` MUI que si le composant lit le thème de l'application.
@@ -49,6 +49,7 @@ Les E2E ne tournent pas sur `vite dev` : c'est le build qui est déployé, et en
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
 - En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres, reflets) : la page y devient trop lente pour être pilotée.
+- Les tests de budget (`e2e/budget.spec.ts`) mesurent avec `scripts/bench/measure.ts`, comme `pnpm bench`. Ils ne vérifient que des comptes, jamais une durée ([ADR 0029](../adr/0029-budget-performance-automatise.md)).
 
 ## Déboguer un E2E
 
