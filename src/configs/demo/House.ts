@@ -204,6 +204,11 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.bedroom_2_shutter',
           position: {x: 4.2, y: 1.3, z: -5},
         },
+        {
+          type: 'printer3d',
+          prefix: 'p1s_demo',
+          position: {x: 6.2, y: 1.1, z: -1.8},
+        },
       ],
     },
     {
