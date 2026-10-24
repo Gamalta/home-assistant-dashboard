@@ -24,7 +24,7 @@ Les illustrations des modales (interrupteur, détecteur) sont des SVG écrits da
 ## Conséquences
 
 - Une pile faible se voit à l'endroit de l'appareil, sans ouvrir Home Assistant. La config grossit d'un élément par appareil : une dizaine de lignes de plus pour l'appartement.
-- Aucun coût pour la scène 3D : ni draw call, ni matériau, ni `invalidate()`. Chaque étiquette suit la caméra comme les autres, d'où un peu de travail DOM en plus pendant une rotation, à surveiller si l'appartement dépasse une vingtaine d'étiquettes de pile.
+- Aucun coût pour la scène 3D : ni draw call, ni matériau, ni `invalidate()`. Chaque étiquette suit pourtant la caméra comme les autres. Sur la démo, en rotation avec le CPU bridé ×4, les 4 étiquettes ajoutées font passer le travail du navigateur de 4,5 à 5,5 ms par image, soit environ 0,25 ms par étiquette. L'appartement en ajoutera une dizaine : c'est à surveiller sur la tablette.
 - Les illustrations n'ajoutent aucun fichier à télécharger, restent nettes à tout DPR et suivent l'état sans changer d'image. En contrepartie, elles sont moins réalistes qu'une photo.
 - Le seuil de 20 % est fixe. Un seuil par appareil, ou réglable, pourra s'ajouter s'il manque.
 - Le bouton « Tester » n'apparaît que si la config fournit une entité `button` : la plupart des détecteurs Zigbee n'en exposent pas.
