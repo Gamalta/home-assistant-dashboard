@@ -303,14 +303,6 @@ useHass.setState({
       const {domain, service, serviceData, target: target} = rawArgs;
       if (typeof target !== 'string' && !Array.isArray(target))
         return undefined as R extends true ? never : void;
-      if (Array.isArray(target)) {
-        target.forEach(entityId =>
-          useHass
-            .getState()
-            .helpers.callService({...rawArgs, target: entityId}),
-        );
-        return undefined as R extends true ? never : void;
-      }
 
       const now = new Date().toISOString();
       // Okay to cast here, we know the store is an InternalStore

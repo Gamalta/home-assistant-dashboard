@@ -41,27 +41,26 @@ async function swipeLeft(page: Page, x: number, y: number) {
   });
 }
 
-test('éteint toutes les lumières depuis le bouton de l’en-tête', async ({
+test('lance un scénario depuis le menu en haut de la vue 3D', async ({
   page,
 }) => {
-  const button = page
-    .getByRole('banner')
-    .getByRole('button', {name: /^Tout éteindre/});
-  await expect(button).toHaveAccessibleName(/\d+ allumées?$/);
-  const label = await button.getAttribute('aria-label');
-  const count = Number(label?.match(/(\d+) allumée/)?.[1]);
-  const badge = button.locator('.MuiBadge-badge');
-  await expect(badge).toHaveText(String(count));
+  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const box = await dial.boundingBox();
+  const separator = await page.getByRole('separator').boundingBox();
+  const header = await page.getByRole('banner').boundingBox();
+  expect(box!.x).toBeGreaterThan(separator!.x + separator!.width);
+  expect(box!.y).toBeCloseTo(header!.y, 0);
 
-  await button.click();
-  const title = page.getByRole('heading', {name: 'Tout éteindre'});
-  await expect(title).toBeVisible();
-  await expect(page.getByRole('listitem')).toHaveCount(count);
+  await dial.tap();
+  await expect(dial).toHaveAttribute('aria-expanded', 'true');
+  for (const name of ['Départ', 'Température', 'Énergie'])
+    await expect(page.getByRole('menuitem', {name})).toBeVisible();
 
-  await page.getByRole('button', {name: 'Éteindre', exact: true}).click();
-  await expect(title).toBeHidden();
-  await expect(button).toHaveAccessibleName('Tout éteindre, tout est éteint');
-  await expect(badge).toBeHidden();
+  await page.getByRole('menuitem', {name: 'Départ'}).tap();
+  await expect(dial).toHaveAttribute('aria-expanded', 'false');
+  const check = dial.getByTestId('coche');
+  await expect(check).toBeVisible();
+  await expect(check).toBeHidden();
 });
 
 test('fait défiler les cartes au doigt et suit la pagination', async ({

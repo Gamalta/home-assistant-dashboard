@@ -16,7 +16,8 @@ export function Container(props: ContainerProps) {
       transition={{
         duration: 1,
         type: 'spring',
-        damping: 7.5,
+        // Assez amorti pour que la modale la plus haute reste dans l'écran.
+        damping: 10,
         mass: 0.55,
         stiffness: 100,
       }}
