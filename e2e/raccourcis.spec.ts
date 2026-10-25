@@ -41,24 +41,24 @@ async function swipeLeft(page: Page, x: number, y: number) {
   });
 }
 
-test('lance un scénario depuis la colonne collée à la barre latérale', async ({
+test('lance un scénario depuis le menu en haut de la vue 3D', async ({
   page,
 }) => {
-  const bar = page.getByRole('navigation', {name: 'Scénarios'});
-  await expect(bar.getByRole('button')).toHaveText([
-    'Départ',
-    'Température',
-    'Énergie',
-  ]);
-  const box = await bar.boundingBox();
+  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const box = await dial.boundingBox();
   const separator = await page.getByRole('separator').boundingBox();
   const header = await page.getByRole('banner').boundingBox();
-  expect(box!.x).toBeCloseTo(separator!.x + separator!.width, 0);
+  expect(box!.x).toBeGreaterThan(separator!.x + separator!.width);
   expect(box!.y).toBeCloseTo(header!.y, 0);
 
-  const departure = bar.getByRole('button', {name: 'Départ'});
-  await departure.tap();
-  const check = departure.getByTestId('CheckRoundedIcon');
+  await dial.tap();
+  await expect(dial).toHaveAttribute('aria-expanded', 'true');
+  for (const name of ['Départ', 'Température', 'Énergie'])
+    await expect(page.getByRole('menuitem', {name})).toBeVisible();
+
+  await page.getByRole('menuitem', {name: 'Départ'}).tap();
+  await expect(dial).toHaveAttribute('aria-expanded', 'false');
+  const check = dial.getByTestId('coche');
   await expect(check).toBeVisible();
   await expect(check).toBeHidden();
 });
