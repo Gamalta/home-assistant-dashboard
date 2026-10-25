@@ -14,8 +14,8 @@ Le hook `useTodoList` s'abonne à `todo/item/subscribe`, comme le frontend de Ho
 
 ## Conséquences
 
-- La tuile et la modale sont à jour en temps réel, sans relecture ni minuteur.
-- Une tuile ouvre un abonnement pendant toute sa durée de vie : c'est négligeable pour une liste de courses.
+- La modale est à jour en temps réel, sans relecture ni minuteur.
+- La modale reste montée, fermée, tant que la liste est configurée, et son abonnement reste ouvert : c'est négligeable pour une liste de courses.
 - Le mock doit simuler cet abonnement et ces services (`src/mock/mocks/mockTodo.ts`).
 - Le jour où @hakit prendra en charge `todo`, le hook pourra être remplacé sans toucher aux composants.
 

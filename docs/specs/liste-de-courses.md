@@ -9,20 +9,21 @@ La liste de courses de Home Assistant (`todo.shopping_list`) n'est accessible qu
 
 ## Objectif
 
-Consulter et modifier la liste de courses depuis une carte du carrousel de la barre latérale, avec une synchronisation immédiate avec les téléphones.
+Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu des scénarios, avec une synchronisation immédiate avec les téléphones. Le propriétaire ne veut pas de carte dans le carrousel.
 
 ## Hors périmètre
 
 - Échéances, descriptions et réordonnancement des articles.
-- Plusieurs listes dans une même carte : une carte par liste.
+- Plusieurs listes : le menu n'en ouvre qu'une.
+- Le nombre d'articles à acheter hors de la modale.
 
 ## Comportement attendu
 
-### Scénario : la carte montre ce qu'il reste à acheter
+### Scénario : ouvrir la liste depuis le menu
 
-- **Étant donné** une liste avec des articles à acheter et des articles cochés
-- **Quand** la barre latérale s'affiche
-- **Alors** la carte indique le nombre d'articles à acheter, ou « Liste vide », et les 3 premiers
+- **Étant donné** une liste de courses configurée
+- **Quand** l'utilisateur ouvre le menu des scénarios et touche « Courses »
+- **Alors** le menu se referme et la modale « Courses » s'ouvre
 
 ### Scénario : ajouter un article au clavier
 
@@ -44,16 +45,17 @@ Consulter et modifier la liste de courses depuis une carte du carrousel de la ba
 
 ### Scénario : synchronisation
 
-- **Étant donné** la carte affichée
+- **Étant donné** la modale ouverte
 - **Quand** la liste change ailleurs (téléphone, assistant vocal)
-- **Alors** la carte et la modale se mettent à jour sans recharger la page
+- **Alors** la modale se met à jour sans recharger la page
 
 ## Critères d'acceptation
 
 - [x] Les articles à acheter apparaissent avant les articles cochés.
+- [x] Saisir un article ne rouvre pas le menu des scénarios.
 - [x] Chaque scénario est couvert : `e2e/courses.spec.ts`, et `hooks/useTodoList.test.ts` pour l'abonnement et les services.
 
 ## Impacts
 
-- Config : type de carte `shoppingList` dans `SideBarConfigType.shortcuts`.
+- Config : `shoppingListEntityId` dans `SideBarConfigType`. L'entrée « Courses » s'ajoute après les scénarios.
 - Mock : la liste est simulée, avec l'abonnement `todo/item/subscribe` et les services `todo.*`.
