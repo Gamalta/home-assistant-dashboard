@@ -11,8 +11,11 @@ import {
 } from 'react-resizable-panels';
 import {useState} from 'react';
 import {useEffect} from 'react';
+import {useIsMobile} from './hooks/useIsMobile';
+import {MobileDashboard} from './components/Mobile';
 
 export default function Dashboard() {
+  const mobile = useIsMobile();
   const [isDragging, setIsDragging] = useState(false);
   const {defaultLayout, onLayoutChanged} = useDefaultLayout({
     groupId: 'siderbar-main',
@@ -32,6 +35,14 @@ export default function Dashboard() {
       document.removeEventListener('pointerup', handlePointerUp);
     };
   }, [isDragging]);
+
+  if (mobile) {
+    return (
+      <HouseProvider>
+        <MobileDashboard />
+      </HouseProvider>
+    );
+  }
 
   return (
     <HouseProvider>

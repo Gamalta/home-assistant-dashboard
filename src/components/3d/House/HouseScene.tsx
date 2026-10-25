@@ -1,6 +1,6 @@
-import {Canvas} from '@react-three/fiber';
+import {Canvas, invalidate} from '@react-three/fiber';
 import Stack from '@mui/material/Stack';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   GizmoHelper,
   GizmoViewport,
@@ -25,10 +25,12 @@ import {ModelLoader} from './ModelLoader';
 type HouseSceneProps = {
   backend: RenderBackend;
   model: string;
+  focusRoomId?: string;
+  paused?: boolean;
 };
 
 export function HouseScene(props: HouseSceneProps) {
-  const {backend, model} = props;
+  const {backend, model, focusRoomId, paused = false} = props;
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
   const {scene, cameras} = useGLTF(model);
@@ -45,6 +47,12 @@ export function HouseScene(props: HouseSceneProps) {
   const [compiled, setCompiled] = useState<string>();
   const ready = compiled === graphics;
 
+  // En pause, la boucle ignore les invalidate() : une image au retour
+  // rattrape les changements survenus entre-temps.
+  useEffect(() => {
+    if (!paused) invalidate();
+  }, [paused]);
+
   return (
     <>
       {compiled === undefined && (
@@ -60,7 +68,7 @@ export function HouseScene(props: HouseSceneProps) {
         </Stack>
       )}
       <Canvas
-        frameloop={ready ? 'demand' : 'never'}
+        frameloop={ready && !paused ? 'demand' : 'never'}
         camera={{position: camera.position, fov: camera.fov}}
         // R3F réapplique `shadows` à gl.shadowMap à chaque rendu du Canvas :
         // sans la prop, il éteint les ombres. PCF explicite : three remplace
@@ -100,7 +108,12 @@ export function HouseScene(props: HouseSceneProps) {
           />
           <Daylight />
           {rooms.map(room => (
-            <Room3d key={room.id} room={room} model={scene} />
+            <Room3d
+              key={room.id}
+              room={room}
+              model={scene}
+              showLabels={!focusRoomId || room.id === focusRoomId}
+            />
           ))}
           <Precompile
             key={graphics}

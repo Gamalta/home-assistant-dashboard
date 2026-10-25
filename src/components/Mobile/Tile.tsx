@@ -11,6 +11,8 @@ type TileProps = Omit<ButtonBaseProps, 'children' | 'color' | 'sx'> & {
   active?: boolean;
   // Couleur de l'état actif : celle de la lumière, sinon l'ambre du thème.
   color?: string;
+  // Icône lisible sur cette couleur.
+  iconColor?: string;
   unavailable?: boolean;
 };
 
@@ -21,6 +23,7 @@ export function Tile(props: TileProps) {
     state,
     active = false,
     color,
+    iconColor = '#1C1C1E',
     unavailable = false,
     ...buttonProps
   } = props;
@@ -58,14 +61,23 @@ export function Tile(props: TileProps) {
           alignItems: 'center',
           justifyContent: 'center',
           bgcolor: active ? tint : 'background.tertiary',
-          color: active ? '#1C1C1E' : 'text.secondary',
+          color: active ? iconColor : 'text.secondary',
           '& svg': {width: 20, height: 20},
         }}
       >
         {icon}
       </Stack>
       <Stack sx={{minWidth: 0}}>
-        <Typography variant="body2" noWrap sx={{fontWeight: 500}}>
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 500,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
           {name}
         </Typography>
         <Typography variant="caption" noWrap color="textSecondary">

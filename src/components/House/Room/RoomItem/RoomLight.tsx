@@ -8,6 +8,7 @@ import {motion} from 'framer-motion';
 import {LightModal} from '../../../Modal/LightModal';
 import Button from '@mui/material/Button';
 import {lightColor, lightStateLabel} from '../../../../utils/entity/light';
+import {readableOn} from '../../../../utils/color';
 import {Tile} from '../../../Mobile/Tile';
 import type {ItemVariant} from '.';
 
@@ -58,6 +59,7 @@ export function RoomLight(props: RoomLightProps) {
             active={light.state === 'on'}
             aria-pressed={light.state === 'on'}
             color={`rgb(${lightColor(light).join(',')})`}
+            iconColor={readableOn(lightColor(light))}
             unavailable={unavailable}
             {...(!unavailable && lightLongPress)}
           />
