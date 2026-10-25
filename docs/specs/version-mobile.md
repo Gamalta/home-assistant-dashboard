@@ -89,11 +89,11 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche l'onglet « Pièces »
 - **Alors** chaque pièce s'affiche en carte de tuiles, dans l'ordre de la config, et la scène 3D se met en pause
 
-### Scénario : le filtre Lumières ne garde que les lumières
+### Scénario : le filtre Volets ne garde que les volets
 
 - **Étant donné** l'onglet Pièces
-- **Quand** l'utilisateur touche le filtre « Lumières »
-- **Alors** seules les tuiles de lumière restent, et les pièces sans lumière disparaissent
+- **Quand** l'utilisateur touche le filtre « Volets »
+- **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
 ### Scénario : les avatars ouvrent la feuille Foyer
 

@@ -65,6 +65,8 @@ export function RoomCarousel(props: RoomCarouselProps) {
         ref={chipsRef}
         direction="row"
         spacing={1}
+        role="group"
+        aria-label="Choix de la pièce"
         sx={{px: 2, overflowX: 'auto', scrollbarWidth: 'none'}}
       >
         {rooms.map((room, roomIndex) => (
