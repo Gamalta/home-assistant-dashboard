@@ -10,10 +10,21 @@ test('gère la liste de courses depuis le menu rapide', async ({page}) => {
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('heading', {name: 'Courses'})).toBeVisible();
   await expect(page.getByRole('checkbox', {name: 'Café'})).toBeChecked();
+  await expect(page.getByRole('checkbox', {name: 'Café'})).toContainText('☕');
 
-  await page.getByRole('textbox', {name: 'Nouvel article'}).fill('Beurre');
-  await page.keyboard.press('Enter');
+  // clientHeight ignore l'échelle de l'animation d'ouverture.
+  const list = page.getByRole('region', {name: 'Articles'});
+  const height = await list.evaluate(el => el.clientHeight);
+  for (const summary of ['Beurre', 'Œufs', 'Riz', 'Thé', 'Piles']) {
+    await page.getByRole('textbox', {name: 'Nouvel article'}).fill(summary);
+    await page.keyboard.press('Enter');
+  }
   await expect(page.getByRole('checkbox', {name: 'Beurre'})).not.toBeChecked();
+  await expect(page.getByRole('checkbox', {name: 'Piles'})).toContainText('🛒');
+  expect(await list.evaluate(el => el.clientHeight)).toBe(height);
+  await expect
+    .poll(() => list.evaluate(el => el.scrollHeight > el.clientHeight))
+    .toBe(true);
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
 
   await page.getByRole('checkbox', {name: 'Lait'}).click();
@@ -22,5 +33,5 @@ test('gère la liste de courses depuis le menu rapide', async ({page}) => {
   await page.getByRole('button', {name: 'Retirer les articles cochés'}).click();
   await expect(page.getByRole('checkbox', {name: 'Lait'})).toBeHidden();
   await expect(page.getByRole('checkbox', {name: 'Café'})).toBeHidden();
-  await expect(page.getByRole('checkbox')).toHaveCount(3);
+  await expect(page.getByRole('checkbox')).toHaveCount(7);
 });
