@@ -83,7 +83,7 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - [x] Les cartes viennent de `sideBar.shortcuts` et les scénarios de `sideBar.scenarios` ; sans config, rien ne s'affiche.
 - [x] Le carrousel n'ajoute aucune dépendance : défilement et accrochage en CSS (`scroll-snap`).
 - [x] Le nom et l'icône d'un scénario sont ceux de son script dans Home Assistant.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/raccourcis.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioAction.test.tsx` et `utils/carousel.test.ts`.
+- [x] Chaque scénario est couvert par un test : E2E `e2e/shortcuts.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioAction.test.tsx` et `utils/carousel.test.ts`.
 
 ## Impacts
 

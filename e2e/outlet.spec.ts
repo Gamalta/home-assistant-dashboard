@@ -29,11 +29,8 @@ async function expectIllustration(
   illustration: Locator,
   status: keyof typeof LED,
 ) {
-  await expect(illustration.getByTestId('voyant')).toHaveCSS(
-    'fill',
-    LED[status],
-  );
-  await expect(illustration.getByTestId('fiche')).toHaveCSS(
+  await expect(illustration.getByTestId('led')).toHaveCSS('fill', LED[status]);
+  await expect(illustration.getByTestId('plug')).toHaveCSS(
     'opacity',
     status === 'on' ? '1' : '0',
   );
