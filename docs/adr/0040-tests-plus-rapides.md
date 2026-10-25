@@ -21,8 +21,8 @@ Mesures du 25 octobre 2026 :
 
 **La CI tourne en parallèle** :
 
-- un job `check` (lint, typecheck, unitaires) et un job `e2e` découpé en 3 shards (`--shard=n/3`), chacun sur son runner ;
-- `fullyParallel: true` répartit les tests, et non les fichiers, entre les shards ;
+- un job `check` (lint, typecheck, unitaires) et un job `e2e` sur 4 runners : un pour `e2e/ombres.spec.ts`, et 3 shards (`--shard=n/3`) pour les autres tests ;
+- `fullyParallel: true` répartit les tests, et non les fichiers, entre les shards. Playwright découpe en tranches contiguës d'un même nombre de tests, sans tenir compte de leur durée : en CI, les deux tests d'ombres, voisins, durent autant qu'un shard entier, et le shard qui les portait mettait 210 s contre 95 s pour les autres ;
 - le job `e2e` tourne dans l'image `mcr.microsoft.com/playwright`, qui contient Chromium et ses dépendances, à la même version que `@playwright/test` ;
 - `push` ne lance la CI que sur `dev` et `master`. Les autres branches sont vérifiées par leur pull request.
 
@@ -34,16 +34,18 @@ Le nombre de workers en local ne change pas.
 
 - Unitaires, sur un Mac au repos : 4,7 s → 2,2 s pour les mêmes 110 tests, puis 4,0 s avec les 6 scénarios venus de l'E2E. Ces tests chargent tout le mock et attendent l'ouverture de la modale (0,55 s) : 0,1 à 1 s chacun, contre 20 à 60 s en E2E.
 - E2E en local : 2,7 min pour 38 tests → 1,9 min pour 32 tests.
-- En CI, un run vert dure 5 min 11 s, contre 13 min 54 s pour le dernier run vert de l'ancienne CI, dont 5 min d'installation de Chromium. Le shard 2, qui porte les deux tests d'ombres, fixe la durée : 4,2 min de tests, contre 2,5 min pour les deux autres. Il faut 4 runners au lieu d'un, gratuits sur un dépôt public, et chaque shard démarre l'image (25 à 30 s) et refait l'installation (20 s).
+- En CI, un run vert dure 3 min 18 s, contre 13 min 54 s pour le dernier run vert de l'ancienne CI, dont 5 min d'installation de Chromium. Les tests E2E de chaque job durent de 92 à 126 s ; avec les ombres dans le shard 2, ce shard en mettait 210 et le run 4 min 45 à 5 min 11. Il faut 5 runners au lieu d'un, gratuits sur un dépôt public, et chaque job E2E démarre l'image (25 à 40 s) et refait l'installation (10 à 20 s).
 - Le mock garde son état en mémoire : chaque test unitaire qui l'utilise repart des entités initiales (`useHass.setState({entities})`).
 - jsdom ne calcule ni couleurs, ni positions, ni animations : un scénario qui en dépend reste en E2E.
 - Monter Playwright demande de changer aussi le tag de l'image dans `ci.yml` : sinon le navigateur attendu n'est pas dans l'image et les E2E échouent au lancement.
 - Une branche sans pull request n'a plus de CI. On ouvre une PR, en brouillon au besoin.
-- Un échec E2E publie le rapport de son shard (`playwright-report-<n>`).
+- Un échec E2E publie le rapport de son job (`playwright-report-<n>`).
 - Une seule suite E2E à la fois sur une machine : en parallèle, les tests se disputent le processeur et dépassent leurs délais.
 
 ## Alternatives considérées
 
+- **4 shards, sans job pour les ombres** : les deux tests d'ombres resteraient dans la même tranche.
+- **Poids des shards** (`PWTEST_SHARD_WEIGHTS`) : une variable interne de Playwright, non documentée.
 - **Plusieurs workers sur un seul runner CI** : un Chromium SwiftShader occupe déjà 3 à 4 cœurs, et un runner public en a 4.
 - **Cache des navigateurs et `--only-shell`** : l'étape apt de `--with-deps`, responsable des 10 min, resterait.
 - **Une page partagée par fichier** (`mode: 'serial'`) : un chargement de scène par fichier, mais chaque test dépendrait de l'état laissé par le précédent (lumière allumée, impression arrêtée), et un échec ferait tomber les suivants.
