@@ -23,7 +23,15 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 - **Étant donné** une liste de courses configurée
 - **Quand** l'utilisateur ouvre le menu rapide et touche « Courses »
-- **Alors** le menu se referme et la modale « Courses » s'ouvre
+- **Alors** le menu se referme et la modale « Courses » grandit depuis le bouton de l'entrée ; fermée, elle s'y résorbe
+
+### Scénario : voir la liste d'un coup d'œil
+
+- **Étant donné** des articles à acheter et des articles cochés
+- **Quand** la modale est ouverte
+- **Alors** les articles sont des tuiles de 3 par ligne, avec un emoji selon leur nom (le panier pour un article inconnu)
+- **Et** les articles à acheter sont sous « À acheter », les cochés sous « Dans le panier », estompés, barrés et marqués d'une coche
+- **Et** la modale garde la même hauteur quel que soit le nombre d'articles : la liste défile, le champ et le bouton de retrait restent en place
 
 ### Scénario : ajouter un article au clavier
 
@@ -53,7 +61,7 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 - [x] Les articles à acheter apparaissent avant les articles cochés.
 - [x] Saisir un article ne rouvre pas le menu rapide.
-- [x] Chaque scénario est couvert : `e2e/shopping-list.spec.ts`, et `hooks/useTodoList.test.ts` pour l'abonnement et les services.
+- [x] Chaque scénario est couvert : `e2e/shopping-list.spec.ts`, `hooks/useTodoList.test.ts` pour l'abonnement et les services, et `utils/groceryEmoji.test.ts` pour les emojis.
 
 ## Impacts
 
