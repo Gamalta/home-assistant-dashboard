@@ -56,11 +56,11 @@ Un beau rendu plutôt qu'un rendu réaliste, léger pour la tablette : doux et c
 
 ## Critères d'acceptation
 
-- [x] La nuit qui tombe ne recompile aucun shader (`e2e/eclairage.spec.ts`).
-- [x] La maison est plus sombre la nuit que le jour (`e2e/eclairage.spec.ts`).
+- [x] La nuit qui tombe ne recompile aucun shader (`e2e/lighting.spec.ts`).
+- [x] La maison est plus sombre la nuit que le jour (`e2e/lighting.spec.ts`).
 - [x] L'heure simulée change le thème, et fermer le panneau revient à l'heure réelle (`e2e/options.spec.ts`).
 - [x] Hauteur du soleil d'après l'heure testée (`src/rendering/daylight.test.ts`).
-- [x] L'option a disparu de la modale Système et aucun `.hdr` n'est demandé (`e2e/options.spec.ts`, `e2e/eclairage.spec.ts`).
+- [x] L'option a disparu de la modale Système et aucun `.hdr` n'est demandé (`e2e/options.spec.ts`, `e2e/lighting.spec.ts`).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : GPU égal au repos, mêmes programmes au démarrage.
 
 ## Impacts

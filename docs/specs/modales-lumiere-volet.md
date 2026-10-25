@@ -76,7 +76,7 @@ Les deux modales s'ouvrent, se ferment et se rouvrent proprement, et leurs contr
 
 ## Critères d'acceptation
 
-- [x] Chaque scénario est couvert par un test E2E (`e2e/modales-lumiere-volet.spec.ts`) qui échoue sans son correctif.
+- [x] Chaque scénario est couvert par un test E2E (`e2e/light-shutter-modals.spec.ts`) qui échoue sans son correctif.
 - [x] Le mode sombre garde le rendu actuel de la jauge.
 
 ## Impacts

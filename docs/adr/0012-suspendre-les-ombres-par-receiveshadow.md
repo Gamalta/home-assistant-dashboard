@@ -24,7 +24,7 @@ Les lumières gardent `castShadow` tant que l'option est active, dans la limite 
 
 ## Conséquences
 
-- Mesures sur `apartment` : 0 programme compilé par geste, au lieu de 5 au premier geste. Les ombres et le DPR changent une seule fois, au premier déplacement puis 250 ms après le dernier. Le retour au repos arrive 2,1 s après le relâcher, contre 4 s auparavant. L'E2E `e2e/ombres.spec.ts` vérifie ces trois points sur la démo.
+- Mesures sur `apartment` : 0 programme compilé par geste, au lieu de 5 au premier geste. Les ombres et le DPR changent une seule fois, au premier déplacement puis 250 ms après le dernier. Le retour au repos arrive 2,1 s après le relâcher, contre 4 s auparavant. L'E2E `e2e/shadows.spec.ts` vérifie ces trois points sur la démo.
 - L'ADR 0005 reste valable, à un détail près : le délai de 250 ms court désormais à partir de la fin réelle de l'inertie.
 - Chaque matériau n'a plus qu'un programme par état des lumières, au lieu de deux.
 - En mouvement, le shader garde le code des ombres : les cartes restent liées et le vertex shader calcule encore leurs coordonnées. Seules les lectures sont sautées, par une branche sur l'uniform. Sous SwiftShader, une image en mouvement coûte autant qu'avec l'ancienne suspension. Le GPU du Mac est trop rapide pour départager les deux versions : la mesure reste à faire sur l'Adreno 610. Si son compilateur évaluait les deux branches de `( directLight.visible && receiveShadow ) ? getShadow(…) : 1.0`, il faudrait ajouter dans `shadowSampling.ts` un `if ( receiveShadow )` autour de la lecture.
