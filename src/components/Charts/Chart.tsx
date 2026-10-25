@@ -55,14 +55,14 @@ export function Chart(props: ChartProps) {
   const id = useId();
   const palette = (theme.vars ?? theme).palette;
 
-  const mains = series.filter(serie => !serie.variant);
-  const empty = series.every(serie => serie.data.every(value => value == null));
+  const mains = series.filter(item => !item.variant);
+  const empty = series.every(item => item.data.every(value => value == null));
   const mainDomain = chartDomain(
     [
-      ...stackValues(mains.map(serie => serie.data)),
+      ...stackValues(mains.map(item => item.data)),
       ...series
-        .filter(serie => serie.variant === 'comparison')
-        .flatMap(serie => serie.data),
+        .filter(item => item.variant === 'comparison')
+        .flatMap(item => item.data),
     ],
     // Une barre qui ne part pas de zéro trompe sur les proportions.
     {min: min ?? (bars ? 0 : undefined), max},
@@ -75,21 +75,21 @@ export function Chart(props: ChartProps) {
     info: palette.info.main,
     success: palette.success.main,
   };
-  const colorOf = (serie: ChartSeries) => {
-    if (serie.color) return paletteColors[serie.color] ?? serie.color;
-    return serie.variant === 'comparison'
+  const colorOf = (item: ChartSeries) => {
+    if (item.color) return paletteColors[item.color] ?? item.color;
+    return item.variant === 'comparison'
       ? palette.text.secondary
       : palette.primary.main;
   };
   const variantOf = (seriesId: string | number) =>
-    series.find(serie => serie.id === seriesId)?.variant;
+    series.find(item => item.id === seriesId)?.variant;
   const gradientId = (seriesId: string | number) => `${id}-${seriesId}`;
 
   return (
     <Box sx={[{position: 'relative'}, ...(Array.isArray(sx) ? sx : [sx])]}>
       <Box
         role="img"
-        aria-label={series.map(serie => serie.label).join(', ')}
+        aria-label={series.map(item => item.label).join(', ')}
         sx={{
           position: 'absolute',
           inset: bleed ? theme.spacing(0, -4, -4) : 0,
@@ -112,20 +112,20 @@ export function Chart(props: ChartProps) {
         ) : (
           <ChartsContainer
             margin={0}
-            series={series.map(serie => ({
-              type: bars && !serie.variant ? 'bar' : 'line',
-              id: serie.id,
-              label: serie.label,
-              data: serie.data,
-              color: colorOf(serie),
-              stack: serie.variant ? undefined : 'main',
-              area: !bars && !serie.variant,
-              curve: serie.step ? 'stepAfter' : 'monotoneX',
+            series={series.map(item => ({
+              type: bars && !item.variant ? 'bar' : 'line',
+              id: item.id,
+              label: item.label,
+              data: item.data,
+              color: colorOf(item),
+              stack: item.variant ? undefined : 'main',
+              area: !bars && !item.variant,
+              curve: item.step ? 'stepAfter' : 'monotoneX',
               showMark: false,
               shape: 'circle' as const,
-              yAxisId: serie.variant === 'line' ? serie.id : 'main',
+              yAxisId: item.variant === 'line' ? item.id : 'main',
               valueFormatter: (value: number | null) =>
-                value === null ? null : serie.format(value),
+                value === null ? null : item.format(value),
             }))}
             xAxis={[
               {
@@ -139,11 +139,11 @@ export function Chart(props: ChartProps) {
             yAxis={[
               {id: 'main', width: 0, ...mainDomain},
               ...series
-                .filter(serie => serie.variant === 'line')
-                .map(serie => ({
-                  id: serie.id,
+                .filter(item => item.variant === 'line')
+                .map(item => ({
+                  id: item.id,
                   width: 0,
-                  ...chartDomain(serie.data),
+                  ...chartDomain(item.data),
                 })),
             ]}
             sx={{
@@ -154,10 +154,10 @@ export function Chart(props: ChartProps) {
             }}
           >
             <defs>
-              {mains.map(serie => (
+              {mains.map(item => (
                 <linearGradient
-                  key={serie.id}
-                  id={gradientId(serie.id)}
+                  key={item.id}
+                  id={gradientId(item.id)}
                   // Une aire descend jusqu'à zéro, sous le domaine : on dégrade sur la hauteur du graphique.
                   gradientUnits={bars ? 'objectBoundingBox' : 'userSpaceOnUse'}
                   x2="0"
@@ -165,12 +165,12 @@ export function Chart(props: ChartProps) {
                 >
                   <stop
                     offset="0%"
-                    stopColor={colorOf(serie)}
+                    stopColor={colorOf(item)}
                     stopOpacity={bars ? 0.9 : 0.5}
                   />
                   <stop
                     offset="100%"
-                    stopColor={colorOf(serie)}
+                    stopColor={colorOf(item)}
                     stopOpacity={bars ? 0.45 : 0}
                   />
                 </linearGradient>
