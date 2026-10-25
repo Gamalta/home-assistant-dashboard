@@ -1,7 +1,8 @@
 import AddIcon from '@mui/icons-material/AddRounded';
+import ClearAllIcon from '@mui/icons-material/ClearAllRounded';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
+import Fab from '@mui/material/Fab';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -20,6 +21,10 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
   const [summary, setSummary] = useState('');
   const pending = todo.items.filter(item => item.status === 'needs_action');
   const completed = todo.items.filter(item => item.status === 'completed');
+  const sections = [
+    {title: 'À acheter', items: pending},
+    {title: 'Dans le panier', items: completed},
+  ].filter(section => section.items.length);
 
   const add = (event: FormEvent) => {
     event.preventDefault();
@@ -30,7 +35,7 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
 
   return (
     <Modal {...modalProps}>
-      <Stack spacing={2} sx={{width: 360, maxWidth: '100%'}}>
+      <Stack spacing={2} sx={{width: 440, maxWidth: '100%', height: 440}}>
         <Stack component="form" direction="row" spacing={1} onSubmit={add}>
           <TextField
             size="small"
@@ -40,27 +45,57 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
             onChange={event => setSummary(event.target.value)}
             slotProps={{htmlInput: {'aria-label': 'Nouvel article'}}}
           />
-          <IconButton type="submit" aria-label="Ajouter">
+          <Fab size="small" color="primary" type="submit" aria-label="Ajouter">
             <AddIcon />
-          </IconButton>
+          </Fab>
         </Stack>
-        {todo.items.length ? (
-          <List dense disablePadding sx={{maxHeight: 360, overflowY: 'auto'}}>
-            {[...pending, ...completed].map(item => (
-              <ShoppingListItem
-                key={item.uid}
-                item={item}
-                onToggle={() =>
-                  todo.setCompleted(item, item.status === 'needs_action')
-                }
-              />
-            ))}
-          </List>
-        ) : (
-          <Typography color="textSecondary">La liste est vide.</Typography>
-        )}
+        <Stack
+          component="section"
+          aria-label="Articles"
+          spacing={2}
+          sx={{flex: 1, minHeight: 0, overflowY: 'auto'}}
+        >
+          {sections.length ? (
+            sections.map(section => (
+              <Stack key={section.title} spacing={1}>
+                <Typography variant="overline" color="textSecondary">
+                  {section.title} · {section.items.length}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: 1,
+                  }}
+                >
+                  {section.items.map(item => (
+                    <ShoppingListItem
+                      key={item.uid}
+                      item={item}
+                      onToggle={() =>
+                        todo.setCompleted(item, item.status === 'needs_action')
+                      }
+                    />
+                  ))}
+                </Box>
+              </Stack>
+            ))
+          ) : (
+            <Stack
+              sx={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'text.secondary',
+              }}
+            >
+              <Typography sx={{fontSize: 56}}>🛒</Typography>
+              <Typography>La liste est vide.</Typography>
+            </Stack>
+          )}
+        </Stack>
         {completed.length > 0 && (
-          <Button onClick={todo.removeCompleted}>
+          <Button startIcon={<ClearAllIcon />} onClick={todo.removeCompleted}>
             Retirer les articles cochés
           </Button>
         )}
