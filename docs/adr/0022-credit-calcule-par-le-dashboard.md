@@ -10,7 +10,7 @@ Home Assistant n'expose aucune entité pour un crédit immobilier. Il faudrait d
 
 ## Décision
 
-La tuile `mortgage` porte ces paramètres dans sa config. Les fonctions pures de `src/utils/mortgage.ts` calculent la mensualité, le capital restant dû, les intérêts et le calendrier à la date du jour.
+Chaque prêt de `sideBar.mortgages` porte ces paramètres dans la config. Les fonctions pures de `src/utils/mortgage.ts` calculent la mensualité, le capital restant dû, les intérêts et le calendrier à la date du jour.
 
 ## Conséquences
 
