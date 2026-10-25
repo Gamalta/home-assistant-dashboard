@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import type {HassEntityWithService} from '@hakit/core';
-import {lightColor} from './light';
+import {lightColor, lightStateLabel} from './light';
 
 // Seuls les modes de couleur et la couleur calculée par @hakit/core comptent.
 const light = (modes: string[], color: [number, number, number]) =>
@@ -20,5 +20,26 @@ describe('lightColor', () => {
     expect(red).toBe(255);
     expect(green).toBeGreaterThan(100);
     expect(green).toBeGreaterThan(blue);
+  });
+});
+
+describe('lightStateLabel', () => {
+  const withState = (state: string, brightness?: number) =>
+    ({
+      state,
+      attributes: {brightness},
+    }) as unknown as HassEntityWithService<'light'>;
+
+  it('donne la luminosité en % d’une lumière allumée', () => {
+    expect(lightStateLabel(withState('on', 204))).toBe('80 %');
+  });
+
+  it('dit « Allumée » sans variateur', () => {
+    expect(lightStateLabel(withState('on'))).toBe('Allumée');
+  });
+
+  it('dit « Éteinte » ou « Indisponible »', () => {
+    expect(lightStateLabel(withState('off', 204))).toBe('Éteinte');
+    expect(lightStateLabel(withState('unavailable'))).toBe('Indisponible');
   });
 });

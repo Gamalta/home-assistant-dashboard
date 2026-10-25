@@ -79,12 +79,24 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createCover('cover.salon_shutter'),
-  ...createCover('cover.kitchen_shutter'),
-  ...createCover('cover.kitchen_shutter_2'),
-  ...createCover('cover.bedroom_shutter'),
-  ...createCover('cover.bedroom_2_shutter'),
-  ...createCover('cover.bedroom_3_shutter'),
+  ...createCover('cover.salon_shutter', {
+    attributes: {friendly_name: 'Volet du séjour'},
+  }),
+  ...createCover('cover.kitchen_shutter', {
+    attributes: {friendly_name: 'Fenêtre de la cuisine'},
+  }),
+  ...createCover('cover.kitchen_shutter_2', {
+    attributes: {friendly_name: 'Porte-fenêtre de la cuisine'},
+  }),
+  ...createCover('cover.bedroom_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre'},
+  }),
+  ...createCover('cover.bedroom_2_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre 2'},
+  }),
+  ...createCover('cover.bedroom_3_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre 3'},
+  }),
 
   ...createLight('light.salon_light', {
     state: 'off',
