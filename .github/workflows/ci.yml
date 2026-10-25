@@ -56,7 +56,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        # En rendu logiciel, les deux tests d'ombres durent autant qu'un shard
+        # entier : ils ont leur propre job.
+        args:
+          - --shard=1/3 --grep-invert ombres.spec
+          - --shard=2/3 --grep-invert ombres.spec
+          - --shard=3/3 --grep-invert ombres.spec
+          - e2e/ombres.spec.ts
 
     steps:
       - name: Checkout
@@ -84,12 +90,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: E2E tests
-        run: pnpm test:e2e --shard=${{ matrix.shard }}/3
+        run: pnpm test:e2e ${{ matrix.args }}
 
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.shard }}
+          name: playwright-report-${{ strategy.job-index }}
           path: playwright-report/
           retention-days: 7
