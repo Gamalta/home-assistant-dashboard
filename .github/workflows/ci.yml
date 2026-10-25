@@ -64,6 +64,11 @@ jobs:
         with:
           submodules: false
 
+      # Le dépôt appartient à l'utilisateur du runner, pas à root : sans cela,
+      # git refuse le `git rev-parse` de vite.config.ts.
+      - name: Trust the checkout
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
