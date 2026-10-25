@@ -39,7 +39,7 @@ describe('useLongPress', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  it('ignore un doigt qui fait défiler la page', () => {
+  it("un doigt qui fait défiler n'appuie sur rien", () => {
     const {handlers, onLongPress, onClick} = setup();
 
     act(() => handlers().onTouchStart(touch(0, 0)));
