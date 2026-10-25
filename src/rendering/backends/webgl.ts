@@ -35,4 +35,12 @@ export const webGLBackend: RenderBackend = {
       waitForWebGlContext(renderer.getContext());
     }
   },
+  compile: async (renderer, scene, camera) => {
+    if (!(renderer instanceof THREE.WebGLRenderer)) return;
+    await renderer.compileAsync(scene, camera);
+    // Lit les uniforms tant que la file du GPU est vide. À la première image,
+    // chaque lecture attendrait que le GPU ait fini les dessins précédents,
+    // création de leurs pipelines comprise.
+    renderer.info.programs?.forEach(program => program.getUniforms());
+  },
 };

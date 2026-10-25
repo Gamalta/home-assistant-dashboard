@@ -37,17 +37,17 @@ export const SideBarConfig: SideBarConfigType = {
     graphs: [
       {
         color: 'red',
-        label: 'Mémoire:',
+        label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
         color: 'orange',
-        label: 'Température:',
+        label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
         color: 'cyan',
-        label: 'Processeur:',
+        label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],
@@ -88,6 +88,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.salon_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
+        },
+        {
+          type: 'outlet',
+          switchEntityId: 'switch.tv_outlet',
+          powerEntityId: 'sensor.tv_outlet_power',
+          position: {x: -3.3, y: 0.3, z: 4.3},
         },
       ],
     },
@@ -209,6 +215,11 @@ export const HouseConfig: HouseConfigType = {
           shutterEntityId: 'cover.bedroom_2_shutter',
           position: {x: 4.2, y: 1.3, z: -5},
         },
+        {
+          type: 'printer3d',
+          prefix: 'p1s_demo',
+          position: {x: 6.2, y: 1.1, z: -1.8},
+        },
       ],
     },
     {
@@ -232,6 +243,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_3_shutter',
           position: {x: 6.5, y: 1.3, z: 4.2},
+        },
+        {
+          type: 'outlet',
+          switchEntityId: 'switch.desk_outlet',
+          powerEntityId: 'sensor.desk_outlet_power',
+          position: {x: 5.8, y: 0.8, z: 1.2},
         },
       ],
     },
@@ -287,6 +304,30 @@ export const HouseConfig: HouseConfigType = {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.toilet_light',
+        },
+      ],
+    },
+    {
+      id: 'Hallway',
+      name: 'Entrée',
+      position: {x: 1.5, y: 2.5, z: 4},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.hallway_dimmer',
+        },
+      ],
+    },
+    {
+      id: 'Storage',
+      name: 'Débarras',
+      position: {x: 4, y: 2.5, z: 4.6},
+      items: [
+        {
+          type: 'light',
+          roomDisplay: true,
+          lightEntityId: 'light.storage_switch',
         },
       ],
     },
