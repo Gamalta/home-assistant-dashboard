@@ -1,16 +1,20 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CheckIcon from '@mui/icons-material/CheckRounded';
 import CloseIcon from '@mui/icons-material/CloseRounded';
+import CartIcon from '@mui/icons-material/ShoppingCartRounded';
 import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
+import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {ScenarioAction} from './ScenarioAction';
 
 export function ScenarioBar() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
+  const [shoppingListOpen, setShoppingListOpen] = useState(false);
 
   useEffect(() => {
     if (!launched) return;
@@ -18,42 +22,70 @@ export function ScenarioBar() {
     return () => clearTimeout(timeout);
   }, [launched]);
 
-  const scenarios = houseConfig?.sideBar.scenarios;
-  if (!scenarios?.length) return null;
+  const scenarios = houseConfig?.sideBar.scenarios ?? [];
+  const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
+  if (!scenarios.length && !shoppingListEntityId) return null;
 
   return (
-    <SpeedDial
-      ariaLabel="Scénarios"
-      direction="down"
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      icon={
-        launched ? (
-          // data-testid explicite : MUI ne le pose qu'en développement.
-          <CheckIcon data-testid="coche" />
-        ) : (
-          <SpeedDialIcon icon={<AutoAwesomeIcon />} openIcon={<CloseIcon />} />
-        )
-      }
-      sx={{
-        position: 'absolute',
-        top: theme => theme.spacing(4),
-        left: theme => theme.spacing(2),
-        // Au-dessus des étiquettes et du chargeur de la vue 3D.
-        zIndex: 1,
-      }}
-    >
-      {scenarios.map(scriptEntityId => (
-        <ScenarioAction
-          key={scriptEntityId}
-          scriptEntityId={scriptEntityId}
-          onLaunch={() => {
-            setOpen(false);
-            setLaunched(true);
-          }}
+    <>
+      <SpeedDial
+        ariaLabel="Scénarios"
+        direction="down"
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        icon={
+          launched ? (
+            // data-testid explicite : MUI ne le pose qu'en développement.
+            <CheckIcon data-testid="coche" />
+          ) : (
+            <SpeedDialIcon
+              icon={<AutoAwesomeIcon />}
+              openIcon={<CloseIcon />}
+            />
+          )
+        }
+        sx={{
+          position: 'absolute',
+          top: theme => theme.spacing(4),
+          left: theme => theme.spacing(2),
+          // Au-dessus des étiquettes et du chargeur de la vue 3D.
+          zIndex: 1,
+        }}
+      >
+        {scenarios.map(scriptEntityId => (
+          <ScenarioAction
+            key={scriptEntityId}
+            scriptEntityId={scriptEntityId}
+            onLaunch={() => {
+              setOpen(false);
+              setLaunched(true);
+            }}
+          />
+        ))}
+        {shoppingListEntityId && (
+          <SpeedDialAction
+            icon={<CartIcon />}
+            onClick={() => {
+              setOpen(false);
+              setShoppingListOpen(true);
+            }}
+            slotProps={{
+              tooltip: {title: 'Courses', open: true, placement: 'right'},
+            }}
+          />
+        )}
+      </SpeedDial>
+      {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
+          React, et le focus du champ de saisie rouvrirait le menu. */}
+      {shoppingListEntityId && (
+        <ShoppingListModal
+          open={shoppingListOpen}
+          onClose={() => setShoppingListOpen(false)}
+          title="Courses"
+          todoEntityId={shoppingListEntityId}
         />
-      ))}
-    </SpeedDial>
+      )}
+    </>
   );
 }

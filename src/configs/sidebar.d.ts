@@ -11,13 +11,13 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
+  /** Liste `todo` ouverte par l'entrée « Courses » du menu des scénarios. */
+  shoppingListEntityId?: `todo.${string}`;
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType =
-  | MediaShortcutConfigType
-  | ShoppingListShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
@@ -40,11 +40,4 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
-};
-
-type ShoppingListShortcutConfigType = {
-  type: 'shoppingList';
-  todoEntityId: `todo.${string}`;
-  /** Libellé de la carte, `Courses` par défaut. */
-  label?: string;
 };

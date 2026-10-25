@@ -53,10 +53,10 @@ export const SideBarConfig: SideBarConfigType = {
     ],
   },
   scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
-    {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
   ],
 };
 

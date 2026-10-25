@@ -7,15 +7,16 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {type FormEvent, useState} from 'react';
 import {Modal, ModalProps} from '..';
-import type {useTodoList} from '../../../hooks/useTodoList';
+import {useTodoList} from '../../../hooks/useTodoList';
 import {ShoppingListItem} from './ShoppingListItem';
 
 type ShoppingListModalProps = Omit<ModalProps, 'children'> & {
-  todo: ReturnType<typeof useTodoList>;
+  todoEntityId: string;
 };
 
 export function ShoppingListModal(props: ShoppingListModalProps) {
-  const {todo, ...modalProps} = props;
+  const {todoEntityId, ...modalProps} = props;
+  const todo = useTodoList(todoEntityId);
   const [summary, setSummary] = useState('');
   const pending = todo.items.filter(item => item.status === 'needs_action');
   const completed = todo.items.filter(item => item.status === 'completed');
