@@ -10,9 +10,9 @@ type SideBarConfigType = {
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
     graphs: SystemGraphConfigType[];
   };
-  /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
+  /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
-  /** Prêts ouverts par les entrées « Crédit » du menu des scénarios. */
+  /** Prêts ouverts par les entrées « Crédit » du menu rapide. */
   mortgages?: MortgageConfigType[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];

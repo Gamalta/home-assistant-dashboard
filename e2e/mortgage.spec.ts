@@ -4,14 +4,14 @@ import {expect, test, waitForScene} from './fixtures';
 async function openMortgage(page: Page) {
   await page.goto('/');
   await waitForScene(page);
-  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
   await dial.click();
   await page.getByRole('menuitem', {name: 'Crédit'}).click();
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('heading', {name: 'Crédit'})).toBeVisible();
 }
 
-test('illustre l’avancement du crédit depuis le menu des scénarios', async ({
+test('illustre l’avancement du crédit depuis le menu rapide', async ({
   page,
 }) => {
   await openMortgage(page);
@@ -45,7 +45,7 @@ test('trace le capital restant dû dans l’historique', async ({page}) => {
   await page.getByRole('button', {name: 'Avancement'}).click();
   await expect(chart).toBeHidden();
   await expect(page.getByRole('img', {name: /% remboursé$/})).toBeVisible();
-  await expect(page.getByRole('button', {name: 'Scénarios'})).toHaveAttribute(
+  await expect(page.getByRole('button', {name: 'Menu rapide'})).toHaveAttribute(
     'aria-expanded',
     'false',
   );

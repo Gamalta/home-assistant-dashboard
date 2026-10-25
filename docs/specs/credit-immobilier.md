@@ -9,7 +9,7 @@ Savoir où en est le crédit de la maison (capital restant, intérêts déjà pa
 
 ## Objectif
 
-Une entrée « Crédit » dans le menu des scénarios, qui ouvre une modale détaillant le prêt à la date du jour. Le propriétaire ne veut pas de carte dans le carrousel.
+Une entrée « Crédit » dans le menu rapide, qui ouvre une modale détaillant le prêt à la date du jour. Le propriétaire ne veut pas de carte dans le carrousel.
 
 ## Hors périmètre
 
@@ -21,7 +21,7 @@ Une entrée « Crédit » dans le menu des scénarios, qui ouvre une modale dét
 ### Scénario : la modale illustre l'avancement
 
 - **Étant donné** un prêt configuré
-- **Quand** l'utilisateur ouvre le menu des scénarios et touche « Crédit » (ou le libellé configuré)
+- **Quand** l'utilisateur ouvre le menu rapide et touche « Crédit » (ou le libellé configuré)
 - **Alors** le menu se referme, et la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, avec ce pourcentage en grand dessous
 - **Et** une colonne donne en grand le capital restant dû sur le montant emprunté, la mensualité (et l'assurance si elle est configurée), le mois de la dernière échéance avec les échéances payées sur le total, les intérêts payés et les intérêts restants
 
@@ -43,8 +43,8 @@ Une entrée « Crédit » dans le menu des scénarios, qui ouvre une modale dét
 - [x] Mensualité, capital restant et intérêts conformes à un tableau d'amortissement à échéances constantes, taux nul compris (`utils/mortgage.test.ts`).
 - [x] La maison se remplit à hauteur de la part remboursée, et n'affiche 100 % qu'une fois tout remboursé (`MortgageModal/MortgageHouse.test.tsx`).
 - [x] Plusieurs prêts possibles : une entrée du menu par prêt, avec `label`.
-- [x] Utiliser la modale ne rouvre pas le menu des scénarios.
-- [x] E2E `e2e/credit.spec.ts` sur la démo, avec un prêt fictif.
+- [x] Utiliser la modale ne rouvre pas le menu rapide.
+- [x] E2E `e2e/mortgage.spec.ts` sur la démo, avec un prêt fictif.
 
 ## Impacts
 
