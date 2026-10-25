@@ -9,7 +9,7 @@ Ce qui concerne toute la maison n'a pas d'emplacement : la carte sous les person
 
 ## Objectif
 
-Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, et une barre de scénarios (Départ, Température, Énergie…) collée à la barre latérale, qui lance chacun d'un appui.
+Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, et un menu de scénarios (Départ, Température, Énergie…) en haut de la vue 3D, près de la barre latérale, qui lance chacun en deux appuis.
 
 ## Hors périmètre
 
@@ -52,24 +52,24 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - **Et** les boutons « Pause » et « Suivant » agissent sans ouvrir la modale
 - **Et** un lecteur éteint affiche « Éteint », sans boutons
 
-### Scénario : la barre de scénarios prolonge la barre latérale
+### Scénario : ouvrir le menu des scénarios
 
 - **Étant donné** une maison avec des scénarios configurés
-- **Quand** le dashboard s'affiche
-- **Alors** une colonne de boutons, collée au bord droit de la barre latérale et à la hauteur de l'en-tête, montre l'icône et le nom de chaque script, dans l'ordre de la config
+- **Quand** l'utilisateur touche le bouton rond « Scénarios », en haut à gauche de la vue 3D, près de la barre latérale et à la hauteur de l'en-tête
+- **Alors** le menu se déplie vers le bas, avec l'icône et le nom de chaque script, dans l'ordre de la config
 
 ### Scénario : lancer un scénario d'un appui
 
-- **Étant donné** la barre de scénarios
+- **Étant donné** le menu des scénarios ouvert
 - **Quand** l'utilisateur touche « Départ »
-- **Alors** le script est lancé tout de suite, sans modale
-- **Et** le bouton montre une coche dans la couleur primaire pendant 1,5 s, puis reprend son icône
+- **Alors** le script est lancé tout de suite, sans confirmation, et le menu se referme
+- **Et** le bouton rond montre une coche pendant 1,5 s, puis reprend son icône
 
 ### Scénario : script absent
 
 - **Étant donné** un script configuré qui n'existe pas dans Home Assistant
 - **Quand** le dashboard s'affiche
-- **Alors** son bouton n'apparaît pas
+- **Alors** il n'apparaît pas dans le menu
 
 ### Scénario : la page tient sur l'écran de la tablette
 
@@ -82,11 +82,11 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - [x] Les cartes viennent de `sideBar.shortcuts` et les scénarios de `sideBar.scenarios` ; sans config, rien ne s'affiche.
 - [x] Le carrousel n'ajoute aucune dépendance : défilement et accrochage en CSS (`scroll-snap`).
 - [x] Le nom et l'icône d'un scénario sont ceux de son script dans Home Assistant.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/raccourcis.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioButton.test.tsx` et `utils/carousel.test.ts`.
+- [x] Chaque scénario est couvert par un test : E2E `e2e/raccourcis.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioAction.test.tsx` et `utils/carousel.test.ts`.
 
 ## Impacts
 
 - Config : champs optionnels `scenarios` et `shortcuts` dans `SideBarConfigType`. `{type: 'allLightsOff'}` disparaît : un script Home Assistant le remplace, dans `scenarios` ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)).
 - Mock : deux lecteurs multimédias et trois scripts fictifs. Les changements de média gardent le nom du lecteur, `light.turn_off` est simulé, et les lumières de la démo ont un nom.
 - Dock : il ne s'ouvre plus sur un glissement horizontal, ni sur un appui tactile dans le bas de la barre.
-- Performance : la barre recouvre le coin haut gauche de la vue 3D, sans toucher à la scène.
+- Performance : le bouton rond recouvre le coin haut gauche de la vue 3D, et le menu ouvert un peu plus, sans toucher à la scène.

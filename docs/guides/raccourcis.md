@@ -12,7 +12,7 @@ export const SideBarConfig: SideBarConfigType = {
 };
 ```
 
-- `scenarios` : une colonne de boutons collée à la barre latérale, en haut de la vue 3D. Un appui lance le script aussitôt.
+- `scenarios` : un bouton rond « Scénarios » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
@@ -34,7 +34,7 @@ Les autres types gardent leur place et leurs options dans `shortcuts`.
 
 ## Scénarios
 
-Un scénario est un [script Home Assistant](https://www.home-assistant.io/integrations/script/). Son bouton reprend le nom du script et son icône, `mdi:script-text-outline` par défaut : on les change dans Home Assistant. Un appui lance le script sans confirmation, et une coche le confirme pendant 1,5 s. Un script absent de Home Assistant n'a pas de bouton.
+Un scénario est un [script Home Assistant](https://www.home-assistant.io/integrations/script/). Son bouton reprend le nom du script et son icône, `mdi:script-text-outline` par défaut : on les change dans Home Assistant. Un appui sur un scénario le lance sans confirmation et referme le menu, et une coche remplace l'icône du bouton rond pendant 1,5 s. Un script absent de Home Assistant n'apparaît pas.
 
 ```yaml
 script:
@@ -52,7 +52,7 @@ script:
           preset_mode: away
 ```
 
-Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit à le lancer. La colonne tient 4 ou 5 scénarios : au-delà, elle descend trop sur la vue 3D.
+Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit à le lancer. Le menu tient 5 ou 6 scénarios : au-delà, il descend trop sur la vue 3D.
 
 ## Cartes
 
