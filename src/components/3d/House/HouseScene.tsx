@@ -15,6 +15,7 @@ import type {RenderBackend} from '../../../rendering/backends';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
+import {RoomFocus} from '../RoomFocus';
 import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
@@ -36,6 +37,7 @@ export function HouseScene(props: HouseSceneProps) {
   const {scene, cameras} = useGLTF(model);
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
+  const focusRoom = rooms.find(room => room.id === focusRoomId);
   const moving = useRef(false);
   // Options qui changent les shaders : la scène ne s'affiche qu'une fois
   // compilée pour celles en cours.
@@ -92,6 +94,9 @@ export function HouseScene(props: HouseSceneProps) {
             </>
           )}
           <Camera onMovingChange={value => (moving.current = value)} />
+          {focusRoom && (
+            <RoomFocus position={focusRoom.position} base={camera.position} />
+          )}
           {ready && <Benchmark backend={backend} />}
           <Scene scene={scene} backend={backend} />
           <SceneMaterials
