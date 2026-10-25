@@ -72,11 +72,11 @@ Tous les graphiques du dashboard ont le même design, celui de l'historique Clim
 - [x] Un seul composant, `Chart`, trace tous les graphiques ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).
 - [x] L'historique Climat garde sa bascule réglage / historique, son minimum et son maximum, et l'heure de mise à jour au survol de la valeur.
 - [x] Les couleurs viennent de la palette du thème, en clair comme en sombre.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/graphiques.spec.ts` ; unitaires `src/components/Charts/Chart.test.tsx` (chargement, aucune donnée) et `src/utils/chart.test.ts` (capteur indisponible, préparation des séries).
+- [x] Chaque scénario est couvert par un test : E2E `e2e/charts.spec.ts` ; unitaires `src/components/Charts/Chart.test.tsx` (chargement, aucune donnée) et `src/utils/chart.test.ts` (capteur indisponible, préparation des séries).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : la scène 3D n'est pas touchée.
 
 ## Impacts
 
-- Config : `SystemGraphConfigType.color` accepte une couleur de la palette (`'error'`, `'warning'`, `'info'`…) en plus d'une couleur CSS. La config `demo` s'en sert et perd les deux-points de ses libellés, désormais placés au-dessus de la valeur.
+- Config : `SystemGraphConfigType.color` accepte une couleur de la palette (`'error'`, `'warning'`, `'info'`…) en plus d'une couleur CSS. La config `demo` garde ses couleurs CSS et perd les deux-points de ses libellés, désormais placés au-dessus de la valeur.
 - Mock : l'historique simulé suit une marche aléatoire au lieu de valeurs tirées au hasard, comme un vrai capteur.
 - Performance : un historique est ramené à un point par quart d'heure, soit 96 points sur 24 h au plus, quel que soit le nombre d'états reçus.

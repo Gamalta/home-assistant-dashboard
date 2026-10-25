@@ -170,7 +170,6 @@ const last = Math.floor(status.paymentsMade / 12);
   bleed
   x={points.map(point => point.date.getTime())}
   min={0}
-  max={mortgage.principal}
   formatX={time => String(new Date(time).getFullYear())}
   series={[
     {
@@ -200,5 +199,5 @@ Les cartes de la modale Système (`SystemGraphDisplay`) montrent le même graphi
 ## Tester
 
 - La préparation des données se teste en unitaire, à côté de sa fonction.
-- En E2E, le graphique se trouve par son nom : `page.getByRole('img', {name: 'Puissance'})`. Survoler le graphique (`hover()`) ouvre l'infobulle, un tableau : `page.getByRole('table')`. `e2e/graphiques.spec.ts` montre aussi comment poser un doigt.
+- En E2E, le graphique se trouve par son nom : `page.getByRole('img', {name: 'Puissance'})`. Survoler le graphique (`hover()`) ouvre l'infobulle, un tableau : `page.getByRole('table')`. `e2e/charts.spec.ts` montre aussi comment poser un doigt.
 - Regarde le rendu en clair et en sombre, à 1280 × 800.

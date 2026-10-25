@@ -4,6 +4,8 @@ import {lightUpdates} from './light';
 import {mediaPlayerUpdates} from './mediaPlayer';
 import {vacuumUpdates} from './vacuum';
 import {alarmControlPanelUpdates} from './alarmControlPanel';
+import {buttonUpdates} from './button';
+import {selectUpdates} from './select';
 
 export default {
   scene: sceneUpdates,
@@ -14,4 +16,6 @@ export default {
   vacuum: vacuumUpdates,
   alarmControlPanel: alarmControlPanelUpdates,
   alarm_control_panel: alarmControlPanelUpdates,
+  button: buttonUpdates,
+  select: selectUpdates,
 };
