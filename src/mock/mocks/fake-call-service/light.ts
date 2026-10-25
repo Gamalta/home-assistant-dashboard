@@ -119,5 +119,8 @@ export function lightUpdates({
           },
         };
       });
+    default:
+      // Les autres services (turn_off…) passent par le traitement générique.
+      return true;
   }
 }

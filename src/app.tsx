@@ -36,8 +36,12 @@ function App() {
           <Dashboard />
         </HAConnect>
       </ThemeProvider>
-      <Analytics />
-      <SpeedInsights />
+      {import.meta.env.VITE_VERCEL_ENV && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
     </AppProvider>
   );
 }

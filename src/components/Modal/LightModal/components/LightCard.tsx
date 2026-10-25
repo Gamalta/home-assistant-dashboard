@@ -11,6 +11,7 @@ import LinkIcon from '@mui/icons-material/LinkRounded';
 import LinkOffIcon from '@mui/icons-material/LinkOffRounded';
 import Chip from '@mui/material/Chip';
 import {useIcon} from '../../../../hooks/useIcon';
+import {lightColor} from '../../../../utils/entity/light';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;
@@ -24,12 +25,12 @@ export function LightCard(props: LightCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const theme = useTheme();
 
-  const rgbColor = entity.custom.color;
+  const rgbColor = lightColor(entity);
   const hexColor = rgbColor
     ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
     : undefined;
   const contrastColor = theme.palette.getContrastText(hexColor ?? '#000');
-  const color = `rgb(${entity.custom.color ?? [255, 255, 255].join(',')})`;
+  const color = `rgb(${rgbColor.join(',')})`;
   const brightness = entity.custom.brightnessValue ?? 100;
   const icon = useIcon(entity.attributes.icon);
   const lightOn = entity.state === 'on';

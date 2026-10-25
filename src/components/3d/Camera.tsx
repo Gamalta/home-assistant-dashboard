@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {useThree} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {OrbitControls, usePerformanceMonitor} from '@react-three/drei';
 import {useEffect, useRef} from 'react';
 
@@ -14,10 +14,14 @@ const REST_DELAY = 250;
 export function Camera(props: CameraProps) {
   const {onMovingChange} = props;
   const setDpr = useThree(state => state.setDpr);
+  const invalidate = useThree(state => state.invalidate);
 
   const factor = useRef(1);
   const isMoving = useRef(false);
   const isDragging = useRef(false);
+  const hasMoved = useRef(false);
+  const isStopping = useRef(false);
+  const lastMove = useRef(0);
   const timeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   usePerformanceMonitor({
@@ -37,15 +41,24 @@ export function Camera(props: CameraProps) {
     setDpr(Math.min(window.devicePixelRatio, Math.round(dpr * 4) / 4));
   };
 
-  const stopMovingLater = () => {
-    clearTimeout(timeout.current);
-    if (isDragging.current) return;
-    timeout.current = setTimeout(() => {
-      isMoving.current = false;
-      onMovingChange?.(false);
-      setDpr(window.devicePixelRatio);
-    }, REST_DELAY);
+  const stopMoving = () => {
+    isMoving.current = false;
+    isStopping.current = false;
+    onMovingChange?.(false);
+    setDpr(window.devicePixelRatio);
   };
+
+  // Après OrbitControls (priorité -1) : la première image sans déplacement,
+  // hors d'un geste, marque la fin de l'inertie, même si les images sont lentes.
+  useFrame(() => {
+    const settled =
+      isMoving.current && !isDragging.current && !hasMoved.current;
+    hasMoved.current = false;
+    if (!settled || isStopping.current) return;
+    isStopping.current = true;
+    const delay = lastMove.current + REST_DELAY - performance.now();
+    timeout.current = setTimeout(stopMoving, delay);
+  });
 
   return (
     <OrbitControls
@@ -53,16 +66,22 @@ export function Camera(props: CameraProps) {
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}
       onChange={() => {
-        if (!isMoving.current) startMoving();
-        stopMovingLater();
-      }}
-      onStart={() => {
-        isDragging.current = true;
+        // Une fois l'inertie finie, OrbitControls applique encore des restes
+        // sous son seuil à chaque image : sans geste, ils ne relancent pas le
+        // mouvement (sinon les ombres et le DPR clignotent).
+        const leftover = !isMoving.current || isStopping.current;
+        if (leftover && !isDragging.current) return;
         clearTimeout(timeout.current);
+        isStopping.current = false;
+        hasMoved.current = true;
+        lastMove.current = performance.now();
+        if (!isMoving.current) startMoving();
       }}
+      onStart={() => (isDragging.current = true)}
       onEnd={() => {
         isDragging.current = false;
-        stopMovingLater();
+        // Une image de plus pour constater l'arrêt d'un geste fini immobile.
+        if (isMoving.current) invalidate();
       }}
     />
   );

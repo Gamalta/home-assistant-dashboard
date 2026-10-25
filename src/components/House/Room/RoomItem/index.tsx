@@ -3,6 +3,8 @@ import {RoomBattery} from './RoomBattery';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
+import {RoomOutlet} from './RoomOutlet';
+import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomSmoke} from './RoomSmoke';
 import {RoomTemperature} from './RoomTemperature';
@@ -26,6 +28,10 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomShutter id={id} shutterConfig={itemConfig} />;
     case 'desktop':
       return <RoomDesktop id={id} desktopConfig={itemConfig} />;
+    case 'outlet':
+      return <RoomOutlet id={id} outletConfig={itemConfig} />;
+    case 'printer3d':
+      return <RoomPrinter3d id={id} printer3dConfig={itemConfig} />;
     case 'battery':
       return <RoomBattery id={id} batteryConfig={itemConfig} />;
     case 'smoke':
