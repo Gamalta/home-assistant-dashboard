@@ -13,7 +13,7 @@ Un bandeau WLED est un élément `light` ordinaire :
 ```ts
 {
   type: 'light',
-  lightEntityId: 'light.salon_strip',
+  lightEntityId: 'light.living_room_strip',
   position: {x: -3.0, y: 0.4, z: 4.6},
 },
 ```
@@ -63,6 +63,6 @@ Les réglages de lissage, de moteur de couleur et de tone mapping HDR restent da
 
 ## Démo et mock
 
-La démo place près de la TV du séjour un bandeau WLED fictif, `light.salon_strip`, et un ambilight fictif, `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). L'aperçu fictif est `public/ambilight/demo-led-gradient.svg`.
+La démo place près de la TV du séjour un bandeau WLED fictif, `light.living_room_strip`, et un ambilight fictif, `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). L'aperçu fictif est `public/ambilight/demo-led-gradient.svg`.
 
-Le bandeau n'a pas de lumière dans le modèle 3D de la démo : la console signale « Aucune lumière 3D trouvée pour light.salon_strip », sans conséquence.
+Le bandeau n'a pas de lumière dans le modèle 3D de la démo : la console signale « Aucune lumière 3D trouvée pour light.living_room_strip », sans conséquence.

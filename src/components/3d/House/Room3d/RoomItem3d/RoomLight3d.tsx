@@ -1,41 +1,44 @@
 import {useEntity} from '@hakit/core';
 import {useFrame, useThree} from '@react-three/fiber';
 import {LightConfigType} from '../../../../../configs/house';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
+import {lightColor} from '../../../../../utils/entity/light';
 
 type RoomLight3dProps = {
   lightConfig: LightConfigType;
+  model: THREE.Object3D;
 };
 
 export function RoomLight3d(props: RoomLight3dProps) {
-  const {lightConfig} = props;
+  const {lightConfig, model} = props;
   const {scene, camera, gl, invalidate} = useThree();
 
   const light = useEntity(lightConfig.lightEntityId, {
     returnNullIfNotFound: true,
   });
 
-  const [lightObject, setLightObject] = useState<THREE.Light>();
-  const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
-  const transition = useRef(0);
-  useEffect(() => {
-    const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
+  const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
+  // Cherchée dans le modèle pendant le rendu : la lumière prend son état dès le
+  // premier commit, avant la précompilation de la scène (Precompile).
+  const lightObject = useMemo(() => {
     let found: THREE.Light | undefined;
-    scene.traverse(obj => {
+    model.traverse(obj => {
       if (found || !(obj instanceof THREE.Light)) return;
       if (obj.name.toLowerCase().startsWith(prefix)) found = obj;
     });
-    if (!found) {
+    return found;
+  }, [model, prefix]);
+  const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
+  const transition = useRef(0);
+
+  useEffect(() => {
+    if (!lightObject) {
       console.warn(
         `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId} (${prefix})`,
       );
+      return;
     }
-    setLightObject(found);
-  }, [scene, lightConfig.lightEntityId]);
-
-  useEffect(() => {
-    if (!lightObject) return;
     lightObject.visible = false;
     lightObject.intensity = 0;
 
@@ -55,7 +58,7 @@ export function RoomLight3d(props: RoomLight3dProps) {
       ? ((light?.attributes.brightness ?? 255) / 255) * maxIntensity
       : 0;
 
-  const color = light?.custom?.color;
+  const color = light ? lightColor(light) : undefined;
   const colorKey = color?.join(',');
   useEffect(() => {
     if (!color || !lightObject) return;
@@ -72,6 +75,9 @@ export function RoomLight3d(props: RoomLight3dProps) {
     const id = ++transition.current;
     phase.current = visible ? 'showing' : 'hiding';
     light.visible = visible;
+    // Les autres lumières du même commit changent d'abord d'état : une seule
+    // combinaison de lumières à compiler, pas une par lumière.
+    await Promise.resolve();
     try {
       await gl.compileAsync(scene, camera);
     } catch {}

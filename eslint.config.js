@@ -16,6 +16,15 @@ export default [
   {
     rules: {
       "prettier/prettier": "error",
+      // MUI 9 n'accepte plus les chemins de palette dans `color` : ils sont
+      // passés tels quels en CSS, donc ignorés.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXAttribute[name.name='color'] Literal[value=/^text\\./]",
+          message: "Utiliser color=\"textSecondary\" (clé MUI 9) ou sx={{color: 'text.secondary'}}.",
+        },
+      ],
       "react-hooks/exhaustive-deps": "off",
       "react-hooks/refs": "off",
       "react-hooks/set-state-in-effect": "off",

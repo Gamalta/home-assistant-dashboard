@@ -1,15 +1,18 @@
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import {Suspense, useEffect, useState} from 'react';
+import {useGLTF} from '@react-three/drei';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
+import {LightingTrial} from '../../LightingTrial';
 
 export default function House() {
-  const {configuration, setConfiguration, webGLSupported} = useAppContext();
+  const {configuration, setConfiguration, webGLSupported, lightingTrial} =
+    useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -25,6 +28,11 @@ export default function House() {
       cancelled = true;
     };
   }, [configuration.webGPU]);
+
+  // Hors du rendu : sinon useGLTF met à jour ModelLoader pendant le rendu de HouseScene.
+  useEffect(() => {
+    if (model) useGLTF.preload(model);
+  }, [model]);
 
   if (!webGLSupported || !model) {
     return (
@@ -66,8 +74,13 @@ export default function House() {
         }
       >
         <Suspense fallback={<ModelLoader />}>
-          <HouseScene backend={backend} model={model} />
+          <HouseScene
+            key={`${houseConfig?.id}-${backend.kind}`}
+            backend={backend}
+            model={model}
+          />
         </Suspense>
+        {lightingTrial && <LightingTrial />}
       </ErrorBoundary>
     </Stack>
   );

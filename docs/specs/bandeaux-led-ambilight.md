@@ -69,6 +69,6 @@ Les listes « Préréglage », « Playlist » et « Palette » et les curseurs �
 ## Impacts
 
 - Configuration des maisons : nouvel élément `ambilight` (`lightEntityId`). Les bandeaux restent des éléments `light`.
-- Mock Home Assistant : un bandeau WLED fictif (`light.salon_strip` et ses `select` et `number`) et une instance HyperHDR fictive (`light.tv_ambilight`, `camera.tv_ambilight_led_gradient`). `light.turn_on` enregistre l'effet, `light.turn_off` éteint enfin une lumière, `select.select_option` et `number.set_value` modifient l'état simulé.
-- Démo : le bandeau n'a pas de lumière 3D dans le modèle, d'où l'avertissement « Aucune lumière 3D trouvée pour light.salon_strip » au chargement.
+- Mock Home Assistant : un bandeau WLED fictif (`light.living_room_strip` et ses `select` et `number`) et une instance HyperHDR fictive (`light.tv_ambilight`, `camera.tv_ambilight_led_gradient`). `light.turn_on` enregistre l'effet, `light.turn_off` éteint enfin une lumière, `select.select_option` et `number.set_value` modifient l'état simulé.
+- Démo : le bandeau n'a pas de lumière 3D dans le modèle, d'où l'avertissement « Aucune lumière 3D trouvée pour light.living_room_strip » au chargement.
 - Performance : aucun changement de la scène 3D ; deux étiquettes HTML de plus dans le séjour.

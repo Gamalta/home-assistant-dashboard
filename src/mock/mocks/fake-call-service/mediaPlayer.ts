@@ -1,22 +1,16 @@
 import type {ServiceArgs} from './types';
-import {defaults} from '../createMediaPlayer';
 
+// Attributs du média seulement : le lecteur garde son nom, ses fonctions et son volume.
 const tracks = (now: string) => ({
   first: {
-    ...defaults,
     attributes: {
-      ...defaults.attributes,
-      friendly_name: 'Bedroom Speaker',
-      volume_level: 0.54,
-      is_volume_muted: false,
       media_duration: 219,
       media_position: 1.819,
       media_position_updated_at: now,
       media_title: 'My Way',
       media_artist: 'Calvin Harris',
       app_name: 'YouTube Music',
-      entity_picture:
-        'https://lh3.googleusercontent.com/sLxiYvk82ZBXIYW-g_qh4BDjkApX4gdRvGxeinQIC0HBwte4AKOzS3u2mDPaYjPBw6dD_Of-r0x10egf=w544-h544-l90-rj',
+      entity_picture: 'media/demo_cover.svg',
     },
     context: {
       id: '1',
@@ -25,12 +19,7 @@ const tracks = (now: string) => ({
     },
   },
   second: {
-    ...defaults,
     attributes: {
-      ...defaults.attributes,
-      friendly_name: 'Bedroom Speaker',
-      volume_level: 0.54,
-      is_volume_muted: false,
       media_duration: 199,
       media_position: 1.005,
       media_position_updated_at: now,
@@ -38,8 +27,7 @@ const tracks = (now: string) => ({
       media_artist: "Rag'n'Bone Man",
       media_album_name: 'Human',
       app_name: 'YouTube',
-      entity_picture:
-        'https://lh3.googleusercontent.com/dtJNjutgMCLfu4FemGp9xilUjGTrWo8eOzIzFQz97IEQaqB2NMWTarj1Sh2fuRNnlmfY8B-jrWm-nmuP=w544-h544-l90-rj',
+      entity_picture: 'media/demo_cover.svg',
     },
     context: {
       id: '2',
@@ -81,6 +69,10 @@ export function mediaPlayerUpdates({
             ...tracks(now).first,
             ...dates,
             state: 'playing',
+            attributes: {
+              ...entities[target].attributes,
+              ...tracks(now).first.attributes,
+            },
           },
         }));
       case 'turnOff':
@@ -143,6 +135,7 @@ export function mediaPlayerUpdates({
         }));
       case 'volumeSet':
       case 'volumeMute':
+      case 'selectSource':
         return setEntities(entities => ({
           ...entities,
           [target]: {
@@ -171,6 +164,4 @@ export function mediaPlayerUpdates({
         }));
     }
   });
-
-  return true;
 }

@@ -20,6 +20,7 @@ export function SideBarDock(props: SideBarDockProps) {
   const {sideBarRef} = props;
   const [isVisible, setIsVisible] = useState(false);
   const [systemModal, setSystemModal] = useState(false);
+  const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
@@ -31,11 +32,15 @@ export function SideBarDock(props: SideBarDockProps) {
     if (!sideBarRef.current) return;
     const sideBar = sideBarRef.current;
 
-    const handleTouchStart = (event: TouchEvent) =>
+    const handleTouchStart = (event: TouchEvent) => {
+      setStartX(event.touches[0].clientX);
       setStartY(event.touches[0].clientY);
+    };
 
     const handleTouchMove = (event: TouchEvent) => {
-      const currentY = event.touches[0].clientY;
+      const {clientX, clientY: currentY} = event.touches[0];
+      // Un glissement horizontal fait défiler le carrousel, pas le dock.
+      if (Math.abs(clientX - startX) > Math.abs(currentY - startY)) return;
       if (!isVisible && startY - currentY > 10) {
         setIsVisible(true);
         event.preventDefault();
@@ -45,7 +50,9 @@ export function SideBarDock(props: SideBarDockProps) {
       }
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handlePointerMove = (event: PointerEvent) => {
+      // Un appui tactile émet aussi un mousemove : seule la souris compte.
+      if (event.pointerType !== 'mouse') return;
       const heightThreshold = window.innerHeight - window.innerHeight / 4;
       if (event.clientY > heightThreshold) {
         setIsVisible(true);
@@ -56,14 +63,14 @@ export function SideBarDock(props: SideBarDockProps) {
 
     sideBar.addEventListener('touchstart', handleTouchStart);
     sideBar.addEventListener('touchmove', handleTouchMove);
-    sideBar.addEventListener('mousemove', handleMouseMove);
+    sideBar.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       sideBar.removeEventListener('touchstart', handleTouchStart);
       sideBar.removeEventListener('touchmove', handleTouchMove);
-      sideBar.removeEventListener('mousemove', handleMouseMove);
+      sideBar.removeEventListener('pointermove', handlePointerMove);
     };
-  }, [isVisible, sideBarRef, startY]);
+  }, [isVisible, sideBarRef, startX, startY]);
 
   useEffect(() => {
     if (!configAnchor) return;
