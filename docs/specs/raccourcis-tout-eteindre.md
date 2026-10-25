@@ -57,6 +57,7 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - **Étant donné** une maison avec des scénarios configurés
 - **Quand** l'utilisateur touche le bouton rond « Scénarios », en haut à gauche de la vue 3D, près de la barre latérale et à la hauteur de l'en-tête
 - **Alors** le menu se déplie vers le bas, avec l'icône et le nom de chaque script, dans l'ordre de la config
+- **Et** il reste ouvert jusqu'au choix d'un scénario, sans réagir au survol
 
 ### Scénario : lancer un scénario d'un appui
 
