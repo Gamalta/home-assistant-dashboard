@@ -21,7 +21,7 @@ Mesures du 25 octobre 2026 :
 
 **La CI tourne en parallèle** :
 
-- un job `check` (lint, typecheck, unitaires) et un job `e2e` sur 4 runners : un pour `e2e/ombres.spec.ts`, et 3 shards (`--shard=n/3`) pour les autres tests ;
+- un job `check` (lint, typecheck, unitaires) et un job `e2e` sur 4 runners : un pour `e2e/shadows.spec.ts`, et 3 shards (`--shard=n/3`) pour les autres tests ;
 - `fullyParallel: true` répartit les tests, et non les fichiers, entre les shards. Playwright découpe en tranches contiguës d'un même nombre de tests, sans tenir compte de leur durée : en CI, les deux tests d'ombres, voisins, durent autant qu'un shard entier, et le shard qui les portait mettait 210 s contre 95 s pour les autres ;
 - le job `e2e` tourne dans l'image `mcr.microsoft.com/playwright`, qui contient Chromium et ses dépendances, à la même version que `@playwright/test` ;
 - `push` ne lance la CI que sur `dev` et `master`. Les autres branches sont vérifiées par leur pull request.

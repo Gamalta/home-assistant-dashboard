@@ -7,7 +7,7 @@ Deux niveaux de tests, choisis dans l'[ADR 0010](../adr/0010-strategie-de-tests.
 | Unitaires | Vitest, Testing Library, jsdom           | `src/**/*.test.ts(x)`, à côté du fichier | `pnpm test`     |
 | E2E       | Playwright (Chromium, WebGL SwiftShader) | `e2e/*.spec.ts`                          | `pnpm test:e2e` |
 
-La CI (`.github/workflows/ci.yml`) tourne sur chaque pull request et à chaque push sur `dev` et `master`. Deux jobs y tournent en parallèle ([ADR 0040](../adr/0040-tests-plus-rapides.md)) : `check` lance `pnpm lint`, `pnpm typecheck` et `pnpm test`, et `e2e` lance `pnpm test:e2e` sur 4 runners : `e2e/ombres.spec.ts` a le sien, car ses deux tests durent autant qu'un shard entier, et les autres tests se partagent les 3 restants (`--shard=n/3`). Le job `e2e` tourne dans l'image Docker de Playwright, qui contient déjà Chromium : en montant `@playwright/test`, changer aussi le tag de l'image dans `ci.yml`.
+La CI (`.github/workflows/ci.yml`) tourne sur chaque pull request et à chaque push sur `dev` et `master`. Deux jobs y tournent en parallèle ([ADR 0040](../adr/0040-tests-plus-rapides.md)) : `check` lance `pnpm lint`, `pnpm typecheck` et `pnpm test`, et `e2e` lance `pnpm test:e2e` sur 4 runners : `e2e/shadows.spec.ts` a le sien, car ses deux tests durent autant qu'un shard entier, et les autres tests se partagent les 3 restants (`--shard=n/3`). Le job `e2e` tourne dans l'image Docker de Playwright, qui contient déjà Chromium : en montant `@playwright/test`, changer aussi le tag de l'image dans `ci.yml`.
 
 ## Lancer les tests
 
@@ -60,7 +60,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - `pnpm test:e2e --headed` : voir le navigateur ; `--debug` met en pause avant chaque action.
 - Après un échec, la trace est gardée dans `test-results/` : `pnpm exec playwright show-trace test-results/<test>/trace.zip` (DOM, réseau, console et captures à chaque étape).
 - `pnpm exec playwright show-report` ouvre le rapport HTML du dernier lancement (`playwright-report/`).
-- En CI, chaque job E2E qui échoue publie son rapport comme artefact `playwright-report-<n>`, numéroté à partir de 0 dans l'ordre de la matrice : le télécharger depuis la page du run, le décompresser, puis `pnpm exec playwright show-report <dossier>`. Les arguments du job, par exemple `pnpm test:e2e --shard=2/3 --grep-invert ombres.spec`, rejouent les mêmes tests en local.
+- En CI, chaque job E2E qui échoue publie son rapport comme artefact `playwright-report-<n>`, numéroté à partir de 0 dans l'ordre de la matrice : le télécharger depuis la page du run, le décompresser, puis `pnpm exec playwright show-report <dossier>`. Les arguments du job, par exemple `pnpm test:e2e --shard=2/3 --grep-invert shadows.spec`, rejouent les mêmes tests en local.
 - En local, un serveur déjà lancé sur le port 4317 (ou 4318) est réutilisé tel quel : s'il sert un ancien build, l'arrêter avant de relancer les tests. Pour lancer deux suites en parallèle (deux worktrees, par exemple), donner à chacune son port : `E2E_PORT=4330 pnpm test:e2e` sert le build sur 4330 et le dev sur 4331. Mieux vaut pourtant une seule suite à la fois : deux suites se disputent le processeur, et les tests dépassent leurs délais. Sinon, réduire les workers de chacune (`--workers=2`).
 - Pour regarder l'application telle que les E2E la voient :
 
