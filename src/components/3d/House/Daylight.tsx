@@ -1,15 +1,8 @@
-import {useEffect, useLayoutEffect, useState} from 'react';
+import {useLayoutEffect} from 'react';
 import {useThree} from '@react-three/fiber';
-import {useEntity} from '@hakit/core';
 import * as THREE from 'three';
-import {
-  daylightFactor,
-  sunAtHour,
-  sunDirection,
-  sunFromHour,
-  type SunPosition,
-} from '../../../rendering/daylight';
-import {useAppContext} from '../../../contexts/AppContext';
+import {sunDirection} from '../../../rendering/daylight';
+import {useDaylight} from '../../../hooks/useDaylight';
 
 // Jour doux et chaud, nuit sombre et contrastée : le choix du propriétaire
 // parmi dix ambiances essayées (ADR 0030).
@@ -34,26 +27,7 @@ const SUN = sunDirection({elevation: 75, azimuth: 200}).multiplyScalar(20);
  */
 export function Daylight() {
   const {gl, invalidate} = useThree();
-  const sunEntity = useEntity('sun.sun', {returnNullIfNotFound: true});
-  const {simulatedHour} = useAppContext();
-  const [hourSun, setHourSun] = useState(() => sunFromHour(new Date()));
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setHourSun(sunFromHour(new Date())),
-      60000,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
-  const elevation = Number(sunEntity?.attributes.elevation);
-  const sun: SunPosition =
-    simulatedHour !== null
-      ? sunAtHour(simulatedHour)
-      : isNaN(elevation)
-        ? hourSun
-        : {elevation, azimuth: Number(sunEntity!.attributes.azimuth)};
-  const day = daylightFactor(sun.elevation);
+  const day = useDaylight();
 
   // Avant la première image : le tone mapping fait partie des shaders,
   // l'exposition n'est qu'un uniform.
