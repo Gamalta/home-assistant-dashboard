@@ -4,18 +4,18 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import {useState} from 'react';
 import {Modal, ModalProps} from '..';
-import type {Mortgage, MortgageStatus} from '../../../utils/mortgage';
+import {type Mortgage, mortgageStatus} from '../../../utils/mortgage';
 import {MortgageChart} from './MortgageChart';
 import {MortgageFigures} from './MortgageFigures';
 import {MortgageHouse} from './MortgageHouse';
 
 type MortgageModalProps = Omit<ModalProps, 'children'> & {
   mortgage: Mortgage;
-  status: MortgageStatus;
 };
 
 export function MortgageModal(props: MortgageModalProps) {
-  const {mortgage, status, ...modalProps} = props;
+  const {mortgage, ...modalProps} = props;
+  const status = mortgageStatus(mortgage, new Date());
   const [tab, setTab] = useState<'progress' | 'history'>('progress');
 
   return (

@@ -12,11 +12,13 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
+  /** Prêts ouverts par les entrées « Crédit » du menu des scénarios. */
+  mortgages?: MortgageConfigType[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = MediaShortcutConfigType | MortgageShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
@@ -41,8 +43,7 @@ type PersonConfigType = {
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
 };
 
-type MortgageShortcutConfigType = Mortgage & {
-  type: 'mortgage';
-  /** Libellé de la carte, pour distinguer plusieurs prêts. */
+type MortgageConfigType = Mortgage & {
+  /** Libellé de l'entrée du menu, pour distinguer plusieurs prêts. */
   label?: string;
 };

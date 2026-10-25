@@ -53,17 +53,18 @@ export const SideBarConfig: SideBarConfigType = {
     ],
   },
   scenarios: ['script.depart', 'script.temperature', 'script.energie'],
-  shortcuts: [
-    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
-    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+  mortgages: [
     {
-      type: 'mortgage',
       principal: 250_000,
       annualRate: 1.45,
       durationMonths: 300,
       firstPaymentDate: '2021-06-05',
       monthlyInsurance: 28,
     },
+  ],
+  shortcuts: [
+    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
   ],
 };
 
