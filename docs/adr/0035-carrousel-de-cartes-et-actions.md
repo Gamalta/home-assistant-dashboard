@@ -31,6 +31,7 @@ Contraintes :
 - **Menu `SpeedDial`** en haut à gauche de la vue 3D, à la hauteur de l'en-tête, plutôt que dans l'en-tête :
   - fermé, il ne prend que la place d'un bouton rond ; ouvert, il se déplie vers le bas ;
   - les libellés restent affichés (`slotProps.tooltip.open`), car la tablette n'a pas de survol ;
+  - le menu s'ouvre et se ferme au toucher (raison `toggle`), jamais au survol : après un appui, Chromium sous Linux ramène la souris à sa dernière position, et le `mouseleave` qui suit refermait le menu ;
   - un appui sur une action lance le script sans confirmation et referme le menu. Une coche remplace l'icône du bouton rond pendant 1,5 s ;
   - `ScenarioAction` transmet à `SpeedDialAction` les props que `SpeedDial` injecte dans ses enfants (`open`, `delay`, `slotProps`).
 - **Dock** : un glissement plus horizontal que vertical est laissé au carrousel. Seule une vraie souris ouvre le dock au survol, car un appui tactile émet aussi un `mousemove`.
