@@ -17,6 +17,7 @@ export function ScreensaverCard(props: ScreensaverCardProps) {
       sx={{
         p: 2.5,
         minWidth: 260,
+        width: '100%',
         borderRadius: 2,
         bgcolor: 'rgba(8, 14, 32, 0.35)',
         border: '1px solid rgba(255, 255, 255, 0.12)',

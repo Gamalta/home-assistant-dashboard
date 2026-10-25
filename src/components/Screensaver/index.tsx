@@ -18,9 +18,6 @@ export function Screensaver() {
   return (
     <AnimatePresence>
       {idle && (
-        // Réveil au clic, pas au pointerdown : l'écran de veille reste sous le
-        // doigt jusqu'au relâcher, et l'appui n'actionne rien en dessous.
-        // Le ciel est toujours sombre : la classe `dark` y force le thème sombre.
         <Stack
           component={motion.div}
           role="button"
@@ -46,19 +43,18 @@ export function Screensaver() {
               useFlexGap
               spacing={3}
               sx={{
-                flexWrap: 'wrap',
                 justifyContent: 'center',
-                alignItems: 'flex-start',
+                alignItems: 'stretch',
               }}
             >
-              {sideBar && (
-                <ScreensaverWeather weather={sideBar.weatherEntityId} />
-              )}
               {sideBar?.shortcuts?.map(
                 (shortcut, index) =>
                   shortcut.type === 'trains' && (
                     <ScreensaverTrains key={index} trains={shortcut} />
                   ),
+              )}
+              {sideBar && (
+                <ScreensaverWeather weather={sideBar.weatherEntityId} />
               )}
               {sideBar?.alerts && <ScreensaverAlerts alerts={sideBar.alerts} />}
             </Stack>
