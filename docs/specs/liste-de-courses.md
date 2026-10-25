@@ -23,7 +23,7 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 - **Étant donné** une liste de courses configurée
 - **Quand** l'utilisateur ouvre le menu rapide et touche « Courses »
-- **Alors** le menu se referme et la modale « Courses » grandit depuis le bouton de l'entrée ; fermée, elle s'y résorbe
+- **Alors** le menu se referme et la modale « Courses » grandit depuis le bouton rond du menu, où elle se résorbe à la fermeture
 
 ### Scénario : voir la liste d'un coup d'œil
 
