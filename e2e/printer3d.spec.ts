@@ -6,11 +6,13 @@ import {expect, test, waitForScene} from './fixtures';
 const printerButton = (page: Page) =>
   page.getByRole('button', {name: 'Imprimante 3D', exact: true});
 
+// La carte média du carrousel a aussi un bouton « Pause » : on cherche dans
+// la modale, dont l'en-tête et le contenu partagent le parent.
 async function openPrinterModal(page: Page) {
   await printerButton(page).click();
-  await expect(
-    page.getByRole('heading', {name: 'Imprimante 3D'}),
-  ).toBeVisible();
+  const title = page.getByRole('heading', {name: 'Imprimante 3D'});
+  await expect(title).toBeVisible();
+  return title.locator('../..');
 }
 
 test.beforeEach(async ({page}) => {
@@ -56,9 +58,9 @@ test('pilote la lumière de la chambre et la vitesse', async ({page}) => {
 });
 
 test('met l’impression en pause puis la reprend', async ({page}) => {
-  await openPrinterModal(page);
+  const modal = await openPrinterModal(page);
 
-  await page.getByRole('button', {name: 'Pause', exact: true}).click();
+  await modal.getByRole('button', {name: 'Pause', exact: true}).click();
   await expect(page.getByText('En pause', {exact: true})).toBeVisible();
 
   await page.getByRole('button', {name: 'Reprendre'}).click();
@@ -66,8 +68,8 @@ test('met l’impression en pause puis la reprend', async ({page}) => {
 });
 
 test('arrête l’impression après confirmation', async ({page}) => {
-  await openPrinterModal(page);
-  const pause = page.getByRole('button', {name: 'Pause', exact: true});
+  const modal = await openPrinterModal(page);
+  const pause = modal.getByRole('button', {name: 'Pause', exact: true});
   const stop = page.getByRole('button', {name: 'Arrêter', exact: true});
   const confirm = page.getByRole('button', {name: "Confirmer l'arrêt"});
 
