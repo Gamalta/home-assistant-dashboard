@@ -9,7 +9,7 @@ La tablette murale reste allumée toute la journée et la nuit. Le dashboard aff
 
 ## Objectif
 
-Après un délai sans interaction, la tablette affiche un écran sombre avec l'heure ; un appui la réveille, sans actionner ce qui se trouve dessous.
+Après un délai sans interaction, la tablette affiche un écran de veille lisible de loin : l'heure, la météo, les prochains trains et les alertes de la maison, sur un ciel qui suit le jour. Un appui la réveille, sans actionner ce qui se trouve dessous.
 
 ## Hors périmètre
 
@@ -23,7 +23,19 @@ Après un délai sans interaction, la tablette affiche un écran sombre avec l'h
 
 - **Étant donné** un délai de veille réglé sur l'appareil
 - **Quand** aucun appui, touche ni défilement n'a lieu pendant ce délai
-- **Alors** un écran noir apparaît en fondu, avec l'heure et la date
+- **Alors** l'écran de veille apparaît en fondu, avec l'heure et la date
+
+### Scénario : informations de la maison
+
+- **Étant donné** la météo, des trajets `trains` dans les raccourcis et des alertes dans la config de la barre latérale
+- **Quand** l'écran de veille s'affiche
+- **Alors** il montre une carte « Météo » (température, minimale et maximale du jour, quatre jours suivants), une carte par trajet avec ses trois prochains départs, et une carte des alertes. La carte des alertes n'apparaît que s'il y en a.
+
+### Scénario : ciel et luminosité selon l'heure
+
+- **Étant donné** l'écran de veille affiché
+- **Quand** il fait nuit, d'après `sun.sun` ou, à défaut, l'heure
+- **Alors** le fond est un ciel de nuit et le contenu est atténué (60 %). Le jour, le ciel s'éclaircit et le contenu est à pleine opacité. À l'aube et au crépuscule, le bas du ciel s'orange.
 
 ### Scénario : réveil sans effet de bord
 
@@ -41,8 +53,10 @@ Après un délai sans interaction, la tablette affiche un écran sombre avec l'h
 
 - [x] Chaque interaction relance le délai (`hooks/useIdle.test.ts`).
 - [x] Les scénarios sont couverts par `e2e/veille.spec.ts`.
-- [x] La scène 3D ne consomme rien de plus en veille.
+- [x] La scène 3D ne dessine aucune image pendant la veille (0 appel de dessin en 60 s, build de production).
 
 ## Impacts
 
 - Option `screensaverMinutes` dans les options de l'appareil (`AppContext`).
+- Aucune config propre à la veille : elle lit `weatherEntityId`, les raccourcis `trains` et `alerts` de la barre latérale.
+- `useDaylight` est partagé avec l'éclairage de la scène 3D, et `useTrainDepartures` avec la tuile des trains.
