@@ -39,6 +39,7 @@ export default function Dashboard() {
         defaultLayout={defaultLayout}
         orientation="horizontal"
         onLayoutChanged={onLayoutChanged}
+        style={{height: '100vh'}}
       >
         <Panel
           defaultSize="30%"

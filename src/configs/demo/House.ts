@@ -52,6 +52,12 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
+  actions: [{type: 'allLightsOff'}],
+  shortcuts: [
+    {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
+    {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
+  ],
 };
 
 export const HouseConfig: HouseConfigType = {

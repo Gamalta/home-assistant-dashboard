@@ -13,3 +13,4 @@
 | [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun        |
 | [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)    |
 | [Guide : mode veille](guides/mode-veille.md)               | Mettre la tablette murale en veille après inactivité |
+| [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et actions de la barre latérale            |
