@@ -109,12 +109,18 @@ export function Benchmark(props: {backend: RenderBackend}) {
 
     window.__dashboardMotionBenchmark = async (frames = 120) => {
       const {camera, invalidate} = get();
+      // Comme un geste : sans « start », Camera garde la qualité du repos.
+      const controls = get().controls as THREE.EventDispatcher<{
+        start: object;
+        end: object;
+      }> | null;
       const center = new THREE.Vector3();
       const initialPosition = camera.position.clone();
       const offset = initialPosition.clone().sub(center);
       const axis = new THREE.Vector3(0, 1, 0);
       let pixelRatio = 0;
 
+      controls?.dispatchEvent({type: 'start'});
       let last = await nextFrame();
       const start = last;
       let worstMs = 0;
@@ -131,6 +137,7 @@ export function Benchmark(props: {backend: RenderBackend}) {
       }
       const msPerFrame = (last - start) / frames;
 
+      controls?.dispatchEvent({type: 'end'});
       camera.position.copy(initialPosition);
       invalidate();
 

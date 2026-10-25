@@ -1,4 +1,5 @@
 import {Modal, ModalProps} from '..';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
 import {OptionRow} from './OptionRow';
@@ -17,8 +18,13 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
-  const {configuration, webGLSupported, webGPUSupported, rendererInfo} =
-    useAppContext();
+  const {
+    configuration,
+    webGLSupported,
+    webGPUSupported,
+    rendererInfo,
+    setLightingTrial,
+  } = useAppContext();
   const {houseConfig} = useHouseContext();
   const house = houseConfig?.house;
   const is3d = webGLSupported && !!house?.model;
@@ -45,18 +51,23 @@ export function SystemModal(props: SystemModalProps) {
             }
           />
           <Divider />
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography variant="subtitle2" color="textSecondary">
             Affichage
           </Typography>
           <BenchmarkRow />
+          <Button
+            variant="outlined"
+            disabled={!is3d}
+            onClick={() => {
+              setLightingTrial(true);
+              modalProps.onClose();
+            }}
+          >
+            Essayer l'éclairage selon l'heure
+          </Button>
           <OptionRow
             label="Murs transparents"
             option="hideWallsShader"
-            disabled={!is3d}
-          />
-          <OptionRow
-            label="Reflets d'environnement"
-            option="environmentReflections"
             disabled={!is3d}
           />
           <OptionRow label="Ombres" option="shadows" disabled={!is3d} />

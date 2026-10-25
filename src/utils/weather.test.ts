@@ -28,6 +28,16 @@ describe('getWeatherIcon', () => {
     at(12);
     expect(getWeatherIcon('sunny', true)).toBe('sunny');
   });
+
+  it('ne remplace que le soleil par la lune avant 7 h', () => {
+    at(5);
+    expect(getWeatherIcon('sunny', true)).toBe('clear-night');
+    expect(getWeatherIcon('rainy', true)).toBe('rainy');
+  });
+
+  it('affiche un orage pour une condition exceptionnelle', () => {
+    expect(getWeatherIcon('exceptional')).toBe('lightning-rainy');
+  });
 });
 
 describe('getWeatherIconPath', () => {
@@ -36,5 +46,26 @@ describe('getWeatherIconPath', () => {
 
     expect(path).toBe('weather/partlycloudy.png');
     expect(existsSync(`public/${path}`)).toBe(true);
+  });
+
+  // Conditions possibles d'une entité weather de Home Assistant.
+  it.each([
+    'clear-night',
+    'cloudy',
+    'exceptional',
+    'fog',
+    'hail',
+    'lightning',
+    'lightning-rainy',
+    'partlycloudy',
+    'pouring',
+    'rainy',
+    'snowy',
+    'snowy-rainy',
+    'sunny',
+    'windy',
+    'windy-variant',
+  ])('a une image pour la condition %s', condition => {
+    expect(existsSync(`public/${getWeatherIconPath(condition)}`)).toBe(true);
   });
 });
