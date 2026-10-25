@@ -25,7 +25,7 @@ export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
       sx={{justifyContent: 'space-between', alignItems: 'center'}}
     >
       <Typography>{label}</Typography>
-      <Typography color="text.secondary">{formatEntity(entity)}</Typography>
+      <Typography color="textSecondary">{formatEntity(entity)}</Typography>
     </Stack>
   );
 }
