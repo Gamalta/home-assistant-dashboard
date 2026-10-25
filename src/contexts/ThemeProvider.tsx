@@ -21,6 +21,7 @@ export const themeOptions: {value: themeType; name: string}[] = [
   {value: 'light', name: 'Clair'},
   {value: 'dark', name: 'Sombre'},
 ];
+
 type ThemeContextType = {
   themeMode: string;
   setTheme: (newTheme: themeType) => void;

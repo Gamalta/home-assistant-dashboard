@@ -137,3 +137,18 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Performance : voir la section Mesures.
 
 ## Mesures
+
+Build de production, maison démo, en 390 × 844 avec un DPR de 3 (R3F le plafonne à 2). Le Chromium sans tête de Playwright tourne sur le GPU d'un Mac M4 (Metal). Un Mac n'est pas un téléphone : ces chiffres comparent `dev` et la branche entre eux.
+
+| 390 × 844                                        | `dev` (disposition tablette) |                      Version mobile |
+| ------------------------------------------------ | ---------------------------: | ----------------------------------: |
+| Étiquettes dans la scène                         |                           31 |                                   5 |
+| Appels de dessin par image, au repos             |                           74 |                                  88 |
+| GPU au repos, DPR 2 (`__dashboardBenchmark(60)`) |                       6,8 ms |                              8,6 ms |
+| GPU au repos, DPR 1                              |                       3,6 ms |                              3,4 ms |
+| Rotation (`__dashboardMotionBenchmark()`)        |    55 i/s, pire image 183 ms |            60 i/s, pire image 17 ms |
+| Vol vers la cuisine                              |                            — | 0 programme compilé, 0 tâche longue |
+
+- Le temps GPU au repos suit la surface du canvas : en pleine largeur, il couvre 1,4 fois plus de pixels que les 70 % de la disposition tablette.
+- Les appels de dessin restent sous les 150 du [budget](../adr/0009-budget-performance-tablette.md).
+- En rendu logiciel (SwiftShader, comme en CI), on compte les mêmes étiquettes, les mêmes appels de dessin et aucune compilation pendant le vol.
