@@ -44,18 +44,8 @@ test.beforeEach(async ({page}) => {
   await waitForScene(page);
 });
 
-// Un test par scénario de docs/specs/prises-connectees.md.
-test('bascule la prise d’un appui court', async ({page}) => {
-  const outlet = outletButton(page, 'Prise bureau');
-  await expect(outlet).toHaveAttribute('aria-pressed', 'true');
-
-  await outlet.click();
-  await expect(outlet).toHaveAttribute('aria-pressed', 'false');
-
-  await outlet.click();
-  await expect(outlet).toHaveAttribute('aria-pressed', 'true');
-});
-
+// Les autres scénarios de docs/specs/prises-connectees.md ne dépendent que du
+// bouton et de la modale : ils sont testés en unitaire (RoomOutlet.test.tsx).
 test('ouvre le détail de la prise d’un appui long', async ({page}) => {
   const illustration = await openOutletModal(page, 'Prise bureau');
   await expectIllustration(illustration, 'on');
@@ -75,33 +65,4 @@ test('ouvre le détail de la prise d’un appui long', async ({page}) => {
   await expect(power).toHaveAttribute('aria-pressed', 'true');
   await expect(watts).toBeVisible();
   await expectIllustration(illustration, 'on');
-});
-
-test('bascule la prise en touchant l’illustration', async ({page}) => {
-  const illustration = await openOutletModal(page, 'Prise bureau');
-
-  await illustration.click();
-  await expect(illustration).toHaveAttribute('aria-pressed', 'false');
-  await expectIllustration(illustration, 'off');
-
-  await illustration.click();
-  await expect(illustration).toHaveAttribute('aria-pressed', 'true');
-  await expectIllustration(illustration, 'on');
-});
-
-test('affiche la consommation dans un second onglet', async ({page}) => {
-  await openOutletModal(page, 'Prise bureau');
-  const history = page.getByRole('button', {name: 'Historique'});
-  // Un clic pendant l'animation d'ouverture de la modale peut tomber à côté.
-  await expect(history).toBeVisible();
-  await history.click();
-
-  const chart = page.getByRole('img', {name: 'Puissance', exact: true});
-  await expect(chart).toBeVisible();
-  await expect(chart.locator('.MuiLineChart-line')).toHaveCount(1);
-  await expect(page.getByRole('heading', {name: '85 W'})).toBeVisible();
-
-  await page.getByRole('button', {name: 'Réglage'}).click();
-  await expect(chart).toBeHidden();
-  await expect(page.getByRole('button', {name: 'Marche'})).toBeVisible();
 });
