@@ -10,18 +10,11 @@ export const useLongPress = (
 ) => {
   const [longPressTriggered, setLongPressTriggered] = useState(false);
   const timeout = useRef<number | null>(null);
-  const target = useRef<EventTarget | null>(null);
   const origin = useRef<{x: number; y: number} | null>(null);
   const moved = useRef(false);
 
   const start = useCallback(
     (event: MouseEvent | TouchEvent) => {
-      if (shouldPreventDefault && event.target) {
-        event.target.addEventListener('touchend', () => preventDefault(event), {
-          passive: false,
-        });
-        target.current = event.target;
-      }
       moved.current = false;
       origin.current = isTouchEvent(event)
         ? {x: event.touches[0].clientX, y: event.touches[0].clientY}
@@ -31,7 +24,7 @@ export const useLongPress = (
         setLongPressTriggered(true);
       }, delay);
     },
-    [onLongPress, delay, shouldPreventDefault],
+    [onLongPress, delay],
   );
 
   const move = (event: TouchEvent) => {
@@ -60,13 +53,8 @@ export const useLongPress = (
         onClick(event);
       }
       setLongPressTriggered(false);
-      if (shouldPreventDefault && target.current) {
-        target.current.removeEventListener('touchend', () =>
-          preventDefault(event),
-        );
-      }
     },
-    [shouldPreventDefault, onClick, longPressTriggered],
+    [onClick, longPressTriggered],
   );
 
   return {
@@ -75,7 +63,12 @@ export const useLongPress = (
     onTouchMove: move,
     onMouseUp: (event: MouseEvent) => clear(event),
     onMouseLeave: (event: MouseEvent) => clear(event, false),
-    onTouchEnd: (event: TouchEvent) => clear(event),
+    onTouchEnd: (event: TouchEvent) => {
+      // Sans cela, le navigateur rejoue l'appui en souris : un second clic
+      // rebasculerait la lumière.
+      if (shouldPreventDefault) preventDefault(event);
+      clear(event);
+    },
   };
 };
 

@@ -4,8 +4,12 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {useLongPress} from './useLongPress';
 
 const target = document.createElement('button');
-const touch = (x: number, y: number) =>
-  ({target, touches: [{clientX: x, clientY: y}]}) as unknown as TouchEvent;
+const touch = (x: number, y: number, preventDefault = vi.fn()) =>
+  ({
+    target,
+    touches: [{clientX: x, clientY: y}],
+    preventDefault,
+  }) as unknown as TouchEvent;
 
 function setup() {
   const onLongPress = vi.fn();
@@ -58,6 +62,17 @@ describe('useLongPress', () => {
     act(() => handlers().onTouchMove(touch(3, 4)));
     act(() => handlers().onTouchEnd(touch(3, 4)));
 
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("n'émet pas en plus l'appui souris que rejoue le navigateur", () => {
+    const {handlers, onClick} = setup();
+    const preventDefault = vi.fn();
+
+    act(() => handlers().onTouchStart(touch(0, 0)));
+    act(() => handlers().onTouchEnd(touch(0, 0, preventDefault)));
+
+    expect(preventDefault).toHaveBeenCalled();
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
