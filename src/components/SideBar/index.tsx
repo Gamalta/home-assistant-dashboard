@@ -28,6 +28,7 @@ export function SideBar() {
     >
       <HeaderCard
         weather={sideBarConfig?.weatherEntityId}
+        alerts={sideBarConfig?.alerts}
         actions={sideBarConfig?.actions}
       />
       <Stack
