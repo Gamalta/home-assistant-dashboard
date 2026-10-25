@@ -9,18 +9,10 @@ type SideBarConfigType = {
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
     graphs: SystemGraphConfigType[];
   };
-  /** Boutons ronds de l'en-tête, à côté de l'heure. */
-  actions?: ActionConfigType[];
+  /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
+  scenarios?: FilterByDomain<EntityName, 'script'>[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
-};
-
-type ActionConfigType = AllLightsOffActionConfigType;
-
-type AllLightsOffActionConfigType = {
-  type: 'allLightsOff';
-  /** Script Home Assistant à lancer à la place de l'extinction des lumières de la maison. */
-  scriptEntityId?: FilterByDomain<EntityName, 'script'>;
 };
 
 type ShortcutConfigType = MediaShortcutConfigType;

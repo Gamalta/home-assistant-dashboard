@@ -12,6 +12,7 @@ import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
+import {createScript} from './createScript';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -387,5 +388,15 @@ export const entities: HassEntities = {
       app_name: 'Spotify',
       entity_picture: 'media/demo_cover.svg',
     },
+  }),
+
+  ...createScript('script.depart', {
+    attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
+  }),
+  ...createScript('script.temperature', {
+    attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
+  }),
+  ...createScript('script.energie', {
+    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
   }),
 } as const;

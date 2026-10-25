@@ -41,27 +41,26 @@ async function swipeLeft(page: Page, x: number, y: number) {
   });
 }
 
-test('éteint toutes les lumières depuis le bouton de l’en-tête', async ({
+test('lance un scénario depuis la colonne collée à la barre latérale', async ({
   page,
 }) => {
-  const button = page
-    .getByRole('banner')
-    .getByRole('button', {name: /^Tout éteindre/});
-  await expect(button).toHaveAccessibleName(/\d+ allumées?$/);
-  const label = await button.getAttribute('aria-label');
-  const count = Number(label?.match(/(\d+) allumée/)?.[1]);
-  const badge = button.locator('.MuiBadge-badge');
-  await expect(badge).toHaveText(String(count));
+  const bar = page.getByRole('navigation', {name: 'Scénarios'});
+  await expect(bar.getByRole('button')).toHaveText([
+    'Départ',
+    'Température',
+    'Énergie',
+  ]);
+  const box = await bar.boundingBox();
+  const separator = await page.getByRole('separator').boundingBox();
+  const header = await page.getByRole('banner').boundingBox();
+  expect(box!.x).toBeCloseTo(separator!.x + separator!.width, 0);
+  expect(box!.y).toBeCloseTo(header!.y, 0);
 
-  await button.click();
-  const title = page.getByRole('heading', {name: 'Tout éteindre'});
-  await expect(title).toBeVisible();
-  await expect(page.getByRole('listitem')).toHaveCount(count);
-
-  await page.getByRole('button', {name: 'Éteindre', exact: true}).click();
-  await expect(title).toBeHidden();
-  await expect(button).toHaveAccessibleName('Tout éteindre, tout est éteint');
-  await expect(badge).toBeHidden();
+  const departure = bar.getByRole('button', {name: 'Départ'});
+  await departure.tap();
+  const check = departure.getByTestId('CheckRoundedIcon');
+  await expect(check).toBeVisible();
+  await expect(check).toBeHidden();
 });
 
 test('fait défiler les cartes au doigt et suit la pagination', async ({
