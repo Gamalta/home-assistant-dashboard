@@ -49,7 +49,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
         <Stack sx={{alignItems: 'center'}}>
           <Typography
             variant="h6"
-            color="text.secondary"
+            color="textSecondary"
             sx={{textAlign: 'center'}}
           >
             {weather.attributes.temperature ?? '--'}
@@ -58,7 +58,7 @@ export function WeatherDisplay(props: WeatherDisplayProps) {
           {weather.forecast?.forecast[0] && (
             <Typography
               variant="body2"
-              color="text.secondary"
+              color="textSecondary"
               sx={{opacity: 0.7, mt: -0.5, textAlign: 'center'}}
             >
               {weather.forecast?.forecast[0].templow}°/

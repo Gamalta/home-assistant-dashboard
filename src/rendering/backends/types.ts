@@ -18,4 +18,9 @@ export type RenderBackend = {
   getMaxTextures: (renderer: unknown) => number | null;
   describeGpu: (renderer: unknown) => string;
   waitForGpu: (renderer: unknown) => Promise<void>;
+  compile: (
+    renderer: unknown,
+    scene: THREE.Object3D,
+    camera: THREE.Camera,
+  ) => Promise<void>;
 };
