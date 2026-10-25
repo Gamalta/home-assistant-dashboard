@@ -11,7 +11,6 @@ export type ConfigurationOptions = {
   debug: boolean;
   hideWallsShader: boolean;
   heatmapShader: boolean;
-  environmentReflections: boolean;
   shadows: boolean;
   webGPU: boolean;
   /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
@@ -31,6 +30,12 @@ type AppContextType = {
   webGPUSupported: boolean;
   rendererInfo: RendererInfo;
   setRendererInfo: Dispatch<SetStateAction<RendererInfo>>;
+  /** Heure d'essai de l'éclairage et du thème, non mémorisée ; `null` : l'heure réelle. */
+  simulatedHour: number | null;
+  setSimulatedHour: Dispatch<SetStateAction<number | null>>;
+  /** Panneau d'essai de l'éclairage, ouvert sur la vue 3D. */
+  lightingTrial: boolean;
+  setLightingTrial: Dispatch<SetStateAction<boolean>>;
 };
 
 const STORAGE_KEY = 'graphics-options';
@@ -61,9 +66,8 @@ const defaultConfiguration: ConfigurationOptions = {
   debug: false,
   hideWallsShader: true,
   heatmapShader: false,
-  environmentReflections: false,
   shadows: false,
-  webGPU: webGPUSupported,
+  webGPU: false,
   screensaverMinutes: 0,
 };
 
@@ -91,6 +95,10 @@ export const AppContext = createContext<AppContextType>({
   webGPUSupported,
   rendererInfo: defaultRendererInfo,
   setRendererInfo: () => {},
+  simulatedHour: null,
+  setSimulatedHour: () => {},
+  lightingTrial: false,
+  setLightingTrial: () => {},
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -98,6 +106,8 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({children}: {children: React.ReactNode}) => {
   const [configuration, setConfiguration] = useState(loadConfiguration);
   const [rendererInfo, setRendererInfo] = useState(defaultRendererInfo);
+  const [simulatedHour, setSimulatedHour] = useState<number | null>(null);
+  const [lightingTrial, setLightingTrial] = useState(false);
 
   useEffect(() => {
     try {
@@ -116,6 +126,10 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
         webGPUSupported,
         rendererInfo,
         setRendererInfo,
+        simulatedHour,
+        setSimulatedHour,
+        lightingTrial,
+        setLightingTrial,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import hideWallsWorldPosVertex from './hideWallsWorldPos.vertex.glsl?raw';
 import hideWallsCommonFragment from './hideWallsCommon.fragment.glsl?raw';
 import hideWallsClipFragment from './hideWallsClip.fragment.glsl?raw';
 import hideWallsFadeFragment from './hideWallsFade.fragment.glsl?raw';
+import {FADE_RADIUS} from '../common';
 
 type WallMaterial = THREE.MeshStandardMaterial | THREE.MeshLambertMaterial;
 
@@ -16,7 +17,7 @@ function createVariant(source: WallMaterial, fade: boolean) {
   }
 
   material.onBeforeCompile = shader => {
-    shader.uniforms.fadeRadius = {value: 8.0};
+    shader.uniforms.fadeRadius = {value: FADE_RADIUS};
     shader.uniforms.minOpacity = {value: 0.05};
     shader.uniforms.nearFadeDistance = {value: 6.0};
     shader.vertexShader = shader.vertexShader

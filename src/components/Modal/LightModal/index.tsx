@@ -124,7 +124,7 @@ export function LightModal(props: LightModalProps) {
             {hasColorTemp && <ColorTempTab />}
             {hasEffect && <EffectTab />}
           </Stack>
-          {(hasColor || hasColorTemp || hasEffect) && (
+          {(hasColor || hasColorTemp || hasEffect || hasBrightness) && (
             <Stack direction="row" sx={{justifyContent: 'space-between'}}>
               <ToggleButtonGroup
                 exclusive
@@ -176,7 +176,7 @@ export function LightModal(props: LightModalProps) {
           <Stack spacing={1}>
             <Typography variant="h6" sx={{display: 'flex', gap: 1}}>
               Lumières
-              <Box color="text.secondary">
+              <Box sx={{color: 'text.secondary'}}>
                 {entities.length > 1 && entities.length}
               </Box>
             </Typography>

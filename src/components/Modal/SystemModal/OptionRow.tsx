@@ -21,7 +21,7 @@ export function OptionRow(props: OptionRowProps) {
       direction="row"
       sx={{justifyContent: 'space-between', alignItems: 'center'}}
     >
-      <Typography color={disabled ? 'text.disabled' : undefined}>
+      <Typography color={disabled ? 'textDisabled' : undefined}>
         {label}
       </Typography>
       <Switch
