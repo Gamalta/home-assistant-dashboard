@@ -68,7 +68,7 @@ function ModalWindow(props: ModalProps) {
     <AnimatePresence mode="wait" initial={false}>
       {open && (
         <>
-          <Backdrop />
+          <Backdrop onClick={onClose} />
           <Container id={id}>
             {/* Avec layout, le ressort du conteneur n'étire plus son contenu. */}
             <Stack
