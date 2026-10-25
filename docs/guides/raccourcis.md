@@ -1,11 +1,11 @@
-# Carrousel et scénarios de la barre latérale
+# Carrousel et menu rapide de la barre latérale
 
 La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)). Tout se déclare dans `SideBarConfig`, dans le `House.ts` de la maison :
 
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
   shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
@@ -13,7 +13,7 @@ export const SideBarConfig: SideBarConfigType = {
 };
 ```
 
-- `scenarios` : un bouton rond « Scénarios » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
+- `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
@@ -29,7 +29,7 @@ Sans scénario ni liste de courses, le menu ne s'affiche pas. Sans carte, le car
 // Avant
 shortcuts: [{type: 'allLightsOff'}],
 // Après
-scenarios: ['script.tout_eteindre'],
+scenarios: ['script.leave_home'],
 ```
 
 Les autres types gardent leur place et leurs options dans `shortcuts`.
@@ -40,7 +40,7 @@ Un scénario est un [script Home Assistant](https://www.home-assistant.io/integr
 
 ```yaml
 script:
-  depart:
+  leave_home:
     alias: Départ
     icon: mdi:exit-run
     sequence:
@@ -58,7 +58,7 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 
 ## Liste de courses
 
-Un appui sur « Courses », dans le menu des scénarios, referme le menu et ouvre la modale de la liste `todo`, par exemple celle de l'intégration « Liste de courses ». Elle permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
+Un appui sur « Courses », dans le menu rapide, referme le menu et ouvre la modale de la liste `todo`, par exemple celle de l'intégration « Liste de courses ». Elle permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
 
 ## Cartes
 

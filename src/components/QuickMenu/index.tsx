@@ -10,7 +10,7 @@ import {useHouseContext} from '../../contexts/HouseContext';
 import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {ScenarioAction} from './ScenarioAction';
 
-export function ScenarioBar() {
+export function QuickMenu() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
@@ -29,7 +29,7 @@ export function ScenarioBar() {
   return (
     <>
       <SpeedDial
-        ariaLabel="Scénarios"
+        ariaLabel="Menu rapide"
         direction="down"
         open={open}
         onOpen={() => setOpen(true)}
@@ -37,7 +37,7 @@ export function ScenarioBar() {
         icon={
           launched ? (
             // data-testid explicite : MUI ne le pose qu'en développement.
-            <CheckIcon data-testid="coche" />
+            <CheckIcon data-testid="launched" />
           ) : (
             <SpeedDialIcon
               icon={<AutoAwesomeIcon />}

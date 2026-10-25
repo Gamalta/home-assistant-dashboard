@@ -1,12 +1,10 @@
 import {expect, test, waitForScene} from './fixtures';
 
-test('gère la liste de courses depuis le menu des scénarios', async ({
-  page,
-}) => {
+test('gère la liste de courses depuis le menu rapide', async ({page}) => {
   await page.goto('/');
   await waitForScene(page);
 
-  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
   await dial.click();
   await page.getByRole('menuitem', {name: 'Courses'}).click();
   await expect(dial).toHaveAttribute('aria-expanded', 'false');

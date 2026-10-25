@@ -9,7 +9,7 @@ La liste de courses de Home Assistant (`todo.shopping_list`) n'est accessible qu
 
 ## Objectif
 
-Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu des scénarios, avec une synchronisation immédiate avec les téléphones. Le propriétaire ne veut pas de carte dans le carrousel.
+Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu rapide, avec une synchronisation immédiate avec les téléphones. Le propriétaire ne veut pas de carte dans le carrousel.
 
 ## Hors périmètre
 
@@ -22,7 +22,7 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 ### Scénario : ouvrir la liste depuis le menu
 
 - **Étant donné** une liste de courses configurée
-- **Quand** l'utilisateur ouvre le menu des scénarios et touche « Courses »
+- **Quand** l'utilisateur ouvre le menu rapide et touche « Courses »
 - **Alors** le menu se referme et la modale « Courses » s'ouvre
 
 ### Scénario : ajouter un article au clavier
@@ -52,8 +52,8 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 ## Critères d'acceptation
 
 - [x] Les articles à acheter apparaissent avant les articles cochés.
-- [x] Saisir un article ne rouvre pas le menu des scénarios.
-- [x] Chaque scénario est couvert : `e2e/courses.spec.ts`, et `hooks/useTodoList.test.ts` pour l'abonnement et les services.
+- [x] Saisir un article ne rouvre pas le menu rapide.
+- [x] Chaque scénario est couvert : `e2e/shopping-list.spec.ts`, et `hooks/useTodoList.test.ts` pour l'abonnement et les services.
 
 ## Impacts
 

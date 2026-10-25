@@ -52,7 +52,7 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
   shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},

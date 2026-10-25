@@ -9,7 +9,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 - **Diff minimal.** Chaque ligne ajoutée doit pouvoir être défendue en revue. Ce qui n'est pas indispensable est supprimé.
 - **Pas de sur-ingénierie.** Pas d'abstraction pour un seul usage, pas d'option sans besoin réel, pas de code « au cas où ».
 - **Peu de commentaires.** Le code se lit seul. Un commentaire explique un _pourquoi_ non évident (contrainte GPU, bug d'une bibliothèque), jamais un _quoi_.
-- **Le français** pour les commentaires, les messages de commit, la documentation et les textes d'interface. L'anglais pour les identifiants.
+- **Le français** pour les commentaires, les messages de commit, la documentation et les textes d'interface. L'anglais pour tous les noms : identifiants, fichiers de code et de tests, `data-testid`, entités Home Assistant de la démo et des configs (`script.leave_home`).
 
 ## Arborescence
 
