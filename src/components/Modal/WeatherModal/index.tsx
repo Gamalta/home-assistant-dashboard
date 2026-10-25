@@ -76,7 +76,7 @@ export function WeatherModal(props: WeatherModalProps) {
                 {weather.attributes.temperature_unit}
               </Typography>
               {weather.forecast?.forecast[0] && (
-                <Typography color="text.secondary">
+                <Typography color="textSecondary">
                   {weather.forecast?.forecast[0].templow}°/
                   {weather.forecast?.forecast[0].temperature}°
                 </Typography>

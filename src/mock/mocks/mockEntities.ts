@@ -8,8 +8,11 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
+import {createSwitch} from './createSwitch';
+import {createPrinter3d} from './createPrinter3d';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
+import {createScript} from './createScript';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -196,6 +199,35 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
+  ...createLight('light.hallway_dimmer', {
+    state: 'off',
+    attributes: {
+      friendly_name: 'Variateur de l’entrée',
+      icon: 'hue:bulb-sultan',
+      color_mode: 'brightness',
+      supported_color_modes: ['brightness'],
+      supported_features: 0,
+      brightness: 128,
+      hs_color: undefined,
+      rgb_color: undefined,
+      xy_color: undefined,
+      color_temp_kelvin: undefined,
+    },
+  }),
+  ...createLight('light.storage_switch', {
+    attributes: {
+      friendly_name: 'Interrupteur du débarras',
+      icon: 'hue:bulb-candle',
+      color_mode: 'onoff',
+      supported_color_modes: ['onoff'],
+      supported_features: 0,
+      brightness: undefined,
+      hs_color: undefined,
+      rgb_color: undefined,
+      xy_color: undefined,
+      color_temp_kelvin: undefined,
+    },
+  }),
 
   ...createClimate('climate.salon'),
   ...createClimate('climate.kitchen', {
@@ -301,6 +333,24 @@ export const entities: HassEntities = {
     },
   }),
 
+  ...createSwitch('switch.desk_outlet', {
+    state: 'on',
+    attributes: {friendly_name: 'Prise bureau'},
+  }),
+  ...createSensor('sensor.desk_outlet_power', {
+    state: '85.4',
+    attributes: {unit_of_measurement: 'W', device_class: 'power'},
+  }),
+  // TV éteinte à la télécommande : la prise reste allumée et consomme peu.
+  ...createSwitch('switch.tv_outlet', {
+    state: 'on',
+    attributes: {friendly_name: 'Prise TV'},
+  }),
+  ...createSensor('sensor.tv_outlet_power', {
+    state: '0.8',
+    attributes: {unit_of_measurement: 'W', device_class: 'power'},
+  }),
+  ...createPrinter3d('p1s_demo'),
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {
@@ -338,5 +388,15 @@ export const entities: HassEntities = {
       app_name: 'Spotify',
       entity_picture: 'media/demo_cover.svg',
     },
+  }),
+
+  ...createScript('script.depart', {
+    attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
+  }),
+  ...createScript('script.temperature', {
+    attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
+  }),
+  ...createScript('script.energie', {
+    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
   }),
 } as const;

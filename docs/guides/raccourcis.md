@@ -1,18 +1,18 @@
-# Carrousel et actions de la barre latérale
+# Carrousel et scénarios de la barre latérale
 
 La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)). Deux listes se déclarent dans `SideBarConfig`, dans le `House.ts` de la maison :
 
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  actions: [{type: 'allLightsOff'}],
+  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
   ],
 };
 ```
 
-- `actions` : des boutons ronds dans l'en-tête, à côté de l'heure, toujours à un appui.
+- `scenarios` : un bouton rond « Scénarios » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
@@ -21,28 +21,38 @@ Sans l'une ou l'autre liste, rien ne s'affiche à sa place.
 
 ## Migration depuis les tuiles
 
-« Tout éteindre » n'est plus une tuile mais une action : l'entrée passe de `shortcuts` à `actions`, avec les mêmes options.
+« Tout éteindre » disparaît. Un script Home Assistant le remplace, déclaré dans `scenarios` :
 
 ```ts
 // Avant
 shortcuts: [{type: 'allLightsOff'}],
 // Après
-actions: [{type: 'allLightsOff'}],
+scenarios: ['script.tout_eteindre'],
 ```
 
 Les autres types gardent leur place et leurs options dans `shortcuts`.
 
-## Actions
+## Scénarios
 
-### Tout éteindre
+Un scénario est un [script Home Assistant](https://www.home-assistant.io/integrations/script/). Son bouton reprend le nom du script et son icône, `mdi:script-text-outline` par défaut : on les change dans Home Assistant. Un appui sur un scénario le lance sans confirmation et referme le menu, et une coche remplace l'icône du bouton rond pendant 1,5 s. Un script absent de Home Assistant n'apparaît pas.
 
-`{type: 'allLightsOff'}`
+```yaml
+script:
+  depart:
+    alias: Départ
+    icon: mdi:exit-run
+    sequence:
+      - action: light.turn_off
+        target:
+          entity_id: all
+      - action: climate.set_preset_mode
+        target:
+          entity_id: climate.sejour
+        data:
+          preset_mode: away
+```
 
-Un bouton rond à l'icône marche/arrêt. Sa pastille indique le nombre de lumières allumées et disparaît quand tout est éteint. Un appui ouvre la liste de ces lumières, et le bouton « Éteindre » les éteint toutes en un seul appel à `light.turn_off`. Seules les lumières déclarées dans les pièces de la maison sont concernées.
-
-| Option           | Rôle                                                                                                                                    |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `scriptEntityId` | Script Home Assistant lancé à la place, par exemple pour éteindre aussi la TV ou les prises. Le dashboard n'éteint alors rien lui-même. |
+Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit à le lancer. Le menu tient 5 ou 6 scénarios : au-delà, il descend trop sur la vue 3D.
 
 ## Cartes
 
@@ -92,11 +102,3 @@ Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `f
    - Les boutons de la carte passent par `controls` : un bouton ne peut pas en contenir un autre.
 3. Ajouter le `case` correspondant dans `src/components/SideBar/Shortcuts/index.tsx`.
 4. Documenter la carte dans ce guide, et ajouter ses entités au mock pour la démo et les tests.
-
-## Ajouter une action
-
-1. Ajouter son type à l'union `ActionConfigType` de `src/configs/sidebar.d.ts`.
-2. Créer `src/components/SideBar/HeaderCard/<Type>Action.tsx`, qui rend un `IconButton` rond avec un `aria-label`, et sa modale avec le même `id`.
-3. Ajouter le `case` correspondant dans `src/components/SideBar/HeaderCard/index.tsx`.
-
-L'en-tête n'a de place que pour 2 ou 3 boutons à côté de l'heure.
