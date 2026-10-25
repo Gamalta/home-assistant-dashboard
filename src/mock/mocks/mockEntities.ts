@@ -79,14 +79,14 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createCover('cover.salon_shutter'),
+  ...createCover('cover.living_room_shutter'),
   ...createCover('cover.kitchen_shutter'),
   ...createCover('cover.kitchen_shutter_2'),
   ...createCover('cover.bedroom_shutter'),
   ...createCover('cover.bedroom_2_shutter'),
   ...createCover('cover.bedroom_3_shutter'),
 
-  ...createLight('light.salon_light', {
+  ...createLight('light.living_room_light', {
     state: 'off',
     attributes: {
       friendly_name: 'Plafonnier du séjour',
@@ -95,7 +95,7 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.salon_hue_play', {
+  ...createLight('light.living_room_hue_play', {
     attributes: {
       friendly_name: 'Hue Play du séjour',
       icon: 'hue:play-bar-v',
@@ -229,7 +229,7 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createClimate('climate.salon'),
+  ...createClimate('climate.living_room'),
   ...createClimate('climate.kitchen', {
     attributes: {
       current_temperature: 20,
@@ -247,13 +247,13 @@ export const entities: HassEntities = {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_temperature', {
+  ...createSensor('sensor.living_room_temperature', {
     state: '21',
     attributes: {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_humidity', {
+  ...createSensor('sensor.living_room_humidity', {
     state: '55',
     attributes: {
       unit_of_measurement: '%',

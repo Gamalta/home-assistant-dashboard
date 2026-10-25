@@ -26,8 +26,10 @@ export function QuickMenu() {
       ariaLabel="Menu rapide"
       direction="down"
       open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      // Au toucher seulement, sans survol : après un appui, Chromium sous
+      // Linux ramène la souris à sa dernière position, ce qui refermait le menu.
+      onOpen={(_, reason) => reason === 'toggle' && setOpen(true)}
+      onClose={(_, reason) => reason !== 'mouseLeave' && setOpen(false)}
       icon={
         launched ? (
           // data-testid explicite : MUI ne le pose qu'en développement.

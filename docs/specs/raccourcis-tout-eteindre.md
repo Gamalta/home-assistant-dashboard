@@ -57,6 +57,7 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - **Étant donné** une maison avec des scénarios configurés
 - **Quand** l'utilisateur touche le bouton rond « Menu rapide », en haut à gauche de la vue 3D, près de la barre latérale et à la hauteur de l'en-tête
 - **Alors** le menu se déplie vers le bas, avec l'icône et le nom de chaque script, dans l'ordre de la config
+- **Et** il reste ouvert jusqu'au choix d'un scénario, sans réagir au survol
 
 ### Scénario : lancer un scénario d'un appui
 
@@ -82,7 +83,7 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - [x] Les cartes viennent de `sideBar.shortcuts` et les scénarios de `sideBar.scenarios` ; sans config, rien ne s'affiche.
 - [x] Le carrousel n'ajoute aucune dépendance : défilement et accrochage en CSS (`scroll-snap`).
 - [x] Le nom et l'icône d'un scénario sont ceux de son script dans Home Assistant.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/raccourcis.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioAction.test.tsx` et `utils/carousel.test.ts`.
+- [x] Chaque scénario est couvert par un test : E2E `e2e/shortcuts.spec.ts`, unitaires `MediaShortcut.test.tsx`, `ScenarioAction.test.tsx` et `utils/carousel.test.ts`.
 
 ## Impacts
 
