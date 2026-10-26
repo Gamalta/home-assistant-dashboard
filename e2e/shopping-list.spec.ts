@@ -1,6 +1,16 @@
 import {expect, test, waitForScene} from './fixtures';
 
+// Un pixel PNG : le test ne dépend pas du CDN des images d'Apple.
+const PIXEL = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+);
+
 test('gère la liste de courses depuis le menu rapide', async ({page}) => {
+  await page.route(
+    'https://cdn.jsdelivr.net/npm/emoji-datasource-apple@*/**',
+    route => route.fulfill({contentType: 'image/png', body: PIXEL}),
+  );
   await page.goto('/');
   await waitForScene(page);
 
@@ -10,7 +20,9 @@ test('gère la liste de courses depuis le menu rapide', async ({page}) => {
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('heading', {name: 'Courses'})).toBeVisible();
   await expect(page.getByRole('checkbox', {name: 'Café'})).toBeChecked();
-  await expect(page.getByRole('checkbox', {name: 'Café'})).toContainText('☕');
+  await expect(
+    page.getByRole('checkbox', {name: 'Café'}).locator('img[alt="☕"]'),
+  ).toHaveAttribute('src', /emoji-datasource-apple.*\/2615\.png$/);
 
   // clientHeight ignore l'échelle de l'animation d'ouverture.
   const list = page.getByRole('region', {name: 'Articles'});
@@ -22,7 +34,10 @@ test('gère la liste de courses depuis le menu rapide', async ({page}) => {
     await page.keyboard.press('Enter');
   }
   await expect(page.getByRole('checkbox', {name: 'Beurre'})).not.toBeChecked();
-  await expect(page.getByRole('checkbox', {name: 'Piles'})).toContainText('🛒');
+  // Les piles viennent d'emojibase, absentes du dictionnaire.
+  await expect(
+    page.getByRole('checkbox', {name: 'Piles'}).locator('img[alt="🔋"]'),
+  ).toBeVisible();
   const width = (name: string) =>
     page.getByRole('checkbox', {name}).evaluate(el => el.clientWidth);
   expect(await width(long)).toBe(await width('Beurre'));
