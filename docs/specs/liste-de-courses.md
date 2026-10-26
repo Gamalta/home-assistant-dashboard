@@ -29,7 +29,8 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 - **Étant donné** des articles à acheter et des articles cochés
 - **Quand** la modale est ouverte
-- **Alors** les articles sont des tuiles de 3 par ligne, avec un emoji selon leur nom (le panier pour un article inconnu)
+- **Alors** les articles sont des tuiles de 3 par ligne, avec un emoji selon leur nom, trouvé dans le dictionnaire puis dans les noms et mots-clés français d'emojibase (le panier pour un article inconnu)
+- **Et** les emojis ont le dessin d'iOS sur toutes les plateformes, et celui du système quand l'image ne charge pas
 - **Et** les articles à acheter sont sous « À acheter », les cochés sous « Dans le panier », estompés, barrés et marqués d'une coche
 - **Et** un nom trop long est tronqué, sans élargir sa tuile
 - **Et** la modale garde la même hauteur quel que soit le nombre d'articles : la liste défile, le champ et le bouton de retrait restent en place
@@ -62,9 +63,10 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 - [x] Les articles à acheter apparaissent avant les articles cochés.
 - [x] Saisir un article ne rouvre pas le menu rapide.
-- [x] Chaque scénario est couvert : `e2e/shopping-list.spec.ts`, `hooks/useTodoList.test.ts` pour l'abonnement et les services, et `utils/groceryEmoji.test.ts` pour les emojis.
+- [x] Chaque scénario est couvert : `e2e/shopping-list.spec.ts`, `hooks/useTodoList.test.ts` pour l'abonnement et les services, `utils/groceryEmoji.test.ts` et `hooks/useEmojiKeywords.test.ts` pour le choix des emojis, `utils/appleEmoji.test.ts` et `AppleEmoji.test.tsx` pour leurs images.
 
 ## Impacts
 
 - Config : `shoppingListEntityId` dans `SideBarConfigType`. L'entrée « Courses » s'ajoute après les scénarios.
 - Mock : la liste est simulée, avec l'abonnement `todo/item/subscribe` et les services `todo.*`.
+- Dépendance : `emojibase-data`, chargée à la première ouverture. Les images viennent de jsDelivr ([ADR 0042](../adr/0042-emojis-apple-et-mots-cles-emojibase.md)).
