@@ -11,6 +11,11 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
+  /**
+   * Prêts réunis dans l'entrée « Crédit » du menu rapide : des entités dont les
+   * attributs `principal`, `interest` et `insurance` donnent l'échéancier.
+   */
+  mortgages?: FilterByDomain<EntityName, 'sensor'>[];
   /** Liste `todo` ouverte par l'entrée « Courses » du menu rapide. */
   shoppingListEntityId?: `todo.${string}`;
   /** Cartes du carrousel, sous les personnes. */

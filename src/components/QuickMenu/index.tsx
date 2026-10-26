@@ -1,6 +1,7 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CheckIcon from '@mui/icons-material/CheckRounded';
 import CloseIcon from '@mui/icons-material/CloseRounded';
+import HouseIcon from '@mui/icons-material/HouseRounded';
 import CartIcon from '@mui/icons-material/ShoppingCartRounded';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
@@ -9,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import {motion} from 'framer-motion';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
+import {MortgageModal} from '../Modal/MortgageModal';
 import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {ScenarioAction} from './ScenarioAction';
 
@@ -16,6 +18,7 @@ export function QuickMenu() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
+  const [mortgageOpen, setMortgageOpen] = useState(false);
   const [shoppingListOpen, setShoppingListOpen] = useState(false);
 
   useEffect(() => {
@@ -25,8 +28,10 @@ export function QuickMenu() {
   }, [launched]);
 
   const scenarios = houseConfig?.sideBar.scenarios ?? [];
+  const mortgages = houseConfig?.sideBar.mortgages ?? [];
   const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
-  if (!scenarios.length && !shoppingListEntityId) return null;
+  if (!scenarios.length && !mortgages.length && !shoppingListEntityId)
+    return null;
 
   return (
     <>
@@ -71,6 +76,18 @@ export function QuickMenu() {
             }}
           />
         ))}
+        {mortgages.length > 0 && (
+          <SpeedDialAction
+            icon={<HouseIcon />}
+            onClick={() => {
+              setOpen(false);
+              setMortgageOpen(true);
+            }}
+            slotProps={{
+              tooltip: {title: 'Crédit', open: true, placement: 'right'},
+            }}
+          />
+        )}
         {shoppingListEntityId && (
           <SpeedDialAction
             icon={<CartIcon />}
@@ -85,7 +102,16 @@ export function QuickMenu() {
         )}
       </SpeedDial>
       {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
-          React, et le menu capterait les flèches et Échap du champ de saisie. */}
+          React, et le menu capterait les flèches et Échap des modales. */}
+      {mortgages.length > 0 && (
+        <MortgageModal
+          id="layoutid-quick-menu"
+          open={mortgageOpen}
+          onClose={() => setMortgageOpen(false)}
+          title="Crédit"
+          entityIds={mortgages}
+        />
+      )}
       {shoppingListEntityId && (
         <ShoppingListModal
           id="layoutid-quick-menu"
