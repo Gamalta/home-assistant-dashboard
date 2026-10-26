@@ -13,6 +13,7 @@ import {createPrinter3d} from './createPrinter3d';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
+import {createRemote} from './createRemote';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -375,6 +376,7 @@ export const entities: HassEntities = {
       source_list: ['Apple TV', 'Freebox', 'Console'],
     },
   }),
+  ...createRemote('remote.living_room_tv'),
   ...createMediaPlayer('media_player.bedroom_speaker', {
     state: 'paused',
     attributes: {

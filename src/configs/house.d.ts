@@ -20,7 +20,8 @@ type RoomItemConfigType =
   | ShutterConfigType
   | DestkopConfigType
   | OutletConfigType
-  | Printer3dConfigType;
+  | Printer3dConfigType
+  | MediaConfigType;
 
 type BaseItemConfigType =
   | {
@@ -80,4 +81,11 @@ type Printer3dConfigType = BaseItemConfigType & {
   type: 'printer3d';
   // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
   prefix: string;
+};
+
+type MediaConfigType = BaseItemConfigType & {
+  type: 'media';
+  mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
+  // Pavé directionnel, avec les commandes de l'Apple TV (ADR 0028).
+  remoteEntityId?: FilterByDomain<EntityName, 'remote'>;
 };
