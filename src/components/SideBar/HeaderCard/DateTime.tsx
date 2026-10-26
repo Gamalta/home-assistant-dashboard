@@ -32,7 +32,7 @@ export function DateTime() {
       <Typography variant="h4" color="primary">
         {date}
       </Typography>
-      <Typography variant="h5" color="text.secondary">
+      <Typography variant="h5" color="textSecondary">
         {time}
       </Typography>
     </Stack>

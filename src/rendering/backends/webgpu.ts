@@ -55,4 +55,7 @@ export const webGPUBackend: RenderBackend = {
     if (isWebGLBackend && gl) waitForWebGlContext(gl);
     else await device?.queue.onSubmittedWorkDone();
   },
+  compile: async (renderer, scene, camera) => {
+    await (renderer as WebGPURenderer).compileAsync(scene, camera);
+  },
 };
