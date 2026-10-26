@@ -6,9 +6,14 @@ import {expect, test, waitForScene} from './fixtures';
 const tvButton = (page: Page) =>
   page.getByRole('button', {name: 'TV du séjour', exact: true});
 
+// Le carrousel « Raccourcis » montre aussi cette TV, avec les mêmes boutons
+// et textes : on cherche dans la modale, dont l'en-tête et le contenu
+// partagent le parent.
 async function openMediaModal(page: Page) {
   await tvButton(page).click();
-  await expect(page.getByRole('heading', {name: 'TV du séjour'})).toBeVisible();
+  const title = page.getByRole('heading', {name: 'TV du séjour'});
+  await expect(title).toBeVisible();
+  return title.locator('../..');
 }
 
 test.beforeEach(async ({page}) => {
@@ -19,26 +24,26 @@ test.beforeEach(async ({page}) => {
 // Un test par scénario de docs/specs/telecommande-tv.md.
 test('affiche le média en cours', async ({page}) => {
   await expect(tvButton(page)).toHaveText('My Way');
-  await openMediaModal(page);
+  const modal = await openMediaModal(page);
 
-  await expect(page.getByRole('img', {name: 'Visuel du média'})).toBeVisible();
-  await expect(page.getByRole('heading', {name: 'My Way'})).toBeVisible();
-  await expect(page.getByText('Calvin Harris')).toBeVisible();
+  await expect(modal.getByRole('img', {name: 'Visuel du média'})).toBeVisible();
+  await expect(modal.getByRole('heading', {name: 'My Way'})).toBeVisible();
+  await expect(modal.getByText('Calvin Harris')).toBeVisible();
 });
 
 test('met en pause puis relance la lecture', async ({page}) => {
-  await openMediaModal(page);
+  const modal = await openMediaModal(page);
 
-  await page.getByRole('button', {name: 'Pause', exact: true}).click();
-  await page.getByRole('button', {name: 'Lecture', exact: true}).click();
+  await modal.getByRole('button', {name: 'Pause', exact: true}).click();
+  await modal.getByRole('button', {name: 'Lecture', exact: true}).click();
   await expect(
-    page.getByRole('button', {name: 'Pause', exact: true}),
+    modal.getByRole('button', {name: 'Pause', exact: true}),
   ).toBeVisible();
 
-  await page.getByRole('button', {name: 'Suivant'}).click();
-  await expect(page.getByRole('heading', {name: 'Human'})).toBeVisible();
-  await page.getByRole('button', {name: 'Précédent'}).click();
-  await expect(page.getByRole('heading', {name: 'My Way'})).toBeVisible();
+  await modal.getByRole('button', {name: 'Suivant'}).click();
+  await expect(modal.getByRole('heading', {name: 'Human'})).toBeVisible();
+  await modal.getByRole('button', {name: 'Précédent'}).click();
+  await expect(modal.getByRole('heading', {name: 'My Way'})).toBeVisible();
 });
 
 test('règle le volume et coupe le son', async ({page}) => {
@@ -90,15 +95,15 @@ test('pilote le lecteur avec le pavé directionnel', async ({page}) => {
 });
 
 test('éteint puis rallume le lecteur', async ({page}) => {
-  await openMediaModal(page);
+  const modal = await openMediaModal(page);
 
-  await page.getByRole('button', {name: 'Éteindre', exact: true}).click();
-  await expect(page.getByText('Éteint', {exact: true})).toBeVisible();
+  await modal.getByRole('button', {name: 'Éteindre', exact: true}).click();
+  await expect(modal.getByText('Éteint', {exact: true})).toBeVisible();
   await expect(tvButton(page)).toHaveText('');
 
-  await page.getByRole('button', {name: 'Allumer', exact: true}).click();
+  await modal.getByRole('button', {name: 'Allumer', exact: true}).click();
   await expect(
-    page.getByRole('button', {name: 'Pause', exact: true}),
+    modal.getByRole('button', {name: 'Pause', exact: true}),
   ).toBeVisible();
   await expect(tvButton(page)).toHaveText('My Way');
 });
