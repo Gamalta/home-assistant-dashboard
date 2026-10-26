@@ -9,7 +9,10 @@ import Typography from '@mui/material/Typography';
 import {motion} from 'framer-motion';
 import {type FormEvent, useState} from 'react';
 import {Modal, ModalProps} from '..';
+import {useEmojiKeywords} from '../../../hooks/useEmojiKeywords';
 import {useTodoList} from '../../../hooks/useTodoList';
+import {groceryEmoji} from '../../../utils/groceryEmoji';
+import {AppleEmoji} from './AppleEmoji';
 import {ShoppingListItem} from './ShoppingListItem';
 
 type ShoppingListModalProps = Omit<ModalProps, 'children'> & {
@@ -19,6 +22,7 @@ type ShoppingListModalProps = Omit<ModalProps, 'children'> & {
 export function ShoppingListModal(props: ShoppingListModalProps) {
   const {todoEntityId, ...modalProps} = props;
   const todo = useTodoList(todoEntityId);
+  const keywords = useEmojiKeywords(modalProps.open);
   const [summary, setSummary] = useState('');
   const pending = todo.items.filter(item => item.status === 'needs_action');
   const completed = todo.items.filter(item => item.status === 'completed');
@@ -92,6 +96,7 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
                     <ShoppingListItem
                       key={item.uid}
                       item={item}
+                      emoji={groceryEmoji(item.summary, keywords)}
                       onToggle={() =>
                         todo.setCompleted(item, item.status === 'needs_action')
                       }
@@ -109,7 +114,7 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
                 color: 'text.secondary',
               }}
             >
-              <Typography sx={{fontSize: 56}}>🛒</Typography>
+              <AppleEmoji emoji="🛒" size={56} />
               <Typography>La liste est vide.</Typography>
             </Stack>
           )}

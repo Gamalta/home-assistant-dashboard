@@ -1,17 +1,19 @@
 import CheckIcon from '@mui/icons-material/CheckCircleRounded';
+import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import {motion} from 'framer-motion';
 import type {TodoItem} from '../../../hooks/useTodoList';
-import {groceryEmoji} from '../../../utils/groceryEmoji';
+import {AppleEmoji} from './AppleEmoji';
 
 type ShoppingListItemProps = {
   item: TodoItem;
+  emoji: string;
   onToggle: () => void;
 };
 
 export function ShoppingListItem(props: ShoppingListItemProps) {
-  const {item, onToggle} = props;
+  const {item, emoji, onToggle} = props;
   const completed = item.status === 'completed';
 
   return (
@@ -36,12 +38,12 @@ export function ShoppingListItem(props: ShoppingListItemProps) {
         transition: 'background-color 200ms, border-color 200ms',
       }}
     >
-      <Typography
+      <Box
         component="span"
-        sx={{fontSize: 40, lineHeight: 1, opacity: completed ? 0.4 : 1}}
+        sx={{display: 'flex', opacity: completed ? 0.4 : 1}}
       >
-        {groceryEmoji(item.summary)}
-      </Typography>
+        <AppleEmoji emoji={emoji} size={40} />
+      </Box>
       <Typography
         component="span"
         noWrap
