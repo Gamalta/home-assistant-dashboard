@@ -22,7 +22,8 @@ Une entrée « Crédit » dans le menu rapide, qui ouvre une modale détaillant 
 
 - **Étant donné** un prêt configuré
 - **Quand** l'utilisateur ouvre le menu rapide et touche « Crédit » (ou le libellé configuré)
-- **Alors** le menu se referme, et la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, avec ce pourcentage en grand dessous
+- **Alors** le menu se referme et la modale grandit depuis le bouton rond du menu, où elle se résorbe à la fermeture
+- **Et** la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, avec ce pourcentage en grand dessous
 - **Et** une colonne donne en grand le capital restant dû sur le montant emprunté, la mensualité (et l'assurance si elle est configurée), le mois de la dernière échéance avec les échéances payées sur le total, les intérêts payés et les intérêts restants
 
 ### Scénario : l'historique trace le capital restant dû
