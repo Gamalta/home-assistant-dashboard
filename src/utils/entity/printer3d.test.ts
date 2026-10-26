@@ -36,7 +36,7 @@ describe('libellés', () => {
   });
 
   it('garde la valeur brute d’un état inconnu', () => {
-    expect(printStatusLabel('nouvel_etat')).toBe('nouvel_etat');
+    expect(printStatusLabel('new_state')).toBe('new_state');
     expect(currentStageLabel('heating_chamber')).toBe('heating_chamber');
   });
 
