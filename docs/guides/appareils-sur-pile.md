@@ -70,5 +70,5 @@ La démo place trois interrupteurs fictifs (séjour 54 %, cuisine 12 %, chambre 
 
 ```js
 window.__mockSetState('binary_sensor.hallway_smoke_detector_smoke', 'on');
-window.__mockSetState('sensor.salon_button_battery', '8');
+window.__mockSetState('sensor.living_room_button_battery', '8');
 ```
