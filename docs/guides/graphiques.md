@@ -159,7 +159,9 @@ Par mois, même appel : `x` porte le premier jour de chaque mois et `formatX` af
 
 ### Aires empilées sur des années : capital restant dû par prêt
 
-Une série principale par prêt : les aires s'empilent, et le haut de la pile donne le total. Les couleurs viennent de la palette, et une légende sous le graphique les nomme (`MortgageBalanceChart`).
+Une série principale par prêt : les aires s'empilent, et le haut de la pile donne le total. Les couleurs viennent de la palette, et une légende les nomme (`MortgageBalanceChart`).
+
+Avec une légende, le titre et la légende vont au-dessus du graphique, pas par-dessus : sinon la ligne du survol les traverse. `max` rend alors au tracé le tiers haut que `chartDomain` garde pour le titre.
 
 ```tsx
 const {x, balances} = yearlyBalances(loans);
@@ -167,6 +169,7 @@ const {x, balances} = yearlyBalances(loans);
 <Chart
   x={x}
   min={0}
+  max={status.principal}
   formatX={time => String(new Date(time).getFullYear())}
   series={loans.map((loan, index) => ({
     id: `loan-${index}`,
@@ -175,10 +178,8 @@ const {x, balances} = yearlyBalances(loans);
     color: COLORS[index % COLORS.length],
     format: formatEuros,
   }))}
-  sx={{height: 200, width: 564}}
->
-  <Typography variant="h4">{formatEuros(status.remainingPrincipal)}</Typography>
-</Chart>;
+  sx={{height: 140, width: 564}}
+/>;
 ```
 
 Avec `bars`, les mêmes séries s'empilent en barres : `MortgageCostChart` montre ainsi le capital, les intérêts et l'assurance payés chaque année.
