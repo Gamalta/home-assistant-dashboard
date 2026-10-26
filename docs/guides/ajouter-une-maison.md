@@ -33,6 +33,26 @@ Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
 
+### La modale Système
+
+Le bloc `system` de `SideBarConfig` ajoute le bouton « Système » au dock. Tous ses identifiants sont facultatifs : une ligne n'apparaît que si son entité existe ([spec](../specs/systeme-enrichi.md)).
+
+| Champ                        | Entité Home Assistant                                                                                      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `uptimeEntityId`             | Capteur de démarrage de System Monitor (« Lancé depuis »)                                                  |
+| `powerStatusEntityId`        | Alimentation du Raspberry Pi (`off` : suffisante)                                                          |
+| `internetEntityId`           | `binary_sensor` de connexion WAN de la box (`on` : connecté)                                               |
+| `lastBackupEntityId`         | Intégration Backup : _Last successful automatic backup_                                                    |
+| `lastBackupAttemptEntityId`  | _Last attempted automatic backup_ : plus récente que la dernière réussite, elle signale un échec           |
+| `nextBackupEntityId`         | _Next scheduled automatic backup_                                                                          |
+| `backupStateEntityId`        | _Backup Manager state_ : évite de signaler un échec pendant une sauvegarde en cours                        |
+| `tabletBatteryLevelEntityId` | Application Companion de la tablette murale : _Battery Level_                                              |
+| `tabletBatteryStateEntityId` | _Battery State_ : `discharging` (débranchée) s'affiche en rouge, « Ne charge pas »                         |
+| `tabletChargerTypeEntityId`  | _Charger Type_ (`ac`, `usb`, `wireless`, `dock`, `none`)                                                   |
+| `graphs`                     | Graphes des dernières 24 h : `label`, `color` et `sensorEntityId` (mémoire, température, processeur, etc.) |
+
+Les mises à jour ne se configurent pas : la modale liste toutes les entités `update` à `on`, avec leur version installée et la version disponible. Elle est en lecture seule : on installe depuis Home Assistant.
+
 ## 4. Activer la maison
 
 Ajouter `<id>` à `VITE_HOUSE_CONFIGS` dans `.env`, par exemple `["demo", "<id>"]`. La première maison de la liste est celle qui s'ouvre par défaut. Le dock de la barre latérale permet ensuite de passer de l'une à l'autre.

@@ -13,6 +13,9 @@ import {createPrinter3d} from './createPrinter3d';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
+import {createUpdate} from './createUpdate';
+
+const DAY = 24 * 60 * 60 * 1000;
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -60,6 +63,25 @@ export const entities: HassEntities = {
     last_updated: new Date(0).toISOString(),
   }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createBinarySensor('binary_sensor.router_wan_status', {
+    state: 'on',
+    attributes: {friendly_name: 'Connexion internet'},
+  }),
+  ...createSensor('sensor.wall_tablet_battery_level', {
+    state: '64',
+    attributes: {
+      friendly_name: 'Batterie de la tablette murale',
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.wall_tablet_battery_state', {
+    state: 'charging',
+    attributes: {friendly_name: 'Charge de la tablette murale'},
+  }),
+  ...createSensor('sensor.wall_tablet_charger_type', {
+    state: 'ac',
+    attributes: {friendly_name: 'Chargeur de la tablette murale'},
+  }),
   ...createSensor('sensor.system_monitor_memory_usage', {
     state: '50',
     attributes: {
@@ -76,6 +98,36 @@ export const entities: HassEntities = {
     state: '50',
     attributes: {
       unit_of_measurement: '%',
+    },
+  }),
+  // Sauvegarde quotidienne : réussie il y a 3 jours, échouée hier.
+  ...createSensor('sensor.backup_last_successful', {
+    state: new Date(Date.now() - 3.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_last_attempted', {
+    state: new Date(Date.now() - 1.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_next_scheduled', {
+    state: new Date(Date.now() + 0.9 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_manager_state', {state: 'idle'}),
+  ...createUpdate('update.home_assistant_core_update', {
+    state: 'on',
+    attributes: {latest_version: '2026.10.2'},
+  }),
+  ...createUpdate('update.zigbee_bridge_update', {
+    state: 'on',
+    attributes: {
+      friendly_name: 'Pont Zigbee',
+      installed_version: '2.6.0',
+      latest_version: '2.7.0',
+    },
+  }),
+  ...createUpdate('update.home_assistant_operating_system_update', {
+    attributes: {
+      friendly_name: 'Home Assistant Operating System',
+      installed_version: '16.2',
+      latest_version: '16.2',
     },
   }),
 
