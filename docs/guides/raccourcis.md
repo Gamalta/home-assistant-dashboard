@@ -56,7 +56,7 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 
 ## Température
 
-La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. C'est le réglage « Carte des températures » de la modale Système : il est mémorisé, et la carte reste affichée après un rechargement ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
+La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Système ne le propose plus ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
 
 ## Cartes
 
