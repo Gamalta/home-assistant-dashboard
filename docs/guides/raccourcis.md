@@ -13,7 +13,7 @@ export const SideBarConfig: SideBarConfigType = {
 ```
 
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
-- `mortgages` : une entrée « Crédit » par prêt à la fin de ce menu, qui ouvre le [suivi du crédit](#crédit-immobilier).
+- `mortgages` : une entrée « Crédit » à la fin de ce menu, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
@@ -60,17 +60,27 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 ```ts
 mortgages: [
   {
-    label: 'Crédit maison',
+    label: 'Prêt principal',
     principal: 250_000,
     annualRate: 1.45,
     durationMonths: 300,
     firstPaymentDate: '2021-06-05',
     monthlyInsurance: 28,
   },
+  {
+    label: 'PTZ',
+    principal: 40_000,
+    annualRate: 0,
+    durationMonths: 240,
+    firstPaymentDate: '2021-06-05',
+  },
 ],
 ```
 
-Chaque prêt ajoute une entrée « Crédit » à la fin du menu rapide. Un appui referme le menu et ouvre la modale du prêt : une maison qui se remplit jusqu'à la part remboursée et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+Une seule entrée « Crédit » réunit tous les prêts. Un appui referme le menu et ouvre la modale : une maison qui se remplit jusqu'à la part remboursée et, à côté, les totaux de tous les prêts (capital restant dû, mensualité et assurance des prêts en cours, dernière échéance, intérêts payés et restants). Le bouton « Historique » affiche deux graphiques :
+
+- le capital restant dû de chaque prêt, en aires empilées, avec sa part remboursée dans la légende ;
+- par année, le capital remboursé, les intérêts et l'assurance, en barres empilées, sous le coût total du crédit. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
 
 | Option             | Rôle                                                                                        |
 | ------------------ | ------------------------------------------------------------------------------------------- |
@@ -79,7 +89,7 @@ Chaque prêt ajoute une entrée « Crédit » à la fin du menu rapide. Un appui
 | `durationMonths`   | Nombre d'échéances                                                                          |
 | `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
 | `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
-| `label`            | Libellé de l'entrée et de la modale, `Crédit` par défaut ; utile pour plusieurs prêts       |
+| `label`            | Nom du prêt dans la légende des graphiques                                                  |
 
 Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
 

@@ -157,40 +157,31 @@ const total = (day: DayConsumption) =>
 
 Par mois, même appel : `x` porte le premier jour de chaque mois et `formatX` affiche `{month: 'long', year: 'numeric'}`.
 
-### Courbe sur des années : capital restant dû
+### Aires empilées sur des années : capital restant dû par prêt
 
-Les années écoulées en aire, la projection en pointillés ; les deux séries se rejoignent au dernier anniversaire du prêt.
+Une série principale par prêt : les aires s'empilent, et le haut de la pile donne le total. Les couleurs viennent de la palette, et une légende sous le graphique les nomme (`MortgageBalanceChart`).
 
 ```tsx
-const points = yearlyBalance(mortgage);
-const balance = points.map(point => point.remaining);
-const last = Math.floor(status.paymentsMade / 12);
+const {x, balances} = yearlyBalances(mortgages);
 
 <Chart
-  bleed
-  x={points.map(point => point.date.getTime())}
+  x={x}
   min={0}
   formatX={time => String(new Date(time).getFullYear())}
-  series={[
-    {
-      id: 'balance',
-      label: 'Capital restant dû',
-      data: balance.map((value, i) => (i <= last ? value : null)),
-      format: formatEuros,
-    },
-    {
-      id: 'projection',
-      label: 'Projection',
-      data: balance.map((value, i) => (i >= last ? value : null)),
-      variant: 'comparison',
-      format: formatEuros,
-    },
-  ]}
-  sx={{height: 300, width: 500}}
+  series={mortgages.map((mortgage, index) => ({
+    id: `mortgage-${index}`,
+    label: mortgage.label,
+    data: balances[index],
+    color: COLORS[index % COLORS.length],
+    format: formatEuros,
+  }))}
+  sx={{height: 200, width: 564}}
 >
   <Typography variant="h4">{formatEuros(status.remainingPrincipal)}</Typography>
 </Chart>;
 ```
+
+Avec `bars`, les mêmes séries s'empilent en barres : `MortgageCostChart` montre ainsi le capital, les intérêts et l'assurance payés chaque année.
 
 ### Carte compacte
 
