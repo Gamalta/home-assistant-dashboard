@@ -23,13 +23,14 @@ type SideBarConfigType = {
   scenarios?: FilterByDomain<EntityName, 'script'>[];
   /** Prêts ouverts par les entrées « Crédit » du menu rapide. */
   mortgages?: MortgageConfigType[];
+  /** Liste `todo` ouverte par l'entrée « Courses » du menu rapide. */
+  shoppingListEntityId?: `todo.${string}`;
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };
 
 type ShortcutConfigType =
   | MediaShortcutConfigType
-  | ShoppingListShortcutConfigType
   | TrainsShortcutConfigType
   | EnergyShortcutConfigType;
 
@@ -80,13 +81,6 @@ type PersonConfigType = {
 
 type MortgageConfigType = Mortgage & {
   /** Libellé de l'entrée du menu, pour distinguer plusieurs prêts. */
-  label?: string;
-};
-
-type ShoppingListShortcutConfigType = {
-  type: 'shoppingList';
-  todoEntityId: `todo.${string}`;
-  /** Libellé de la carte, `Courses` par défaut. */
   label?: string;
 };
 

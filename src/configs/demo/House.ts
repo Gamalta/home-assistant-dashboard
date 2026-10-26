@@ -85,10 +85,10 @@ export const SideBarConfig: SideBarConfigType = {
       monthlyInsurance: 28,
     },
   ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
-    {type: 'shoppingList', todoEntityId: 'todo.shopping_list'},
     {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
     {
       type: 'energy',

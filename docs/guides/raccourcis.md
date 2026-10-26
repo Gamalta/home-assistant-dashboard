@@ -6,6 +6,7 @@ La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](.
 export const SideBarConfig: SideBarConfigType = {
   // …
   scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
   ],
@@ -13,12 +14,13 @@ export const SideBarConfig: SideBarConfigType = {
 ```
 
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
-- `mortgages` : une entrée « Crédit » par prêt à la fin de ce menu, qui ouvre le [suivi du crédit](#crédit-immobilier).
+- `mortgages` : une entrée « Crédit » par prêt après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier).
+- `shoppingListEntityId` : une entrée « Courses » tout en bas de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
-Sans scénario ni prêt, le menu ne s'affiche pas. Sans carte, le carrousel non plus.
+Sans scénario, ni prêt, ni liste de courses, le menu ne s'affiche pas. Sans carte, le carrousel non plus.
 
 ## Migration depuis les tuiles
 
@@ -70,7 +72,7 @@ mortgages: [
 ],
 ```
 
-Chaque prêt ajoute une entrée « Crédit » à la fin du menu rapide. Un appui referme le menu et ouvre la modale du prêt : une maison qui se remplit jusqu'à la part remboursée et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+Chaque prêt ajoute une entrée « Crédit » au menu rapide, après les scénarios. Un appui referme le menu et ouvre la modale du prêt : une maison qui se remplit jusqu'à la part remboursée et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
 
 | Option             | Rôle                                                                                        |
 | ------------------ | ------------------------------------------------------------------------------------------- |
@@ -83,6 +85,10 @@ Chaque prêt ajoute une entrée « Crédit » à la fin du menu rapide. Un appui
 
 Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
 
+## Liste de courses
+
+Un appui sur « Courses », dans le menu rapide, referme le menu et ouvre la modale de la liste `todo`, par exemple celle de l'intégration « Liste de courses ». Les articles y sont des tuiles, « À acheter » puis « Dans le panier », avec un emoji tiré de leur nom (`src/utils/groceryEmoji.ts`, à compléter au besoin). Un appui coche ou décoche un article, le champ du haut en ajoute un et le bouton du bas retire les articles cochés. La modale garde la même hauteur et la liste défile. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
+
 ## Cartes
 
 ### Média
@@ -94,17 +100,6 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | Option                | Rôle                                                  |
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
-
-### Liste de courses
-
-`{type: 'shoppingList', todoEntityId: 'todo.shopping_list'}`
-
-La carte affiche le nombre d'articles à acheter et les 3 premiers. La modale permet d'ajouter un article au clavier, de cocher et décocher un article d'un appui, et de retirer les articles cochés. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
-
-| Option         | Rôle                                                                                    |
-| -------------- | --------------------------------------------------------------------------------------- |
-| `todoEntityId` | Liste `todo` de Home Assistant, par exemple celle de l'intégration « Liste de courses » |
-| `label`        | Libellé de la carte, `Courses` par défaut                                               |
 
 ### Prochains trains
 
