@@ -23,10 +23,6 @@ test('ne compile aucun programme pendant une rotation', async ({page}) => {
 test('ne compile aucun programme pendant une rotation, avec les ombres', async ({
   page,
 }) => {
-  // Basculer castShadow au début et à la fin du geste recompile 5 programmes
-  // à chaque fois. #39 corrige ce défaut : Playwright signalera alors ce test,
-  // qui passera, et il faudra retirer test.fail().
-  test.fail();
   test.slow();
   await openHouse(page, 'demo', {shadows: true});
   expect((await rotate(page, 10)).programs).toBe(0);
