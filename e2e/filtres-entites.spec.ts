@@ -36,33 +36,33 @@ test.beforeEach(async ({page}) => {
   await waitForScene(page);
 });
 
-// Démo : 12 pièces, 13 lumières, 7 climatisations et 6 volets.
+// Démo : 14 pièces, 15 lumières, 7 climatisations, 6 volets, 2 prises et 1 imprimante.
 test('masque puis réaffiche les étiquettes d’une catégorie', async ({page}) => {
-  await expect(labels(page).getByRole('button')).toHaveCount(26);
+  await expect(labels(page).getByRole('button')).toHaveCount(31);
   await expect(temperatures(page)).toHaveCount(7);
 
   await filter(page, 'Volets').tap();
   await expect(filter(page, 'Volets')).toHaveAttribute('aria-pressed', 'false');
-  await expect(labels(page).getByRole('button')).toHaveCount(20);
+  await expect(labels(page).getByRole('button')).toHaveCount(25);
   await expect(temperatures(page)).toHaveCount(7);
 
   await filter(page, 'Climat').tap();
   await expect(temperatures(page)).toHaveCount(0);
-  await expect(labels(page).getByRole('button')).toHaveCount(13);
+  await expect(labels(page).getByRole('button')).toHaveCount(18);
 
   await filter(page, 'Volets').tap();
   await filter(page, 'Climat').tap();
-  await expect(labels(page).getByRole('button')).toHaveCount(26);
+  await expect(labels(page).getByRole('button')).toHaveCount(31);
   await expect(temperatures(page)).toHaveCount(7);
 });
 
 test('retire l’étiquette d’une pièce dont tous les éléments sont masqués', async ({
   page,
 }) => {
-  await expect(labels(page)).toHaveCount(19);
-  // 5 pièces n'ont qu'une lumière, et celle du meuble TV a sa propre étiquette.
+  await expect(labels(page)).toHaveCount(24);
+  // 7 pièces n'ont qu'une lumière, et celle du meuble TV a sa propre étiquette.
   await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(13);
+  await expect(labels(page)).toHaveCount(16);
   await expect(temperatures(page)).toHaveCount(7);
 });
 
@@ -83,13 +83,13 @@ test('garde les lumières 3D allumées quand leurs étiquettes sont masquées', 
     .toBe(0);
 
   await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(13);
+  await expect(labels(page)).toHaveCount(16);
   expect(await canvasBrightness(page)).toBeCloseTo(before, 0);
 });
 
 test('mémorise le filtre après rechargement', async ({page}) => {
   await filter(page, 'Volets').tap();
-  await expect(labels(page)).toHaveCount(13);
+  await expect(labels(page)).toHaveCount(18);
 
   await page.reload();
   await waitForScene(page);
@@ -98,7 +98,7 @@ test('mémorise le filtre après rechargement', async ({page}) => {
     'aria-pressed',
     'true',
   );
-  await expect(labels(page)).toHaveCount(13);
+  await expect(labels(page)).toHaveCount(18);
 });
 
 test('reste utilisable au doigt à 1280 × 800 sans cacher la maison', async ({
