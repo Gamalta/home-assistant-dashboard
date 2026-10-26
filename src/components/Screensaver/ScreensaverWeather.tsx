@@ -17,7 +17,11 @@ export function ScreensaverWeather(props: ScreensaverWeatherProps) {
 
   return (
     <ScreensaverCard icon={<CloudIcon />} title="Météo">
-      <Stack direction="row" spacing={2} sx={{alignItems: 'center', justifyContent: 'space-between', px: 1}}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{alignItems: 'center', justifyContent: 'space-between', px: 1}}
+      >
         <Box
           component="img"
           src={getWeatherIconPath(weather.state, true)}
