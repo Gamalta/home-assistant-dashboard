@@ -1,25 +1,30 @@
-# 0022 — Crédit immobilier calculé par le dashboard
+# 0022 — Échéancier du crédit lu dans Home Assistant
 
 - Statut : Proposé
-- Date : 2026-10-24
+- Date : 2026-10-24, révisé le 2026-10-26
 - Issue : #20
 
 ## Contexte
 
-Home Assistant n'expose aucune entité pour un crédit immobilier. Il faudrait des capteurs template ou une intégration bancaire, que le propriétaire n'a pas. Un prêt à taux fixe et à échéances constantes se calcule entièrement à partir de cinq paramètres : montant, taux, durée, date de la première échéance et assurance.
+Le crédit du propriétaire compte plusieurs prêts. Il a déjà leurs tableaux d'amortissement dans Home Assistant, en capteurs template, mois par mois. Calculer les échéances à partir du montant, du taux et de la durée (première version de cette PR) ne retombe pas sur ces tableaux : première échéance au prorata, différé d'un PTZ, remboursement anticipé, arrondis de la banque.
 
 ## Décision
 
-Chaque prêt de `sideBar.mortgages` porte ces paramètres dans la config. Les fonctions pures de `src/utils/mortgage.ts` calculent la mensualité, le capital restant dû, les intérêts et le calendrier à la date du jour.
+Chaque prêt est une entité Home Assistant, listée dans `sideBar.mortgages`. Ses attributs `principal`, `interest` et `insurance` associent chacun un mois `AAAA-MM` à la part de l'échéance de ce mois. Son `friendly_name` le nomme dans la légende, et son état n'est pas lu.
+
+Le dashboard ne calcule plus d'amortissement : les fonctions pures de `src/utils/mortgage.ts` additionnent ces montants à la date du jour (capital restant dû, intérêts payés, échéances), par année (graphiques) et sur l'ensemble des prêts. L'échéance d'un mois compte dès le 1er du mois.
 
 ## Conséquences
 
-- Aucune entité Home Assistant à créer, et aucun appel réseau.
-- Les montants réels sont dans la config de la maison, donc dans le sous-module privé ([ADR 0007](0007-une-config-par-maison.md)), jamais dans le dépôt public.
-- Un remboursement anticipé ou une renégociation rend le calcul faux, jusqu'à ce que la config soit mise à jour (nouveau capital et nouvelle date de départ).
-- Le calcul suit la formule de l'échéance constante ; l'échéancier de la banque peut différer de quelques centimes à cause des arrondis.
+- Les montants sont ceux de la banque, au centime, quel que soit le prêt (différé, taux variable, remboursement anticipé).
+- Les montants réels restent dans Home Assistant, jamais dans le dépôt public. La config de la maison ne liste que des identifiants d'entités.
+- Le tableau d'amortissement se maintient dans Home Assistant : après un remboursement anticipé, c'est le template qui change.
+- Un échéancier de 25 ans dépasse les 16 Ko d'attributs que l'enregistreur de Home Assistant accepte : il l'ignore avec un avertissement. Le dashboard ne lit que l'état courant, et l'entité peut être exclue de l'enregistreur.
+- Le jour de prélèvement n'est pas connu : en début de mois, l'échéance compte quelques jours avant d'être prélevée.
+- Le mock simule ces entités (`src/mock/mocks/createLoan.ts`) avec la formule des échéances constantes, pour la démo et les tests.
 
 ## Alternatives considérées
 
-- **Capteurs template dans Home Assistant** : la même formule, écrite en Jinja et plus difficile à tester, pour un résultat que seul le dashboard affiche.
-- **Importer le tableau d'amortissement de la banque** : exact au centime, mais il faut un fichier à maintenir et à garder privé.
+- **Calcul par le dashboard à partir de 5 paramètres** (première version) : faux dès que l'échéancier réel s'écarte de la formule, et en double avec les tableaux déjà présents dans Home Assistant.
+- **Un attribut par mois avec le total seulement** (`monthly`, le format actuel du propriétaire) : impossible d'isoler les intérêts et l'assurance, que montrent les graphiques.
+- **Une entité par mesure** (capital restant dû, mensualité, intérêts payés…) : pas d'échéancier, donc ni courbe sur toute la durée ni coût par année.

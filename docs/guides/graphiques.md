@@ -162,15 +162,15 @@ Par mois, même appel : `x` porte le premier jour de chaque mois et `formatX` af
 Une série principale par prêt : les aires s'empilent, et le haut de la pile donne le total. Les couleurs viennent de la palette, et une légende sous le graphique les nomme (`MortgageBalanceChart`).
 
 ```tsx
-const {x, balances} = yearlyBalances(mortgages);
+const {x, balances} = yearlyBalances(loans);
 
 <Chart
   x={x}
   min={0}
   formatX={time => String(new Date(time).getFullYear())}
-  series={mortgages.map((mortgage, index) => ({
-    id: `mortgage-${index}`,
-    label: mortgage.label,
+  series={loans.map((loan, index) => ({
+    id: `loan-${index}`,
+    label: loan.label,
     data: balances[index],
     color: COLORS[index % COLORS.length],
     format: formatEuros,
