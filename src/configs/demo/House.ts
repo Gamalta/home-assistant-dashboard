@@ -59,6 +59,7 @@ export const SideBarConfig: SideBarConfigType = {
     'sensor.loan_action_logement',
     'sensor.loan_works',
   ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},

@@ -16,6 +16,8 @@ type SideBarConfigType = {
    * attributs `principal`, `interest` et `insurance` donnent l'échéancier.
    */
   mortgages?: FilterByDomain<EntityName, 'sensor'>[];
+  /** Liste `todo` ouverte par l'entrée « Courses » du menu rapide. */
+  shoppingListEntityId?: `todo.${string}`;
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };

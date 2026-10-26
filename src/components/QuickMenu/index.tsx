@@ -2,6 +2,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CheckIcon from '@mui/icons-material/CheckRounded';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import HouseIcon from '@mui/icons-material/HouseRounded';
+import CartIcon from '@mui/icons-material/ShoppingCartRounded';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -10,6 +11,7 @@ import {motion} from 'framer-motion';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {MortgageModal} from '../Modal/MortgageModal';
+import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {HeatmapAction} from './HeatmapAction';
 import {ScenarioAction} from './ScenarioAction';
 
@@ -18,6 +20,7 @@ export function QuickMenu() {
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
   const [mortgageOpen, setMortgageOpen] = useState(false);
+  const [shoppingListOpen, setShoppingListOpen] = useState(false);
 
   useEffect(() => {
     if (!launched) return;
@@ -27,6 +30,7 @@ export function QuickMenu() {
 
   const scenarios = houseConfig?.sideBar.scenarios ?? [];
   const mortgages = houseConfig?.sideBar.mortgages ?? [];
+  const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
 
   return (
     <>
@@ -84,9 +88,21 @@ export function QuickMenu() {
             }}
           />
         )}
+        {shoppingListEntityId && (
+          <SpeedDialAction
+            icon={<CartIcon />}
+            onClick={() => {
+              setOpen(false);
+              setShoppingListOpen(true);
+            }}
+            slotProps={{
+              tooltip: {title: 'Courses', open: true, placement: 'right'},
+            }}
+          />
+        )}
       </SpeedDial>
       {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
-          React, et le menu capterait les flèches et Échap de la modale. */}
+          React, et le menu capterait les flèches et Échap des modales. */}
       {mortgages.length > 0 && (
         <MortgageModal
           id="layoutid-quick-menu"
@@ -94,6 +110,15 @@ export function QuickMenu() {
           onClose={() => setMortgageOpen(false)}
           title="Crédit"
           entityIds={mortgages}
+        />
+      )}
+      {shoppingListEntityId && (
+        <ShoppingListModal
+          id="layoutid-quick-menu"
+          open={shoppingListOpen}
+          onClose={() => setShoppingListOpen(false)}
+          title="Courses"
+          todoEntityId={shoppingListEntityId}
         />
       )}
     </>

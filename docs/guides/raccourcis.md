@@ -6,6 +6,7 @@ La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](.
 export const SideBarConfig: SideBarConfigType = {
   // …
   scenarios: ['script.leave_home', 'script.energy'],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
   ],
@@ -13,7 +14,8 @@ export const SideBarConfig: SideBarConfigType = {
 ```
 
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie l'action « Température » puis la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
-- `mortgages` : une entrée « Crédit » à la fin de ce menu, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
+- `mortgages` : une entrée « Crédit » après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
+- `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
@@ -98,6 +100,10 @@ Une seule entrée « Crédit » réunit tous les prêts. Un appui referme le men
 - par année, le capital remboursé, les intérêts et l'assurance, en barres empilées, sous le coût total du crédit.
 
 Après un remboursement anticipé ou une renégociation, mettre à jour le template avec le nouveau tableau.
+
+## Liste de courses
+
+Un appui sur « Courses », dans le menu rapide, referme le menu et ouvre la modale de la liste `todo`, par exemple celle de l'intégration « Liste de courses ». Les articles y sont des tuiles, « À acheter » puis « Dans le panier », avec un emoji au dessin d'iOS tiré de leur nom : le dictionnaire de `src/utils/groceryEmoji.ts` d'abord, à compléter quand emojibase se trompe, puis les noms et mots-clés français d'emojibase ([ADR 0042](../adr/0042-emojis-apple-et-mots-cles-emojibase.md)). Un appui coche un article, dont la tuile glisse dans « Dans le panier », ou le décoche. Le champ du haut en ajoute un et le bouton du bas retire les articles cochés. La modale garde la même hauteur et la liste défile. La liste se met à jour en temps réel quand elle change ailleurs ([ADR 0023](../adr/0023-listes-todo-par-abonnement.md)).
 
 ## Cartes
 
