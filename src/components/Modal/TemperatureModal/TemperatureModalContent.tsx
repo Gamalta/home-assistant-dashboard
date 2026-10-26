@@ -4,15 +4,20 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import {
-  AreaPlot,
-  ChartsClipPath,
-  ChartsTooltip,
-  LinePlot,
-  ChartsContainer,
-} from '@mui/x-charts';
-import {roundToNearest5Minutes} from '../../../utils/graph';
+  alignHistories,
+  formatTime,
+  isHistoryLoading,
+  valueRange,
+} from '../../../utils/chart';
+import {Chart} from '../../Charts/Chart';
 import {ThermostatIcon} from '../../Icons/ThermostatIcon';
-import {HassEntityWithService} from '@hakit/core';
+import {EntityName, HassEntityWithService, useEntity} from '@hakit/core';
+
+const HISTORY_OPTIONS = {
+  returnNullIfNotFound: true,
+  historyOptions: {disable: false, hoursToShow: 24},
+} as const;
+
 type TemperatureModalContentProps = {
   temperatureEntity: HassEntityWithService<'sensor'>;
   humidityEntity?: HassEntityWithService<'sensor'>;
@@ -21,188 +26,104 @@ type TemperatureModalContentProps = {
 export function TemperatureModalContent(props: TemperatureModalContentProps) {
   const {temperatureEntity, humidityEntity} = props;
 
-  const temperatureMap = Object.fromEntries(
-    (temperatureEntity?.history?.entityHistory ?? []).map(data => [
-      roundToNearest5Minutes(data.lu * 1000),
-      Number(data.s) || null,
-    ])
-  );
-  const tempTimestamps = Object.keys(temperatureMap);
-  const temperatures = Object.values(temperatureMap).filter(
-    (data): data is number => data !== null
-  );
-  const maxTemp = Math.max(...temperatures);
-  const minTemp = Math.min(...temperatures);
-  const tempLastTimestamp = tempTimestamps[tempTimestamps.length - 1];
-  const tempFormatedLastTimestamp = new Date(
-    Number(tempLastTimestamp)
-  ).toLocaleTimeString('fr', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const temperatureHistory = useEntity(
+    temperatureEntity.entity_id as EntityName,
+    HISTORY_OPTIONS,
+  )?.history;
+  const humidityHistory = useEntity(
+    (humidityEntity?.entity_id ?? 'unknown') as EntityName,
+    HISTORY_OPTIONS,
+  )?.history;
 
-  const humidityMap = Object.fromEntries(
-    (humidityEntity?.history?.entityHistory ?? []).map(data => [
-      roundToNearest5Minutes(data.lu * 1000),
-      Number(data.s) || null,
-    ])
-  );
-
-  const humTimestamps = Object.keys(humidityMap);
-  const humLastTimesptamp = humTimestamps[humTimestamps.length - 1];
-  const formatedLastTimeHumidity = new Date(
-    Number(humLastTimesptamp)
-  ).toLocaleTimeString('fr', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  const timestamps = Array.from(
-    new Set([...Object.keys(temperatureMap), ...Object.keys(humidityMap)])
-  ).sort((a, b) => Number(a) - Number(b));
-
-  let lastTemp = 0;
-  let lastHum = 0;
-  const dataset = timestamps.map(time => {
-    const temperature = temperatureMap[time] || lastTemp;
-    const humidity = humidityMap[time] || lastHum;
-    lastTemp = temperature;
-    lastHum = humidity;
-    return {
-      timestamp: Number(time),
-      temperature,
-      humidity,
-    };
-  });
-  const lastTime = dataset[dataset.length - 1]?.timestamp;
+  const {
+    x,
+    data: [temperatures, humidities],
+  } = alignHistories([
+    temperatureHistory?.entityHistory ?? [],
+    humidityHistory?.entityHistory ?? [],
+  ]);
+  const range = valueRange(temperatures);
+  const temperatureUnit = temperatureEntity.attributes.unit_of_measurement;
+  const humidityUnit = humidityEntity?.attributes.unit_of_measurement ?? '%';
+  const format = (unit?: string) => (value: number) =>
+    `${value.toLocaleString('fr', {maximumFractionDigits: 1})}${unit ?? ''}`;
 
   return (
-    <Stack width="500px" height="300px" position="relative">
-      <Stack justifyContent="space-between" height="100%" width="fit-content">
+    <Chart
+      bleed
+      loading={isHistoryLoading(temperatureHistory)}
+      x={x}
+      formatX={formatTime}
+      series={[
+        {
+          id: 'temperature',
+          label: 'Température',
+          data: temperatures,
+          color: 'warning',
+          format: format(temperatureUnit),
+        },
+        ...(humidityEntity
+          ? [
+              {
+                id: 'humidity',
+                label: 'Humidité',
+                data: humidities,
+                color: 'info',
+                variant: 'line' as const,
+                format: format(humidityUnit),
+              },
+            ]
+          : []),
+      ]}
+      sx={{height: 300, width: 500}}
+    >
+      <Stack direction="row" sx={{justifyContent: 'space-between'}}>
         <Stack spacing={1}>
-          <Stack direction="row" width="fit-content" zIndex={102}>
+          <Stack direction="row">
             <ThermostatIcon
-              sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
+              sx={{fontSize: '48px', color: 'warning.main', opacity: 0.75}}
             />
-            <Tooltip title={`mis à jour: ${tempFormatedLastTimestamp}`}>
-              <Typography variant="h4">{`${temperatureEntity.state}${temperatureEntity.attributes.unit_of_measurement}`}</Typography>
+            <Tooltip
+              title={`mis à jour: ${formatTime(temperatureEntity.last_updated)}`}
+            >
+              <Typography
+                variant="h4"
+                sx={{pointerEvents: 'auto'}}
+              >{`${temperatureEntity.state}${temperatureUnit}`}</Typography>
             </Tooltip>
           </Stack>
           {humidityEntity && (
-            <Stack
-              direction="row"
-              width="fit-content"
-              spacing={1}
-              zIndex={102}
-              pl={1}
-            >
+            <Stack direction="row" spacing={1} sx={{pl: 1}}>
               <WaterDropIcon
                 fontSize="large"
-                sx={{color: 'blue', opacity: 0.6}}
+                sx={{color: 'info.main', opacity: 0.75}}
               />
-              <Tooltip title={`mis à jour: ${formatedLastTimeHumidity}`}>
+              <Tooltip
+                title={`mis à jour: ${formatTime(humidityEntity.last_updated)}`}
+              >
                 <Typography
                   variant="h5"
                   color="textSecondary"
-                >{`${humidityEntity.state}${humidityEntity.attributes.unit_of_measurement}`}</Typography>
+                  sx={{pointerEvents: 'auto'}}
+                >{`${humidityEntity.state}${humidityUnit}`}</Typography>
               </Tooltip>
             </Stack>
           )}
         </Stack>
-        <Stack spacing={2} direction="row" ml={-2} mb={-2}>
-          <Chip
-            label={`min: ${minTemp}${temperatureEntity.attributes.unit_of_measurement}`}
-          />
-          <Chip
-            label={`max: ${maxTemp}${temperatureEntity.attributes.unit_of_measurement}`}
-          />
-        </Stack>
+        {/* En haut à droite, au-dessus de la courbe qui ne monte pas jusque-là. */}
+        {range && (
+          <Stack spacing={1} sx={{alignItems: 'flex-end'}}>
+            <Chip
+              size="small"
+              label={`max: ${format(temperatureUnit)(range.max)}`}
+            />
+            <Chip
+              size="small"
+              label={`min: ${format(temperatureUnit)(range.min)}`}
+            />
+          </Stack>
+        )}
       </Stack>
-      <Stack
-        margin="-32px"
-        marginTop={0}
-        height="275px"
-        width="564px"
-        position="absolute"
-        bottom={0}
-        zIndex={101}
-      >
-        <ChartsContainer
-          margin={0}
-          sx={{
-            '& .MuiLineElement-series-temperature': {
-              strokeWidth: 3,
-            },
-            '& .MuiLineElement-series-humidity': {
-              strokeWidth: 2,
-              opacity: 0.5,
-            },
-          }}
-          dataset={dataset}
-          series={[
-            {
-              id: 'temperature',
-              type: 'line',
-              dataKey: 'temperature',
-              label: 'Température: ',
-              yAxisId: 'temperature',
-              color: 'orange',
-
-              area: true,
-              valueFormatter: value =>
-                `${value}${temperatureEntity.attributes.unit_of_measurement}`,
-            },
-            {
-              id: 'humidity',
-              type: 'line',
-              dataKey: 'humidity',
-              label: 'Humidité: ',
-              yAxisId: 'humidity',
-              color: 'blue',
-              valueFormatter: value =>
-                `${value}${humidityEntity?.attributes.unit_of_measurement ?? '%'}`,
-            },
-          ]}
-          xAxis={[
-            {
-              id: 'time',
-              height: 0,
-              dataKey: 'timestamp',
-              scaleType: 'utc',
-              min: lastTime - 24 * 60 * 60 * 1000,
-              max: lastTime,
-              valueFormatter: value =>
-                new Date(value).toLocaleTimeString('fr', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }),
-            },
-          ]}
-          yAxis={[
-            {
-              id: 'temperature',
-              width: 0,
-              min: minTemp - 1,
-              max: maxTemp + 1,
-              scaleType: 'linear',
-            },
-            {
-              id: 'humidity',
-              width: 0,
-              min: -80,
-              max: 100,
-              scaleType: 'linear',
-            },
-          ]}
-        >
-          <g clipPath="url(#clip-path)">
-            <LinePlot />
-            <AreaPlot opacity={0.2} />
-          </g>
-          <ChartsTooltip />
-          <ChartsClipPath id="clip-path" />
-        </ChartsContainer>
-      </Stack>
-    </Stack>
+    </Chart>
   );
 }

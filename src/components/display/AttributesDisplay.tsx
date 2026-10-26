@@ -15,21 +15,20 @@ export function AttributesDisplay(props: AttributesDisplayProps) {
 
   if (type === 'icon')
     return (
-      <Stack position="relative">
+      <Stack sx={{position: 'relative'}}>
         <Tooltip
           title={
-            <Stack justifyContent="center" padding={1}>
+            <Stack sx={{justifyContent: 'center', padding: 1}}>
               {attributes?.map((entity, index) => (
                 <Fragment key={`${index}`}>
                   {Object.entries(entity).map(([key, value]) => (
                     <Stack
-                      gap={2}
                       direction="row"
-                      justifyContent="space-between"
+                      sx={{gap: 2, justifyContent: 'space-between'}}
                       key={`${index}-${key}`}
                     >
                       <Typography>{key}:</Typography>
-                      <Typography color="text.secondary">
+                      <Typography color="textSecondary">
                         {value ? value.toString() : '--'}
                       </Typography>
                     </Stack>
@@ -46,18 +45,17 @@ export function AttributesDisplay(props: AttributesDisplayProps) {
     );
   if (type === 'text')
     return (
-      <Stack direction="column" justifyContent="center">
+      <Stack direction="column" sx={{justifyContent: 'center'}}>
         {attributes?.map((entity, index) => (
           <Fragment key={`${index}`}>
             {Object.entries(entity).map(([key, value]) => (
               <Stack
-                gap={2}
                 direction="row"
-                justifyContent="space-between"
+                sx={{justifyContent: 'space-between', gap: 2}}
                 key={`${index}-${key}`}
               >
                 <Typography>{key}:</Typography>
-                <Typography color="text.secondary">{value}</Typography>
+                <Typography color="textSecondary">{value}</Typography>
               </Stack>
             ))}
             {index + 1 !== attributes.length && <Divider sx={{my: 1}} />}

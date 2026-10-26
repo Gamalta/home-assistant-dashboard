@@ -9,7 +9,7 @@ export function generateMockHistory(
   min: number,
   max: number,
   start?: number,
-  end?: number
+  end?: number,
 ) {
   const data: MockHistory[] = [];
 
@@ -18,13 +18,16 @@ export function generateMockHistory(
   const endTime = end ?? now;
 
   const step = (endTime - startTime) / length;
+  // Marche aléatoire : un vrai capteur évolue par petites variations.
+  let value = (min + max) / 2;
 
   for (let i = 0; i < length; i++) {
-    const value = (Math.random() * (max - min) + min).toFixed(1);
+    value += (Math.random() - 0.5) * (max - min) * 0.2;
+    value = Math.min(max, Math.max(min, value));
     const lu = startTime + i * step;
 
     data.push({
-      s: value,
+      s: value.toFixed(1),
       lu,
     });
   }

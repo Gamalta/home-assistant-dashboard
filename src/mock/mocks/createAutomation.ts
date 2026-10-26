@@ -24,7 +24,7 @@ const defaults = {
 
 export const createAutomation = (
   entity_id: string,
-  overrides: Partial<HassEntity> = {}
+  overrides: Partial<HassEntity> = {},
 ) => {
   return createEntity(entity_id, defaults, overrides);
 };

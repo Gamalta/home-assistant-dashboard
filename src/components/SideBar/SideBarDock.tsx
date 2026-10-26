@@ -20,22 +20,27 @@ export function SideBarDock(props: SideBarDockProps) {
   const {sideBarRef} = props;
   const [isVisible, setIsVisible] = useState(false);
   const [systemModal, setSystemModal] = useState(false);
+  const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
   const [configs, setConfigs] = useState<ConfigType[]>([]);
   const {themeMode, setTheme} = useThemeContext();
-  const {config, setConfig} = useHouseContext();
+  const {houseConfig, setHouseConfig} = useHouseContext();
 
   useEffect(() => {
     if (!sideBarRef.current) return;
     const sideBar = sideBarRef.current;
 
-    const handleTouchStart = (event: TouchEvent) =>
+    const handleTouchStart = (event: TouchEvent) => {
+      setStartX(event.touches[0].clientX);
       setStartY(event.touches[0].clientY);
+    };
 
     const handleTouchMove = (event: TouchEvent) => {
-      const currentY = event.touches[0].clientY;
+      const {clientX, clientY: currentY} = event.touches[0];
+      // Un glissement horizontal fait défiler le carrousel, pas le dock.
+      if (Math.abs(clientX - startX) > Math.abs(currentY - startY)) return;
       if (!isVisible && startY - currentY > 10) {
         setIsVisible(true);
         event.preventDefault();
@@ -45,23 +50,27 @@ export function SideBarDock(props: SideBarDockProps) {
       }
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handlePointerMove = (event: PointerEvent) => {
+      // Un appui tactile émet aussi un mousemove : seule la souris compte.
+      if (event.pointerType !== 'mouse') return;
       const heightThreshold = window.innerHeight - window.innerHeight / 4;
-      event.clientY > heightThreshold
-        ? setIsVisible(true)
-        : setIsVisible(false);
+      if (event.clientY > heightThreshold) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
     };
 
     sideBar.addEventListener('touchstart', handleTouchStart);
     sideBar.addEventListener('touchmove', handleTouchMove);
-    sideBar.addEventListener('mousemove', handleMouseMove);
+    sideBar.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       sideBar.removeEventListener('touchstart', handleTouchStart);
       sideBar.removeEventListener('touchmove', handleTouchMove);
-      sideBar.removeEventListener('mousemove', handleMouseMove);
+      sideBar.removeEventListener('pointermove', handlePointerMove);
     };
-  }, [isVisible, sideBarRef, startY]);
+  }, [isVisible, sideBarRef, startX, startY]);
 
   useEffect(() => {
     if (!configAnchor) return;
@@ -69,7 +78,7 @@ export function SideBarDock(props: SideBarDockProps) {
       const promises = HouseConfigsName.map(name => loadConfig(name));
       const loadedConfigs = await Promise.all(promises);
       setConfigs(
-        loadedConfigs.filter(config => config !== null) as ConfigType[]
+        loadedConfigs.filter(config => config !== null) as ConfigType[],
       );
     }
     loadConfigs();
@@ -86,7 +95,7 @@ export function SideBarDock(props: SideBarDockProps) {
 
   const handleConfigMenuClick = (newConfig: ConfigType) => {
     setConfigAnchor(null);
-    setConfig(newConfig);
+    setHouseConfig(newConfig);
 
     setTimeout(() => {
       setIsVisible(false);
@@ -98,18 +107,20 @@ export function SideBarDock(props: SideBarDockProps) {
       {isVisible && (
         <Stack
           component={motion.div}
-          position="absolute"
           direction="row"
-          bottom={theme => theme.spacing(2)}
-          right="50%"
-          justifyContent="center"
-          bgcolor="background.tertiary"
-          borderRadius="50px"
-          p={theme => theme.spacing(1, 2)}
           initial={{opacity: 0, x: '50%', y: 50}}
           animate={{opacity: 1, y: 0}}
           exit={{opacity: 0, y: 50}}
           transition={{duration: 0.5}}
+          sx={{
+            position: 'absolute',
+            bottom: theme => theme.spacing(2),
+            right: '50%',
+            justifyContent: 'center',
+            bgcolor: 'background.tertiary',
+            borderRadius: '50px',
+            p: theme => theme.spacing(1, 2),
+          }}
         >
           {themeMode && (
             <>
@@ -142,7 +153,7 @@ export function SideBarDock(props: SideBarDockProps) {
                   </MenuItem>
                 ))}
               </Menu>
-              <Stack py={0.5}>
+              <Stack sx={{py: 0.5}}>
                 <Divider orientation="vertical" />
               </Stack>
             </>
@@ -163,7 +174,7 @@ export function SideBarDock(props: SideBarDockProps) {
                   <MenuItem
                     key={option.id}
                     onClick={() => handleConfigMenuClick(option)}
-                    selected={config?.id === option.id}
+                    selected={houseConfig?.id === option.id}
                   >
                     {option.name}
                   </MenuItem>
@@ -171,7 +182,7 @@ export function SideBarDock(props: SideBarDockProps) {
               </Menu>
             </>
           )}
-          {config?.sideBar.system && (
+          {houseConfig?.sideBar.system && (
             <>
               <Button onClick={() => setSystemModal(true)}>Système</Button>
               <motion.div layoutId="layoutid-system-modal" />
@@ -180,7 +191,7 @@ export function SideBarDock(props: SideBarDockProps) {
                 title="Système"
                 open={systemModal}
                 onClose={() => setSystemModal(false)}
-                systemConfig={config.sideBar.system}
+                systemConfig={houseConfig.sideBar.system}
               />
             </>
           )}

@@ -24,19 +24,19 @@ export function SignalDisplay(props: SignalDisplayProps) {
 
   if (type === 'icon')
     return (
-      <Stack position="relative">
+      <Stack sx={{position: 'relative'}}>
         <WifiIcon sx={{opacity: 0.3}} />
         <Tooltip title={`${signal} dBm`}>{getSignalIcon()}</Tooltip>
       </Stack>
     );
   if (type === 'text')
     return (
-      <Stack direction="row" justifyContent="center">
-        <Stack position="relative">
+      <Stack direction="row" sx={{justifyContent: 'center'}}>
+        <Stack sx={{position: 'relative'}}>
           <WifiIcon sx={{opacity: 0.3}} />
           {getSignalIcon()}
         </Stack>
-        <Typography mt="2px">{signal} dBm</Typography>
+        <Typography sx={{mt: '2px'}}>{signal} dBm</Typography>
       </Stack>
     );
   return null;

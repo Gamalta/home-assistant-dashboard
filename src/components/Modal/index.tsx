@@ -1,6 +1,6 @@
 import {IconButton, Stack, Typography} from '@mui/material';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
-import {useEffect, useRef, useState} from 'react';
+import {memo, useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import {Backdrop} from './Base/Backdrop';
@@ -37,7 +37,14 @@ const variants: Variants = {
   },
 };
 
-export function Modal(props: ModalProps) {
+// Fermée, la modale ignore les rendus de son parent : pendant la sortie, un
+// rendu relance la mesure du layout partagé et la modale vide réapparaît.
+export const Modal = memo(
+  ModalWindow,
+  (prev, next) => !prev.open && !next.open,
+);
+
+function ModalWindow(props: ModalProps) {
   const {open, id, title = '', children, action, onClose} = props;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [ready, setReady] = useState(false);
@@ -53,7 +60,7 @@ export function Modal(props: ModalProps) {
     }, 1000 / 1.8);
 
     return () => {
-      timerRef.current && clearTimeout(timerRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [open]);
 
@@ -63,9 +70,15 @@ export function Modal(props: ModalProps) {
         <>
           <Backdrop />
           <Container id={id}>
-            <Stack direction="row" justifyContent="space-between">
+            {/* Avec layout, le ressort du conteneur n'étire plus son contenu. */}
+            <Stack
+              direction="row"
+              component={motion.div}
+              layout="position"
+              sx={{justifyContent: 'space-between'}}
+            >
               <Typography variant="h5">{title}</Typography>
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
                 {action}
                 <IconButton onClick={onClose}>
                   <CloseIcon />
@@ -74,12 +87,12 @@ export function Modal(props: ModalProps) {
             </Stack>
             <Stack
               component={motion.div}
+              layout="position"
               initial="hidden"
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
               variants={variants}
-              p={2}
-              maxHeight="100%"
+              sx={{p: 2, maxHeight: '100%'}}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}
@@ -89,6 +102,6 @@ export function Modal(props: ModalProps) {
         </>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }

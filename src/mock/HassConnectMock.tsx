@@ -31,7 +31,8 @@ import type {ServiceArgs} from './mocks/fake-call-service/types';
 import {mockCallApi} from './mocks/fake-call-api';
 import {logs} from './mocks/mockLogs';
 import {dailyForecast, hourlyForecast} from './mocks/mockWeather';
-import { generateMockHistory } from './mock-history';
+import {generateMockHistory} from './mock-history';
+import {callTodoService, subscribeTodo} from './mocks/mockTodo';
 interface HassProviderProps {
   children: (ready: boolean) => ReactNode;
   hassUrl: string;
@@ -52,7 +53,7 @@ let fakeConfig: HassConfig = {
     wind_speed: 'm/s',
   },
   location_name: 'Home',
-  time_zone: 'France/Paris',
+  time_zone: 'Europe/Paris',
   components: [],
   config_dir: '/config',
   allowlist_external_dirs: [],
@@ -117,7 +118,7 @@ class MockConnection extends Connection {
   // hass events
   async subscribeEvents<EventType>(
     eventCallback: (ev: EventType) => void,
-    eventType?: string
+    eventType?: string,
   ) {
     if (!eventType) {
       throw new Error('mock all events not implemented');
@@ -146,8 +147,16 @@ class MockConnection extends Connection {
       start_time?: string;
       forecast_type?: string;
       end_time?: string;
-    }
+      entity_id?: string;
+    },
   ): Promise<() => Promise<void>> {
+    if (params?.type === 'todo/item/subscribe' && params.entity_id) {
+      const stop = subscribeTodo(
+        params.entity_id,
+        callback as Parameters<typeof subscribeTodo>[1],
+      );
+      return async () => stop();
+    }
     if (
       params &&
       params.type === 'logbook/event_stream' &&
@@ -192,7 +201,7 @@ class MockConnection extends Connection {
       let min = 0;
       let max = 100;
 
-      if(entityId.includes('temperature')) {
+      if (entityId.includes('temperature')) {
         min = 20;
         max = 25;
       } else if (entityId.includes('humidity')) {
@@ -205,8 +214,12 @@ class MockConnection extends Connection {
         50,
         min,
         max,
-        params?.start_time ? new Date(params.start_time).getTime() / 1000 : undefined,
-        params?.end_time ? new Date(params.end_time).getTime() / 1000 : undefined
+        params?.start_time
+          ? new Date(params.start_time).getTime() / 1000
+          : undefined,
+        params?.end_time
+          ? new Date(params.end_time).getTime() / 1000
+          : undefined,
       );
 
       callback(history as Result);
@@ -214,6 +227,12 @@ class MockConnection extends Connection {
     return () => Promise.resolve();
   }
   async sendMessagePromise<Result>(message: MessageBase): Promise<Result> {
+    if (message.type === 'call_service' && message.domain === 'todo') {
+      callTodoService(message.target.entity_id, message.service, {
+        ...message.service_data,
+      });
+      return null as Result;
+    }
     if (message.type === 'get_config') {
       return fakeConfig as Result;
     }
@@ -278,7 +297,7 @@ useHass.setState({
       T extends SnakeOrCamelDomains,
       M extends DomainService<T>,
     >(
-      rawArgs: CallServiceArgs<T, M, boolean>
+      rawArgs: CallServiceArgs<T, M, boolean>,
     ): Promise<ServiceResponse<R>> | void => {
       console.log('callService', rawArgs);
       const {domain, service, serviceData, target: target} = rawArgs;
@@ -290,7 +309,7 @@ useHass.setState({
       const {entities, setEntities} = useHass.getState() as InternalStore;
       if (domain in fakeApi) {
         const api = fakeApi[domain as 'scene'] as (
-          params: ServiceArgs<'scene'>
+          params: ServiceArgs<'scene'>,
         ) => boolean;
         const skip = api({
           setEntities(cb: (entities: HassEntities) => HassEntities) {
@@ -397,10 +416,8 @@ useHass.setState({
 });
 
 function HassProvider({children}: HassProviderProps) {
-  const {hash: _hash, ready} = useHass(s => ({
-    hash: s.hash,
-    ready: s.ready,
-  }));
+  const ready = useHass(s => s.ready);
+  const _hash = useHass(s => s.hash);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -426,7 +443,7 @@ function HassProvider({children}: HassProviderProps) {
             ...route,
             active: false,
           };
-        })
+        }),
       );
       setHash(location.hash);
     }

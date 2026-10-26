@@ -1,28 +1,25 @@
 import {
   Dispatch,
   ReactNode,
-  RefObject,
   SetStateAction,
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import {ConfigType, loadConfig} from '../configs/configs';
-
-type configType = ConfigType | undefined;
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 type HouseContextType = {
-  config: configType;
-  setConfig: Dispatch<SetStateAction<configType>>;
-  houseRef: RefObject<HTMLDivElement | null> | null;
+  houseConfig: ConfigType | undefined;
+  setHouseConfig: Dispatch<SetStateAction<ConfigType | undefined>>;
 };
 
-const HouseContext = createContext<HouseContextType>({
-  config: undefined,
-  setConfig: () => {},
-  houseRef: null,
+export const HouseContext = createContext<HouseContextType>({
+  houseConfig: undefined,
+  setHouseConfig: () => {},
 });
 
 export const useHouseContext = () => useContext(HouseContext);
@@ -33,29 +30,52 @@ type HouseProviderProps = {
 
 export const HouseProvider = (props: HouseProviderProps) => {
   const {children} = props;
-  const [config, setConfig] = useState<configType>(undefined);
-  const houseRef = useRef<HTMLDivElement | null>(null);
+  const [houseConfig, setHouseConfig] = useState<ConfigType | undefined>(
+    undefined,
+  );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function updateConfig() {
       const configName = window.localStorage.getItem('config') || undefined;
       const config = await loadConfig(configName);
-      if (config) setConfig(config);
+      setIsLoading(false);
+      if (config) setHouseConfig(config);
     }
     updateConfig();
-  }, [setConfig]);
+  }, [setHouseConfig]);
 
   useEffect(() => {
-    if (!config) return;
-    const oldConfigName = window.localStorage.getItem('config');
-
-    if (oldConfigName !== config.name) {
-      window.localStorage.setItem('config', config.id);
+    if (!houseConfig) return;
+    if (window.localStorage.getItem('config') !== houseConfig.id) {
+      window.localStorage.setItem('config', houseConfig.id);
     }
-  }, [config]);
+  }, [houseConfig]);
+
+  if (isLoading) {
+    return (
+      <Stack
+        sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}
+      >
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (!houseConfig) {
+    return (
+      <Stack
+        sx={{height: '100vh', justifyContent: 'center', alignItems: 'center'}}
+      >
+        <Alert severity="error" variant="filled">
+          Impossible de charger la configuration.
+        </Alert>
+      </Stack>
+    );
+  }
 
   return (
-    <HouseContext.Provider value={{config, setConfig, houseRef}}>
+    <HouseContext.Provider value={{houseConfig, setHouseConfig}}>
       {children}
     </HouseContext.Provider>
   );

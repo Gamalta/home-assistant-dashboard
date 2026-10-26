@@ -11,6 +11,7 @@ import LinkIcon from '@mui/icons-material/LinkRounded';
 import LinkOffIcon from '@mui/icons-material/LinkOffRounded';
 import Chip from '@mui/material/Chip';
 import {useIcon} from '../../../../hooks/useIcon';
+import {lightColor} from '../../../../utils/entity/light';
 
 type LightCardProps = {
   entity: HassEntityWithService<'light'>;
@@ -24,12 +25,12 @@ export function LightCard(props: LightCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const theme = useTheme();
 
-  const rgbColor = entity.custom.color;
+  const rgbColor = lightColor(entity);
   const hexColor = rgbColor
     ? `#${rgbColor.map(c => c.toString(16).padStart(2, '0')).join('')}`
     : undefined;
   const contrastColor = theme.palette.getContrastText(hexColor ?? '#000');
-  const color = `rgb(${entity.custom.color ?? [255, 255, 255].join(',')})`;
+  const color = `rgb(${rgbColor.join(',')})`;
   const brightness = entity.custom.brightnessValue ?? 100;
   const icon = useIcon(entity.attributes.icon);
   const lightOn = entity.state === 'on';
@@ -60,19 +61,17 @@ export function LightCard(props: LightCardProps) {
 
   return (
     <Stack
-      border={
-        activeEntity
-          ? `2px solid ${lightOn ? color : 'rgba(102, 102, 102, 0.6)'}`
-          : undefined
-      }
-      borderRadius={
-        activeEntity ? theme => `${Number(theme.shape.borderRadius) + 4}px` : 1
-      }
-      p={activeEntity ? '2px' : 0}
-      m={activeEntity ? '-4px' : 0}
-      width="150px"
-      minWidth="150px"
       sx={{
+        width: '150px',
+        minWidth: '150px',
+        p: activeEntity ? '2px' : 0,
+        m: activeEntity ? '-4px' : 0,
+        border: activeEntity
+          ? `2px solid ${lightOn ? color : 'rgba(102, 102, 102, 0.6)'}`
+          : undefined,
+        borderRadius: activeEntity
+          ? theme => `${Number(theme.shape.borderRadius) + 4}px`
+          : 1,
         transition: 'all 0.3s ease-out 0s, transform .15s',
         opacity: controllableByCurrentTab ? 1 : 0.3,
         '&:hover': {
@@ -91,13 +90,16 @@ export function LightCard(props: LightCardProps) {
         component={motion.div}
         whileTap={{scale: 0.9}}
         whileHover={{scale: 0.95}}
-        borderRadius={1}
         sx={{
+          borderRadius: 1,
           background: lightOn ? color : 'rgba(102, 102, 102, 0.6)',
           transition: 'all 0.3s ease-out 0s, transform .15s',
         }}
       >
-        <Stack direction="row-reverse" justifyContent="space-between" p={1}>
+        <Stack
+          direction="row-reverse"
+          sx={{justifyContent: 'space-between', p: 1}}
+        >
           <IconButton
             size="small"
             sx={{
@@ -109,7 +111,7 @@ export function LightCard(props: LightCardProps) {
               setActiveEntityIds(entities =>
                 entities.includes(entity.entity_id)
                   ? entities.filter(entityId => entityId !== entity.entity_id)
-                  : [entity.entity_id, ...entities]
+                  : [entity.entity_id, ...entities],
               );
               event.stopPropagation();
             }}
@@ -124,10 +126,10 @@ export function LightCard(props: LightCardProps) {
           )}
         </Stack>
         <Stack
-          p={2}
           spacing={1}
-          alignItems="center"
           sx={{
+            p: 2,
+            alignItems: 'center',
             '& .MuiSvgIcon-root': {
               color: contrastColor,
             },
@@ -148,9 +150,9 @@ export function LightCard(props: LightCardProps) {
           </Typography>
         </Stack>
         <Stack
-          alignItems="center"
-          boxSizing="content-box"
           sx={{
+            alignItems: 'center',
+            boxSizing: 'content-box',
             background:
               'linear-gradient(rgba(255, 255, 255, 0.1), transparent)',
             borderTop: '1px solid rgba(80, 80, 80, 0.1)',

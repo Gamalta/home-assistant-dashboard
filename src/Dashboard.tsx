@@ -1,15 +1,16 @@
 import Stack from '@mui/material/Stack';
-import {House} from './components/House';
+import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
+import {QuickMenu} from './components/QuickMenu';
 import {
   Group,
   Panel,
   Separator,
   useDefaultLayout,
 } from 'react-resizable-panels';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import {useState} from 'react';
+import {useEffect} from 'react';
 
 export default function Dashboard() {
   const [isDragging, setIsDragging] = useState(false);
@@ -38,6 +39,7 @@ export default function Dashboard() {
         defaultLayout={defaultLayout}
         orientation="horizontal"
         onLayoutChanged={onLayoutChanged}
+        style={{height: '100vh'}}
       >
         <Panel
           defaultSize="30%"
@@ -48,30 +50,37 @@ export default function Dashboard() {
         >
           <SideBar />
         </Panel>
-        <Separator style={{outline: 0}} onPointerDown={() => setIsDragging(true)}>
+        <Separator
+          style={{outline: 0}}
+          onPointerDown={() => setIsDragging(true)}
+        >
           <Stack
-            height="100vh"
-            width="26px"
-            display="flex"
-            justifyContent="center"
-            bgcolor="background.primary"
             sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              height: '100vh',
+              width: '26px',
+              bgcolor: 'background.primary',
+              borderRadius: '0 16px 16px 0',
               '&:hover': {div: {height: '10%'}},
             }}
-            borderRadius="0 16px 16px 0"
           >
             <Stack
-              bgcolor={isDragging ? 'cyan' : 'grey'}
-              width="5px"
-              m="0 0 0 16px"
-              height={isDragging ? '10%' : '5%'}
-              borderRadius="50px"
-              sx={{transition: '500ms', opacity: isDragging ? 0.5 : 1}}
+              sx={{
+                height: isDragging ? '10%' : '5%',
+                width: '5px',
+                bgcolor: isDragging ? 'cyan' : 'grey',
+                borderRadius: '50px',
+                margin: '0 0 0 16px',
+                transition: '500ms',
+                opacity: isDragging ? 0.5 : 1,
+              }}
             />
           </Stack>
         </Separator>
-        <Panel defaultSize="70%">
+        <Panel defaultSize="70%" style={{position: 'relative'}}>
           <House />
+          <QuickMenu />
         </Panel>
       </Group>
     </HouseProvider>

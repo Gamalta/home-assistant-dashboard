@@ -32,7 +32,7 @@ enum PresetMode {
 function interpolateColor(
   color1: string,
   color2: string,
-  factor: number
+  factor: number,
 ): string {
   const hexToRgb = (hex: string) =>
     hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
@@ -49,7 +49,7 @@ function interpolateColor(
 const getModeColors = (
   presetMode: PresetMode,
   temperature: number,
-  targetTemperature: number
+  targetTemperature: number,
 ) => {
   const baseNeutral = '#848484';
   const distance = targetTemperature - temperature;
@@ -85,36 +85,28 @@ export default function ClimateModal(props: ClimateModalProps) {
   const {climateConfig, climateEntity, ...modalProps} = props;
   const [tab, setTab] = useState<'control' | 'history'>('control');
   const [targetTemperature, setTargetTemperature] = useState(
-    climateEntity.attributes.temperature
+    climateEntity.attributes.temperature,
   );
   const [presetMode, setPresetMode] = useState<PresetMode>(
     Object.values<string>(PresetMode).includes(
-      climateEntity.attributes.preset_mode ?? ''
+      climateEntity.attributes.preset_mode ?? '',
     )
       ? (climateEntity.attributes.preset_mode as PresetMode)
-      : PresetMode.Off
+      : PresetMode.Off,
   );
 
   const temperatureEntity = useEntity(
     climateConfig.temperatureEntityId ?? 'unknown',
     {
       returnNullIfNotFound: true,
-      historyOptions: {
-        disable: false,
-        hoursToShow: 24,
-      },
-    }
+    },
   );
 
   const humidityEntity = useEntity(
     climateConfig.humidityEntityId ?? 'unknown',
     {
       returnNullIfNotFound: true,
-      historyOptions: {
-        disable: false,
-        hoursToShow: 24,
-      },
-    }
+    },
   );
 
   const isActive = presetMode !== PresetMode.Off;
@@ -125,13 +117,13 @@ export default function ClimateModal(props: ClimateModalProps) {
       getModeColors(
         presetMode,
         climateEntity.attributes.current_temperature ?? 22,
-        targetTemperature
+        targetTemperature,
       ),
     [
       presetMode,
       climateEntity.attributes.current_temperature,
       targetTemperature,
-    ]
+    ],
   );
 
   return (
@@ -140,12 +132,15 @@ export default function ClimateModal(props: ClimateModalProps) {
         temperatureEntity &&
         {
           control: (
-            <IconButton onClick={() => setTab('history')}>
+            <IconButton
+              aria-label="Historique"
+              onClick={() => setTab('history')}
+            >
               <AssessmentIcon />
             </IconButton>
           ),
           history: (
-            <IconButton onClick={() => setTab('control')}>
+            <IconButton aria-label="Réglage" onClick={() => setTab('control')}>
               <TuneIcon />
             </IconButton>
           ),
@@ -156,8 +151,10 @@ export default function ClimateModal(props: ClimateModalProps) {
       {
         {
           control: (
-            <Stack width="350px" position="relative" alignItems="center">
-              <Stack width="200px" mt={7} spacing={3} alignItems="center">
+            <Stack
+              sx={{position: 'relative', alignItems: 'center', width: '350px'}}
+            >
+              <Stack sx={{width: '200px', mt: 7, alignItems: 'center'}}>
                 <Thermostat
                   min={climateEntity.attributes.min_temp}
                   max={climateEntity.attributes.max_temp}
@@ -204,12 +201,14 @@ export default function ClimateModal(props: ClimateModalProps) {
               </Stack>
               <Stack
                 spacing={1}
-                p={1}
-                position="absolute"
-                right={0}
-                top={0}
-                bgcolor="background.tertiary"
-                borderRadius={10}
+                sx={{
+                  p: 1,
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  bgcolor: 'background.tertiary',
+                  borderRadius: 10,
+                }}
               >
                 <IconButton
                   sx={{
@@ -259,8 +258,11 @@ export default function ClimateModal(props: ClimateModalProps) {
                   <LeaveIcon />
                 </IconButton>
               </Stack>
-              <Stack mx={-1} spacing={1} position="absolute" left={0} top={0}>
-                <Stack direction="row" width="fit-content" zIndex={102}>
+              <Stack
+                spacing={1}
+                sx={{mx: -1, position: 'absolute', left: 0, top: 0}}
+              >
+                <Stack direction="row" sx={{width: 'fit-content', zIndex: 102}}>
                   <ThermostatIcon
                     sx={{fontSize: '48px', color: 'orange', opacity: 0.75}}
                   />
@@ -269,10 +271,8 @@ export default function ClimateModal(props: ClimateModalProps) {
                 {climateEntity.attributes.current_humidity && (
                   <Stack
                     direction="row"
-                    width="fit-content"
                     spacing={1}
-                    zIndex={102}
-                    pl={1}
+                    sx={{width: 'fit-content', zIndex: 102, pl: 1}}
                   >
                     <WaterDropIcon
                       fontSize="large"

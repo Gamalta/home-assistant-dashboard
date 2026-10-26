@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Battery20Icon from '@mui/icons-material/Battery20Rounded';
 import Battery30Icon from '@mui/icons-material/Battery30Rounded';
-import Battery50Icon from '@mui/icons-material/Battery20Rounded';
+import Battery50Icon from '@mui/icons-material/Battery50Rounded';
 import Battery60Icon from '@mui/icons-material/Battery60Rounded';
 import Battery80Icon from '@mui/icons-material/Battery80Rounded';
 import Battery90Icon from '@mui/icons-material/Battery90Rounded';
@@ -55,9 +55,9 @@ export function BatteryDisplay(props: BatteryDisplayProps) {
 
   if (type === 'text') {
     return (
-      <Stack direction="row" justifyContent="center">
+      <Stack direction="row" sx={{justifyContent: 'center'}}>
         {getBatteryIcon()}
-        <Typography mt="2px">{batteryLevel}%</Typography>
+        <Typography sx={{mt: '2px'}}>{batteryLevel}%</Typography>
       </Stack>
     );
   }

@@ -10,7 +10,7 @@ import {BulbSpotHungIcon} from '../components/Icons/BulbSpotHungIcon';
 
 export function useIcon(
   icon?: string | null,
-  iconProps?: Omit<IconProps, 'icon'>
+  iconProps?: Omit<IconProps, 'icon'>,
 ) {
   const HaIcon = useMemo(() => {
     if (icon === null) return null;

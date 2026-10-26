@@ -3,7 +3,7 @@ import {HassEntity} from 'home-assistant-js-websocket';
 export const createEntity = (
   entity_id: string,
   defaults: HassEntity,
-  overrides: Partial<HassEntity> = {}
+  overrides: Partial<HassEntity> = {},
 ): {
   [entity_id: string]: HassEntity;
 } => {

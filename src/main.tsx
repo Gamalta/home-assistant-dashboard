@@ -13,7 +13,7 @@ Sentry.init({
   sendDefaultPii: false,
 });
 
-if(import.meta.env.VITE_MOCK_HOME_ASSISTANT){
+if (import.meta.env.VITE_MOCK_HOME_ASSISTANT) {
   Sentry.setTag('mock_home_assistant', true);
 }
 

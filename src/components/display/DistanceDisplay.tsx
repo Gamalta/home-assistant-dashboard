@@ -41,9 +41,9 @@ export function DistanceDisplay(props: DistanceDisplayProps) {
 
   if (type === 'text') {
     return (
-      <Stack direction="row" justifyContent="center" spacing={0.5}>
+      <Stack direction="row" spacing={0.5} sx={{justifyContent: 'center'}}>
         {getDistanceIcon()}
-        <Typography mt="2px">{getDistanceText()}</Typography>
+        <Typography sx={{mt: '2px'}}>{getDistanceText()}</Typography>
       </Stack>
     );
   }

@@ -42,7 +42,7 @@ export function DesktopModal(props: DesktopModalProps) {
         </>
       }
     >
-      <Stack spacing={2} alignItems="center" mt={-2}>
+      <Stack spacing={2} sx={{alignItems: 'center', mt: -2}}>
         <img
           src="icon/pc.png"
           style={{

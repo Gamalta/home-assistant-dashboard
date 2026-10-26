@@ -53,7 +53,7 @@ export function OptionButton(props: OptionButtonProps) {
           sx={theme => ({
             bgcolor: option.color ?? 'background.tertiary',
             color: theme.palette.getContrastText(
-              option.color ?? theme.palette.background.tertiary
+              option.color ?? theme.palette.background.tertiary,
             ),
           })}
           startIcon={getIcon(entity, option.icon)}
@@ -66,7 +66,7 @@ export function OptionButton(props: OptionButtonProps) {
           sx={theme => ({
             bgcolor: option.color ?? 'background.tertiary',
             color: theme.palette.getContrastText(
-              option.color ?? theme.palette.background.tertiary
+              option.color ?? theme.palette.background.tertiary,
             ),
           })}
           onClick={() => (entity.service.turnOn(), onClose())}

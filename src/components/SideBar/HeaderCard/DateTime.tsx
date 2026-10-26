@@ -28,11 +28,11 @@ export function DateTime() {
     minute: '2-digit',
   });
   return (
-    <Stack justifyContent="space-between">
+    <Stack sx={{justifyContent: 'space-between'}}>
       <Typography variant="h4" color="primary">
         {date}
       </Typography>
-      <Typography variant="h5" color="text.secondary">
+      <Typography variant="h5" color="textSecondary">
         {time}
       </Typography>
     </Stack>

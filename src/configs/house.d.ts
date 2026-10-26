@@ -1,12 +1,14 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
 
+type Position3dType = {x: number; y: number; z: number};
+
 type HouseConfigType = {
-  nightFloorPlan: string;
-  dayFloorPlan: string;
+  model?: string;
+  camera?: string;
   rooms: {
     id: string;
     name: string;
-    position: {x: number; y: number};
+    position: Position3dType;
     items?: RoomItemConfigType[];
   }[];
 };
@@ -16,7 +18,9 @@ type RoomItemConfigType =
   | ClimateConfigType
   | TemperatureConfigType
   | ShutterConfigType
-  | DestkopConfigType;
+  | DestkopConfigType
+  | OutletConfigType
+  | Printer3dConfigType;
 
 type BaseItemConfigType =
   | {
@@ -26,17 +30,13 @@ type BaseItemConfigType =
   | {
       type: string;
       roomDisplay?: false;
-      position: {x: number; y: number};
+      position: Position3dType;
     };
 
 type LightConfigType = BaseItemConfigType & {
   type: 'light';
   lightEntityId: FilterByDomain<EntityName, 'light'>;
-  layer?: {
-    red: string;
-    green: string;
-    blue: string;
-  };
+  intensity?: number;
 };
 
 type ClimateConfigType = BaseItemConfigType & {
@@ -68,4 +68,16 @@ type DestkopConfigType = BaseItemConfigType & {
     scriptEntityId: FilterByDomain<EntityName, 'script'>;
     hide?: boolean;
   }[];
+};
+
+type OutletConfigType = BaseItemConfigType & {
+  type: 'outlet';
+  switchEntityId: FilterByDomain<EntityName, 'switch'>;
+  powerEntityId?: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type Printer3dConfigType = BaseItemConfigType & {
+  type: 'printer3d';
+  // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
+  prefix: string;
 };

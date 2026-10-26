@@ -21,9 +21,9 @@ export function ColorTempTab() {
         0,
         ...entities
           .map(entity => entity.attributes.max_color_temp_kelvin)
-          .filter(temp => temp !== undefined)
+          .filter(temp => temp !== undefined),
       ),
-    [entities]
+    [entities],
   );
   const entitiesMinSupportedKelvin = useMemo(
     () =>
@@ -31,9 +31,9 @@ export function ColorTempTab() {
         0,
         ...entities
           .map(entity => entity.attributes.min_color_temp_kelvin)
-          .filter(temp => temp !== undefined)
+          .filter(temp => temp !== undefined),
       ),
-    [entities]
+    [entities],
   );
 
   const generateColorTempWheel = useCallback(() => {
@@ -42,7 +42,7 @@ export function ColorTempTab() {
     drawColorTempWheel(
       ctx,
       entitiesMinSupportedKelvin,
-      entitiesMaxSupportedKelvin
+      entitiesMaxSupportedKelvin,
     );
   }, [entitiesMinSupportedKelvin, entitiesMaxSupportedKelvin]);
 
@@ -51,13 +51,13 @@ export function ColorTempTab() {
     const {x, y} = getRelativePosition(
       canvasRef.current,
       event.clientX,
-      event.clientY
+      event.clientY,
     );
     const newColor = getColorTempFromCoord(
       x,
       y,
       entitiesMinSupportedKelvin,
-      entitiesMaxSupportedKelvin
+      entitiesMaxSupportedKelvin,
     );
 
     entities
@@ -76,18 +76,22 @@ export function ColorTempTab() {
   }, [generateColorTempWheel]);
 
   return (
-    <Stack maxWidth="500px" minWidth="500px" p={2} alignItems="center">
+    <Stack
+      sx={{maxWidth: '500px', minWidth: '500px', p: 2, alignItems: 'center'}}
+    >
       <Stack
         component={motion.div}
-        position="relative"
-        height="30vh"
-        maxHeight="320px"
-        maxWidth="320px"
-        minHeight="200px"
-        minWidth="200px"
-        borderRadius="50%"
-        border="3px solid"
-        borderColor="divider"
+        sx={{
+          position: 'relative',
+          height: '30vh',
+          maxHeight: '320px',
+          maxWidth: '320px',
+          minHeight: '200px',
+          minWidth: '200px',
+          borderRadius: '50%',
+          border: '3px solid',
+          borderColor: 'divider',
+        }}
       >
         <Canvas
           ref={canvasRef}
@@ -101,7 +105,7 @@ export function ColorTempTab() {
               !activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
               entity.attributes.color_temp_kelvin &&
-              lightHasColorTemp(entity)
+              lightHasColorTemp(entity),
           )
           .map(entity => (
             <Picker
@@ -109,6 +113,8 @@ export function ColorTempTab() {
               mode="temperature"
               canvasRef={canvasRef}
               entity={entity}
+              minKelvin={entitiesMinSupportedKelvin}
+              maxKelvin={entitiesMaxSupportedKelvin}
             />
           ))}
         <ActivePicker
@@ -119,7 +125,7 @@ export function ColorTempTab() {
               activeEntityIds.includes(entity.entity_id) &&
               entity.state === 'on' &&
               entity.attributes.color_temp_kelvin &&
-              lightHasColorTemp(entity)
+              lightHasColorTemp(entity),
           )}
           minKelvin={entitiesMinSupportedKelvin}
           maxKelvin={entitiesMaxSupportedKelvin}

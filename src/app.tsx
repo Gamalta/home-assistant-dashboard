@@ -3,12 +3,13 @@ import {ThemeProvider} from './contexts/ThemeProvider';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/react';
 import {useEffect} from 'react';
-import {HassConnect} from '@hakit/core';
-import {HassConnect as HassConnectMock} from './mock/HassConnectMock';
+import {AppProvider} from './contexts/AppContext';
 
-const HAConnect = import.meta.env.VITE_MOCK_HOME_ASSISTANT
-  ? HassConnectMock
-  : HassConnect;
+const {HassConnect: HAConnect} = await (import.meta.env
+  .VITE_MOCK_HOME_ASSISTANT === 'true'
+  ? import('./mock/HassConnectMock')
+  : import('@hakit/core'));
+
 function App() {
   useEffect(() => {
     console.log('App version:', import.meta.env.VITE_APP_VERSION);
@@ -29,15 +30,19 @@ function App() {
   }, []);
 
   return (
-    <>
+    <AppProvider>
       <ThemeProvider>
         <HAConnect hassUrl={import.meta.env.VITE_HA_URL ?? ''}>
           <Dashboard />
         </HAConnect>
       </ThemeProvider>
-      <Analytics />
-      <SpeedInsights />
-    </>
+      {import.meta.env.VITE_VERCEL_ENV && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
+    </AppProvider>
   );
 }
 

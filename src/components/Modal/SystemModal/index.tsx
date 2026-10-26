@@ -1,8 +1,16 @@
 import {Modal, ModalProps} from '..';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {SystemInfoDisplay} from './SystemInfoDisplay';
-import {SystemGraphDisplay} from './SystemGraphDisplay';
+import {OptionRow} from './OptionRow';
+import {BenchmarkRow} from './BenchmarkRow';
+import {InfoRow} from './InfoRow';
 import {SideBarConfigType} from '../../../configs/sidebar';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import {useAppContext} from '../../../contexts/AppContext';
+import {useHouseContext} from '../../../contexts/HouseContext';
+import {SystemGraphDisplay} from './SystemGraphDisplay';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
   systemConfig: SideBarConfigType['system'];
@@ -10,6 +18,16 @@ type SystemModalProps = Omit<ModalProps, 'children'> & {
 
 export function SystemModal(props: SystemModalProps) {
   const {systemConfig, ...modalProps} = props;
+  const {
+    configuration,
+    webGLSupported,
+    webGPUSupported,
+    rendererInfo,
+    setLightingTrial,
+  } = useAppContext();
+  const {houseConfig} = useHouseContext();
+  const house = houseConfig?.house;
+  const is3d = webGLSupported && !!house?.model;
 
   return (
     <Modal {...modalProps}>
@@ -32,6 +50,50 @@ export function SystemModal(props: SystemModalProps) {
               entity.state === 'off' ? 'Suffisant' : 'Insuffisante'
             }
           />
+          <Divider />
+          <Typography variant="subtitle2" color="textSecondary">
+            Affichage
+          </Typography>
+          <BenchmarkRow />
+          <Button
+            variant="outlined"
+            disabled={!is3d}
+            onClick={() => {
+              setLightingTrial(true);
+              modalProps.onClose();
+            }}
+          >
+            Essayer l'éclairage selon l'heure
+          </Button>
+          <OptionRow
+            label="Murs transparents"
+            option="hideWallsShader"
+            disabled={!is3d}
+          />
+          <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
+          <OptionRow
+            label="WebGPU"
+            option="webGPU"
+            disabled={!is3d || !webGPUSupported}
+          />
+          <OptionRow label="Debug" option="debug" disabled={!is3d} />
+          {is3d && configuration.debug && (
+            <>
+              <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />
+              <InfoRow
+                label="Textures max"
+                value={rendererInfo.maxTextures ?? '—'}
+              />
+              <InfoRow
+                label="Triangles"
+                value={
+                  rendererInfo.triangles < 0
+                    ? '—'
+                    : rendererInfo.triangles.toLocaleString('fr-FR')
+                }
+              />
+            </>
+          )}
         </Stack>
       </Stack>
     </Modal>

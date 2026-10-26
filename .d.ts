@@ -1,3 +1,4 @@
+import {ThreeElements} from '@react-three/fiber';
 interface CustomEnv {
   VITE_VERCEL_ENV: string;
   VITE_SENTRY_RELEASE: string;
@@ -9,13 +10,20 @@ interface CustomEnv {
 }
 
 // For Vite's import.meta.env
-interface ImportMeta {
+export interface ImportMeta {
   env: CustomEnv;
 }
 declare global {
+  namespace React {
+    namespace JSX {
+      interface IntrinsicElements extends ThreeElements {
+        '';
+      }
+    }
+  }
   interface Window {
-    _mtm: Record<string, unknown>[]
+    _mtm: Record<string, unknown>[];
   }
 }
 
-export {}
+export {};

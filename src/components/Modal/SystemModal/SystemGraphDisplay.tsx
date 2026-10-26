@@ -1,13 +1,13 @@
 import {useEntity} from '@hakit/core';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {roundToNearest5Minutes} from '../../../utils/graph';
-import {ChartsTooltip} from '@mui/x-charts/ChartsTooltip';
-import {ChartsClipPath} from '@mui/x-charts/ChartsClipPath';
-import {LinePlot} from '@mui/x-charts/LineChart';
-import {AreaPlot} from '@mui/x-charts/LineChart';
 import {SystemGraphConfigType} from '../../../configs/sidebar';
-import {ChartsContainer} from '@mui/x-charts';
+import {
+  alignHistories,
+  formatTime,
+  isHistoryLoading,
+} from '../../../utils/chart';
+import {Chart} from '../../Charts/Chart';
 
 type SystemGraphDisplayProps = {
   graphConfig: SystemGraphConfigType;
@@ -24,111 +24,48 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
   });
   if (!entity) return null;
 
-  const valueMap = Object.fromEntries(
-    (entity?.history?.entityHistory ?? []).map(data => [
-      roundToNearest5Minutes(data.lu * 1000),
-      Number(data.s) || null,
-    ])
-  );
-  const values = Object.values(valueMap).filter(
-    (data): data is number => data !== null
-  );
-  const maxValue = Math.max(...values);
-  const minValue = Math.min(...values);
-  const timestamps = Array.from(new Set(Object.keys(valueMap))).sort(
-    (a, b) => Number(a) - Number(b)
-  );
-
-  const dataset = timestamps.map(time => {
-    const value = valueMap[time];
-    return {
-      timestamp: Number(time),
-      value,
-    };
-  });
-  const lastTime = dataset[dataset.length - 1]?.timestamp;
+  const {
+    x,
+    data: [values],
+  } = alignHistories([entity.history?.entityHistory ?? []]);
+  const unit = entity.attributes.unit_of_measurement ?? '';
 
   return (
-    <Stack
-      position="relative"
-      bgcolor="background.tertiary"
-      borderRadius={1}
-      overflow="hidden"
+    <Chart
+      loading={isHistoryLoading(entity.history)}
+      x={x}
+      formatX={formatTime}
+      series={[
+        {
+          id: 'value',
+          label: graphConfig.label,
+          data: values,
+          color: graphConfig.color,
+          format: value =>
+            `${value.toLocaleString('fr', {maximumFractionDigits: 1})}${unit}`,
+        },
+      ]}
+      sx={{
+        width: 175,
+        height: 150,
+        p: 1.5,
+        bgcolor: 'background.tertiary',
+        borderRadius: 1,
+        overflow: 'hidden',
+      }}
     >
-      <ChartsContainer
-        margin={0}
-        sx={{
-          '& .MuiLineElement-series-temperature': {
-            strokeWidth: 3,
-          },
-          '& .MuiLineElement-series-humidity': {
-            strokeWidth: 2,
-            opacity: 0.5,
-          },
-        }}
-        dataset={dataset}
-        series={[
-          {
-            id: 'value',
-            type: 'line',
-            dataKey: 'value',
-            label: graphConfig.label,
-            color: graphConfig.color,
-            area: true,
-            valueFormatter: value =>
-              `${value}${entity.attributes.unit_of_measurement}`,
-          },
-        ]}
-        xAxis={[
-          {
-            id: 'time',
-            height: 0,
-            dataKey: 'timestamp',
-            scaleType: 'utc',
-            min: lastTime - 24 * 60 * 60 * 1000,
-            max: lastTime,
-            valueFormatter: value =>
-              new Date(value).toLocaleTimeString('fr', {
-                hour: '2-digit',
-                minute: '2-digit',
-              }),
-          },
-        ]}
-        yAxis={[
-          {
-            id: 'temperature',
-            width: 0,
-            min: minValue * 0.9,
-            max: maxValue * 1.1,
-            scaleType: 'linear',
-          },
-        ]}
-        width={175}
-        height={125}
-      >
-        <g clipPath="url(#clip-path)">
-          <LinePlot />
-          <AreaPlot opacity={0.2} />
-        </g>
-        <ChartsTooltip />
-        <ChartsClipPath id="clip-path" />
-      </ChartsContainer>
       <Stack
         direction="row"
-        justifyContent="space-between"
-        position="absolute"
-        width="100%"
-        spacing={1}
-        p={1}
+        sx={{justifyContent: 'space-between', alignItems: 'baseline'}}
       >
-        <Typography variant="body2" sx={{fontWeight: 'bold'}}>
+        <Typography variant="body2" color="textSecondary">
           {graphConfig.label}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="h6">
           {entity.state}
-          {entity.attributes.unit_of_measurement}
+          {unit}
         </Typography>
       </Stack>
-    </Stack>
+    </Chart>
   );
 }

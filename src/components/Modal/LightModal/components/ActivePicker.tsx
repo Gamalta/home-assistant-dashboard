@@ -41,7 +41,7 @@ export function ActivePicker(props: ActivePickerProps) {
   const motionXValue = useMotionValue(0);
   const motionYValue = useMotionValue(0);
   const activeEntities = entities.filter(entity =>
-    activeEntityIds.includes(entity.entity_id)
+    activeEntityIds.includes(entity.entity_id),
   );
   //TODO remove entity has no color (onoff, brightness, color_temp)
   //TODO link entities with same color
@@ -51,7 +51,7 @@ export function ActivePicker(props: ActivePickerProps) {
     const {x, y} = getWheelPosition(
       canvasRef.current,
       motionXValue.get(),
-      motionYValue.get()
+      motionYValue.get(),
     );
 
     let newX = x;
@@ -65,7 +65,7 @@ export function ActivePicker(props: ActivePickerProps) {
       const {x: containerX, y: containerY} = getContainerPosition(
         canvasRef.current,
         constrainedX,
-        constrainedY
+        constrainedY,
       );
       newX = constrainedX;
       newY = constrainedY;
@@ -79,7 +79,7 @@ export function ActivePicker(props: ActivePickerProps) {
     const neerEntity = getNeerEntity(
       motionXValue.get(),
       motionYValue.get(),
-      allEntities.filter(entity => !activeEntityIds.includes(entity.entity_id))
+      allEntities.filter(entity => !activeEntityIds.includes(entity.entity_id)),
     );
     setHoverEntity(neerEntity?.entity_id);
   };
@@ -89,7 +89,7 @@ export function ActivePicker(props: ActivePickerProps) {
     const {x, y} = getWheelPosition(
       canvasRef.current,
       motionXValue.get(),
-      motionYValue.get()
+      motionYValue.get(),
     );
     const newColor = getColorFromCoordWheel(x, y);
     setColor(newColor);
@@ -115,7 +115,6 @@ export function ActivePicker(props: ActivePickerProps) {
       motionXValue.set(x);
       motionYValue.set(y);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEntities.length > 0, activeEntities[0]]);
 
   return (
@@ -143,17 +142,18 @@ export function ActivePicker(props: ActivePickerProps) {
           dragMomentum={false}
         >
           <Stack
-            width="32px"
-            height="32px"
-            borderRadius="50%"
-            border="2px solid"
-            borderColor="divider"
-            boxSizing="border-box"
-            justifyContent="center"
-            alignItems="center"
-            boxShadow="0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)"
-            bgcolor={`rgb(${color.join(',')})`}
             sx={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: '2px solid',
+              borderColor: 'divider',
+              boxSizing: 'border-box',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow:
+                '0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)',
+              bgcolor: `rgb(${color.join(',')})`,
               transform: 'translate(-16px, -38px) rotate(45deg)',
               borderBottomRightRadius: 0,
             }}
