@@ -5,6 +5,7 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
+import {HeatmapAction} from './HeatmapAction';
 import {ScenarioAction} from './ScenarioAction';
 
 export function QuickMenu() {
@@ -18,8 +19,7 @@ export function QuickMenu() {
     return () => clearTimeout(timeout);
   }, [launched]);
 
-  const scenarios = houseConfig?.sideBar.scenarios;
-  if (!scenarios?.length) return null;
+  const scenarios = houseConfig?.sideBar.scenarios ?? [];
 
   return (
     <SpeedDial
@@ -46,6 +46,7 @@ export function QuickMenu() {
         zIndex: 1,
       }}
     >
+      <HeatmapAction onToggle={() => setOpen(false)} />
       {scenarios.map(scriptEntityId => (
         <ScenarioAction
           key={scriptEntityId}
