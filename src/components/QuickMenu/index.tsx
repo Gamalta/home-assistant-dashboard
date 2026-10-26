@@ -5,6 +5,8 @@ import HouseIcon from '@mui/icons-material/HouseRounded';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import Stack from '@mui/material/Stack';
+import {motion} from 'framer-motion';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {MortgageModal} from '../Modal/MortgageModal';
@@ -37,15 +39,19 @@ export function QuickMenu() {
         onOpen={(_, reason) => reason === 'toggle' && setOpen(true)}
         onClose={(_, reason) => reason !== 'mouseLeave' && setOpen(false)}
         icon={
-          launched ? (
-            // data-testid explicite : MUI ne le pose qu'en développement.
-            <CheckIcon data-testid="launched" />
-          ) : (
-            <SpeedDialIcon
-              icon={<AutoAwesomeIcon />}
-              openIcon={<CloseIcon />}
-            />
-          )
+          // Les modales du menu grandissent depuis ce bouton et s'y résorbent.
+          <Stack component={motion.span} layoutId="layoutid-quick-menu">
+            {launched ? (
+              // data-testid explicite : MUI ne le pose qu'en développement.
+              <CheckIcon data-testid="launched" />
+            ) : (
+              <SpeedDialIcon
+                open={open}
+                icon={<AutoAwesomeIcon />}
+                openIcon={<CloseIcon />}
+              />
+            )}
+          </Stack>
         }
         sx={{
           position: 'absolute',
@@ -84,10 +90,11 @@ export function QuickMenu() {
         ))}
       </SpeedDial>
       {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
-          React, et le focus d'un bouton de la modale rouvrirait le menu. */}
+          React, et le menu capterait les flèches et Échap de la modale. */}
       {mortgages.map((mortgage, index) => (
         <MortgageModal
           key={index}
+          id="layoutid-quick-menu"
           open={index === mortgageIndex}
           onClose={() => setMortgageIndex(undefined)}
           title={mortgage.label ?? 'Crédit'}
