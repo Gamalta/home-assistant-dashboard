@@ -1,6 +1,7 @@
 import CheckIcon from '@mui/icons-material/CheckCircleRounded';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import {motion} from 'framer-motion';
 import type {TodoItem} from '../../../hooks/useTodoList';
 import {groceryEmoji} from '../../../utils/groceryEmoji';
 
@@ -15,6 +16,9 @@ export function ShoppingListItem(props: ShoppingListItemProps) {
 
   return (
     <ButtonBase
+      // La tuile glisse d'une section à l'autre quand on la coche.
+      component={motion.button}
+      layoutId={`shopping-list-${item.uid}`}
       role="checkbox"
       aria-checked={completed}
       aria-label={item.summary}
@@ -26,17 +30,22 @@ export function ShoppingListItem(props: ShoppingListItemProps) {
         height: 104,
         px: 1,
         borderRadius: 1,
-        bgcolor: 'background.tertiary',
-        opacity: completed ? 0.5 : 1,
-        transition: 'opacity 200ms',
+        border: 1,
+        borderColor: completed ? 'divider' : 'transparent',
+        bgcolor: completed ? 'transparent' : 'background.tertiary',
+        transition: 'background-color 200ms, border-color 200ms',
       }}
     >
-      <Typography component="span" sx={{fontSize: 40, lineHeight: 1}}>
+      <Typography
+        component="span"
+        sx={{fontSize: 40, lineHeight: 1, opacity: completed ? 0.4 : 1}}
+      >
         {groceryEmoji(item.summary)}
       </Typography>
       <Typography
         component="span"
         noWrap
+        color={completed ? 'textSecondary' : 'textPrimary'}
         sx={{
           maxWidth: '100%',
           textDecoration: completed ? 'line-through' : 'none',

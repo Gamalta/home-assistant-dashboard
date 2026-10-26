@@ -2,10 +2,11 @@ import AddIcon from '@mui/icons-material/AddRounded';
 import ClearAllIcon from '@mui/icons-material/ClearAllRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Fab from '@mui/material/Fab';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import {motion} from 'framer-motion';
 import {type FormEvent, useState} from 'react';
 import {Modal, ModalProps} from '..';
 import {useTodoList} from '../../../hooks/useTodoList';
@@ -36,21 +37,39 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
   return (
     <Modal {...modalProps}>
       <Stack spacing={2} sx={{width: 440, maxWidth: '100%', height: 440}}>
-        <Stack component="form" direction="row" spacing={1} onSubmit={add}>
-          <TextField
-            size="small"
+        <Stack
+          component="form"
+          direction="row"
+          onSubmit={add}
+          sx={{
+            alignItems: 'center',
+            py: 0.5,
+            pl: 2,
+            pr: 0.5,
+            borderRadius: 50,
+            bgcolor: 'background.tertiary',
+          }}
+        >
+          <InputBase
             fullWidth
             placeholder="Ajouter un article"
             value={summary}
             onChange={event => setSummary(event.target.value)}
-            slotProps={{htmlInput: {'aria-label': 'Nouvel article'}}}
+            slotProps={{input: {'aria-label': 'Nouvel article'}}}
           />
-          <Fab size="small" color="primary" type="submit" aria-label="Ajouter">
+          <IconButton
+            type="submit"
+            color="primary"
+            aria-label="Ajouter"
+            disabled={!summary.trim()}
+          >
             <AddIcon />
-          </Fab>
+          </IconButton>
         </Stack>
         <Stack
-          component="section"
+          component={motion.section}
+          // Mesure le défilement pour faire glisser les tuiles au bon endroit.
+          layoutScroll
           aria-label="Articles"
           spacing={2}
           sx={{flex: 1, minHeight: 0, overflowY: 'auto'}}
@@ -64,7 +83,8 @@ export function ShoppingListModal(props: ShoppingListModalProps) {
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    // minmax : un nom long ne doit pas élargir sa colonne.
+                    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
                     gap: 1,
                   }}
                 >
