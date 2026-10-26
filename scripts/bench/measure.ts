@@ -2,7 +2,6 @@ import type {Page} from '@playwright/test';
 
 export type GraphicsOptions = {
   shadows?: boolean;
-  environmentReflections?: boolean;
   heatmapShader?: boolean;
 };
 

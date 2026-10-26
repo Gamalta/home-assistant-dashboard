@@ -9,13 +9,13 @@ Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance
 ```sh
 pnpm bench                          # demo, et apartment si le sous-module est présent
 pnpm bench --houses demo            # une seule maison
-pnpm bench --options defaut,chaleur # parmi defaut, ombres, reflets et chaleur
+pnpm bench --options defaut,chaleur # parmi defaut, ombres et chaleur
 pnpm bench --cpu 4                  # CPU bridé ×4 pendant les mesures
 pnpm bench --url http://localhost:4173/  # un build déjà servi, avec le mock
 pnpm bench --ci                     # rendu logiciel SwiftShader, comme les E2E
 ```
 
-Le script construit l'application avec le mock Home Assistant, la sert sur un port libre et l'ouvre dans le Chrome du système, avec le GPU de la machine, en 1280×800 à DPR 2. Pour chaque maison et chaque jeu d'options (par défaut : `defaut`, `ombres` et `reflets`), il :
+Le script construit l'application avec le mock Home Assistant, la sert sur un port libre et l'ouvre dans le Chrome du système, avec le GPU de la machine, en 1280×800 à DPR 2. Pour chaque maison et chaque jeu d'options (par défaut : `defaut` et `ombres`), il :
 
 1. charge la page et attend le repos : plus aucun draw call ni compilation pendant 1 s ;
 2. lance `__dashboardBenchmark(60)` en comptant les draw calls de chaque image ;
