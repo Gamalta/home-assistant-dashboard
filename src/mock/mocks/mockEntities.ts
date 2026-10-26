@@ -13,6 +13,7 @@ import {createPrinter3d} from './createPrinter3d';
 import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
+import {createScript} from './createScript';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -98,14 +99,14 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createCover('cover.salon_shutter'),
+  ...createCover('cover.living_room_shutter'),
   ...createCover('cover.kitchen_shutter'),
   ...createCover('cover.kitchen_shutter_2'),
   ...createCover('cover.bedroom_shutter'),
   ...createCover('cover.bedroom_2_shutter'),
   ...createCover('cover.bedroom_3_shutter'),
 
-  ...createLight('light.salon_light', {
+  ...createLight('light.living_room_light', {
     state: 'off',
     attributes: {
       friendly_name: 'Plafonnier du séjour',
@@ -114,7 +115,7 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.salon_hue_play', {
+  ...createLight('light.living_room_hue_play', {
     attributes: {
       friendly_name: 'Hue Play du séjour',
       icon: 'hue:play-bar-v',
@@ -248,7 +249,7 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createClimate('climate.salon'),
+  ...createClimate('climate.living_room'),
   ...createClimate('climate.kitchen', {
     attributes: {
       current_temperature: 20,
@@ -266,13 +267,13 @@ export const entities: HassEntities = {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_temperature', {
+  ...createSensor('sensor.living_room_temperature', {
     state: '21',
     attributes: {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_humidity', {
+  ...createSensor('sensor.living_room_humidity', {
     state: '55',
     attributes: {
       unit_of_measurement: '%',
@@ -427,6 +428,17 @@ export const entities: HassEntities = {
       entity_picture: 'media/demo_cover.svg',
     },
   }),
+
+  ...createScript('script.depart', {
+    attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
+  }),
+  ...createScript('script.temperature', {
+    attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
+  }),
+  ...createScript('script.energie', {
+    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
+  }),
+
   // Alertes de la démo : une pile faible et un capteur indisponible.
   ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
     attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},

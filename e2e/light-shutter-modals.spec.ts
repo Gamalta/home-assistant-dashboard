@@ -18,7 +18,7 @@ async function modalContent(title: Locator) {
 
 // La lumière du séjour porte le nom par défaut du mock, commun à plusieurs
 // lumières : on la trouve juste avant sa clim « 22° ».
-const salonLight = (page: Page) =>
+const livingRoomLight = (page: Page) =>
   page
     .getByRole('button', {name: '22°', exact: true})
     .first()
@@ -145,7 +145,7 @@ test.describe('modale de la lumière', () => {
   test('les curseurs des autres lumières suivent leur température', async ({
     page,
   }) => {
-    const modal = await openLight(page, salonLight(page));
+    const modal = await openLight(page, livingRoomLight(page));
     // Les onglets n'ont qu'une icône : on passe par leur valeur.
     await modal.locator('button[value="color_temp"]').click();
 
@@ -227,7 +227,7 @@ test.describe('ouverture de la modale de la lumière', () => {
     await page.goto('/');
     await waitForScene(page);
     await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000);
-    const box = (await salonLight(page).boundingBox())!;
+    const box = (await livingRoomLight(page).boundingBox())!;
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.down();
     await page.clock.runFor(500);

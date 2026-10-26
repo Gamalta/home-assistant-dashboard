@@ -67,7 +67,7 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  actions: [{type: 'allLightsOff'}],
+  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
@@ -79,30 +79,30 @@ export const HouseConfig: HouseConfigType = {
   model: Demo,
   rooms: [
     {
-      id: 'Salon',
+      id: 'Living_room',
       name: 'Séjour',
       position: {x: -0.8, y: 2.5, z: 2.8},
       items: [
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.salon_light',
+          lightEntityId: 'light.living_room_light',
         },
         {
           type: 'climate',
           roomDisplay: true,
-          climateEntityId: 'climate.salon',
-          temperatureEntityId: 'sensor.salon_temperature',
-          humidityEntityId: 'sensor.salon_humidity',
+          climateEntityId: 'climate.living_room',
+          temperatureEntityId: 'sensor.living_room_temperature',
+          humidityEntityId: 'sensor.living_room_humidity',
         },
         {
           type: 'light',
-          lightEntityId: 'light.salon_hue_play',
+          lightEntityId: 'light.living_room_hue_play',
           position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.salon_shutter',
+          shutterEntityId: 'cover.living_room_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
         {

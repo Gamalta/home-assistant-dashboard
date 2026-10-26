@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
+import {ScenarioBar} from './components/ScenarioBar';
 import {Screensaver} from './components/Screensaver';
 import {
   Group,
@@ -78,8 +79,9 @@ export default function Dashboard() {
             />
           </Stack>
         </Separator>
-        <Panel defaultSize="70%">
+        <Panel defaultSize="70%" style={{position: 'relative'}}>
           <House />
+          <ScenarioBar />
         </Panel>
       </Group>
       <Screensaver />

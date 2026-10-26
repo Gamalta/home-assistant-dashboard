@@ -59,7 +59,7 @@ export function OutletView(props: OutletViewProps) {
           <stop offset={0} stopColor="#444442" />
           <stop offset={1} stopColor="#161615" />
         </radialGradient>
-        <radialGradient id="plug-fiche-shadow">
+        <radialGradient id="plug-shadow">
           <stop offset={0.75} stopOpacity={0.45} />
           <stop offset={1} stopOpacity={0} />
         </radialGradient>
@@ -151,7 +151,7 @@ export function OutletView(props: OutletViewProps) {
 
       <ellipse cx={270} cy={141} rx={44} ry={24} {...glow} />
       <rect
-        data-testid="voyant"
+        data-testid="led"
         x={251}
         y={137}
         width={38}
@@ -180,11 +180,11 @@ export function OutletView(props: OutletViewProps) {
       <circle cx={270} cy={277} r={80} fill="url(#outlet-well-rim)" />
       <circle cx={236} cy={277} r={12} fill="url(#outlet-hole)" />
       <circle cx={304} cy={277} r={12} fill="url(#outlet-hole)" />
-      <circle cx={272} cy={237} r={14} fill="url(#plug-fiche-shadow)" />
+      <circle cx={272} cy={237} r={14} fill="url(#plug-shadow)" />
       <circle cx={270} cy={232} r={12.5} fill="url(#outlet-pin)" />
 
       <g
-        data-testid="fiche"
+        data-testid="plug"
         style={{
           opacity: on ? 1 : 0,
           // Débranchée, la fiche s'éloigne du mur, vers le bas.
@@ -194,14 +194,8 @@ export function OutletView(props: OutletViewProps) {
             'opacity 0.4s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
         }}
       >
-        <circle cx={276} cy={284} r={92} fill="url(#plug-fiche-shadow)" />
-        <ellipse
-          cx={282}
-          cy={368}
-          rx={46}
-          ry={64}
-          fill="url(#plug-fiche-shadow)"
-        />
+        <circle cx={276} cy={284} r={92} fill="url(#plug-shadow)" />
+        <ellipse cx={282} cy={368} rx={46} ry={64} fill="url(#plug-shadow)" />
         <g mask="url(#plug-cable-mask)">
           <rect
             x={281}
