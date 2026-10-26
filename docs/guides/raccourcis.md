@@ -1,23 +1,24 @@
-# Carrousel et scénarios de la barre latérale
+# Carrousel et menu rapide de la barre latérale
 
-La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)). Deux listes se déclarent dans `SideBarConfig`, dans le `House.ts` de la maison :
+La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)). Tout se déclare dans `SideBarConfig`, dans le `House.ts` de la maison :
 
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
   ],
 };
 ```
 
-- `scenarios` : un bouton rond « Scénarios » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
+- `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
+- `mortgages` : une entrée « Crédit » par prêt à la fin de ce menu, qui ouvre le [suivi du crédit](#crédit-immobilier).
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
-Sans l'une ou l'autre liste, rien ne s'affiche à sa place.
+Sans scénario ni prêt, le menu ne s'affiche pas. Sans carte, le carrousel non plus.
 
 ## Migration depuis les tuiles
 
@@ -27,7 +28,7 @@ Sans l'une ou l'autre liste, rien ne s'affiche à sa place.
 // Avant
 shortcuts: [{type: 'allLightsOff'}],
 // Après
-scenarios: ['script.tout_eteindre'],
+scenarios: ['script.leave_home'],
 ```
 
 Les autres types gardent leur place et leurs options dans `shortcuts`.
@@ -38,7 +39,7 @@ Un scénario est un [script Home Assistant](https://www.home-assistant.io/integr
 
 ```yaml
 script:
-  depart:
+  leave_home:
     alias: Départ
     icon: mdi:exit-run
     sequence:
@@ -54,6 +55,34 @@ script:
 
 Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit à le lancer. Le menu tient 5 ou 6 scénarios : au-delà, il descend trop sur la vue 3D.
 
+## Crédit immobilier
+
+```ts
+mortgages: [
+  {
+    label: 'Crédit maison',
+    principal: 250_000,
+    annualRate: 1.45,
+    durationMonths: 300,
+    firstPaymentDate: '2021-06-05',
+    monthlyInsurance: 28,
+  },
+],
+```
+
+Chaque prêt ajoute une entrée « Crédit » à la fin du menu rapide. Un appui referme le menu et ouvre la modale du prêt : une maison qui se remplit jusqu'à la part remboursée et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
+
+| Option             | Rôle                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `principal`        | Montant emprunté, en euros                                                                  |
+| `annualRate`       | Taux nominal annuel, en %                                                                   |
+| `durationMonths`   | Nombre d'échéances                                                                          |
+| `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
+| `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
+| `label`            | Libellé de l'entrée et de la modale, `Crédit` par défaut ; utile pour plusieurs prêts       |
+
+Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
+
 ## Cartes
 
 ### Média
@@ -65,33 +94,6 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | Option                | Rôle                                                  |
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
-
-### Crédit immobilier
-
-```ts
-{
-  type: 'mortgage',
-  label: 'Crédit maison',
-  principal: 250_000,
-  annualRate: 1.45,
-  durationMonths: 300,
-  firstPaymentDate: '2021-06-05',
-  monthlyInsurance: 28,
-}
-```
-
-La carte affiche le capital restant dû et la part déjà remboursée. La modale montre une maison qui se remplit jusqu'à cette part et, à côté, le capital restant dû, la mensualité, la date de fin avec les échéances payées, et les intérêts payés et restants. Le bouton « Historique » affiche la courbe du capital restant dû, année par année jusqu'à la fin du prêt. Le calcul suppose un prêt à taux fixe et à échéances constantes ([ADR 0022](../adr/0022-credit-calcule-par-le-dashboard.md)).
-
-| Option             | Rôle                                                                                        |
-| ------------------ | ------------------------------------------------------------------------------------------- |
-| `principal`        | Montant emprunté, en euros                                                                  |
-| `annualRate`       | Taux nominal annuel, en %                                                                   |
-| `durationMonths`   | Nombre d'échéances                                                                          |
-| `firstPaymentDate` | Date de la première échéance, au format `AAAA-MM-JJ` ; le jour donne le jour de prélèvement |
-| `monthlyInsurance` | Assurance mensuelle, facultative                                                            |
-| `label`            | Libellé de la carte, `Crédit` par défaut ; utile pour plusieurs prêts                       |
-
-Après un remboursement anticipé, remplacer `principal`, `durationMonths` et `firstPaymentDate` par les valeurs du nouvel échéancier.
 
 ### Liste de courses
 

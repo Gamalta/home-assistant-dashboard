@@ -5,7 +5,6 @@ import {useRef, useState} from 'react';
 import type {ShortcutConfigType} from '../../../configs/sidebar';
 import {carouselPage} from '../../../utils/carousel';
 import {MediaShortcut} from './MediaShortcut';
-import {MortgageShortcut} from './MortgageShortcut';
 import {ShoppingListShortcut} from './ShoppingListShortcut';
 import {TrainsShortcut} from './TrainsShortcut';
 import {EnergyShortcut} from './EnergyShortcut';
@@ -58,10 +57,6 @@ export function Shortcuts(props: ShortcutsProps) {
             case 'media':
               return (
                 <MediaShortcut key={id} id={id} shortcutConfig={shortcut} />
-              );
-            case 'mortgage':
-              return (
-                <MortgageShortcut key={id} id={id} shortcutConfig={shortcut} />
               );
             case 'shoppingList':
               return (

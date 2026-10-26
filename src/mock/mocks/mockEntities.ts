@@ -536,13 +536,13 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createScript('script.depart', {
+  ...createScript('script.leave_home', {
     attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
   }),
   ...createScript('script.temperature', {
     attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
   }),
-  ...createScript('script.energie', {
+  ...createScript('script.energy', {
     attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
   }),
 } as const;

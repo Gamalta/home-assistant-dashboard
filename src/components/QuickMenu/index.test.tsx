@@ -1,10 +1,10 @@
 import {fireEvent, render, screen} from '@testing-library/react';
 import {describe, expect, it, vi} from 'vitest';
-import {ScenarioBar} from '.';
+import {QuickMenu} from '.';
 
 vi.mock('../../contexts/HouseContext', () => ({
   useHouseContext: () => ({
-    houseConfig: {sideBar: {scenarios: ['script.depart']}},
+    houseConfig: {sideBar: {scenarios: ['script.leave_home']}},
   }),
 }));
 
@@ -16,10 +16,10 @@ vi.mock('@hakit/core', async importOriginal => ({
   }),
 }));
 
-describe('ScenarioBar', () => {
+describe('QuickMenu', () => {
   it('garde le menu ouvert quand la souris quitte le bouton après un appui', () => {
-    render(<ScenarioBar />);
-    const dial = screen.getByRole('button', {name: 'Scénarios'});
+    render(<QuickMenu />);
+    const dial = screen.getByRole('button', {name: 'Menu rapide'});
 
     fireEvent.click(dial);
     fireEvent.mouseLeave(dial);

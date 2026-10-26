@@ -19,15 +19,16 @@ type SideBarConfigType = {
     tabletChargerTypeEntityId?: FilterByDomain<EntityName, 'sensor'>;
     graphs: SystemGraphConfigType[];
   };
-  /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
+  /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
+  /** Prêts ouverts par les entrées « Crédit » du menu rapide. */
+  mortgages?: MortgageConfigType[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };
 
 type ShortcutConfigType =
   | MediaShortcutConfigType
-  | MortgageShortcutConfigType
   | ShoppingListShortcutConfigType
   | TrainsShortcutConfigType
   | EnergyShortcutConfigType;
@@ -77,9 +78,8 @@ type PersonConfigType = {
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
 };
 
-type MortgageShortcutConfigType = Mortgage & {
-  type: 'mortgage';
-  /** Libellé de la carte, pour distinguer plusieurs prêts. */
+type MortgageConfigType = Mortgage & {
+  /** Libellé de l'entrée du menu, pour distinguer plusieurs prêts. */
   label?: string;
 };
 

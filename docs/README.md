@@ -13,7 +13,7 @@
 | [Guide : ajouter un graphique](guides/graphiques.md)               | Tracer un historique avec le composant commun        |
 | [Guide : imprimante 3D](guides/imprimante-3d.md)                   | Configurer une imprimante Bambu Lab (ha-bambulab)    |
 | [Guide : mode veille](guides/mode-veille.md)                       | Mettre la tablette murale en veille après inactivité |
-| [Guide : raccourcis](guides/raccourcis.md)                         | Carrousel et scénarios de la barre latérale          |
+| [Guide : raccourcis](guides/raccourcis.md)                         | Carrousel et menu rapide de la barre latérale        |
 | [Guide : alertes](guides/alertes.md)                               | Configurer la pastille d'alertes                     |
 | [Guide : TV et médias](guides/medias.md)                           | Piloter un téléviseur, une Apple TV et ses médias    |
 | [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)           | Effets, bandeaux WLED, Hue et ambilight HyperHDR     |

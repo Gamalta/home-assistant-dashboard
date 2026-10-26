@@ -41,10 +41,10 @@ async function swipeLeft(page: Page, x: number, y: number) {
   });
 }
 
-test('lance un scénario depuis le menu en haut de la vue 3D', async ({
+test('lance un scénario depuis le menu rapide en haut de la vue 3D', async ({
   page,
 }) => {
-  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
   const box = await dial.boundingBox();
   const separator = await page.getByRole('separator').boundingBox();
   const header = await page.getByRole('banner').boundingBox();
@@ -58,7 +58,7 @@ test('lance un scénario depuis le menu en haut de la vue 3D', async ({
 
   await page.getByRole('menuitem', {name: 'Départ'}).tap();
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
-  const check = dial.getByTestId('coche');
+  const check = dial.getByTestId('launched');
   await expect(check).toBeVisible();
   await expect(check).toBeHidden();
 });

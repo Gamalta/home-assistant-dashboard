@@ -9,7 +9,7 @@ Savoir où en est le crédit de la maison (capital restant, intérêts déjà pa
 
 ## Objectif
 
-Une carte du carrousel qui montre d'un coup d'œil le capital restant dû et la part remboursée, et une modale qui détaille le prêt à la date du jour.
+Une entrée « Crédit » dans le menu rapide, qui ouvre une modale détaillant le prêt à la date du jour. Le propriétaire ne veut pas de carte dans le carrousel.
 
 ## Hors périmètre
 
@@ -18,17 +18,12 @@ Une carte du carrousel qui montre d'un coup d'œil le capital restant dû et la 
 
 ## Comportement attendu
 
-### Scénario : la carte donne le capital restant et l'avancement
-
-- **Étant donné** un prêt configuré
-- **Quand** la barre latérale s'affiche
-- **Alors** la carte « Crédit » (ou le libellé configuré) affiche en grand le capital restant dû, avec une barre et le pourcentage du capital déjà remboursé
-
 ### Scénario : la modale illustre l'avancement
 
-- **Étant donné** la carte
-- **Quand** l'utilisateur la touche
-- **Alors** la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, avec ce pourcentage en grand dessous
+- **Étant donné** un prêt configuré
+- **Quand** l'utilisateur ouvre le menu rapide et touche « Crédit » (ou le libellé configuré)
+- **Alors** le menu se referme et la modale grandit depuis le bouton rond du menu, où elle se résorbe à la fermeture
+- **Et** la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, avec ce pourcentage en grand dessous
 - **Et** une colonne donne en grand le capital restant dû sur le montant emprunté, la mensualité (et l'assurance si elle est configurée), le mois de la dernière échéance avec les échéances payées sur le total, les intérêts payés et les intérêts restants
 
 ### Scénario : l'historique trace le capital restant dû
@@ -48,10 +43,11 @@ Une carte du carrousel qui montre d'un coup d'œil le capital restant dû et la 
 
 - [x] Mensualité, capital restant et intérêts conformes à un tableau d'amortissement à échéances constantes, taux nul compris (`utils/mortgage.test.ts`).
 - [x] La maison se remplit à hauteur de la part remboursée, et n'affiche 100 % qu'une fois tout remboursé (`MortgageModal/MortgageHouse.test.tsx`).
-- [x] Plusieurs prêts possibles : une carte par prêt, avec `label`.
-- [x] E2E `e2e/credit.spec.ts` sur la démo, avec un prêt fictif.
+- [x] Plusieurs prêts possibles : une entrée du menu par prêt, avec `label`.
+- [x] Utiliser la modale ne rouvre pas le menu rapide.
+- [x] E2E `e2e/mortgage.spec.ts` sur la démo, avec un prêt fictif.
 
 ## Impacts
 
-- Config : type de carte `mortgage` dans `SideBarConfigType.shortcuts`.
+- Config : liste `mortgages` dans `SideBarConfigType`. Les entrées « Crédit » s'ajoutent après les scénarios.
 - Confidentialité : les montants réels restent dans la config privée de la maison.
