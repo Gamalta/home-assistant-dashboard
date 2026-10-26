@@ -51,6 +51,14 @@ export function lightsHasColor(entities: HassEntityWithService<'light'>[]) {
   );
 }
 
+// Sans couleur ni variateur, @hakit/core donne [33, 33, 33], presque noir : on
+// prend le blanc chaud qu'il donne aux lumières variables.
+export function lightColor(entity: HassEntityWithService<'light'>) {
+  return lightHasBrightness(entity)
+    ? entity.custom.color
+    : temperature2rgb(2000);
+}
+
 export enum LightTab {
   ON_OFF = 'on-off',
   COLOR = 'color',
@@ -77,12 +85,4 @@ export function lightExtraEntityIds(lightEntityId: string) {
     effectSpeed: `number.${name}_effect_speed`,
     intensity: `number.${name}_intensity`,
   } as const;
-}
-
-// Sans couleur ni variateur, @hakit/core donne [33, 33, 33], presque noir : on
-// prend le blanc chaud qu'il donne aux lumières variables.
-export function lightColor(entity: HassEntityWithService<'light'>) {
-  return lightHasBrightness(entity)
-    ? entity.custom.color
-    : temperature2rgb(2000);
 }
