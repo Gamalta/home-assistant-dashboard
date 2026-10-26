@@ -25,7 +25,8 @@ test('résume tous les prêts depuis le menu rapide', async ({page}) => {
     /^Capital restant dû[\d\s]+\s€sur 335\s000\s€ empruntés$/,
   );
   await expect(page.getByText(/^\+ \d+\s€ d'assurance$/)).toBeVisible();
-  await expect(page.getByText(/^encore \d+ ans?$/)).toBeVisible();
+  // Le prêt principal court sur 300 mois, les autres pendant ces mois-là.
+  await expect(page.getByText(/^\d+ \/ 300 échéances$/)).toBeVisible();
   for (const label of [
     'Mensualité',
     'Dernière échéance',

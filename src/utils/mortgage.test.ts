@@ -1,184 +1,115 @@
 import {describe, expect, it} from 'vitest';
 import {
   formatEuros,
-  monthlyPayment,
-  mortgageStatus,
-  mortgagesStatus,
-  paymentsMade,
-  remainingPrincipal,
+  type Loan,
+  loanPayments,
+  loansStatus,
   yearlyBalances,
   yearlyCosts,
-  type Mortgage,
 } from './mortgage';
 
-const mortgage: Mortgage = {
-  principal: 200_000,
-  annualRate: 3.5,
-  durationMonths: 300,
-  firstPaymentDate: '2020-01-05',
+const payment = (
+  month: string,
+  principal: number,
+  interest: number,
+  insurance = 0,
+) => ({month, principal, interest, insurance});
+
+// Deux prêts qui se chevauchent : le premier avec assurance.
+const first: Loan = {
+  label: 'Premier',
+  payments: [
+    payment('2024-11', 100, 10, 2),
+    payment('2024-12', 100, 8, 2),
+    payment('2025-01', 100, 6, 2),
+    payment('2025-02', 100, 4, 2),
+  ],
+};
+const second: Loan = {
+  label: 'Second',
+  payments: [
+    payment('2025-01', 50, 1),
+    payment('2025-02', 50, 1),
+    payment('2025-03', 50, 1),
+    payment('2025-04', 50, 1),
+  ],
 };
 
-describe('monthlyPayment', () => {
-  it('calcule la mensualité d’un prêt à échéances constantes', () => {
-    expect(monthlyPayment(mortgage)).toBeCloseTo(1001.25, 2);
+describe('loanPayments', () => {
+  it('lit l’échéancier dans les attributs, trié par mois', () => {
+    expect(
+      loanPayments({
+        principal: {'2025-02': 120, '2025-01': 118},
+        interest: {'2025-01': 25, '2025-02': 23},
+        insurance: {'2025-01': 5},
+      }),
+    ).toEqual([payment('2025-01', 118, 25, 5), payment('2025-02', 120, 23, 0)]);
   });
 
-  it('divise le capital sans intérêts quand le taux est nul', () => {
-    expect(monthlyPayment({...mortgage, annualRate: 0})).toBeCloseTo(666.67, 2);
+  it('ne trouve aucune échéance sans attribut `principal`', () => {
+    expect(loanPayments({friendly_name: 'Prêt', principal: 'inconnu'})).toEqual(
+      [],
+    );
   });
 });
 
-describe('remainingPrincipal', () => {
-  it('vaut le capital emprunté avant la première échéance', () => {
-    expect(remainingPrincipal(mortgage, 0)).toBeCloseTo(200_000, 6);
+describe('loansStatus', () => {
+  it('additionne les prêts à une date', () => {
+    const status = loansStatus([first, second], new Date(2025, 1, 15));
+
+    expect(status.principal).toBe(600);
+    expect(status.remainingPrincipal).toBe(100);
+    expect(status.repaidRatio).toBeCloseTo(5 / 6, 6);
+    expect(status.monthlyPayment).toBe(104 + 51);
+    expect(status.monthlyInsurance).toBe(2);
+    expect(status.paidInterest).toBe(10 + 8 + 6 + 4 + 1 + 1);
+    expect(status.remainingInterest).toBe(2);
+    // Les mois de novembre 2024 à avril 2025, février compris.
+    expect(status.paymentsMade).toBe(4);
+    expect(status.paymentsTotal).toBe(6);
+    expect(status.endDate).toEqual(new Date(2025, 3, 1));
   });
 
-  it('retire la part de capital de la première échéance', () => {
-    const interest = 200_000 * (0.035 / 12);
-    expect(remainingPrincipal(mortgage, 1)).toBeCloseTo(
-      200_000 - (monthlyPayment(mortgage) - interest),
-      6,
-    );
+  it('compte l’échéance d’un mois dès son premier jour', () => {
+    expect(loansStatus([first], new Date(2024, 11, 1)).paymentsMade).toBe(2);
+    expect(loansStatus([first], new Date(2024, 10, 30)).paymentsMade).toBe(1);
   });
 
-  it('vaut zéro une fois la dernière échéance payée, et au-delà', () => {
-    expect(remainingPrincipal(mortgage, 300)).toBe(0);
-    expect(remainingPrincipal(mortgage, 400)).toBe(0);
-  });
-});
+  it('arrive à zéro, sans mensualité, après la dernière échéance', () => {
+    const status = loansStatus([first, second], new Date(2026, 0, 1));
 
-describe('paymentsMade', () => {
-  it('ne compte rien avant la première échéance', () => {
-    expect(paymentsMade(mortgage, new Date(2020, 0, 4))).toBe(0);
-  });
-
-  it('compte l’échéance le jour même du prélèvement', () => {
-    expect(paymentsMade(mortgage, new Date(2020, 0, 5))).toBe(1);
-    expect(paymentsMade(mortgage, new Date(2020, 1, 4))).toBe(1);
-    expect(paymentsMade(mortgage, new Date(2020, 1, 5))).toBe(2);
-  });
-
-  it('s’arrête au nombre total d’échéances', () => {
-    expect(paymentsMade(mortgage, new Date(2060, 0, 1))).toBe(300);
-  });
-});
-
-describe('mortgageStatus', () => {
-  it('donne l’avancement du prêt à une date', () => {
-    const status = mortgageStatus(mortgage, new Date(2025, 0, 5));
-
-    expect(status.paymentsMade).toBe(61);
-    expect(status.remainingPrincipal).toBeCloseTo(
-      remainingPrincipal(mortgage, 61),
-      6,
-    );
-    // En début de prêt, les échéances remboursent surtout des intérêts.
-    expect(status.repaidRatio).toBeCloseTo(0.139, 3);
-    expect(status.paidInterest + status.remainingInterest).toBeCloseTo(
-      1001.25 * 300 - 200_000,
-      -1,
-    );
-    expect(status.endDate).toEqual(new Date(2044, 11, 5));
-  });
-
-  it('compte les intérêts payés comme un tableau d’amortissement mois par mois', () => {
-    let remaining = mortgage.principal;
-    let interest = 0;
-    for (let month = 0; month < 61; month++) {
-      const monthInterest = remaining * (0.035 / 12);
-      interest += monthInterest;
-      remaining -= monthlyPayment(mortgage) - monthInterest;
-    }
-
-    const status = mortgageStatus(mortgage, new Date(2025, 0, 5));
-    expect(status.paidInterest).toBeCloseTo(interest, 6);
-    expect(status.remainingPrincipal).toBeCloseTo(remaining, 6);
-  });
-});
-
-// Un prêt à taux zéro, plus court et plus tardif, avec assurance.
-const zeroRate: Mortgage = {
-  principal: 40_000,
-  annualRate: 0,
-  durationMonths: 120,
-  firstPaymentDate: '2022-07-10',
-  monthlyInsurance: 5,
-};
-
-describe('mortgagesStatus', () => {
-  it('additionne les prêts et pondère l’avancement par le capital emprunté', () => {
-    const date = new Date(2025, 0, 5);
-    const first = mortgageStatus(mortgage, date);
-    const second = mortgageStatus(zeroRate, date);
-    const status = mortgagesStatus([mortgage, zeroRate], date);
-
-    expect(status.principal).toBe(240_000);
-    expect(status.remainingPrincipal).toBeCloseTo(
-      first.remainingPrincipal + second.remainingPrincipal,
-      6,
-    );
-    expect(status.repaidRatio).toBeCloseTo(
-      1 - status.remainingPrincipal / 240_000,
-      6,
-    );
-    expect(status.monthlyPayment).toBeCloseTo(1001.25 + 333.33, 1);
-    expect(status.monthlyInsurance).toBe(5);
-    expect(status.paidInterest).toBeCloseTo(first.paidInterest, 6);
-    expect(status.endDate).toEqual(new Date(2044, 11, 5));
-    expect(status.remainingYears).toBe(20);
-  });
-
-  it('ne compte plus la mensualité ni l’assurance d’un prêt terminé', () => {
-    const status = mortgagesStatus([mortgage, zeroRate], new Date(2033, 0, 1));
-
-    expect(status.monthlyPayment).toBeCloseTo(1001.25, 2);
-    expect(status.monthlyInsurance).toBe(0);
+    expect(status.remainingPrincipal).toBe(0);
+    expect(status.repaidRatio).toBe(1);
+    expect(status.monthlyPayment).toBe(0);
+    expect(status.remainingInterest).toBe(0);
   });
 });
 
 describe('yearlyBalances', () => {
   it('va de la première échéance au 1er janvier qui suit la dernière', () => {
-    const {x, balances} = yearlyBalances([mortgage, zeroRate]);
+    const {x, balances} = yearlyBalances([first, second]);
 
-    expect(x).toHaveLength(26);
-    expect(x[0]).toBe(new Date(2020, 0, 5).getTime());
-    expect(x[x.length - 1]).toBe(new Date(2045, 0, 1).getTime());
-    expect(balances[0][0]).toBeCloseTo(remainingPrincipal(mortgage, 1), 6);
-    expect(balances[0][x.length - 1]).toBe(0);
-    expect(balances[1][x.length - 1]).toBe(0);
+    expect(x).toEqual([
+      new Date(2024, 10, 1).getTime(),
+      new Date(2025, 0, 1).getTime(),
+      new Date(2026, 0, 1).getTime(),
+    ]);
+    expect(balances[0]).toEqual([300, 100, 0]);
   });
 
   it('ne compte un prêt qu’à partir de sa première échéance', () => {
-    const {x, balances} = yearlyBalances([mortgage, zeroRate]);
-    const year = (y: number) => x.indexOf(new Date(y, 0, 1).getTime());
+    const {balances} = yearlyBalances([first, second]);
 
-    expect(balances[1][year(2022)]).toBe(0);
-    // Six échéances de juillet à décembre 2022.
-    expect(balances[1][year(2023)]).toBeCloseTo(40_000 - 6 * (40_000 / 120), 6);
+    expect(balances[1]).toEqual([0, 150, 0]);
   });
 });
 
 describe('yearlyCosts', () => {
-  it('répartit les échéances entre capital, intérêts et assurance', () => {
-    const years = yearlyCosts([mortgage, zeroRate]);
-    const total = (key: 'principal' | 'interest' | 'insurance') =>
-      years.reduce((sum, year) => sum + year[key], 0);
-
-    expect(years[0].year).toBe(2020);
-    expect(years[years.length - 1].year).toBe(2044);
-    expect(total('principal')).toBeCloseTo(240_000, 6);
-    expect(total('interest')).toBeCloseTo(
-      monthlyPayment(mortgage) * 300 - 200_000,
-      6,
-    );
-    expect(total('insurance')).toBe(5 * 120);
-  });
-
-  it('montre que les premières années remboursent surtout des intérêts', () => {
-    const [first] = yearlyCosts([mortgage]);
-
-    expect(first.interest).toBeGreaterThan(first.principal);
-    expect(first.insurance).toBe(0);
+  it('répartit les échéances de chaque année entre capital, intérêts et assurance', () => {
+    expect(yearlyCosts([first, second])).toEqual([
+      {year: 2024, principal: 200, interest: 18, insurance: 4},
+      {year: 2025, principal: 400, interest: 14, insurance: 4},
+    ]);
   });
 });
 
