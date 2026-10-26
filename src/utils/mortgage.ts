@@ -1,152 +1,123 @@
 import dayjs from 'dayjs';
 
-export type Mortgage = {
-  /** Montant emprunté, en euros. */
+/** Une échéance : le mois (`AAAA-MM`) et ses parts de capital, d'intérêts et d'assurance. */
+export type Payment = {
+  month: string;
   principal: number;
-  /** Taux nominal annuel, en %. */
-  annualRate: number;
-  durationMonths: number;
-  /** Date de la première échéance (AAAA-MM-JJ). */
-  firstPaymentDate: string;
-  /** Assurance mensuelle, en euros. */
-  monthlyInsurance?: number;
+  interest: number;
+  insurance: number;
 };
 
-const monthlyRate = (mortgage: Mortgage) => mortgage.annualRate / 100 / 12;
+export type Loan = {
+  label: string;
+  payments: Payment[];
+};
 
-/** Mensualité hors assurance d'un prêt à échéances constantes. */
-export function monthlyPayment(mortgage: Mortgage) {
-  const {principal, durationMonths} = mortgage;
-  const rate = monthlyRate(mortgage);
-  if (rate === 0) return principal / durationMonths;
-  return (principal * rate) / (1 - (1 + rate) ** -durationMonths);
-}
+type Amounts = Record<string, number>;
 
-/** Capital restant dû après `payments` échéances. */
-export function remainingPrincipal(mortgage: Mortgage, payments: number) {
-  const count = Math.min(Math.max(payments, 0), mortgage.durationMonths);
-  if (count === mortgage.durationMonths) return 0;
-  const rate = monthlyRate(mortgage);
-  const payment = monthlyPayment(mortgage);
-  if (rate === 0) return mortgage.principal - payment * count;
-  const growth = (1 + rate) ** count;
-  return mortgage.principal * growth - (payment * (growth - 1)) / rate;
-}
+// Les attributs Home Assistant sont du JSON sans type.
+const amountsOf = (value: unknown) =>
+  (value && typeof value === 'object' ? value : {}) as Amounts;
 
-/** Échéances prélevées à la date donnée, celle du jour comprise. */
-export function paymentsMade(mortgage: Mortgage, date: Date) {
-  const first = dayjs(mortgage.firstPaymentDate);
-  const day = dayjs(date);
-  if (day.isBefore(first, 'day')) return 0;
-  return Math.min(day.diff(first, 'month') + 1, mortgage.durationMonths);
-}
+/**
+ * Échéancier lu dans les attributs `principal`, `interest` et `insurance`
+ * d'une entité : chacun associe un mois `AAAA-MM` à un montant.
+ */
+export function loanPayments(attributes: Record<string, unknown>): Payment[] {
+  const principal = amountsOf(attributes.principal);
+  const interest = amountsOf(attributes.interest);
+  const insurance = amountsOf(attributes.insurance);
 
-export function mortgageStatus(mortgage: Mortgage, date: Date) {
-  const payment = monthlyPayment(mortgage);
-  const made = paymentsMade(mortgage, date);
-  const remaining = remainingPrincipal(mortgage, made);
-  const totalInterest = payment * mortgage.durationMonths - mortgage.principal;
-  const paidInterest = payment * made - (mortgage.principal - remaining);
-
-  return {
-    monthlyPayment: payment,
-    paymentsMade: made,
-    remainingPrincipal: remaining,
-    repaidRatio: 1 - remaining / mortgage.principal,
-    paidInterest,
-    remainingInterest: totalInterest - paidInterest,
-    endDate: dayjs(mortgage.firstPaymentDate)
-      .add(mortgage.durationMonths - 1, 'month')
-      .toDate(),
-  };
+  return Object.keys(principal)
+    .sort()
+    .map(month => ({
+      month,
+      principal: principal[month],
+      interest: interest[month] ?? 0,
+      insurance: insurance[month] ?? 0,
+    }));
 }
 
 const sum = (values: number[]) =>
   values.reduce((total, value) => total + value, 0);
 
-/** État d'ensemble de plusieurs prêts à une date. */
-export function mortgagesStatus(mortgages: Mortgage[], date: Date) {
-  const statuses = mortgages.map(mortgage => mortgageStatus(mortgage, date));
-  const running = mortgages.filter(
-    (_, i) => statuses[i].remainingPrincipal > 0,
+// Au centime : la somme des parts de capital ne retombe pas pile sur zéro.
+const cents = (value: number) => Math.round(value * 100) / 100;
+
+/** État d'ensemble des prêts à une date : l'échéance d'un mois compte dès son 1er jour. */
+export function loansStatus(loans: Loan[], date: Date) {
+  const current = dayjs(date).format('YYYY-MM');
+  const payments = loans.flatMap(loan => loan.payments);
+  const paid = payments.filter(payment => payment.month <= current);
+  const thisMonth = payments.filter(payment => payment.month === current);
+  const months = [...new Set(payments.map(payment => payment.month))].sort();
+  const principal = sum(payments.map(payment => payment.principal));
+  const remaining = cents(
+    principal - sum(paid.map(payment => payment.principal)),
   );
-  const principal = sum(mortgages.map(mortgage => mortgage.principal));
-  const remaining = sum(statuses.map(status => status.remainingPrincipal));
-  const endDate = new Date(
-    Math.max(...statuses.map(status => status.endDate.getTime())),
-  );
+  const paidInterest = sum(paid.map(payment => payment.interest));
 
   return {
     principal,
     remainingPrincipal: remaining,
-    repaidRatio: 1 - remaining / principal,
-    monthlyPayment: sum(running.map(monthlyPayment)),
-    monthlyInsurance: sum(running.map(m => m.monthlyInsurance ?? 0)),
-    paidInterest: sum(statuses.map(status => status.paidInterest)),
-    remainingInterest: sum(statuses.map(status => status.remainingInterest)),
-    endDate,
-    remainingYears: Math.max(
-      0,
-      Math.ceil(dayjs(endDate).diff(date, 'month', true) / 12),
+    repaidRatio: principal ? 1 - remaining / principal : 0,
+    monthlyPayment: sum(
+      thisMonth.map(payment => payment.principal + payment.interest),
     ),
+    monthlyInsurance: sum(thisMonth.map(payment => payment.insurance)),
+    paidInterest,
+    remainingInterest:
+      sum(payments.map(payment => payment.interest)) - paidInterest,
+    paymentsMade: months.filter(month => month <= current).length,
+    paymentsTotal: months.length,
+    endDate: dayjs(months[months.length - 1]).toDate(),
   };
 }
 
-export type MortgagesStatus = ReturnType<typeof mortgagesStatus>;
+export type LoansStatus = ReturnType<typeof loansStatus>;
 
 /**
  * Capital restant dû de chaque prêt, de la première échéance au 1er janvier
  * qui suit la dernière, pour des aires empilées.
  */
-export function yearlyBalances(mortgages: Mortgage[]) {
-  const starts = mortgages.map(mortgage => dayjs(mortgage.firstPaymentDate));
-  const start = dayjs(Math.min(...starts.map(day => day.valueOf())));
-  const endYear = Math.max(
-    ...mortgages.map((mortgage, i) =>
-      starts[i].add(mortgage.durationMonths - 1, 'month').year(),
-    ),
-  );
-  const dates = [start.toDate()];
-  for (let year = start.year() + 1; year <= endYear + 1; year++) {
+export function yearlyBalances(loans: Loan[]) {
+  const months = loans
+    .flatMap(loan => loan.payments.map(payment => payment.month))
+    .sort();
+  if (!months.length) return {x: [], balances: loans.map(() => [])};
+
+  const first = dayjs(months[0]);
+  const lastYear = dayjs(months[months.length - 1]).year();
+  const dates = [first.toDate()];
+  for (let year = first.year() + 1; year <= lastYear + 1; year++) {
     dates.push(new Date(year, 0, 1));
   }
 
   return {
     x: dates.map(date => date.getTime()),
-    balances: mortgages.map(mortgage =>
+    balances: loans.map(loan =>
       dates.map(date => {
-        const made = paymentsMade(mortgage, date);
+        const status = loansStatus([loan], date);
         // Avant sa première échéance, un prêt ne compte pas encore.
-        return made ? remainingPrincipal(mortgage, made) : 0;
+        return status.paymentsMade ? status.remainingPrincipal : 0;
       }),
     ),
   };
 }
 
 /** Capital, intérêts et assurance payés chaque année civile, tous prêts confondus. */
-export function yearlyCosts(mortgages: Mortgage[]) {
+export function yearlyCosts(loans: Loan[]) {
   const years = new Map<
     number,
     {principal: number; interest: number; insurance: number}
   >();
-  for (const mortgage of mortgages) {
-    const first = dayjs(mortgage.firstPaymentDate);
-    const payment = monthlyPayment(mortgage);
-    for (let month = 0; month < mortgage.durationMonths; month++) {
-      const year = first.add(month, 'month').year();
-      const repaid =
-        remainingPrincipal(mortgage, month) -
-        remainingPrincipal(mortgage, month + 1);
-      const costs = years.get(year) ?? {
-        principal: 0,
-        interest: 0,
-        insurance: 0,
-      };
-      costs.principal += repaid;
-      costs.interest += payment - repaid;
-      costs.insurance += mortgage.monthlyInsurance ?? 0;
-      years.set(year, costs);
-    }
+  for (const payment of loans.flatMap(loan => loan.payments)) {
+    const year = Number(payment.month.slice(0, 4));
+    const costs = years.get(year) ?? {principal: 0, interest: 0, insurance: 0};
+    costs.principal += payment.principal;
+    costs.interest += payment.interest;
+    costs.insurance += payment.insurance;
+    years.set(year, costs);
   }
   return [...years]
     .sort(([a], [b]) => a - b)

@@ -92,7 +92,7 @@ export function QuickMenu() {
           open={mortgageOpen}
           onClose={() => setMortgageOpen(false)}
           title="Crédit"
-          mortgages={mortgages}
+          entityIds={mortgages}
         />
       )}
     </>

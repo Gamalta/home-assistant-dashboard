@@ -1,16 +1,16 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {formatEuros, type Mortgage, yearlyCosts} from '../../../utils/mortgage';
+import {formatEuros, type Loan, yearlyCosts} from '../../../utils/mortgage';
 import {Chart} from '../../Charts/Chart';
 import {MortgageLegend} from './MortgageLegend';
 
 type MortgageCostChartProps = {
-  mortgages: Mortgage[];
+  loans: Loan[];
 };
 
 export function MortgageCostChart(props: MortgageCostChartProps) {
-  const {mortgages} = props;
-  const years = yearlyCosts(mortgages);
+  const {loans} = props;
+  const years = yearlyCosts(loans);
   const series = [
     {
       id: 'principal',

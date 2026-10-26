@@ -1,10 +1,10 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type {MortgageConfigType} from '../../../configs/sidebar';
 import {
   formatEuros,
-  mortgageStatus,
-  type MortgagesStatus,
+  type Loan,
+  loansStatus,
+  type LoansStatus,
   yearlyBalances,
 } from '../../../utils/mortgage';
 import {Chart} from '../../Charts/Chart';
@@ -13,13 +13,13 @@ import {MortgageLegend} from './MortgageLegend';
 const COLORS = ['primary', 'info', 'success', 'error', 'warning'];
 
 type MortgageBalanceChartProps = {
-  mortgages: MortgageConfigType[];
-  status: MortgagesStatus;
+  loans: Loan[];
+  status: LoansStatus;
 };
 
 export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
-  const {mortgages, status} = props;
-  const {x, balances} = yearlyBalances(mortgages);
+  const {loans, status} = props;
+  const {x, balances} = yearlyBalances(loans);
   const now = new Date();
   const colorOf = (index: number) => COLORS[index % COLORS.length];
 
@@ -29,9 +29,9 @@ export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
         x={x}
         min={0}
         formatX={time => String(new Date(time).getFullYear())}
-        series={mortgages.map((mortgage, index) => ({
-          id: `mortgage-${index}`,
-          label: mortgage.label,
+        series={loans.map((loan, index) => ({
+          id: `loan-${index}`,
+          label: loan.label,
           data: balances[index],
           color: colorOf(index),
           format: formatEuros,
@@ -46,8 +46,8 @@ export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
         </Stack>
       </Chart>
       <MortgageLegend
-        items={mortgages.map((mortgage, index) => ({
-          label: `${mortgage.label} · ${Math.floor(mortgageStatus(mortgage, now).repaidRatio * 100)} %`,
+        items={loans.map((loan, index) => ({
+          label: `${loan.label} · ${Math.floor(loansStatus([loan], now).repaidRatio * 100)} %`,
           color: colorOf(index),
         }))}
       />

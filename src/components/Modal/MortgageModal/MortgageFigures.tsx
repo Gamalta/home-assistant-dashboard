@@ -1,16 +1,15 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {formatEuros, type MortgagesStatus} from '../../../utils/mortgage';
+import {formatEuros, type LoansStatus} from '../../../utils/mortgage';
 
 type MortgageFiguresProps = {
-  status: MortgagesStatus;
+  status: LoansStatus;
 };
 
 export function MortgageFigures(props: MortgageFiguresProps) {
   const {status} = props;
   const insurance = status.monthlyInsurance;
-  const years = status.remainingYears;
   const figures = [
     {
       label: 'Mensualité',
@@ -23,7 +22,7 @@ export function MortgageFigures(props: MortgageFiguresProps) {
         month: 'long',
         year: 'numeric',
       }),
-      detail: years ? `encore ${years} an${years > 1 ? 's' : ''}` : '',
+      detail: `${status.paymentsMade} / ${status.paymentsTotal} échéances`,
     },
     {label: 'Intérêts payés', value: formatEuros(status.paidInterest)},
     {label: 'Intérêts restants', value: formatEuros(status.remainingInterest)},

@@ -1,5 +1,4 @@
 import {FilterByDomain, EntityName} from '@hakit/core';
-import type {Mortgage} from '../utils/mortgage';
 
 type SideBarConfigType = {
   weatherEntityId: FilterByDomain<EntityName, 'weather'>;
@@ -12,8 +11,11 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
-  /** Prêts réunis dans l'entrée « Crédit » du menu rapide. */
-  mortgages?: MortgageConfigType[];
+  /**
+   * Prêts réunis dans l'entrée « Crédit » du menu rapide : des entités dont les
+   * attributs `principal`, `interest` et `insurance` donnent l'échéancier.
+   */
+  mortgages?: FilterByDomain<EntityName, 'sensor'>[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
 };
@@ -41,9 +43,4 @@ type PersonConfigType = {
   focusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
   batteryLevelEntityId?: FilterByDomain<EntityName, 'sensor'>;
   batteryStateEntityId?: FilterByDomain<EntityName, 'sensor'>;
-};
-
-type MortgageConfigType = Mortgage & {
-  /** Nom du prêt dans la légende des graphiques. */
-  label: string;
 };
