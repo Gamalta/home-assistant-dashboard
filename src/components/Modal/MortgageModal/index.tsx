@@ -4,18 +4,20 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import {useState} from 'react';
 import {Modal, ModalProps} from '..';
-import {type Mortgage, mortgageStatus} from '../../../utils/mortgage';
-import {MortgageChart} from './MortgageChart';
+import type {MortgageConfigType} from '../../../configs/sidebar';
+import {mortgagesStatus} from '../../../utils/mortgage';
+import {MortgageBalanceChart} from './MortgageBalanceChart';
+import {MortgageCostChart} from './MortgageCostChart';
 import {MortgageFigures} from './MortgageFigures';
 import {MortgageHouse} from './MortgageHouse';
 
 type MortgageModalProps = Omit<ModalProps, 'children'> & {
-  mortgage: Mortgage;
+  mortgages: MortgageConfigType[];
 };
 
 export function MortgageModal(props: MortgageModalProps) {
-  const {mortgage, ...modalProps} = props;
-  const status = mortgageStatus(mortgage, new Date());
+  const {mortgages, ...modalProps} = props;
+  const status = mortgagesStatus(mortgages, new Date());
   const [tab, setTab] = useState<'progress' | 'history'>('progress');
 
   return (
@@ -39,10 +41,13 @@ export function MortgageModal(props: MortgageModalProps) {
       {tab === 'progress' ? (
         <Stack direction="row" spacing={3}>
           <MortgageHouse ratio={status.repaidRatio} />
-          <MortgageFigures mortgage={mortgage} status={status} />
+          <MortgageFigures status={status} />
         </Stack>
       ) : (
-        <MortgageChart mortgage={mortgage} status={status} />
+        <Stack spacing={3}>
+          <MortgageBalanceChart mortgages={mortgages} status={status} />
+          <MortgageCostChart mortgages={mortgages} />
+        </Stack>
       )}
     </Modal>
   );

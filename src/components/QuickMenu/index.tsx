@@ -16,7 +16,7 @@ export function QuickMenu() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
-  const [mortgageIndex, setMortgageIndex] = useState<number>();
+  const [mortgageOpen, setMortgageOpen] = useState(false);
 
   useEffect(() => {
     if (!launched) return;
@@ -71,36 +71,30 @@ export function QuickMenu() {
             }}
           />
         ))}
-        {mortgages.map((mortgage, index) => (
+        {mortgages.length > 0 && (
           <SpeedDialAction
-            key={index}
             icon={<HouseIcon />}
             onClick={() => {
               setOpen(false);
-              setMortgageIndex(index);
+              setMortgageOpen(true);
             }}
             slotProps={{
-              tooltip: {
-                title: mortgage.label ?? 'Crédit',
-                open: true,
-                placement: 'right',
-              },
+              tooltip: {title: 'Crédit', open: true, placement: 'right'},
             }}
           />
-        ))}
+        )}
       </SpeedDial>
       {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
           React, et le menu capterait les flèches et Échap de la modale. */}
-      {mortgages.map((mortgage, index) => (
+      {mortgages.length > 0 && (
         <MortgageModal
-          key={index}
           id="layoutid-quick-menu"
-          open={index === mortgageIndex}
-          onClose={() => setMortgageIndex(undefined)}
-          title={mortgage.label ?? 'Crédit'}
-          mortgage={mortgage}
+          open={mortgageOpen}
+          onClose={() => setMortgageOpen(false)}
+          title="Crédit"
+          mortgages={mortgages}
         />
-      ))}
+      )}
     </>
   );
 }

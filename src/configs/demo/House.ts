@@ -55,11 +55,36 @@ export const SideBarConfig: SideBarConfigType = {
   scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
   mortgages: [
     {
+      label: 'Prêt principal',
       principal: 250_000,
       annualRate: 1.45,
       durationMonths: 300,
       firstPaymentDate: '2021-06-05',
       monthlyInsurance: 28,
+    },
+    {
+      label: 'PTZ',
+      principal: 40_000,
+      annualRate: 0,
+      durationMonths: 240,
+      firstPaymentDate: '2021-06-05',
+      monthlyInsurance: 6,
+    },
+    {
+      label: 'Action Logement',
+      principal: 30_000,
+      annualRate: 0.5,
+      durationMonths: 240,
+      firstPaymentDate: '2021-06-05',
+      monthlyInsurance: 4,
+    },
+    {
+      label: 'Prêt travaux',
+      principal: 15_000,
+      annualRate: 2.9,
+      durationMonths: 120,
+      firstPaymentDate: '2023-03-10',
+      monthlyInsurance: 3,
     },
   ],
   shortcuts: [

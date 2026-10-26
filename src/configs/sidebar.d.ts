@@ -12,7 +12,7 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
-  /** Prêts ouverts par les entrées « Crédit » du menu rapide. */
+  /** Prêts réunis dans l'entrée « Crédit » du menu rapide. */
   mortgages?: MortgageConfigType[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];
@@ -44,6 +44,6 @@ type PersonConfigType = {
 };
 
 type MortgageConfigType = Mortgage & {
-  /** Libellé de l'entrée du menu, pour distinguer plusieurs prêts. */
-  label?: string;
+  /** Nom du prêt dans la légende des graphiques. */
+  label: string;
 };

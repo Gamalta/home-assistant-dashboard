@@ -1,20 +1,16 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {
-  formatEuros,
-  type Mortgage,
-  type MortgageStatus,
-} from '../../../utils/mortgage';
+import {formatEuros, type MortgagesStatus} from '../../../utils/mortgage';
 
 type MortgageFiguresProps = {
-  mortgage: Mortgage;
-  status: MortgageStatus;
+  status: MortgagesStatus;
 };
 
 export function MortgageFigures(props: MortgageFiguresProps) {
-  const {mortgage, status} = props;
-  const insurance = mortgage.monthlyInsurance;
+  const {status} = props;
+  const insurance = status.monthlyInsurance;
+  const years = status.remainingYears;
   const figures = [
     {
       label: 'Mensualité',
@@ -22,12 +18,12 @@ export function MortgageFigures(props: MortgageFiguresProps) {
       detail: insurance ? `+ ${formatEuros(insurance)} d'assurance` : '',
     },
     {
-      label: 'Fin du prêt',
+      label: 'Dernière échéance',
       value: status.endDate.toLocaleDateString('fr-FR', {
         month: 'long',
         year: 'numeric',
       }),
-      detail: `${status.paymentsMade} / ${mortgage.durationMonths} échéances`,
+      detail: years ? `encore ${years} an${years > 1 ? 's' : ''}` : '',
     },
     {label: 'Intérêts payés', value: formatEuros(status.paidInterest)},
     {label: 'Intérêts restants', value: formatEuros(status.remainingInterest)},
@@ -41,7 +37,7 @@ export function MortgageFigures(props: MortgageFiguresProps) {
           {formatEuros(status.remainingPrincipal)}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          sur {formatEuros(mortgage.principal)} empruntés
+          sur {formatEuros(status.principal)} empruntés
         </Typography>
       </Stack>
       <Box sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2}}>
