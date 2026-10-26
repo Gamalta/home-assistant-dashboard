@@ -37,7 +37,7 @@ export function Tile(props: TileProps) {
       sx={{
         width: '100%',
         height: 72,
-        px: 1.25,
+        px: 1,
         gap: 1,
         justifyContent: 'flex-start',
         textAlign: 'left',
@@ -54,8 +54,8 @@ export function Tile(props: TileProps) {
     >
       <Stack
         sx={{
-          width: 36,
-          height: 36,
+          width: 32,
+          height: 32,
           flexShrink: 0,
           borderRadius: '50%',
           alignItems: 'center',

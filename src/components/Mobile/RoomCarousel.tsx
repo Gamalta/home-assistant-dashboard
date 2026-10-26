@@ -103,8 +103,7 @@ export function RoomCarousel(props: RoomCarouselProps) {
           display: 'grid',
           gridAutoFlow: 'column',
           // Le bord de la carte suivante dépasse : on devine qu'il y a une suite.
-          gridAutoColumns: 'calc(100% - 48px)',
-          alignItems: 'end',
+          gridAutoColumns: 'calc(100% - 40px)',
           gap: 1.5,
           px: 2,
           overflowX: 'auto',
@@ -114,8 +113,9 @@ export function RoomCarousel(props: RoomCarouselProps) {
           scrollbarWidth: 'none',
           '& > *': {
             scrollSnapAlign: 'start',
-            maxHeight: '45dvh',
-            overflowY: 'auto',
+            // Même hauteur pour toutes : deux rangées de tuiles et le haut
+            // de la troisième, qui invite à faire défiler.
+            height: 260,
           },
         }}
       >

@@ -19,25 +19,27 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 ## Hors périmètre
 
 - Le téléphone en paysage et la tablette en portrait : la bascule se fait sur la largeur seule, ils gardent la disposition tablette.
+- L'heure, la date et la météo : le téléphone les affiche déjà.
 - Une vue d'ensemble de la maison sur mobile : la caméra cadre toujours une pièce, on peut dézoomer à la main.
 - Un résumé de la maison (« 4 lumières allumées ») au-dessus de la liste des pièces.
 - Une application installable (PWA) et les notifications.
 
 ## Comportement attendu
 
-### Scénario : les onglets remplacent la barre latérale sous 600 px
+### Scénario : le sélecteur de vue remplace la barre latérale sous 600 px
 
 - **Étant donné** un téléphone en portrait (390 × 844)
 - **Quand** le dashboard s'ouvre
-- **Alors** un en-tête (heure, date, météo, avatars) et les onglets Maison et Pièces s'affichent, sans barre latérale
+- **Alors** un en-tête s'affiche en haut de l'écran, avec le sélecteur « 3D » / « Pièces » et les avatars
+- **Et** il n'y a ni barre latérale, ni barre en bas, ni heure, ni météo
 
 ### Scénario : la tablette garde sa disposition à partir de 600 px
 
 - **Étant donné** un écran de 1280 × 800
 - **Quand** le dashboard s'ouvre
-- **Alors** la barre latérale et la vue 3D s'affichent côte à côte, sans onglets
+- **Alors** la barre latérale et la vue 3D s'affichent côte à côte, sans sélecteur de vue
 
-### Scénario : la vue Maison s'ouvre sur la première pièce
+### Scénario : la vue 3D s'ouvre sur la première pièce
 
 - **Étant donné** un téléphone en portrait
 - **Quand** le dashboard s'ouvre
@@ -47,7 +49,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ### Scénario : choisir une pièce y amène la caméra
 
-- **Étant donné** la vue Maison sur le séjour
+- **Étant donné** la vue 3D sur le séjour
 - **Quand** l'utilisateur touche la puce « Cuisine »
 - **Alors** la caméra vole jusqu'à la cuisine et le carrousel affiche sa carte
 - **Et** seules les étiquettes de la cuisine restent dans la scène
@@ -55,9 +57,16 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ### Scénario : glisser le carrousel change de pièce
 
-- **Étant donné** la vue Maison sur la première pièce
+- **Étant donné** la vue 3D sur la première pièce
 - **Quand** l'utilisateur glisse la carte vers la gauche
 - **Alors** la carte suivante s'accroche en place, sa puce devient active et la caméra la cadre
+
+### Scénario : les cartes du carrousel ont toutes la même taille
+
+- **Étant donné** des pièces d'un à cinq équipements
+- **Quand** la vue 3D s'affiche
+- **Alors** toutes les cartes du carrousel ont la même hauteur, et toutes les tuiles la même taille
+- **Et** dans une carte qui a trop d'équipements, les tuiles défilent
 
 ### Scénario : un appui court sur une tuile bascule la lumière
 
@@ -83,15 +92,15 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur pose le doigt sur une tuile et le glisse de plus de 10 px pour faire défiler
 - **Alors** ni l'appui court ni l'appui long ne se déclenchent
 
-### Scénario : l'onglet Pièces liste toutes les pièces
+### Scénario : la vue Pièces liste toutes les pièces
 
-- **Étant donné** la vue Maison
-- **Quand** l'utilisateur touche l'onglet « Pièces »
+- **Étant donné** la vue 3D
+- **Quand** l'utilisateur touche « Pièces » dans le sélecteur
 - **Alors** chaque pièce s'affiche en carte de tuiles, dans l'ordre de la config, et la scène 3D se met en pause
 
 ### Scénario : le filtre Volets ne garde que les volets
 
-- **Étant donné** l'onglet Pièces
+- **Étant donné** la vue Pièces
 - **Quand** l'utilisateur touche le filtre « Volets »
 - **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
@@ -113,10 +122,10 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche « Système »
 - **Alors** la modale Système s'ouvre
 
-### Scénario : le menu Scénarios reste sur la vue Maison
+### Scénario : le menu Scénarios reste sur la vue 3D
 
 - **Étant donné** une maison avec des scénarios configurés
-- **Quand** la vue Maison s'affiche
+- **Quand** la vue 3D s'affiche
 - **Alors** le bouton rond « Scénarios » est sous l'en-tête, à gauche, et déplie la liste des scripts
 
 ## Critères d'acceptation
@@ -129,7 +138,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ## Impacts
 
-- Décisions : [ADR 0038](../adr/0038-disposition-mobile-par-onglets.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
+- Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des feuilles du bas.

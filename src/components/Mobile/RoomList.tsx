@@ -29,10 +29,12 @@ export function RoomList(props: RoomListProps) {
         inset: 0,
         overflowY: 'auto',
         // Sous l'en-tête, posé par-dessus la liste.
-        pt: 12,
+        pt: 11,
         px: 2,
         pb: 2,
         bgcolor: 'background.default',
+        // Les cartes gardent leur hauteur : c'est la liste qui défile.
+        '& > *': {flexShrink: 0},
       }}
     >
       <Typography variant="h4" component="h1" sx={{fontWeight: 700}}>

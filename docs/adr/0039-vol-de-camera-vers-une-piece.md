@@ -6,7 +6,7 @@
 
 ## Contexte
 
-Sur mobile, le carrousel de l'onglet Maison choisit une pièce ([ADR 0038](0038-disposition-mobile-par-onglets.md)), et la caméra doit la cadrer. Jusqu'ici, seul l'utilisateur déplaçait la caméra, avec `OrbitControls`.
+Sur mobile, le carrousel de la vue 3D choisit une pièce ([ADR 0038](0038-disposition-mobile-a-deux-vues.md)), et la caméra doit la cadrer. Jusqu'ici, seul l'utilisateur déplaçait la caméra, avec `OrbitControls`.
 
 Contraintes :
 

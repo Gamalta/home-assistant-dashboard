@@ -74,13 +74,18 @@ async function openFoyer(page: Page) {
   await expect(page.getByRole('list', {name: 'Réglages'})).toBeVisible();
 }
 
-test('les onglets remplacent la barre latérale sous 600 px', async ({page}) => {
-  const tabs = page.getByRole('navigation', {name: 'Navigation principale'});
-  await expect(tabs.getByRole('button', {name: 'Maison'})).toBeVisible();
-  await expect(tabs.getByRole('button', {name: 'Pièces'})).toBeVisible();
-  await expect(page.getByRole('banner')).toBeVisible();
-  await expect(page.getByRole('button', {name: 'Météo'})).toBeVisible();
+test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
+  page,
+}) => {
+  const header = page.getByRole('banner');
+  const views = header.getByRole('group', {name: 'Affichage'});
+  await expect(views.getByRole('button', {name: '3D'})).toBeVisible();
+  await expect(views.getByRole('button', {name: 'Pièces'})).toBeVisible();
+  await expect(header.getByRole('button', {name: 'Foyer'})).toBeVisible();
+  expect((await header.boundingBox())!.y).toBeLessThan(20);
   await expect(page.getByRole('separator')).toHaveCount(0);
+  await expect(page.getByRole('navigation')).toHaveCount(0);
+  await expect(page.getByRole('button', {name: 'Météo'})).toHaveCount(0);
 });
 
 test.describe('tablette', () => {
@@ -90,11 +95,11 @@ test.describe('tablette', () => {
     page,
   }) => {
     await expect(page.getByRole('separator')).toBeVisible();
-    await expect(page.getByRole('navigation')).toHaveCount(0);
+    await expect(page.getByRole('group', {name: 'Affichage'})).toHaveCount(0);
   });
 });
 
-test("la vue Maison s'ouvre sur la première pièce", async ({page}) => {
+test("la vue 3D s'ouvre sur la première pièce", async ({page}) => {
   await expect(chip(page, 'Séjour')).toHaveAttribute('aria-pressed', 'true');
   const card = page.getByRole('region', {name: 'Séjour'});
   await expect(
@@ -136,6 +141,34 @@ test('glisser le carrousel change de pièce', async ({page}) => {
   await expect(page.getByRole('region', {name: 'Cuisine'})).toBeInViewport({
     ratio: 0.9,
   });
+});
+
+test('les cartes du carrousel ont toutes la même taille', async ({page}) => {
+  const cards = page.getByRole('region');
+  // Les quatorze pièces de la démo, d'un à cinq équipements.
+  await expect(cards).toHaveCount(14);
+  const heights = await cards.evaluateAll(sections =>
+    sections.map(section => section.getBoundingClientRect().height),
+  );
+  expect(new Set(heights).size).toBe(1);
+
+  const tiles = await cards.getByRole('button').evaluateAll(buttons =>
+    buttons.map(button => {
+      const {width, height} = button.getBoundingClientRect();
+      return `${Math.round(width)}×${Math.round(height)}`;
+    }),
+  );
+  expect(new Set(tiles).size).toBe(1);
+
+  // Les cinq équipements du séjour défilent dans leur carte.
+  const grid = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button')
+    .first()
+    .locator('xpath=../..');
+  expect(
+    await grid.evaluate(element => element.scrollHeight > element.clientHeight),
+  ).toBe(true);
 });
 
 test('un appui court sur une tuile bascule la lumière', async ({page}) => {
@@ -186,7 +219,7 @@ test('toucher le fond ferme la modale', async ({page}) => {
   await expect(title).toBeHidden();
 });
 
-test("l'onglet Pièces liste toutes les pièces", async ({page}) => {
+test('la vue Pièces liste toutes les pièces', async ({page}) => {
   await page.getByRole('button', {name: 'Pièces', exact: true}).tap();
 
   await expect(page.getByRole('heading', {name: 'Pièces'})).toBeVisible();
@@ -239,7 +272,7 @@ test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
   await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
 });
 
-test('le menu Scénarios reste sur la vue Maison', async ({page}) => {
+test('le menu Scénarios reste sur la vue 3D', async ({page}) => {
   const dial = page.getByRole('button', {name: 'Scénarios'});
   const header = (await page.getByRole('banner').boundingBox())!;
   const box = (await dial.boundingBox())!;

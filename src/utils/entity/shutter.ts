@@ -5,5 +5,5 @@ export function shutterStateLabel(state?: string, position?: number) {
   if (state === 'closing') return 'Fermeture…';
   if (state === 'closed' || position === 0) return 'Fermé';
   if (position === undefined || position === 100) return 'Ouvert';
-  return `Ouvert à ${position} %`;
+  return `Ouvert ${position} %`;
 }

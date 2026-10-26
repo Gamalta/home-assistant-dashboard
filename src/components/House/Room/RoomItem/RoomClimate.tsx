@@ -27,15 +27,11 @@ export function RoomClimate(props: RoomClimateProps) {
   if (!climate) return;
   return (
     <>
-      <motion.div
-        layoutId={`${id}-climate`}
-        // La climatisation prend une ligne entière de la grille de tuiles.
-        style={variant === 'tile' ? {gridColumn: '1 / -1'} : undefined}
-      >
+      <motion.div layoutId={`${id}-climate`}>
         {variant === 'tile' ? (
           <Tile
             icon={<ThermostatIcon />}
-            name="Climatisation"
+            name="Climat"
             state={climateStateLabel(
               climate.state,
               climate.attributes.temperature ?? undefined,

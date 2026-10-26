@@ -31,8 +31,11 @@ export function RoomCard(props: RoomCardProps) {
           sx={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-            gridAutoFlow: 'row dense',
+            gridAutoRows: 72,
             gap: 1,
+            // Dans une carte de hauteur fixe, les tuiles en trop défilent.
+            minHeight: 0,
+            overflowY: 'auto',
           }}
         >
           {items.map((item, index) => (

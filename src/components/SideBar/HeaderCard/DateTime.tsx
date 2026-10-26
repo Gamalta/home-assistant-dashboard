@@ -1,9 +1,14 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useNow} from '../../../hooks/useNow';
+import {useEffect, useState} from 'react';
 
 export function DateTime() {
-  const now = useNow();
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);

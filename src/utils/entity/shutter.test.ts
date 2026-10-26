@@ -3,7 +3,7 @@ import {shutterStateLabel} from './shutter';
 
 describe('shutterStateLabel', () => {
   it('donne la position d’un volet entrouvert', () => {
-    expect(shutterStateLabel('open', 60)).toBe('Ouvert à 60 %');
+    expect(shutterStateLabel('open', 60)).toBe('Ouvert 60 %');
   });
 
   it('dit « Ouvert » ou « Fermé » aux extrémités', () => {

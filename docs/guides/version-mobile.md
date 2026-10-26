@@ -1,19 +1,20 @@
 # Version mobile
 
-Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la barre latérale par un en-tête et deux onglets ([ADR 0038](../adr/0038-disposition-mobile-par-onglets.md)). La tablette ne change pas. Il n'y a rien à configurer : tout vient du `House.ts` de la maison.
+Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la barre latérale par un en-tête qui choisit entre deux vues, 3D et Pièces ([ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md)). La tablette ne change pas. Il n'y a rien à configurer : tout vient du `House.ts` de la maison.
 
 ## Ce qu'on trouve où
 
-| Zone          | Contenu                                                                               | D'où ça vient                      |
-| ------------- | ------------------------------------------------------------------------------------- | ---------------------------------- |
-| En-tête       | Heure, date, météo, avatars                                                           | `SideBarConfig` (météo, personnes) |
-| Onglet Maison | Scène 3D cadrée sur une pièce, menu Scénarios, carrousel des pièces                   | `HouseConfig.rooms`, `scenarios`   |
-| Onglet Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`        |
-| Feuille Foyer | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                    |
+| Zone          | Contenu                                                                               | D'où ça vient                    |
+| ------------- | ------------------------------------------------------------------------------------- | -------------------------------- |
+| En-tête       | Sélecteur « 3D » / « Pièces », avatars                                                | `SideBarConfig` (personnes)      |
+| Vue 3D        | Scène 3D cadrée sur une pièce, menu Scénarios, carrousel des pièces                   | `HouseConfig.rooms`, `scenarios` |
+| Vue Pièces    | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`      |
+| Feuille Foyer | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                  |
 
 ## Gestes
 
 - **Choisir une pièce** : touchez sa puce, ou glissez le carrousel. La caméra vole jusqu'à elle, et seules ses étiquettes restent dans la scène ([ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md)).
+- **Carte de pièce** : dans le carrousel, toutes les cartes ont la même hauteur. Quand une pièce a plus de quatre équipements, faites défiler ses tuiles dans la carte.
 - **Tuile** : elle se comporte comme l'étiquette de la scène.
   - Un appui court bascule une lumière ou une prise, et ouvre la modale des autres équipements.
   - Un appui long ouvre la modale d'une lumière ou d'une prise.
