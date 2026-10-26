@@ -8,11 +8,12 @@ import {createWeather} from './createWeather';
 import openWeatherFixture from './fixtures/open-weather';
 import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
-import {createPrinter3d} from './createPrinter3d';
 import {createSwitch} from './createSwitch';
+import {createPrinter3d} from './createPrinter3d';
 import {createMediaPlayer} from './createMediaPlayer';
-import {createRemote} from './createRemote';
 import {MediaPlayerFeature} from '../../utils/entity/media';
+import {createScript} from './createScript';
+import {createRemote} from './createRemote';
 import {createWledStrip} from './createWledStrip';
 import {createAmbilight} from './createAmbilight';
 import {createTrain} from './createTrain';
@@ -135,14 +136,14 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createCover('cover.salon_shutter'),
+  ...createCover('cover.living_room_shutter'),
   ...createCover('cover.kitchen_shutter'),
   ...createCover('cover.kitchen_shutter_2'),
   ...createCover('cover.bedroom_shutter'),
   ...createCover('cover.bedroom_2_shutter'),
   ...createCover('cover.bedroom_3_shutter'),
 
-  ...createLight('light.salon_light', {
+  ...createLight('light.living_room_light', {
     state: 'off',
     attributes: {
       friendly_name: 'Plafonnier du séjour',
@@ -151,7 +152,7 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.salon_hue_play', {
+  ...createLight('light.living_room_hue_play', {
     attributes: {
       friendly_name: 'Hue Play du séjour',
       icon: 'hue:play-bar-v',
@@ -285,7 +286,7 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createClimate('climate.salon'),
+  ...createClimate('climate.living_room'),
   ...createClimate('climate.kitchen', {
     attributes: {
       current_temperature: 20,
@@ -303,13 +304,13 @@ export const entities: HassEntities = {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_temperature', {
+  ...createSensor('sensor.living_room_temperature', {
     state: '21',
     attributes: {
       unit_of_measurement: '°C',
     },
   }),
-  ...createSensor('sensor.salon_humidity', {
+  ...createSensor('sensor.living_room_humidity', {
     state: '55',
     attributes: {
       unit_of_measurement: '%',
@@ -389,24 +390,24 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createPrinter3d('p1s_demo'),
-  ...createSwitch('switch.desk_plug', {
+  ...createSwitch('switch.desk_outlet', {
     state: 'on',
     attributes: {friendly_name: 'Prise bureau'},
   }),
-  ...createSensor('sensor.desk_plug_power', {
+  ...createSensor('sensor.desk_outlet_power', {
     state: '85.4',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
   // TV éteinte à la télécommande : la prise reste allumée et consomme peu.
-  ...createSwitch('switch.tv_plug', {
+  ...createSwitch('switch.tv_outlet', {
     state: 'on',
     attributes: {friendly_name: 'Prise TV'},
   }),
-  ...createSensor('sensor.tv_plug_power', {
+  ...createSensor('sensor.tv_outlet_power', {
     state: '0.8',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
+  ...createPrinter3d('p1s_demo'),
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {
@@ -432,7 +433,7 @@ export const entities: HassEntities = {
     },
   }),
   ...createRemote('remote.living_room_tv'),
-  ...createWledStrip('light.salon_strip'),
+  ...createWledStrip('light.living_room_strip'),
   ...createAmbilight('light.tv_ambilight'),
   ...createTrain('sensor.sncf_paris_lyon_train_1', {
     departureIn: 6,
@@ -494,7 +495,7 @@ export const entities: HassEntities = {
     state: 'on',
     attributes: {friendly_name: 'Pont Zigbee'},
   }),
-  ...createSensor('sensor.salon_button_battery', {
+  ...createSensor('sensor.living_room_button_battery', {
     state: '54',
     attributes: {
       friendly_name: 'Bouton du séjour',
@@ -533,5 +534,15 @@ export const entities: HassEntities = {
       app_name: 'Spotify',
       entity_picture: 'media/demo_cover.svg',
     },
+  }),
+
+  ...createScript('script.depart', {
+    attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
+  }),
+  ...createScript('script.temperature', {
+    attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
+  }),
+  ...createScript('script.energie', {
+    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
   }),
 } as const;

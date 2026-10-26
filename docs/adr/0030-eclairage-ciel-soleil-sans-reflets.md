@@ -39,7 +39,7 @@ Il a retenu « doux et chaud » pour le jour et la nuit du soleil réel. Le curs
 - Le nombre de lumières ne varie jamais : la journée qui passe ne change que des uniforms, sans aucune recompilation. Un E2E le vérifie. Ne jamais monter ni démonter `Daylight` selon l'heure.
 - Le soleil ne projette pas d'ombre : il en faudrait une carte de plus, et la mise à jour de toutes les ombres à chaque mouvement du soleil.
 - Les ombres des lampes récupèrent l'unité de texture qu'occupait la carte d'environnement.
-- Complète l'[ADR 0005](0005-qualite-adaptative-en-mouvement.md) : les matériaux sont désormais toujours en Lambert. Remplace la sonde de lumière précalculée de la PR #36 : son ADR 0014 passe à « Remplacé par 0030 » si elle est mergée.
+- Complète l'[ADR 0005](0005-qualite-adaptative-en-mouvement.md) : les matériaux sont désormais toujours en Lambert. Remplace la sonde de lumière précalculée de l'[ADR 0014](0014-sonde-lumiere-precalculee.md).
 
 ## Alternatives considérées
 

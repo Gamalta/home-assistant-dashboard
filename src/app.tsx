@@ -36,7 +36,6 @@ function App() {
           <Dashboard />
         </HAConnect>
       </ThemeProvider>
-      {/* Leurs scripts ne sont servis que par Vercel : ailleurs, 404. */}
       {import.meta.env.VITE_VERCEL_ENV && (
         <>
           <Analytics />

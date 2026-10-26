@@ -59,23 +59,23 @@ export const SideBarConfig: SideBarConfigType = {
     tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
-        color: 'error',
+        color: 'red',
         label: 'Mémoire',
         sensorEntityId: 'sensor.system_monitor_memory_usage',
       },
       {
-        color: 'warning',
+        color: 'orange',
         label: 'Température',
         sensorEntityId: 'sensor.system_monitor_processor_temperature',
       },
       {
-        color: 'info',
+        color: 'cyan',
         label: 'Processeur',
         sensorEntityId: 'sensor.system_monitor_processor_use',
       },
     ],
   },
-  actions: [{type: 'allLightsOff'}],
+  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
@@ -105,36 +105,36 @@ export const HouseConfig: HouseConfigType = {
   model: Demo,
   rooms: [
     {
-      id: 'Salon',
+      id: 'Living_room',
       name: 'Séjour',
       position: {x: -0.8, y: 2.5, z: 2.8},
       items: [
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.salon_light',
+          lightEntityId: 'light.living_room_light',
         },
         {
           type: 'climate',
           roomDisplay: true,
-          climateEntityId: 'climate.salon',
-          temperatureEntityId: 'sensor.salon_temperature',
-          humidityEntityId: 'sensor.salon_humidity',
+          climateEntityId: 'climate.living_room',
+          temperatureEntityId: 'sensor.living_room_temperature',
+          humidityEntityId: 'sensor.living_room_humidity',
         },
         {
           type: 'light',
-          lightEntityId: 'light.salon_hue_play',
+          lightEntityId: 'light.living_room_hue_play',
           position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
           type: 'shutter',
-          shutterEntityId: 'cover.salon_shutter',
+          shutterEntityId: 'cover.living_room_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
         },
         {
-          type: 'plug',
-          switchEntityId: 'switch.tv_plug',
-          powerEntityId: 'sensor.tv_plug_power',
+          type: 'outlet',
+          switchEntityId: 'switch.tv_outlet',
+          powerEntityId: 'sensor.tv_outlet_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
         },
         {
@@ -145,7 +145,7 @@ export const HouseConfig: HouseConfigType = {
         },
         {
           type: 'light',
-          lightEntityId: 'light.salon_strip',
+          lightEntityId: 'light.living_room_strip',
           position: {x: -3.0, y: 0.4, z: 5.6},
         },
         {
@@ -156,7 +156,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'battery',
           name: 'Interrupteur du séjour',
-          batteryEntityId: 'sensor.salon_button_battery',
+          batteryEntityId: 'sensor.living_room_button_battery',
           position: {x: 1.4, y: 1.1, z: 1.6},
         },
       ],
@@ -321,9 +321,9 @@ export const HouseConfig: HouseConfigType = {
           position: {x: 6.5, y: 1.3, z: 4.2},
         },
         {
-          type: 'plug',
-          switchEntityId: 'switch.desk_plug',
-          powerEntityId: 'sensor.desk_plug_power',
+          type: 'outlet',
+          switchEntityId: 'switch.desk_outlet',
+          powerEntityId: 'sensor.desk_outlet_power',
           position: {x: 5.8, y: 0.8, z: 1.2},
         },
       ],

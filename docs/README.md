@@ -9,13 +9,13 @@
 | [Guide : tests](guides/tests.md)                                   | Lancer et écrire les tests unitaires et E2E          |
 | [Guide : performance](guides/performance.md)                       | Mesurer le rendu et simuler la tablette              |
 | [Guide : ajouter une maison](guides/ajouter-une-maison.md)         | Brancher un nouveau modèle 3D et ses entités         |
-| [Guide : imprimante 3D](guides/imprimante-3d.md)                   | Configurer une imprimante Bambu Lab (ha-bambulab)    |
 | [Guide : prises connectées](guides/prises.md)                      | Afficher et piloter une prise et sa puissance        |
+| [Guide : ajouter un graphique](guides/graphiques.md)               | Tracer un historique avec le composant commun        |
+| [Guide : imprimante 3D](guides/imprimante-3d.md)                   | Configurer une imprimante Bambu Lab (ha-bambulab)    |
+| [Guide : mode veille](guides/mode-veille.md)                       | Mettre la tablette murale en veille après inactivité |
+| [Guide : raccourcis](guides/raccourcis.md)                         | Carrousel et scénarios de la barre latérale          |
+| [Guide : alertes](guides/alertes.md)                               | Configurer la pastille d'alertes                     |
 | [Guide : TV et médias](guides/medias.md)                           | Piloter un téléviseur, une Apple TV et ses médias    |
 | [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)           | Effets, bandeaux WLED, Hue et ambilight HyperHDR     |
-| [Guide : mode veille](guides/mode-veille.md)                       | Mettre la tablette murale en veille après inactivité |
-| [Guide : raccourcis](guides/raccourcis.md)                         | Carrousel et actions de la barre latérale            |
-| [Guide : alertes](guides/alertes.md)                               | Configurer la pastille d'alertes                     |
-| [Guide : ajouter un graphique](guides/graphiques.md)               | Tracer un historique avec le composant commun        |
 | [Guide : filtrer les étiquettes](guides/filtrer-les-etiquettes.md) | Afficher seulement certaines étiquettes de la vue 3D |
 | [Guide : appareils sur pile](guides/appareils-sur-pile.md)         | Afficher les piles et le détecteur de fumée          |

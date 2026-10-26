@@ -3,21 +3,16 @@ import {motion} from 'framer-motion';
 import {DateTime} from './DateTime';
 import {WeatherDisplay} from './WeatherDisplay';
 import {AlertBadge} from './AlertBadge';
-import {AllLightsOffAction} from './AllLightsOffAction';
 import {EntityName, FilterByDomain} from '@hakit/core';
-import type {
-  ActionConfigType,
-  AlertsConfigType,
-} from '../../../configs/sidebar';
+import {AlertsConfigType} from '../../../configs/sidebar';
 
 type HeaderCardProps = {
   weather?: FilterByDomain<EntityName, 'weather'>;
   alerts?: AlertsConfigType;
-  actions?: ActionConfigType[];
 };
 
 export function HeaderCard(props: HeaderCardProps) {
-  const {weather, alerts, actions = []} = props;
+  const {weather, alerts} = props;
 
   return (
     <Stack
@@ -31,17 +26,7 @@ export function HeaderCard(props: HeaderCardProps) {
         position: 'relative',
       }}
     >
-      <DateTime>
-        {actions.map((action, index) => {
-          const id = `layoutid-action-${index}`;
-          switch (action.type) {
-            case 'allLightsOff':
-              return (
-                <AllLightsOffAction key={id} id={id} actionConfig={action} />
-              );
-          }
-        })}
-      </DateTime>
+      <DateTime />
       {alerts && <AlertBadge config={alerts} />}
       {weather && <WeatherDisplay weather={weather} />}
     </Stack>

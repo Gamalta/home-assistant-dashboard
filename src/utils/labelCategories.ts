@@ -29,7 +29,7 @@ export const labelCategories: LabelCategory[] = [
   },
   {id: 'shutter', label: 'Volets', icon: WindowIcon, types: ['shutter']},
   {id: 'desktop', label: 'Ordinateurs', icon: ComputerIcon, types: ['desktop']},
-  {id: 'plug', label: 'Prises', icon: PowerIcon, types: ['plug']},
+  {id: 'outlet', label: 'Prises', icon: PowerIcon, types: ['outlet']},
   {id: 'media', label: 'Médias', icon: TvIcon, types: ['media', 'ambilight']},
   {
     id: 'printer3d',
