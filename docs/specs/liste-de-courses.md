@@ -31,19 +31,20 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 - **Quand** la modale est ouverte
 - **Alors** les articles sont des tuiles de 3 par ligne, avec un emoji selon leur nom (le panier pour un article inconnu)
 - **Et** les articles à acheter sont sous « À acheter », les cochés sous « Dans le panier », estompés, barrés et marqués d'une coche
+- **Et** un nom trop long est tronqué, sans élargir sa tuile
 - **Et** la modale garde la même hauteur quel que soit le nombre d'articles : la liste défile, le champ et le bouton de retrait restent en place
 
 ### Scénario : ajouter un article au clavier
 
 - **Étant donné** la modale ouverte
-- **Quand** l'utilisateur saisit un article et valide (Entrée ou +)
+- **Quand** l'utilisateur saisit un article et valide (Entrée ou +, actif seulement quand le champ n'est pas vide)
 - **Alors** l'article apparaît dans la liste, non coché, et le champ se vide
 
 ### Scénario : cocher un article
 
 - **Étant donné** un article à acheter
 - **Quand** l'utilisateur le touche
-- **Alors** il est coché et barré ; le toucher de nouveau le décoche
+- **Alors** il est coché et barré, et sa tuile glisse sous « Dans le panier » ; le toucher de nouveau le décoche
 
 ### Scénario : retirer les articles cochés
 
