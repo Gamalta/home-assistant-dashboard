@@ -13,6 +13,8 @@ export type ConfigurationOptions = {
   heatmapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
+  // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
+  hiddenCategories: string[];
 };
 
 export type RendererInfo = {
@@ -66,6 +68,7 @@ const defaultConfiguration: ConfigurationOptions = {
   heatmapShader: false,
   shadows: false,
   webGPU: false,
+  hiddenCategories: [],
 };
 
 const defaultRendererInfo: RendererInfo = {
