@@ -20,6 +20,7 @@ export default defineConfig({
       org: 'gamalta',
       project: 'home-assistant-dashboard',
       authToken: process.env.SENTRY_AUTH_TOKEN,
+      telemetry: false,
       release: { name: sentryRelease, },
       sourcemaps: {
         // On évite d'exposer les sourcemaps en production

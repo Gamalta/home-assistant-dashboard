@@ -1,3 +1,4 @@
+import type * as THREE from 'three';
 import {Room} from '../../../House/Room';
 import {RoomProvider} from '../../../../contexts/RoomContext';
 import {HouseConfigType} from '../../../../configs/house';
@@ -7,12 +8,13 @@ import {isLabelShown} from '../../../../utils/labelCategories';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
+  model: THREE.Object3D;
 };
 
 const heatmapDisplay = ['climate', 'temperature'];
 
 export function Room3d(props: RoomProps) {
-  const {room} = props;
+  const {room, model} = props;
   const {configuration} = useAppContext();
 
   const cleanedRoom = {
@@ -34,7 +36,7 @@ export function Room3d(props: RoomProps) {
     <RoomProvider>
       <Room room={labelledRoom} />
       {cleanedRoom.items.map((item, id) => (
-        <RoomItem3d key={`item-3d-${id}`} itemConfig={item} />
+        <RoomItem3d key={`item-3d-${id}`} itemConfig={item} model={model} />
       ))}
     </RoomProvider>
   );

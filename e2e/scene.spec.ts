@@ -31,3 +31,12 @@ test('rend la maison en 3D', async ({page}) => {
     .poll(() => countCanvasColors(page), {timeout: 30_000})
     .toBeGreaterThan(1000);
 });
+
+test('affiche le chargeur jusqu’à ce que la scène soit prête', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByRole('progressbar').first()).toBeVisible();
+  await waitForScene(page);
+  await expect(page.getByRole('progressbar')).toHaveCount(0);
+});
