@@ -1,18 +1,18 @@
-# Carrousel et scénarios de la barre latérale
+# Carrousel et menu rapide de la barre latérale
 
 La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](../adr/0035-carrousel-de-cartes-et-actions.md)). Deux listes se déclarent dans `SideBarConfig`, dans le `House.ts` de la maison :
 
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
   ],
 };
 ```
 
-- `scenarios` : un bouton rond « Scénarios » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
+- `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
@@ -27,7 +27,7 @@ Sans l'une ou l'autre liste, rien ne s'affiche à sa place.
 // Avant
 shortcuts: [{type: 'allLightsOff'}],
 // Après
-scenarios: ['script.tout_eteindre'],
+scenarios: ['script.leave_home'],
 ```
 
 Les autres types gardent leur place et leurs options dans `shortcuts`.
@@ -38,7 +38,7 @@ Un scénario est un [script Home Assistant](https://www.home-assistant.io/integr
 
 ```yaml
 script:
-  depart:
+  leave_home:
     alias: Départ
     icon: mdi:exit-run
     sequence:

@@ -9,7 +9,7 @@ type SideBarConfigType = {
     powerStatusEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
     graphs: SystemGraphConfigType[];
   };
-  /** Scripts Home Assistant lancés d'un appui, en colonne contre la barre latérale. */
+  /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
   /** Cartes du carrousel, sous les personnes. */
   shortcuts?: ShortcutConfigType[];

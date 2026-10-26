@@ -7,7 +7,7 @@ import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {ScenarioAction} from './ScenarioAction';
 
-export function ScenarioBar() {
+export function QuickMenu() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
@@ -23,7 +23,7 @@ export function ScenarioBar() {
 
   return (
     <SpeedDial
-      ariaLabel="Scénarios"
+      ariaLabel="Menu rapide"
       direction="down"
       open={open}
       // Au toucher seulement, sans survol : après un appui, Chromium sous
@@ -33,7 +33,7 @@ export function ScenarioBar() {
       icon={
         launched ? (
           // data-testid explicite : MUI ne le pose qu'en développement.
-          <CheckIcon data-testid="coche" />
+          <CheckIcon data-testid="launched" />
         ) : (
           <SpeedDialIcon icon={<AutoAwesomeIcon />} openIcon={<CloseIcon />} />
         )
