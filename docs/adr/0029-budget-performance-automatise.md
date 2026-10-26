@@ -24,12 +24,12 @@ Un seul code de mesure, `scripts/bench/measure.ts`, sert à deux outils. Il ne s
 
 **En CI, seulement des comptes** : `e2e/budget.spec.ts`, sur la démo, avec les autres E2E sous SwiftShader ([ADR 0010](0010-strategie-de-tests.md)).
 
-| Budget de l'ADR 0009                   | En CI | Remarque                                                 |
-| -------------------------------------- | ----- | -------------------------------------------------------- |
-| ≤ 150 draw calls par image au repos    | oui   | options par défaut                                       |
-| 0 programme compilé pendant 1 rotation | oui   | par défaut ; avec les ombres, en `test.fail` jusqu'à #39 |
-| Aucune tâche longue > 50 ms            | non   | c'est une durée                                          |
-| Modèle ≤ 2 Mo                          | oui   | taille de `Demo.glb`                                     |
+| Budget de l'ADR 0009                   | En CI | Remarque                      |
+| -------------------------------------- | ----- | ----------------------------- |
+| ≤ 150 draw calls par image au repos    | oui   | options par défaut            |
+| 0 programme compilé pendant 1 rotation | oui   | par défaut et avec les ombres |
+| Aucune tâche longue > 50 ms            | non   | c'est une durée               |
+| Modèle ≤ 2 Mo                          | oui   | taille de `Demo.glb`          |
 
 Les tests de rotation ont un délai triplé (`test.slow()`) : l'inertie de la caméra se compte en images, et une image est lente en rendu logiciel. Aucun test ne pose de seuil de durée.
 
@@ -40,7 +40,7 @@ Les tests de rotation ont un délai triplé (`test.slow()`) : l'inertie de la ca
 ## Conséquences
 
 - Une PR qui dépasse 150 draw calls ou recompile pendant un geste sur la démo échoue en CI, avant d'atteindre la tablette.
-- Le défaut connu des ombres (10 programmes au premier geste, 5 au début et 5 à la fin) reste visible dans `e2e/budget.spec.ts`, en `test.fail`. Une fois #39 fusionnée, le test passe et Playwright le signale : il faut alors retirer `test.fail`.
+- Le défaut connu des ombres (10 programmes au premier geste, 5 au début et 5 à la fin) est corrigé par #39, fusionnée dans `dev` : `e2e/budget.spec.ts` vérifie aussi le geste avec les ombres, sans `test.fail`.
 - Les E2E durent plus longtemps. En CI, la suite a pris 2 min 35 sur un runner seul, et 4 min 45 quand les runs du push et de la pull request tournent en même temps (job complet : 6 min). En local, chaque test de rotation prend de 40 à 50 s. Les rotations des E2E sont donc des gestes courts (10 mouvements au lieu de 60) : ils déclenchent toujours le début et la fin du mouvement.
 - Une durée ne se compare qu'à une autre durée mesurée sur la même machine, avec le même Chrome et le même `--cpu`. La sortie de `--compare` le rappelle quand l'environnement diffère. D'un lancement à l'autre, une durée varie de quelques dixièmes de milliseconde : seul un écart net compte. Les programmes au démarrage varient aussi de quelques unités, selon l'ordre de chargement (HDR, états des entités) : ils n'ont pas de budget.
 - `apartment` ne se mesure qu'en local, quand le sous-module est présent.
