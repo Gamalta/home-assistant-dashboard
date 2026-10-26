@@ -37,25 +37,28 @@ export function MortgageCostChart(props: MortgageCostChartProps) {
   const insurance = total(series[2].data);
 
   return (
+    // Titre et légende au-dessus du tracé : le survol ne passe pas dessus.
     <Stack spacing={1}>
+      <Stack>
+        <Typography variant="h4">
+          {formatEuros(interest + insurance)}
+        </Typography>
+        <Typography color="textSecondary">
+          Coût du crédit : {formatEuros(interest)} d'intérêts et{' '}
+          {formatEuros(insurance)} d'assurance
+        </Typography>
+      </Stack>
+      <MortgageLegend items={series} />
       <Chart
         bars
         x={years.map(year => new Date(year.year, 0, 1).getTime())}
+        max={Math.max(
+          ...years.map(year => year.principal + year.interest + year.insurance),
+        )}
         formatX={time => String(new Date(time).getFullYear())}
         series={series.map(item => ({...item, format: formatEuros}))}
-        sx={{height: 200, width: 564}}
-      >
-        <Stack>
-          <Typography variant="h4">
-            {formatEuros(interest + insurance)}
-          </Typography>
-          <Typography color="textSecondary">
-            Coût du crédit : {formatEuros(interest)} d'intérêts et{' '}
-            {formatEuros(insurance)} d'assurance
-          </Typography>
-        </Stack>
-      </Chart>
-      <MortgageLegend items={series} />
+        sx={{height: 140, width: 564}}
+      />
     </Stack>
   );
 }

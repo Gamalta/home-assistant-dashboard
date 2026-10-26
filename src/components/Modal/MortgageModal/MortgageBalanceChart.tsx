@@ -24,10 +24,24 @@ export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
   const colorOf = (index: number) => COLORS[index % COLORS.length];
 
   return (
+    // Titre et légende au-dessus du tracé : le survol ne passe pas dessus.
     <Stack spacing={1}>
+      <Stack>
+        <Typography variant="h4">
+          {formatEuros(status.remainingPrincipal)}
+        </Typography>
+        <Typography color="textSecondary">Capital restant dû</Typography>
+      </Stack>
+      <MortgageLegend
+        items={loans.map((loan, index) => ({
+          label: `${loan.label} · ${Math.floor(loansStatus([loan], now).repaidRatio * 100)} %`,
+          color: colorOf(index),
+        }))}
+      />
       <Chart
         x={x}
         min={0}
+        max={status.principal}
         formatX={time => String(new Date(time).getFullYear())}
         series={loans.map((loan, index) => ({
           id: `loan-${index}`,
@@ -36,20 +50,7 @@ export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
           color: colorOf(index),
           format: formatEuros,
         }))}
-        sx={{height: 200, width: 564}}
-      >
-        <Stack>
-          <Typography variant="h4">
-            {formatEuros(status.remainingPrincipal)}
-          </Typography>
-          <Typography color="textSecondary">Capital restant dû</Typography>
-        </Stack>
-      </Chart>
-      <MortgageLegend
-        items={loans.map((loan, index) => ({
-          label: `${loan.label} · ${Math.floor(loansStatus([loan], now).repaidRatio * 100)} %`,
-          color: colorOf(index),
-        }))}
+        sx={{height: 140, width: 564}}
       />
     </Stack>
   );
