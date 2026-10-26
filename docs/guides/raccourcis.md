@@ -5,7 +5,7 @@ La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](.
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.leave_home', 'script.temperature', 'script.energy'],
+  scenarios: ['script.leave_home', 'script.energy'],
   shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
@@ -13,14 +13,14 @@ export const SideBarConfig: SideBarConfigType = {
 };
 ```
 
-- `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
+- `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie l'action « Température » puis la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `mortgages` : une entrée « Crédit » après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
 - `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
 - `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
-Sans scénario, prêt ni liste de courses, le menu ne s'affiche pas. Sans carte, le carrousel non plus.
+Sans carte, le carrousel ne s'affiche pas. Le menu, lui, propose toujours « Température », même sans scénario ni prêt.
 
 ## Migration depuis les tuiles
 
@@ -56,6 +56,10 @@ script:
 ```
 
 Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit à le lancer. Le menu tient 5 ou 6 scénarios : au-delà, il descend trop sur la vue 3D.
+
+## Température
+
+La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Système ne le propose plus ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
 
 ## Crédit immobilier
 

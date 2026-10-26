@@ -12,6 +12,7 @@ import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {MortgageModal} from '../Modal/MortgageModal';
 import {ShoppingListModal} from '../Modal/ShoppingListModal';
+import {HeatmapAction} from './HeatmapAction';
 import {ScenarioAction} from './ScenarioAction';
 
 export function QuickMenu() {
@@ -30,8 +31,6 @@ export function QuickMenu() {
   const scenarios = houseConfig?.sideBar.scenarios ?? [];
   const mortgages = houseConfig?.sideBar.mortgages ?? [];
   const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
-  if (!scenarios.length && !mortgages.length && !shoppingListEntityId)
-    return null;
 
   return (
     <>
@@ -66,6 +65,7 @@ export function QuickMenu() {
           zIndex: 1,
         }}
       >
+        <HeatmapAction onToggle={() => setOpen(false)} />
         {scenarios.map(scriptEntityId => (
           <ScenarioAction
             key={scriptEntityId}
