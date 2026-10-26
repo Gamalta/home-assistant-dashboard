@@ -13,7 +13,7 @@ En haut de la vue 3D, une rangée de puces affiche ou masque les étiquettes par
 Un nouveau type d'élément sans catégorie reste toujours affiché, sans puce. Pour le rendre filtrable, ajouter une ligne à `labelCategories` dans `src/utils/labelCategories.ts`, ou compléter les `types` d'une catégorie existante :
 
 ```ts
-{id: 'plug', label: 'Prises', icon: PowerIcon, types: ['plug']},
+{id: 'outlet', label: 'Prises', icon: PowerIcon, types: ['outlet']},
 ```
 
 Le choix de l'interface et du stockage est expliqué dans l'[ADR 0033](../adr/0033-filtre-des-etiquettes-par-categorie.md).

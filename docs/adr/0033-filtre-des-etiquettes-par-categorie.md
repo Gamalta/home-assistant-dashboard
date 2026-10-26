@@ -22,7 +22,7 @@ Contraintes :
 **Une table, seul endroit à compléter** : `labelCategories` dans `src/utils/labelCategories.ts` associe chaque catégorie (identifiant, libellé, icône) à ses types d'items. Plusieurs types partagent une catégorie : `climate` et `temperature` forment « Climat ». Un type absent de la table n'a pas de puce et reste toujours affiché. Ajouter un type revient à ajouter une ligne :
 
 ```ts
-{id: 'plug', label: 'Prises', icon: PowerIcon, types: ['plug']},
+{id: 'outlet', label: 'Prises', icon: PowerIcon, types: ['outlet']},
 ```
 
 ou à compléter les `types` d'une catégorie existante (`types: ['light', 'ledStrip']`).

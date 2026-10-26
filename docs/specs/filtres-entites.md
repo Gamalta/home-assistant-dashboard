@@ -5,7 +5,7 @@
 
 ## Problème
 
-Chaque pièce et chaque élément de la vue 3D affichent une étiquette : lumières, climatisations, thermomètres, volets, ordinateurs. Sur la démo, cela fait déjà 26 boutons sur 19 étiquettes, qui se chevauchent par endroits (le volet de la cuisine cache sa température). Sur la tablette murale, on cherche souvent une seule chose (« quels volets sont ouverts ? », « quelle température dans les chambres ? ») et le reste gêne.
+Chaque pièce et chaque élément de la vue 3D affichent une étiquette : lumières, climatisations, thermomètres, volets, ordinateurs. Sur la démo, cela fait déjà 31 boutons sur 24 étiquettes, qui se chevauchent par endroits (le volet de la cuisine cache sa température). Sur la tablette murale, on cherche souvent une seule chose (« quels volets sont ouverts ? », « quelle température dans les chambres ? ») et le reste gêne.
 
 ## Objectif
 
