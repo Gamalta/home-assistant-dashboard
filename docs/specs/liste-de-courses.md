@@ -67,6 +67,6 @@ Consulter et modifier la liste de courses depuis l'entrée « Courses » du menu
 
 ## Impacts
 
-- Config : `shoppingListEntityId` dans `SideBarConfigType`. L'entrée « Courses » s'ajoute après les scénarios.
+- Config : `shoppingListEntityId` dans `SideBarConfigType`. L'entrée « Courses » s'ajoute à la fin du menu, après les scénarios et le crédit.
 - Mock : la liste est simulée, avec l'abonnement `todo/item/subscribe` et les services `todo.*`.
 - Dépendance : `emojibase-data`, chargée à la première ouverture. Les images viennent de jsDelivr ([ADR 0042](../adr/0042-emojis-apple-et-mots-cles-emojibase.md)).
