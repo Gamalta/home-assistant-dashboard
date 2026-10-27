@@ -288,3 +288,22 @@ test('le menu rapide reste sur la vue 3D', async ({page}) => {
   for (const name of ['Départ', 'Crédit', 'Courses'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 });
+
+test('le crédit tient dans la largeur du téléphone', async ({page}) => {
+  await page.getByRole('button', {name: 'Menu rapide'}).tap();
+  await page.getByRole('menuitem', {name: 'Crédit'}).tap();
+
+  const title = page.getByRole('heading', {name: 'Crédit', exact: true});
+  await expect(title).toBeVisible();
+  const sheet = title.locator('xpath=../..');
+  const fits = () =>
+    sheet.evaluate(element => element.scrollWidth <= element.clientWidth);
+  await expect(page.getByRole('img', {name: /remboursé/})).toBeVisible();
+  expect(await fits()).toBe(true);
+
+  await page.getByRole('button', {name: 'Historique'}).tap();
+  await expect(
+    page.getByRole('img', {name: 'Capital, Intérêts, Assurance'}),
+  ).toBeVisible();
+  expect(await fits()).toBe(true);
+});
