@@ -67,15 +67,13 @@ La première action du menu n'est pas un script : « Température » affiche la 
 mortgages: ['sensor.loan_main', 'sensor.loan_ptz'],
 ```
 
-Chaque prêt est une entité Home Assistant qui fournit son tableau d'amortissement ([ADR 0022](../adr/0022-echeancier-lu-dans-home-assistant.md)). Trois attributs associent chacun un mois `AAAA-MM` à un montant en euros :
+Chaque prêt est une entité Home Assistant qui fournit son tableau d'amortissement ([ADR 0043](../adr/0043-tableau-d-amortissement-une-ligne-par-mois.md)). Son attribut `amortization` associe chaque mois `AAAA-MM` à sa ligne du tableau de la banque, en euros : `[capital, intérêts, assurance]`.
 
-| Attribut    | Montant du mois                                    |
-| ----------- | -------------------------------------------------- |
-| `principal` | Part de capital remboursée ; ses mois font le prêt |
-| `interest`  | Part d'intérêts                                    |
-| `insurance` | Assurance, facultative                             |
+- Une ligne par échéance, l'assurance étant facultative : `[102.11, 37.54]`.
+- La somme des parts de capital fait le montant emprunté : la dernière ligne solde le prêt.
+- Un mois de différé garde sa ligne, avec un capital à 0.
 
-Le `friendly_name` nomme le prêt dans la légende. L'état n'est pas lu. Un capteur template suffit, avec les montants du tableau de la banque :
+Le `friendly_name` nomme le prêt dans la légende. L'état n'est pas lu. Un capteur template suffit, avec les montants écrits en dur :
 
 ```yaml
 template:
@@ -84,15 +82,17 @@ template:
         default_entity_id: sensor.loan_main
         state: "{{ now().strftime('%Y-%m') }}"
         attributes:
-          principal: >
-            {{ {'2025-02': 120.42, '2025-03': 121.05, '2025-04': 121.18} }}
-          interest: >
-            {{ {'2025-02': 27.71, '2025-03': 21.92, '2025-04': 21.79} }}
-          insurance: >
-            {{ {'2025-02': 5.40, '2025-03': 5.40, '2025-04': 5.40} }}
+          # mois: [capital, intérêts, assurance]
+          amortization: >
+            {% set amortization = {
+              '2025-02': [98.40, 41.25, 6.30],
+              '2025-03': [102.11, 37.54, 6.30],
+              '2025-04': [102.24, 37.41, 6.30],
+            } %}
+            {{ amortization }}
 ```
 
-Sur 25 ans, les attributs dépassent les 16 Ko que l'enregistreur accepte : il les ignore avec un avertissement, sans gêner le dashboard. Pour éviter l'avertissement, exclure ces entités de l'enregistreur (`recorder: exclude: entities:`).
+Sur 25 ans, l'attribut pèse environ 9 Ko, sous les 16 Ko que l'enregistreur accepte.
 
 Une seule entrée « Crédit » réunit tous les prêts. Un appui referme le menu et ouvre la modale : une maison qui se remplit jusqu'à la part remboursée et, à côté, les totaux de tous les prêts (capital restant dû, mensualité et assurance du mois, dernière échéance avec les échéances payées, intérêts payés et restants). L'échéance d'un mois compte dès le 1er du mois. Le bouton « Historique » affiche deux graphiques :
 
