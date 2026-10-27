@@ -272,8 +272,8 @@ test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
   await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
 });
 
-test('le menu Scénarios reste sur la vue 3D', async ({page}) => {
-  const dial = page.getByRole('button', {name: 'Scénarios'});
+test('le menu rapide reste sur la vue 3D', async ({page}) => {
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
   const header = (await page.getByRole('banner').boundingBox())!;
   const box = (await dial.boundingBox())!;
   expect(box.y).toBeGreaterThan(header.y + header.height);
@@ -282,5 +282,9 @@ test('le menu Scénarios reste sur la vue 3D', async ({page}) => {
   await dial.tap();
 
   await expect(dial).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.getByRole('menuitem', {name: 'Départ'})).toBeVisible();
+  await expect(
+    page.getByRole('menuitemcheckbox', {name: 'Température'}),
+  ).toBeVisible();
+  for (const name of ['Départ', 'Crédit', 'Courses'])
+    await expect(page.getByRole('menuitem', {name})).toBeVisible();
 });

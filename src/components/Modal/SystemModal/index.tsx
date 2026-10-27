@@ -72,11 +72,6 @@ export function SystemModal(props: SystemModalProps) {
           />
           <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
           <OptionRow
-            label="Carte des températures"
-            option="heatmapShader"
-            disabled={!is3d}
-          />
-          <OptionRow
             label="WebGPU"
             option="webGPU"
             disabled={!is3d || !webGPUSupported}

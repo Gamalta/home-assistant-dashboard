@@ -25,7 +25,7 @@ Contraintes :
 - **Bascule sur la largeur** : `useIsMobile` lit `theme.breakpoints.down('sm')` (moins de 600 px) dès le premier rendu (`noSsr`). Sinon, la disposition tablette et sa scène 3D se monteraient avant de basculer. `Dashboard` rend alors `MobileDashboard` à la place des panneaux. Seule la largeur compte : un téléphone en paysage garde la disposition tablette.
 - **En-tête** : une pastille en haut de l'écran, avec le sélecteur de vue à gauche et les avatars à droite. Il n'y a pas de barre en bas : la 3D prend toute la hauteur.
   - Le sélecteur est un `ToggleButtonGroup` de MUI, « 3D » et « Pièces ».
-  - La vue 3D garde la scène, le menu Scénarios sous l'en-tête et un carrousel de pièces en `scroll-snap`, comme celui de l'[ADR 0035](0035-carrousel-de-cartes-et-actions.md).
+  - La vue 3D garde la scène, le menu rapide sous l'en-tête et un carrousel de pièces en `scroll-snap`, comme celui de l'[ADR 0035](0035-carrousel-de-cartes-et-actions.md).
   - La vue Pièces liste toutes les pièces, avec les filtres Toutes / Lumières / Volets / Climat.
 - **La 3D reste montée sous la vue Pièces** : elle est cachée (`visibility: hidden`) et mise en pause (`frameloop="never"`), puis une image au retour rattrape les changements. Démonter le `Canvas` coûterait une recompilation des shaders à chaque retour.
 - **Étiquettes de la pièce choisie seulement** : `Room3d` reçoit `showLabels`. `RoomItem3d` reste monté, pour que les lumières 3D suivent toujours Home Assistant.

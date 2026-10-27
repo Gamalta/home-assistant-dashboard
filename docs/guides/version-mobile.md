@@ -4,12 +4,12 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 
 ## Ce qu'on trouve où
 
-| Zone          | Contenu                                                                               | D'où ça vient                    |
-| ------------- | ------------------------------------------------------------------------------------- | -------------------------------- |
-| En-tête       | Sélecteur « 3D » / « Pièces », avatars                                                | `SideBarConfig` (personnes)      |
-| Vue 3D        | Scène 3D cadrée sur une pièce, menu Scénarios, carrousel des pièces                   | `HouseConfig.rooms`, `scenarios` |
-| Vue Pièces    | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`      |
-| Feuille Foyer | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                  |
+| Zone          | Contenu                                                                               | D'où ça vient                                     |
+| ------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| En-tête       | Sélecteur « 3D » / « Pièces », avatars                                                | `SideBarConfig` (personnes)                       |
+| Vue 3D        | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                      | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
+| Vue Pièces    | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`                       |
+| Feuille Foyer | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                                   |
 
 ## Gestes
 

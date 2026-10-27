@@ -157,40 +157,32 @@ const total = (day: DayConsumption) =>
 
 Par mois, même appel : `x` porte le premier jour de chaque mois et `formatX` affiche `{month: 'long', year: 'numeric'}`.
 
-### Courbe sur des années : capital restant dû
+### Aires empilées sur des années : capital restant dû par prêt
 
-Les années écoulées en aire, la projection en pointillés ; les deux séries se rejoignent au dernier anniversaire du prêt.
+Une série principale par prêt : les aires s'empilent, et le haut de la pile donne le total. Les couleurs viennent de la palette, et une légende les nomme (`MortgageBalanceChart`).
+
+Avec une légende, le titre et la légende vont au-dessus du graphique, pas par-dessus : sinon la ligne du survol les traverse. `max` rend alors au tracé le tiers haut que `chartDomain` garde pour le titre.
 
 ```tsx
-const points = yearlyBalance(mortgage);
-const balance = points.map(point => point.remaining);
-const last = Math.floor(status.paymentsMade / 12);
+const {x, balances} = yearlyBalances(loans);
 
 <Chart
-  bleed
-  x={points.map(point => point.date.getTime())}
+  x={x}
   min={0}
+  max={status.principal}
   formatX={time => String(new Date(time).getFullYear())}
-  series={[
-    {
-      id: 'balance',
-      label: 'Capital restant dû',
-      data: balance.map((value, i) => (i <= last ? value : null)),
-      format: formatEuros,
-    },
-    {
-      id: 'projection',
-      label: 'Projection',
-      data: balance.map((value, i) => (i >= last ? value : null)),
-      variant: 'comparison',
-      format: formatEuros,
-    },
-  ]}
-  sx={{height: 300, width: 500}}
->
-  <Typography variant="h4">{formatEuros(status.remainingPrincipal)}</Typography>
-</Chart>;
+  series={loans.map((loan, index) => ({
+    id: `loan-${index}`,
+    label: loan.label,
+    data: balances[index],
+    color: COLORS[index % COLORS.length],
+    format: formatEuros,
+  }))}
+  sx={{height: 140, width: 564}}
+/>;
 ```
+
+Avec `bars`, les mêmes séries s'empilent en barres : `MortgageCostChart` montre ainsi le capital, les intérêts et l'assurance payés chaque année.
 
 ### Carte compacte
 

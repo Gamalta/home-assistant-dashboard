@@ -122,11 +122,11 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche « Système »
 - **Alors** la modale Système s'ouvre
 
-### Scénario : le menu Scénarios reste sur la vue 3D
+### Scénario : le menu rapide reste sur la vue 3D
 
-- **Étant donné** une maison avec des scénarios configurés
+- **Étant donné** une maison avec des scénarios, un crédit et une liste de courses configurés
 - **Quand** la vue 3D s'affiche
-- **Alors** le bouton rond « Scénarios » est sous l'en-tête, à gauche, et déplie la liste des scripts
+- **Alors** le bouton rond « Menu rapide » est sous l'en-tête, à gauche, et déplie la carte des températures, les scénarios, le crédit et les courses
 
 ## Critères d'acceptation
 

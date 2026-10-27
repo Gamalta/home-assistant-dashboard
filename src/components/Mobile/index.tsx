@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import {useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
 import House from '../3d/House';
-import {ScenarioBar} from '../ScenarioBar';
+import {QuickMenu} from '../QuickMenu';
 import {MobileHeader} from './MobileHeader';
 import {RoomCarousel} from './RoomCarousel';
 import {RoomList} from './RoomList';
@@ -33,7 +33,7 @@ export function MobileDashboard() {
         }}
       >
         <House focusRoomId={room?.id} paused={view !== 'maison'} />
-        <ScenarioBar />
+        <QuickMenu />
         <RoomCarousel
           rooms={rooms}
           roomId={room?.id}
