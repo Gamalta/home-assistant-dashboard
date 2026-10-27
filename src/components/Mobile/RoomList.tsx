@@ -29,9 +29,10 @@ export function RoomList(props: RoomListProps) {
         inset: 0,
         overflowY: 'auto',
         // Sous l'en-tête, posé par-dessus la liste.
-        pt: 11,
+        pt: 'calc(env(safe-area-inset-top) + 76px)',
         px: 2,
-        pb: 2,
+        // Au-dessus de la barre d'accueil de l'iPhone.
+        pb: 'max(16px, env(safe-area-inset-bottom))',
         bgcolor: 'background.default',
         // Les cartes gardent leur hauteur : c'est la liste qui défile.
         '& > *': {flexShrink: 0},

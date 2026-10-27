@@ -24,16 +24,22 @@ export function MobileHeader(props: MobileHeaderProps) {
       direction="row"
       sx={theme => ({
         position: 'absolute',
-        top: 12,
-        left: 12,
-        right: 12,
+        top: 0,
+        left: 0,
+        right: 0,
         zIndex: 2,
         alignItems: 'center',
         justifyContent: 'space-between',
-        p: 1,
-        borderRadius: 3,
-        // Translucide : la maison reste devinable sous l'en-tête.
-        bgcolor: `color-mix(in srgb, ${(theme.vars ?? theme).palette.background.primary} 90%, transparent)`,
+        // Deux îlots, sous l'encoche et l'heure du téléphone.
+        pt: 'calc(env(safe-area-inset-top) + 8px)',
+        px: 1.5,
+        pb: 1,
+        // Voile : l'heure reste lisible sur la 3D, et la liste s'efface sous
+        // les îlots.
+        background: `linear-gradient(color-mix(in srgb, ${(theme.vars ?? theme).palette.background.default} 90%, transparent) env(safe-area-inset-top), transparent)`,
+        // Entre les îlots, les gestes vont à la scène 3D.
+        pointerEvents: 'none',
+        '& > *': {pointerEvents: 'auto'},
       })}
     >
       <ViewToggle value={view} onChange={onViewChange} />
@@ -42,7 +48,7 @@ export function MobileHeader(props: MobileHeaderProps) {
           <ButtonBase
             aria-label="Foyer"
             onClick={() => setFoyer(true)}
-            sx={{p: 0.5, borderRadius: 5}}
+            sx={{p: 0.5, borderRadius: 50, bgcolor: 'background.paper'}}
           >
             {persons.map((person, index) => (
               <HeaderAvatar

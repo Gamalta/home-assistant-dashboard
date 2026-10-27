@@ -33,6 +33,14 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Alors** un en-tête s'affiche en haut de l'écran, avec le sélecteur « 3D » / « Pièces » et les avatars
 - **Et** il n'y a ni barre latérale, ni barre en bas, ni heure, ni météo
 
+### Scénario : l'en-tête et le carrousel évitent l'encoche et la barre d'accueil
+
+- **Étant donné** un iPhone à Dynamic Island en portrait, avec une zone sûre de 59 px en haut et de 34 px en bas
+- **Quand** le dashboard s'ouvre
+- **Alors** le sélecteur et les avatars s'affichent en deux îlots, sous l'heure et l'encoche
+- **Et** le carrousel s'arrête au-dessus de la barre d'accueil
+- **Et** entre les deux îlots, le doigt atteint la scène 3D
+
 ### Scénario : la tablette garde sa disposition à partir de 600 px
 
 - **Étant donné** un écran de 1280 × 800
@@ -148,6 +156,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des feuilles du bas. Celle du crédit y empile la maison et les chiffres.
+- Page : `viewport-fit=cover`. L'en-tête, le menu rapide, la liste, le carrousel et les feuilles du bas suivent les zones sûres de l'écran.
 - `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
 - Performance : voir la section Mesures.
 

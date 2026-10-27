@@ -55,7 +55,8 @@ export function RoomCarousel(props: RoomCarouselProps) {
         right: 0,
         bottom: 0,
         zIndex: 1,
-        pb: 2,
+        // Au-dessus de la barre d'accueil de l'iPhone.
+        pb: 'max(16px, env(safe-area-inset-bottom))',
         // Entre les cartes, les gestes vont à la scène 3D.
         pointerEvents: 'none',
         '& > *': {pointerEvents: 'auto'},

@@ -88,6 +88,34 @@ test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
   await expect(page.getByRole('button', {name: 'Météo'})).toHaveCount(0);
 });
 
+test("l'en-tête et le carrousel évitent l'encoche et la barre d'accueil", async ({
+  page,
+}) => {
+  // Zones sûres d'un iPhone à Dynamic Island, en portrait.
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride', {
+    insets: {top: 59, bottom: 34},
+  });
+  const header = page.getByRole('banner');
+  const views = (await header
+    .getByRole('group', {name: 'Affichage'})
+    .boundingBox())!;
+  const foyer = (await header
+    .getByRole('button', {name: 'Foyer'})
+    .boundingBox())!;
+  const cards = (await page.getByLabel('Pièces', {exact: true}).boundingBox())!;
+
+  expect(views.y).toBeGreaterThanOrEqual(59);
+  expect(foyer.y).toBeGreaterThanOrEqual(59);
+  expect(cards.y + cards.height).toBeLessThanOrEqual(844 - 34);
+  // Entre les deux îlots, le doigt atteint la scène 3D.
+  const between = await page.evaluate(
+    y => !!document.elementFromPoint(innerWidth / 2, y)?.closest('header'),
+    views.y + views.height / 2,
+  );
+  expect(between).toBe(false);
+});
+
 test.describe('tablette', () => {
   test.use({viewport: {width: 1280, height: 800}});
 

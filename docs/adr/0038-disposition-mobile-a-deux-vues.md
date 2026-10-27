@@ -23,8 +23,11 @@ Contraintes :
 ## Décision
 
 - **Bascule sur la largeur** : `useIsMobile` lit `theme.breakpoints.down('sm')` (moins de 600 px) dès le premier rendu (`noSsr`). Sinon, la disposition tablette et sa scène 3D se monteraient avant de basculer. `Dashboard` rend alors `MobileDashboard` à la place des panneaux. Seule la largeur compte : un téléphone en paysage garde la disposition tablette.
-- **En-tête** : une pastille en haut de l'écran, avec le sélecteur de vue à gauche et les avatars à droite. Il n'y a pas de barre en bas : la 3D prend toute la hauteur.
+- **En-tête** : deux îlots en haut de l'écran, le sélecteur de vue à gauche, sous l'heure, et les avatars à droite, sous la batterie. Il n'y a pas de barre en bas : la 3D prend toute la hauteur.
   - Le sélecteur est un `ToggleButtonGroup` de MUI, « 3D » et « Pièces ».
+  - La page passe sous l'encoche et la barre d'accueil (`viewport-fit=cover`). Les îlots se posent sous la zone sûre du haut (`env(safe-area-inset-top)`), et entre eux les gestes vont à la scène.
+  - Un voile de la couleur du fond, en dégradé, garde l'heure lisible sur la 3D et efface la liste qui défile sous les îlots.
+  - Le carrousel, la liste et les feuilles du bas s'arrêtent au-dessus de la barre d'accueil (`env(safe-area-inset-bottom)`). En paysage, `#root` s'écarte de l'encoche.
   - La vue 3D garde la scène, le menu rapide sous l'en-tête et un carrousel de pièces en `scroll-snap`, comme celui de l'[ADR 0035](0035-carrousel-de-cartes-et-actions.md).
   - La vue Pièces liste toutes les pièces, avec les filtres Toutes / Lumières / Volets / Climat.
 - **La 3D reste montée sous la vue Pièces** : elle est cachée (`visibility: hidden`) et mise en pause (`frameloop="never"`), puis une image au retour rattrape les changements. Démonter le `Canvas` coûterait une recompilation des shaders à chaque retour.
@@ -56,10 +59,14 @@ Contraintes :
 - Une pièce d'un seul équipement a une carte aussi haute que les autres, en partie vide.
 - Toucher le fond d'une modale la ferme, sur la tablette aussi.
 - Le téléphone en paysage et la tablette en portrait restent sur la disposition tablette.
+- Un élément collé à un bord de l'écran doit ajouter la zone sûre à sa marge. Chromium ne la simule que par le protocole DevTools : le test E2E la fixe avec `Emulation.setSafeAreaInsetsOverride`.
 
 ## Alternatives considérées
 
 - **Barre d'onglets en bas** (première version intégrée) : elle prend 84 px à la 3D. L'en-tête y répétait aussi l'heure et la météo, que le téléphone affiche déjà.
+- **Une pastille pleine largeur** (deuxième version intégrée) : posée à 12 px du haut, elle passait sous l'heure et l'encoche de l'iPhone. Décalée sous la zone sûre, elle cache le haut de la scène sur toute la largeur.
+- **Une barre sous la barre d'état**, comme sur iOS : l'heure reste toujours lisible, mais la barre prend environ 110 px à la 3D.
+- **Le menu rapide dans l'en-tête**, entre les deux îlots : une rangée de boutons en moins, mais il faudrait toucher au menu rapide partagé avec la tablette.
 - **Barre latérale responsive en CSS** (piste A, 3D plein écran et feuille) : moins de code, mais les étiquettes de 12 pièces restent illisibles sur 390 px et les gestes de la feuille croisent ceux de la caméra.
 - **3D seulement dans une vue, sans carrousel** (piste B) : le propriétaire veut garder la 3D comme repère principal.
 - **Cartes à la hauteur de leur contenu** : le carrousel change de hauteur d'une pièce à l'autre, et la scène saute.

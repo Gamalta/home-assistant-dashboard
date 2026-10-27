@@ -53,6 +53,8 @@ export function Container(props: ContainerProps) {
           maxHeight: '85dvh',
           overflowY: 'auto',
           borderRadius: '24px 24px 0 0',
+          // Au-dessus de la barre d'accueil de l'iPhone.
+          pb: 'max(16px, env(safe-area-inset-bottom))',
         }),
       }}
     >

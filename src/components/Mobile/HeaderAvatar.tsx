@@ -27,7 +27,7 @@ export function HeaderAvatar(props: HeaderAvatarProps) {
         alignItems: 'center',
         justifyContent: 'center',
         outline: overlap ? '2px solid' : 'none',
-        outlineColor: 'background.primary',
+        outlineColor: 'background.paper',
       }}
     >
       <Box
