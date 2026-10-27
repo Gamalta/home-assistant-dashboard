@@ -41,7 +41,11 @@ export function MortgageModal(props: MortgageModalProps) {
       }
     >
       {tab === 'progress' ? (
-        <Stack direction="row" spacing={3}>
+        <Stack
+          direction={{xs: 'column', sm: 'row'}}
+          spacing={3}
+          sx={{alignItems: {xs: 'center', sm: 'stretch'}}}
+        >
           <MortgageHouse ratio={status.repaidRatio} />
           <MortgageFigures status={status} />
         </Stack>

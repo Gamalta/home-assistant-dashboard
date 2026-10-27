@@ -57,7 +57,7 @@ export function MortgageCostChart(props: MortgageCostChartProps) {
         )}
         formatX={time => String(new Date(time).getFullYear())}
         series={series.map(item => ({...item, format: formatEuros}))}
-        sx={{height: 140, width: 564}}
+        sx={{height: 140, width: {xs: '100%', sm: 564}}}
       />
     </Stack>
   );
