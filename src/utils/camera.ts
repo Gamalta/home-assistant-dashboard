@@ -1,12 +1,13 @@
 import type {Vector3Tuple} from 'three';
 
 /**
- * Pose qui cadre une pièce : la caméra garde la direction de celle du modèle
- * (vue depuis l'origine), à `distance` de la cible. La cible avance vers la
- * caméra d'une part `shift` de la distance, ce qui remonte la pièce à l'écran.
+ * Pose qui cadre une pièce sur son centre (sa lampe principale) : la caméra
+ * garde la direction de celle du modèle (vue depuis l'origine), à `distance` de
+ * la cible. La cible avance vers la caméra d'une part `shift` de la distance,
+ * ce qui remonte la pièce à l'écran.
  */
 export function roomCameraPose(
-  room: {x: number; z: number},
+  center: {x: number; y: number; z: number},
   base: Vector3Tuple,
   distance: number,
   shift: number,
@@ -15,9 +16,9 @@ export function roomCameraPose(
   const [dx, dy, dz] = base.map(value => value / length);
   const ground = Math.hypot(dx, dz) || 1;
   const target: Vector3Tuple = [
-    room.x + (dx / ground) * distance * shift,
-    0,
-    room.z + (dz / ground) * distance * shift,
+    center.x + (dx / ground) * distance * shift,
+    center.y,
+    center.z + (dz / ground) * distance * shift,
   ];
   const position: Vector3Tuple = [
     target[0] + dx * distance,

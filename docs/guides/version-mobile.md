@@ -28,10 +28,12 @@ Une tuile affiche le `friendly_name` de l'entité dans Home Assistant, sur deux 
 
 L'ordre des pièces, dans le carrousel comme dans la liste, est celui de `HouseConfig.rooms`. La première pièce est cadrée à l'ouverture.
 
+La caméra se centre sur la lampe principale de la pièce : sa première lumière dans `House.ts`, retrouvée dans le modèle. Mettez le plafonnier en premier. Une pièce sans lumière dans le modèle est centrée sur son étiquette (`position`).
+
 ## Pour les développeurs
 
 - `useIsMobile` (`src/hooks/useIsMobile.ts`) est la seule source de la bascule. Il est lu dès le premier rendu.
 - Les composants propres au mobile vivent dans `src/components/Mobile/`. Les tuiles sont la variante `tile` des éléments de pièce (`House/Room/RoomItem`) : un nouveau type d'équipement doit prévoir les deux rendus.
-- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` (`DISTANCE`, `SHIFT`) : les calculs sont dans `src/utils/camera.ts`.
+- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` (`DISTANCE`, `SHIFT`) : les calculs sont dans `src/utils/camera.ts`, la lampe visée dans `src/utils/model.ts`.
 - La page passe sous l'encoche et la barre d'accueil de l'iPhone (`viewport-fit=cover`). Un élément collé à un bord de l'écran ajoute `env(safe-area-inset-*)` à sa marge, comme l'en-tête, le carrousel et les feuilles du bas.
 - Pour essayer : `pnpm build && pnpm preview`, puis la vue mobile des outils de développement, en 390 × 844. Les tests E2E sont dans `e2e/mobile.spec.ts`.
