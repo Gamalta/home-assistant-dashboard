@@ -128,6 +128,12 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** la vue 3D s'affiche
 - **Alors** le bouton rond « Menu rapide » est sous l'en-tête, à gauche, et déplie la carte des températures, les scénarios, le crédit et les courses
 
+### Scénario : le crédit tient dans la largeur du téléphone
+
+- **Étant donné** la vue 3D avec un crédit configuré
+- **Quand** l'utilisateur ouvre « Crédit » depuis le menu rapide, puis son historique
+- **Alors** la feuille du crédit empile la maison et les chiffres, et ses graphiques suivent la largeur de l'écran, sans défilement horizontal
+
 ## Critères d'acceptation
 
 - [ ] La tablette (≥ 600 px de large) ne change pas : les tests E2E existants passent sans modification.
@@ -141,7 +147,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
-- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des feuilles du bas.
+- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des feuilles du bas. Celle du crédit y empile la maison et les chiffres.
 - `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
 - Performance : voir la section Mesures.
 
