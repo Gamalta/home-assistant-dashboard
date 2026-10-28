@@ -44,6 +44,30 @@ test('la carte « Énergie » ouvre le mois en cours, comparé au mois précéde
   );
 });
 
+test('le menu rapide ouvre la même modale, avec le prix du kWh de chaque période', async ({
+  page,
+}) => {
+  await page.getByRole('button', {name: 'Menu rapide'}).click();
+  await page.getByRole('menuitem', {name: 'Énergie'}).click();
+
+  await expect(page.getByRole('heading', {name: 'Énergie'})).toBeVisible();
+  const totals = page.getByRole('region', {name: 'Totaux'});
+  await expect(totals).toContainText(/Heures pleines0,27\s€\/kWh/);
+  await expect(totals).toContainText(/Heures creuses0,21\s€\/kWh/);
+});
+
+test('le total et l’écart restent hors du tracé, sous le survol', async ({
+  page,
+}) => {
+  const chart = await openEnergyModal(page);
+  const total = page.getByText(/^\d[\d\s]*(,\d)? kWh$/).first();
+  await expect(total).toBeVisible();
+
+  const totalBox = (await total.boundingBox())!;
+  const chartBox = (await chart.boundingBox())!;
+  expect(totalBox.y + totalBox.height).toBeLessThanOrEqual(chartBox.y);
+});
+
 test('change d’échelle : semaine jour par jour, année mois par mois', async ({
   page,
 }) => {
