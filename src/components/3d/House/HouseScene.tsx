@@ -1,6 +1,6 @@
-import {Canvas} from '@react-three/fiber';
+import {Canvas, invalidate} from '@react-three/fiber';
 import Stack from '@mui/material/Stack';
-import {useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   GizmoHelper,
   GizmoViewport,
@@ -12,9 +12,11 @@ import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
+import {roomCenter} from '../../../utils/model';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
+import {RoomFocus} from '../RoomFocus';
 import {Benchmark} from '../Benchmark';
 import {Room3d} from './Room3d';
 import {SceneMaterials} from './SceneMaterials';
@@ -25,15 +27,24 @@ import {ModelLoader} from './ModelLoader';
 type HouseSceneProps = {
   backend: RenderBackend;
   model: string;
+  focusRoomId?: string;
+  paused?: boolean;
 };
 
 export function HouseScene(props: HouseSceneProps) {
-  const {backend, model} = props;
+  const {backend, model, focusRoomId, paused = false} = props;
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
   const {scene, cameras} = useGLTF(model);
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
+  const focusRoom = rooms.find(room => room.id === focusRoomId);
+  // Identité stable : une nouvelle position relancerait le vol, même après un
+  // geste de l'utilisateur.
+  const focusCenter = useMemo(
+    () => focusRoom && roomCenter(focusRoom, scene),
+    [focusRoom, scene],
+  );
   const moving = useRef(false);
   // Options qui changent les shaders : la scène ne s'affiche qu'une fois
   // compilée pour celles en cours.
@@ -44,6 +55,12 @@ export function HouseScene(props: HouseSceneProps) {
   ].join();
   const [compiled, setCompiled] = useState<string>();
   const ready = compiled === graphics;
+
+  // En pause, la boucle ignore les invalidate() : une image au retour
+  // rattrape les changements survenus entre-temps.
+  useEffect(() => {
+    if (!paused) invalidate();
+  }, [paused]);
 
   return (
     <>
@@ -60,7 +77,7 @@ export function HouseScene(props: HouseSceneProps) {
         </Stack>
       )}
       <Canvas
-        frameloop={ready ? 'demand' : 'never'}
+        frameloop={ready && !paused ? 'demand' : 'never'}
         camera={{position: camera.position, fov: camera.fov}}
         // R3F réapplique `shadows` à gl.shadowMap à chaque rendu du Canvas :
         // sans la prop, il éteint les ombres. PCF explicite : three remplace
@@ -84,6 +101,9 @@ export function HouseScene(props: HouseSceneProps) {
             </>
           )}
           <Camera onMovingChange={value => (moving.current = value)} />
+          {focusCenter && (
+            <RoomFocus position={focusCenter} base={camera.position} />
+          )}
           {ready && <Benchmark backend={backend} />}
           <Scene scene={scene} backend={backend} />
           <SceneMaterials
@@ -100,7 +120,12 @@ export function HouseScene(props: HouseSceneProps) {
           />
           <Daylight />
           {rooms.map(room => (
-            <Room3d key={room.id} room={room} model={scene} />
+            <Room3d
+              key={room.id}
+              room={room}
+              model={scene}
+              showLabels={!focusRoomId || room.id === focusRoomId}
+            />
           ))}
           <Precompile
             key={graphics}

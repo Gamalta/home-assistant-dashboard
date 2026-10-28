@@ -8,12 +8,13 @@ import {useAppContext} from '../../../../contexts/AppContext';
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
   model: THREE.Object3D;
+  showLabels: boolean;
 };
 
 const heatmapDisplay = ['climate', 'temperature'];
 
 export function Room3d(props: RoomProps) {
-  const {room, model} = props;
+  const {room, model, showLabels} = props;
   const {configuration} = useAppContext();
 
   const cleanedRoom = {
@@ -26,7 +27,8 @@ export function Room3d(props: RoomProps) {
 
   return (
     <RoomProvider>
-      <Room room={cleanedRoom} />
+      {/* Les lumières 3D suivent Home Assistant même sans étiquettes. */}
+      {showLabels && <Room room={cleanedRoom} />}
       {cleanedRoom.items.map((item, id) => (
         <RoomItem3d key={`item-3d-${id}`} itemConfig={item} model={model} />
       ))}

@@ -33,6 +33,7 @@ import {logs} from './mocks/mockLogs';
 import {dailyForecast, hourlyForecast} from './mocks/mockWeather';
 import {generateMockHistory} from './mock-history';
 import {getMockStatistics, tickEnergyMeter} from './mocks/mockEnergy';
+import {callTodoService, subscribeTodo} from './mocks/mockTodo';
 interface HassProviderProps {
   children: (ready: boolean) => ReactNode;
   hassUrl: string;
@@ -147,8 +148,16 @@ class MockConnection extends Connection {
       start_time?: string;
       forecast_type?: string;
       end_time?: string;
+      entity_id?: string;
     },
   ): Promise<() => Promise<void>> {
+    if (params?.type === 'todo/item/subscribe' && params.entity_id) {
+      const stop = subscribeTodo(
+        params.entity_id,
+        callback as Parameters<typeof subscribeTodo>[1],
+      );
+      return async () => stop();
+    }
     if (
       params &&
       params.type === 'logbook/event_stream' &&
@@ -219,6 +228,12 @@ class MockConnection extends Connection {
     return () => Promise.resolve();
   }
   async sendMessagePromise<Result>(message: MessageBase): Promise<Result> {
+    if (message.type === 'call_service' && message.domain === 'todo') {
+      callTodoService(message.target.entity_id, message.service, {
+        ...message.service_data,
+      });
+      return null as Result;
+    }
     if (message.type === 'get_config') {
       return fakeConfig as Result;
     }
