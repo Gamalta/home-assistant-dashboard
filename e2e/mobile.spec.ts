@@ -150,6 +150,21 @@ test("la vue 3D s'ouvre sur la première pièce", async ({page}) => {
   // Autant d'étiquettes dans la scène que de tuiles sur la carte.
   const tiles = await card.getByRole('button').count();
   await expect(sceneLabels(page)).toHaveCount(tiles);
+
+  // L'étiquette de la pièce, à sa position dans la config, se centre entre
+  // l'en-tête et les puces ; la scène continue derrière le carrousel.
+  const {top, bottom} = await visibleScene(page);
+  const label = sceneLabels(page).and(
+    page.getByRole('button', {name: /Plafonnier du séjour/}),
+  );
+  await expect
+    .poll(async () => {
+      const box = (await label.boundingBox())!;
+      return Math.abs(box.y + box.height / 2 - (top + bottom) / 2);
+    })
+    .toBeLessThan(30);
+  const canvas = (await page.locator('canvas').boundingBox())!;
+  expect(canvas.y + canvas.height).toBe(844);
 });
 
 test('choisir une pièce y amène la caméra', async ({page}) => {

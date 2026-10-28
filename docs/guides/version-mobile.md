@@ -34,7 +34,7 @@ La caméra vise la `position` de la pièce dans `House.ts` : placez-la au centre
 
 - `useIsMobile` (`src/hooks/useIsMobile.ts`) est la seule source de la bascule. Il est lu dès le premier rendu.
 - Les composants propres au mobile vivent dans `src/components/Mobile/`. Les tuiles sont la variante `tile` des éléments de pièce (`House/Room/RoomItem`) : un nouveau type d'équipement doit prévoir les deux rendus.
-- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` (`DISTANCE`) : les calculs sont dans `src/utils/camera.ts`.
+- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` : `DISTANCE` pour l'éloignement, `LIFT` pour remonter la pièce entre l'en-tête et le carrousel. Les calculs sont dans `src/utils/camera.ts`.
 - La page passe sous l'encoche et la barre d'accueil de l'iPhone (`viewport-fit=cover`). Un élément collé à un bord de l'écran ajoute `env(safe-area-inset-*)` à sa marge, comme l'en-tête et le carrousel. Les modales se centrent entre les zones sûres.
 - Une modale de téléphone donne toute la largeur de sa carte au contenu. Une largeur fixe y devient `{xs: '100%', sm: …}`, et deux blocs côte à côte s'empilent (`direction={{xs: 'column', sm: 'row'}}`). La page ne défile pas (`overflow: hidden` dans `theme/components/CssBaseline.ts`) : ce qui déborde est coupé.
 - Pour essayer : `pnpm build && pnpm preview`, puis la vue mobile des outils de développement, en 390 × 844. Les tests E2E sont dans `e2e/mobile.spec.ts`.
