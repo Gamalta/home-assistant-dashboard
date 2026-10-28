@@ -34,6 +34,13 @@ export function ambilightEffects(effectList: string[]) {
   return effectList.filter(effect => ambilightSource(effect) === 'effect');
 }
 
+// La tuile TV montre l'état de l'ambilight : celui de la TV est inconnu.
+export function ambilightStateLabel(state: string, brightness?: number) {
+  if (state === 'unavailable') return 'Indisponible';
+  if (state !== 'on') return 'Ambilight éteint';
+  return `Ambilight ${Math.round((brightness ?? 255) / 2.55)} %`;
+}
+
 // Profondeur d'une LED, du bord vers le centre de l'écran.
 const LED_DEPTH = 0.1;
 

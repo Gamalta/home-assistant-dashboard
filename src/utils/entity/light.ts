@@ -86,3 +86,12 @@ export function lightExtraEntityIds(lightEntityId: string) {
     intensity: `number.${name}_intensity`,
   } as const;
 }
+
+export function lightStateLabel(entity: HassEntityWithService<'light'>) {
+  if (entity.state === 'unavailable') return 'Indisponible';
+  if (entity.state !== 'on') return 'Éteinte';
+  const brightness = entity.attributes.brightness;
+  return typeof brightness === 'number'
+    ? `${Math.round(brightness / 2.55)} %`
+    : 'Allumée';
+}

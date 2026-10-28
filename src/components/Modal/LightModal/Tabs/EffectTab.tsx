@@ -17,7 +17,7 @@ export function EffectTab() {
   ];
 
   return (
-    <Stack sx={{maxWidth: '500px', minWidth: '500px', p: 2}}>
+    <Stack sx={{maxWidth: '500px', minWidth: {xs: '100%', sm: '500px'}, p: 2}}>
       <Stack
         spacing={2}
         // Même hauteur que la roue des couleurs, pour ne pas agrandir la modale.

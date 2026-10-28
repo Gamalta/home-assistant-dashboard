@@ -4,6 +4,7 @@ import {
   LightTab,
   lightColor,
   lightExtraEntityIds,
+  lightStateLabel,
   supportedLightTab,
 } from './light';
 
@@ -78,5 +79,26 @@ describe('réglages dérivés du nom de la lumière', () => {
       effectSpeed: 'number.living_room_strip_effect_speed',
       intensity: 'number.living_room_strip_intensity',
     });
+  });
+});
+
+describe('lightStateLabel', () => {
+  const withState = (state: string, brightness?: number) =>
+    ({
+      state,
+      attributes: {brightness},
+    }) as unknown as HassEntityWithService<'light'>;
+
+  it('donne la luminosité en % d’une lumière allumée', () => {
+    expect(lightStateLabel(withState('on', 204))).toBe('80 %');
+  });
+
+  it('dit « Allumée » sans variateur', () => {
+    expect(lightStateLabel(withState('on'))).toBe('Allumée');
+  });
+
+  it('dit « Éteinte » ou « Indisponible »', () => {
+    expect(lightStateLabel(withState('off', 204))).toBe('Éteinte');
+    expect(lightStateLabel(withState('unavailable'))).toBe('Indisponible');
   });
 });

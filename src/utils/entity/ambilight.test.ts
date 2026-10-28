@@ -3,6 +3,7 @@ import {
   ambilightEffects,
   ambilightEntityIds,
   ambilightSource,
+  ambilightStateLabel,
   ledAreas,
 } from './ambilight';
 
@@ -29,6 +30,12 @@ describe('source de l’ambilight', () => {
       image: 'camera.tv_ambilight_led_colors',
       leds: 'camera.tv_ambilight_led_gradient',
     });
+  });
+
+  it('donne l’état de l’ambilight à la tuile TV', () => {
+    expect(ambilightStateLabel('on', 204)).toBe('Ambilight 80 %');
+    expect(ambilightStateLabel('off', 204)).toBe('Ambilight éteint');
+    expect(ambilightStateLabel('unavailable')).toBe('Indisponible');
   });
 });
 

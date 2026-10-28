@@ -60,7 +60,7 @@ Utiliser la lumière principale de l'instance, pas `light.<instance>_priority`, 
 
 `ledLayout` recopie la disposition classique de HyperHDR (Matériel LED → Disposition classique) : le nombre de LED en haut (`top`), à droite (`right`), en bas (`bottom`) et à gauche (`left`), la « Position d'entrée » (`position`, 0 par défaut) et la « Direction inverse » (`reverse`, `false` par défaut). Le halo place chaque LED à l'endroit qu'elle occupe autour de l'écran. Les espaces sans LED (« Longueur de l'espace »), les groupes et les matrices ne sont pas pris en charge : avec eux, les couleurs se décalent.
 
-Comme une lumière, un appui court sur le bouton TV allume ou éteint l'ambilight, et un appui long ouvre la modale TV :
+Comme une lumière, un appui court sur le bouton TV (ou sa tuile sur téléphone, qui affiche l'état de l'ambilight) allume ou éteint l'ambilight, et un appui long ouvre la modale TV :
 
 - **l'image de la TV**, en direct, entourée du halo des LED quand l'ambilight est allumé ; les flux s'arrêtent à la fermeture de la modale ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)) ;
 - **Ambilight** et le curseur de luminosité ;
