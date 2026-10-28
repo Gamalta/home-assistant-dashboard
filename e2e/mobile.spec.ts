@@ -71,8 +71,9 @@ async function longPress(page: Page, target: Locator) {
 
 async function openFoyer(page: Page) {
   await page.getByRole('button', {name: 'Foyer'}).tap();
-  // Le contenu d'une modale n'apparaît qu'après son animation d'ouverture.
-  await expect(page.getByRole('list', {name: 'Réglages'})).toBeVisible();
+  const menu = page.getByRole('dialog', {name: 'Foyer'});
+  await expect(menu).toBeVisible();
+  return menu;
 }
 
 test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
@@ -273,7 +274,6 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
     ],
     ['Crédit', () => quickMenu('Crédit')],
     ['Courses', () => quickMenu('Courses')],
-    ['Foyer', () => page.getByRole('button', {name: 'Foyer'}).tap()],
   ];
 
   for (const [name, open] of modals) {
@@ -350,32 +350,85 @@ test('le filtre Volets ne garde que les volets', async ({page}) => {
   ).toBeVisible();
 });
 
-test('les avatars ouvrent le Foyer', async ({page}) => {
-  await openFoyer(page);
+test('les avatars déroulent le Foyer en menu', async ({page}) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride', {
+    insets: {top: 59, bottom: 34},
+  });
+  const avatars = (await page
+    .getByRole('button', {name: 'Foyer'})
+    .boundingBox())!;
+
+  const menu = await openFoyer(page);
 
   for (const name of ['Juliette', 'Roméo', 'Tom', 'Jerry'])
-    await expect(page.getByText(name, {exact: true})).toBeVisible();
-  await expect(page.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
-  const settings = page.getByRole('list', {name: 'Réglages'});
-  await expect(settings.getByRole('button', {name: /Thème/})).toBeVisible();
-  await expect(settings.getByRole('button', {name: /Système/})).toBeVisible();
+    await expect(menu.getByText(name, {exact: true})).toBeVisible();
+  await expect(menu.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
+  const settings = menu.getByRole('list', {name: 'Réglages'});
+  for (const name of [/Thème/, /Système/, /Se déconnecter/])
+    await expect(settings.getByRole('button', {name})).toBeVisible();
+  // Sous les avatars, aligné sur eux à droite, au-dessus de la barre d'accueil.
+  await expect
+    .poll(async () => {
+      const box = (await menu.boundingBox())!;
+      return {
+        x: box.x,
+        right: box.x + box.width,
+        below: box.y >= avatars.y + avatars.height,
+        inside: box.y + box.height <= 844 - 34,
+        scrolls: await menu.evaluate(
+          element => element.scrollHeight > element.clientHeight,
+        ),
+      };
+    })
+    .toEqual({
+      x: 12,
+      right: avatars.x + avatars.width,
+      below: true,
+      inside: true,
+      scrolls: true,
+    });
+
+  await page.touchscreen.tap(195, 20);
+
+  await expect(menu).toBeHidden();
 });
 
 test('changer le thème depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Thème/}).tap();
+  await menu.getByRole('button', {name: /Thème/}).tap();
   await page.getByRole('menuitem', {name: 'Clair'}).tap();
 
   await expect(page.locator('html')).toHaveClass(/light/);
 });
 
 test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Système/}).tap();
+  await menu.getByRole('button', {name: /Système/}).tap();
 
-  await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+  const title = page.getByRole('heading', {name: 'Système'});
+  await expect(title).toBeVisible();
+  // Le fond de la modale passe devant le menu.
+  await page.locator('#backdrop').click({position: {x: 195, y: 4}});
+  await expect(title).toBeHidden();
+  await expect(menu).toBeVisible();
+});
+
+test('se déconnecter depuis le Foyer', async ({page}) => {
+  await page.evaluate(() => localStorage.setItem('hassTokens', '{}'));
+  const menu = await openFoyer(page);
+
+  await Promise.all([
+    page.waitForEvent('load'),
+    menu.getByRole('button', {name: /Se déconnecter/}).tap(),
+  ]);
+
+  // Sans jetons, HassConnect renvoie vers la connexion de Home Assistant.
+  expect(
+    await page.evaluate(() => localStorage.getItem('hassTokens')),
+  ).toBeNull();
 });
 
 test('le menu rapide reste sur la vue 3D', async ({page}) => {
