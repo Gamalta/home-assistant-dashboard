@@ -1,9 +1,8 @@
 import ButtonBase from '@mui/material/ButtonBase';
 import Stack from '@mui/material/Stack';
-import {motion} from 'framer-motion';
 import {useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
-import {FoyerSheet} from './FoyerSheet';
+import {FoyerMenu} from './FoyerMenu';
 import {HeaderAvatar} from './HeaderAvatar';
 import {MobileView, ViewToggle} from './ViewToggle';
 
@@ -16,7 +15,7 @@ export function MobileHeader(props: MobileHeaderProps) {
   const {view, onViewChange} = props;
   const {houseConfig} = useHouseContext();
   const persons = houseConfig?.sideBar.persons;
-  const [foyer, setFoyer] = useState(false);
+  const [foyer, setFoyer] = useState<HTMLElement | null>(null);
 
   return (
     <Stack
@@ -44,23 +43,21 @@ export function MobileHeader(props: MobileHeaderProps) {
     >
       <ViewToggle value={view} onChange={onViewChange} />
       {persons && (
-        <motion.div layoutId="foyer">
-          <ButtonBase
-            aria-label="Foyer"
-            onClick={() => setFoyer(true)}
-            sx={{p: 0.5, borderRadius: 50, bgcolor: 'background.paper'}}
-          >
-            {persons.map((person, index) => (
-              <HeaderAvatar
-                key={person.personEntityId}
-                person={person}
-                overlap={index > 0}
-              />
-            ))}
-          </ButtonBase>
-        </motion.div>
+        <ButtonBase
+          aria-label="Foyer"
+          onClick={event => setFoyer(event.currentTarget)}
+          sx={{p: 0.5, borderRadius: 50, bgcolor: 'background.paper'}}
+        >
+          {persons.map((person, index) => (
+            <HeaderAvatar
+              key={person.personEntityId}
+              person={person}
+              overlap={index > 0}
+            />
+          ))}
+        </ButtonBase>
       )}
-      <FoyerSheet open={foyer} onClose={() => setFoyer(false)} />
+      <FoyerMenu anchorEl={foyer} onClose={() => setFoyer(null)} />
     </Stack>
   );
 }
