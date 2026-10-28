@@ -84,6 +84,18 @@ test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
   await expect(views.getByRole('button', {name: '3D'})).toBeVisible();
   await expect(views.getByRole('button', {name: 'Pièces'})).toBeVisible();
   await expect(header.getByRole('button', {name: 'Foyer'})).toBeVisible();
+  const leftOnTop = await header
+    .getByRole('button', {name: 'Foyer'})
+    .evaluate(button => {
+      const [left, right] = [...button.querySelectorAll('img')].map(
+        img => img.parentElement!,
+      );
+      const box = right.getBoundingClientRect();
+      // Bord gauche de l'avatar de droite, là où les deux se chevauchent.
+      const hit = document.elementFromPoint(box.left + 2, box.top + 19);
+      return left.contains(hit);
+    });
+  expect(leftOnTop).toBe(true);
   expect((await header.boundingBox())!.y).toBeLessThan(20);
   await expect(page.getByRole('separator')).toHaveCount(0);
   await expect(page.getByRole('navigation')).toHaveCount(0);

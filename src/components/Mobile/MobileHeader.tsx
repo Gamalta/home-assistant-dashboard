@@ -53,6 +53,8 @@ export function MobileHeader(props: MobileHeaderProps) {
               key={person.personEntityId}
               person={person}
               overlap={index > 0}
+              // L'avatar de gauche passe par-dessus celui de droite.
+              layer={persons.length - index}
             />
           ))}
         </ButtonBase>

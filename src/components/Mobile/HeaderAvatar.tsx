@@ -7,10 +7,12 @@ import type {PersonConfigType} from '../../configs/sidebar';
 type HeaderAvatarProps = {
   person: PersonConfigType;
   overlap: boolean;
+  // Ordre d'empilement : un avatar passe par-dessus ceux de rang inférieur.
+  layer: number;
 };
 
 export function HeaderAvatar(props: HeaderAvatarProps) {
-  const {person, overlap} = props;
+  const {person, overlap, layer} = props;
   const focused = useEntity(person.focusEntityId ?? 'unknown', {
     returnNullIfNotFound: true,
   });
@@ -19,6 +21,7 @@ export function HeaderAvatar(props: HeaderAvatarProps) {
     <Stack
       sx={{
         position: 'relative',
+        zIndex: layer,
         width: 38,
         height: 38,
         ml: overlap ? -1 : 0,
@@ -26,7 +29,8 @@ export function HeaderAvatar(props: HeaderAvatarProps) {
         bgcolor: 'background.tertiary',
         alignItems: 'center',
         justifyContent: 'center',
-        outline: overlap ? '2px solid' : 'none',
+        // Détoure l'avatar du dessus ; de la couleur du fond, invisible ailleurs.
+        outline: '2px solid',
         outlineColor: 'background.paper',
       }}
     >

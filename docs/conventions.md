@@ -41,6 +41,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 - Un objet three.js créé par un composant est libéré (`dispose`) dans le nettoyage de son effet.
 - Changer les `defines` d'un matériau, le nombre de lumières visibles ou le nombre de lumières qui projettent une ombre recompile les shaders. On l'évite pendant une interaction : on préfère un uniform.
 - Chaque entité lumière pilote la **première** lumière du modèle dont le nom commence par l'identifiant de l'entité, sans le domaine.
+- Les étiquettes passent par `components/3d/Html.tsx`, sans `zIndexRange` : drei empile la plus proche de la caméra devant les autres, avec des z-index qui montent jusqu'à 16 millions. Le `Canvas` les isole (`isolation: isolate`) : un élément qui doit les couvrir se place hors du `Canvas`.
 - Le code propre à WebGL ou à WebGPU vit dans `src/rendering/backends/` et `src/rendering/shaders/<Matériau>/{WebGL,WebGPU}/`, derrière l'interface `RenderBackend`.
 - Toute modification du rendu se mesure (benchmark intégré, [guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md).
 

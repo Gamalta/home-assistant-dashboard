@@ -5,22 +5,15 @@ const expectTuple = (actual: number[], expected: number[]) =>
   actual.forEach((value, index) => expect(value).toBeCloseTo(expected[index]));
 
 describe('roomCameraPose', () => {
-  it('vise le centre de la pièce dans la direction de la caméra du modèle', () => {
+  it('vise la position de la pièce dans la direction de la caméra du modèle', () => {
     const {position, target} = roomCameraPose(
       {x: 2, y: 2.5, z: 3},
       [0, 7, -7],
       4,
-      0,
     );
 
     expectTuple(target, [2, 2.5, 3]);
     expectTuple(position, [2, 2.5 + 4 * Math.SQRT1_2, 3 - 4 * Math.SQRT1_2]);
-  });
-
-  it('avance la cible vers la caméra pour remonter la pièce à l’écran', () => {
-    const {target} = roomCameraPose({x: 2, y: 2.5, z: 3}, [0, 7, -7], 4, 0.5);
-
-    expectTuple(target, [2, 2.5, 1]);
   });
 });
 
