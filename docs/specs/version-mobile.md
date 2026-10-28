@@ -115,6 +115,12 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur pose le doigt sur une tuile et le glisse de plus de 10 px pour faire défiler
 - **Alors** ni l'appui court ni l'appui long ne se déclenchent
 
+### Scénario : un appui long ne sélectionne pas le texte
+
+- **Étant donné** une tuile de lumière
+- **Quand** l'utilisateur la garde enfoncée jusqu'à l'ouverture de sa modale
+- **Alors** aucun texte de la page n'est sélectionné, et le navigateur n'ouvre pas son menu
+
 ### Scénario : la vue Pièces liste toutes les pièces
 
 - **Étant donné** la vue 3D

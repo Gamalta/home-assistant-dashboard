@@ -11,6 +11,15 @@ export const MuiCssBaseline: Components['MuiCssBaseline'] = {
     body: {
       overflow: 'hidden',
       transition: 'all 0.3s linear',
+      // Un appui long ouvre une modale : il ne sélectionne pas le texte et
+      // n'ouvre pas le menu du navigateur.
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      WebkitTouchCallout: 'none',
+    },
+    'input, textarea': {
+      userSelect: 'text',
+      WebkitUserSelect: 'text',
     },
     // En paysage, viewport-fit=cover fait passer la page sous l'encoche.
     '#root': {

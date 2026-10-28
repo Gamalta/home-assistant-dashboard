@@ -351,6 +351,17 @@ test('toucher le fond ferme la modale', async ({page}) => {
   await expect(title).toBeHidden();
 });
 
+test('un appui long ne sélectionne pas le texte', async ({page}) => {
+  const card = page.getByRole('region', {name: 'Séjour'});
+  await card.getByRole('heading').click({clickCount: 3});
+  await longPress(page, card.getByRole('button', {name: /Plafonnier/}));
+
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => getSelection()?.toString())).toBe('');
+});
+
 test('la vue Pièces liste toutes les pièces', async ({page}) => {
   await page.getByRole('button', {name: 'Pièces', exact: true}).tap();
 

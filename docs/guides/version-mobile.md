@@ -21,6 +21,7 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
   - Un doigt qui glisse pour faire défiler n'appuie sur rien.
 - **Modales** : elles s'ouvrent en carte, au centre de l'écran. Touchez le fond pour les fermer.
 - **Foyer** : touchez les avatars de l'en-tête.
+- Un appui long ne sélectionne jamais le texte et n'ouvre pas le menu du navigateur. Seuls les champs de saisie restent sélectionnables.
 
 ## Bien nommer les équipements
 
