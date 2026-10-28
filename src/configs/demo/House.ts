@@ -52,7 +52,7 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.leave_home', 'script.energy'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
   mortgages: [
     'sensor.loan_main',
     'sensor.loan_ptz',

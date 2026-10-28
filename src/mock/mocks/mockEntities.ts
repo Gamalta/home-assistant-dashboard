@@ -408,8 +408,8 @@ export const entities: HassEntities = {
   ...createScript('script.leave_home', {
     attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
   }),
-  ...createScript('script.energy', {
-    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
+  ...createScript('script.eco_mode', {
+    attributes: {friendly_name: 'Économie', icon: 'mdi:leaf'},
   }),
 
   ...createLoan('sensor.loan_main', {
