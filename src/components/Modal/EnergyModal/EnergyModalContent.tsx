@@ -68,7 +68,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
     shownComparison === 'previous' ? PREVIOUS[scale] : 'Un an avant';
 
   return (
-    <Stack direction="row" spacing={5}>
+    <Stack direction={{xs: 'column', sm: 'row'}} spacing={{xs: 3, sm: 5}}>
       <EnergyChart
         scale={scale}
         current={current}
@@ -78,7 +78,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
         comparisonLabel={comparisonLabel}
         prices={prices}
       />
-      <Stack spacing={3} sx={{width: 300}}>
+      <Stack spacing={3} sx={{width: {xs: '100%', sm: 300}}}>
         <ToggleButtonGroup
           exclusive
           fullWidth
