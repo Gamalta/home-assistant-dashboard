@@ -1,10 +1,12 @@
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {Fragment} from 'react';
 import {
   type Consumption,
   formatCost,
   formatEnergy,
+  formatPrice,
   getCost,
   getTotal,
   sumConsumption,
@@ -27,12 +29,14 @@ export function EnergyTotals(props: EnergyTotalsProps) {
     ...(['peak', 'offPeak'] as const).map(tariff => ({
       label: TARIFF_PERIODS[tariff].label,
       color: TARIFF_PERIODS[tariff].color,
+      price: prices[tariff],
       kWh: total[tariff],
       cost: total[tariff] === null ? null : total[tariff] * prices[tariff],
     })),
     {
       label: comparisonLabel,
       color: null,
+      price: null,
       kWh: getTotal(referenceTotal),
       cost: getCost(referenceTotal, prices),
     },
@@ -70,7 +74,14 @@ export function EnergyTotals(props: EnergyTotalsProps) {
                   }
             }
           />
-          <Typography variant="body2">{row.label}</Typography>
+          <Stack>
+            <Typography variant="body2">{row.label}</Typography>
+            {row.price !== null && (
+              <Typography variant="caption" color="textSecondary">
+                {formatPrice(row.price)}
+              </Typography>
+            )}
+          </Stack>
           <Typography variant="body2" sx={{textAlign: 'right'}}>
             {formatEnergy(row.kWh)}
           </Typography>

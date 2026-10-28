@@ -6,6 +6,7 @@ import {
   formatEnergy,
   formatPeriod,
   formatPower,
+  formatPrice,
   getBuckets,
   getChange,
   getComparisonPeriod,
@@ -453,6 +454,11 @@ describe('formatage', () => {
     expect(formatEnergy(0)).toBe('0 kWh');
     expect(formatEnergy(1234.5)).toMatch(/^1\s235 kWh$/);
     expect(formatCost(1.234)).toMatch(/^1,23\s€$/);
+  });
+
+  it('écrit le prix du kWh avec ses décimales, au moins deux', () => {
+    expect(formatPrice(0.2516)).toMatch(/^0,2516\s€\/kWh$/);
+    expect(formatPrice(0.27)).toMatch(/^0,27\s€\/kWh$/);
   });
 
   it('écrit l’écart signé, au pour cent', () => {

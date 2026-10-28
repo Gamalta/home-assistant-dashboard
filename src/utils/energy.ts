@@ -280,6 +280,11 @@ export function formatPeriod(scale: Scale, period: Period) {
   return `semaine du ${date.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'})}`;
 }
 
+/** « 0,2516 €/kWh » : les tarifs ont jusqu'à quatre décimales. */
+export function formatPrice(euros: number) {
+  return `${euros.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 4})} €/kWh`;
+}
+
 /** « 1,23 € » ; « — » sans valeur. */
 export function formatCost(euros: number | null) {
   return euros === null

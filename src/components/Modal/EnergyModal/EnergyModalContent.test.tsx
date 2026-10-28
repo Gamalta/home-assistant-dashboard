@@ -127,6 +127,13 @@ describe('EnergyModalContent', () => {
     ).toHaveStyle({color: palette.warning.main});
     const totals = screen.getByRole('region', {name: 'Totaux'});
     expect(totals).toHaveTextContent(/Mois précédent240 kWh55,50\s€/);
+    // Le prix du kWh retenu pour chaque période tarifaire.
+    expect(totals).toHaveTextContent(
+      /Heures pleines0,25\s€\/kWh186 kWh46,50\s€/,
+    );
+    expect(totals).toHaveTextContent(
+      /Heures creuses0,20\s€\/kWh124 kWh24,80\s€/,
+    );
   });
 
   it('compare le mois en cours au même mois un an avant, à date égale', async () => {
