@@ -59,7 +59,8 @@ export function QuickMenu() {
         }
         sx={{
           position: 'absolute',
-          top: theme => theme.spacing(4),
+          // Sur téléphone, sous l'en-tête posé sur la vue 3D.
+          top: {xs: 'calc(env(safe-area-inset-top) + 76px)', sm: '32px'},
           left: theme => theme.spacing(2),
           // Au-dessus des étiquettes et du chargeur de la vue 3D.
           zIndex: 1,

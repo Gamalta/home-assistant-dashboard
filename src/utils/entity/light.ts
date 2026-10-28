@@ -58,3 +58,12 @@ export function lightColor(entity: HassEntityWithService<'light'>) {
     ? entity.custom.color
     : temperature2rgb(2000);
 }
+
+export function lightStateLabel(entity: HassEntityWithService<'light'>) {
+  if (entity.state === 'unavailable') return 'Indisponible';
+  if (entity.state !== 'on') return 'Éteinte';
+  const brightness = entity.attributes.brightness;
+  return typeof brightness === 'number'
+    ? `${Math.round(brightness / 2.55)} %`
+    : 'Allumée';
+}

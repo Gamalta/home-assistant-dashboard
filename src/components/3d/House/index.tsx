@@ -10,7 +10,14 @@ import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
 import {LightingTrial} from '../../LightingTrial';
 
-export default function House() {
+type HouseProps = {
+  // Pièce cadrée par la caméra ; seules ses étiquettes s'affichent.
+  focusRoomId?: string;
+  paused?: boolean;
+};
+
+export default function House(props: HouseProps) {
+  const {focusRoomId, paused} = props;
   const {configuration, setConfiguration, webGLSupported, lightingTrial} =
     useAppContext();
   const {houseConfig} = useHouseContext();
@@ -78,6 +85,8 @@ export default function House() {
             key={`${houseConfig?.id}-${backend.kind}`}
             backend={backend}
             model={model}
+            focusRoomId={focusRoomId}
+            paused={paused}
           />
         </Suspense>
         {lightingTrial && <LightingTrial />}

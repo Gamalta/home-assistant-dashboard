@@ -32,7 +32,7 @@ export function SystemModal(props: SystemModalProps) {
   return (
     <Modal {...modalProps}>
       <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={{xs: 1, sm: 2}}>
           {(systemConfig?.graphs ?? []).map(graph => (
             <SystemGraphDisplay key={graph.label} graphConfig={graph} />
           ))}

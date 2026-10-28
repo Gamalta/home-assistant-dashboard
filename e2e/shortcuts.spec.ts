@@ -1,5 +1,4 @@
-import {Page} from '@playwright/test';
-import {expect, test, waitForScene} from './fixtures';
+import {expect, swipeLeft, test, waitForScene} from './fixtures';
 
 // Taille de la tablette murale en pixels CSS, écran tactile.
 test.use({viewport: {width: 1280, height: 800}, hasTouch: true});
@@ -8,38 +7,6 @@ test.beforeEach(async ({page}) => {
   await page.goto('/');
   await waitForScene(page);
 });
-
-// Glissement du doigt vers la gauche, un peu de biais comme à la main.
-// Chromium headless ne simule pas le doigt de la même façon partout : sous
-// Linux (CI), synthesizeScrollGesture n'émet aucun touchmove, et sous macOS,
-// dispatchTouchEvent se bloque dès que le défilement commence.
-async function swipeLeft(page: Page, x: number, y: number) {
-  const client = await page.context().newCDPSession(page);
-  if (process.platform === 'darwin') {
-    await client.send('Input.synthesizeScrollGesture', {
-      x,
-      y,
-      xDistance: -240,
-      yDistance: -24,
-      gestureSourceType: 'touch',
-    });
-    return;
-  }
-  await client.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{x, y}],
-  });
-  for (let dx = 40; dx <= 240; dx += 40) {
-    await client.send('Input.dispatchTouchEvent', {
-      type: 'touchMove',
-      touchPoints: [{x: x - dx, y: y - dx / 10}],
-    });
-  }
-  await client.send('Input.dispatchTouchEvent', {
-    type: 'touchEnd',
-    touchPoints: [],
-  });
-}
 
 test('lance un scénario depuis le menu rapide en haut de la vue 3D', async ({
   page,

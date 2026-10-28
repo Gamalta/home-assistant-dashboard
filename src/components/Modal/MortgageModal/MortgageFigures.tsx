@@ -29,7 +29,10 @@ export function MortgageFigures(props: MortgageFiguresProps) {
   ];
 
   return (
-    <Stack spacing={3} sx={{width: 300, justifyContent: 'center'}}>
+    <Stack
+      spacing={3}
+      sx={{width: {xs: '100%', sm: 300}, justifyContent: 'center'}}
+    >
       <Stack>
         <Typography color="textSecondary">Capital restant dû</Typography>
         <Typography variant="h3" component="span">
