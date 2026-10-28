@@ -4,12 +4,12 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 
 ## Ce qu'on trouve où
 
-| Zone       | Contenu                                                                               | D'où ça vient                                     |
-| ---------- | ------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| En-tête    | Sélecteur « 3D » / « Pièces », avatars                                                | `SideBarConfig` (personnes)                       |
-| Vue 3D     | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                      | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
-| Vue Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`                       |
-| Foyer      | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                                   |
+| Zone       | Contenu                                                                                                                       | D'où ça vient                                     |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| En-tête    | Sélecteur « 3D » / « Pièces », avatars                                                                                        | `SideBarConfig` (personnes)                       |
+| Vue 3D     | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                                                              | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
+| Vue Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                                                             | `HouseConfig.rooms[].items`                       |
+| Foyer      | Menu sous les avatars : personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs), Système et Se déconnecter | `SideBarConfig`                                   |
 
 ## Gestes
 
@@ -20,7 +20,7 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
   - Un appui long ouvre la modale d'une lumière ou d'une prise.
   - Un doigt qui glisse pour faire défiler n'appuie sur rien.
 - **Modales** : elles s'ouvrent en carte, au centre de l'écran. Touchez le fond pour les fermer.
-- **Foyer** : touchez les avatars de l'en-tête.
+- **Foyer** : touchez les avatars de l'en-tête, le menu se déroule dessous. Touchez à côté pour le refermer.
 
 ## Bien nommer les équipements
 
