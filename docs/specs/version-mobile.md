@@ -83,11 +83,18 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur la touche brièvement
 - **Alors** la lumière s'allume et la tuile prend sa couleur
 
-### Scénario : un appui long sur une tuile ouvre sa modale en bas de l'écran
+### Scénario : un appui long sur une tuile ouvre sa modale au centre de l'écran
 
 - **Étant donné** une tuile de lumière
 - **Quand** l'utilisateur la garde enfoncée
-- **Alors** la modale de la lumière s'ouvre en feuille, collée au bas de l'écran et sur toute sa largeur
+- **Alors** la modale de la lumière s'ouvre en carte, centrée dans l'écran, à 12 px des bords
+
+### Scénario : chaque modale tient dans l'écran du téléphone
+
+- **Étant donné** un téléphone en portrait
+- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit, des courses ou le Foyer
+- **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
+- **Et** la page garde la largeur de l'écran
 
 ### Scénario : toucher le fond ferme la modale
 
@@ -113,21 +120,21 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche le filtre « Volets »
 - **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
-### Scénario : les avatars ouvrent la feuille Foyer
+### Scénario : les avatars ouvrent le Foyer
 
 - **Étant donné** un téléphone en portrait
 - **Quand** l'utilisateur touche les avatars de l'en-tête
-- **Alors** la feuille Foyer s'ouvre : personnes, animaux, carrousel de raccourcis, puis les réglages Thème et Système
+- **Alors** le Foyer s'ouvre : personnes, animaux, carrousel de raccourcis, puis les réglages Thème et Système
 
 ### Scénario : changer le thème depuis le Foyer
 
-- **Étant donné** la feuille Foyer ouverte
+- **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Thème » puis « Clair »
 - **Alors** le dashboard passe en thème clair
 
 ### Scénario : ouvrir la modale Système depuis le Foyer
 
-- **Étant donné** la feuille Foyer ouverte
+- **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Système »
 - **Alors** la modale Système s'ouvre
 
@@ -141,7 +148,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** la vue 3D avec un crédit configuré
 - **Quand** l'utilisateur ouvre « Crédit » depuis le menu rapide, puis son historique
-- **Alors** la feuille du crédit empile la maison et les chiffres, et ses graphiques suivent la largeur de l'écran, sans défilement horizontal
+- **Alors** la modale du crédit empile la maison et les chiffres, et ses graphiques suivent la largeur de l'écran, sans défilement horizontal
 
 ## Critères d'acceptation
 
@@ -156,8 +163,8 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
-- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des feuilles du bas. Celle du crédit y empile la maison et les chiffres.
-- Page : `viewport-fit=cover`. L'en-tête, le menu rapide, la liste, le carrousel et les feuilles du bas suivent les zones sûres de l'écran.
+- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
+- Page : `viewport-fit=cover`, et `html` comme `body` en `overflow: hidden`. L'en-tête, le menu rapide, la liste, le carrousel et les modales suivent les zones sûres de l'écran.
 - `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
 - Performance : voir la section Mesures.
 

@@ -92,7 +92,8 @@ function ModalWindow(props: ModalProps) {
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
               variants={variants}
-              sx={{p: 2, maxHeight: '100%'}}
+              // Sur téléphone, la carte garde toute sa largeur au contenu.
+              sx={{p: 2, px: {xs: 0, sm: 2}, maxHeight: '100%'}}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}

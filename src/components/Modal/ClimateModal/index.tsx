@@ -152,7 +152,11 @@ export default function ClimateModal(props: ClimateModalProps) {
         {
           control: (
             <Stack
-              sx={{position: 'relative', alignItems: 'center', width: '350px'}}
+              sx={{
+                position: 'relative',
+                alignItems: 'center',
+                width: {xs: '100%', sm: '350px'},
+              }}
             >
               <Stack sx={{width: '200px', mt: 7, alignItems: 'center'}}>
                 <Thermostat

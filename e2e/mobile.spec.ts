@@ -9,8 +9,9 @@ declare global {
 
 // Un test par scénario de docs/specs/version-mobile.md.
 
-// Téléphone en portrait, écran tactile.
-test.use({viewport: {width: 390, height: 844}, hasTouch: true});
+// Téléphone en portrait, écran tactile. Avec isMobile, comme sur un vrai
+// téléphone, un élément qui déborde élargit toute la page.
+test.use({viewport: {width: 390, height: 844}, hasTouch: true, isMobile: true});
 
 test.beforeEach(async ({page}) => {
   await page.addInitScript(() => {
@@ -211,7 +212,7 @@ test('un appui court sur une tuile bascule la lumière', async ({page}) => {
   await expect(tile).not.toContainText('Éteinte');
 });
 
-test("un appui long sur une tuile ouvre sa modale en bas de l'écran", async ({
+test("un appui long sur une tuile ouvre sa modale au centre de l'écran", async ({
   page,
 }) => {
   const tile = page
@@ -222,14 +223,91 @@ test("un appui long sur une tuile ouvre sa modale en bas de l'écran", async ({
 
   const title = page.getByRole('heading', {name: 'Lumière', exact: true});
   await expect(title).toBeVisible();
-  const sheet = title.locator('xpath=../..');
-  // Le ressort de l'animation finit par poser la feuille au bas de l'écran.
+  const card = title.locator('xpath=../..');
+  // Le ressort de l'animation finit par centrer la carte, à 12 px des bords.
   await expect
     .poll(async () => {
-      const box = (await sheet.boundingBox())!;
-      return [box.x, box.width, Math.round(box.y + box.height)];
+      const box = (await card.boundingBox())!;
+      return [box.x, box.width, Math.round(2 * box.y + box.height)];
     })
-    .toEqual([0, 390, 844]);
+    .toEqual([12, 366, 844]);
+});
+
+test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
+  const room = (name: string) => page.getByRole('region', {name, exact: true});
+  const quickMenu = async (name: string) => {
+    await page.getByRole('button', {name: 'Menu rapide'}).tap();
+    await page.getByRole('menuitem', {name}).tap();
+  };
+  const modals: [string, () => Promise<unknown>][] = [
+    [
+      'Lumière',
+      () =>
+        longPress(
+          page,
+          room('Séjour').getByRole('button', {name: /Plafonnier/}),
+        ),
+    ],
+    [
+      'Volet roulant',
+      () => room('Séjour').getByRole('button', {name: /Volet/}).tap(),
+    ],
+    [
+      'Prise TV',
+      () =>
+        longPress(page, room('Séjour').getByRole('button', {name: /Prise TV/})),
+    ],
+    [
+      'Climatisation',
+      () =>
+        room('Séjour')
+          .getByRole('button', {name: /Climat/})
+          .tap(),
+    ],
+    [
+      'Imprimante 3D',
+      () =>
+        room('Chambre 2')
+          .getByRole('button', {name: /Imprimante 3D/})
+          .tap(),
+    ],
+    ['Crédit', () => quickMenu('Crédit')],
+    ['Courses', () => quickMenu('Courses')],
+    ['Foyer', () => page.getByRole('button', {name: 'Foyer'}).tap()],
+  ];
+
+  for (const [name, open] of modals) {
+    // Les tuiles de toutes les pièces sont dans la vue Pièces, le menu rapide
+    // sur la vue 3D.
+    const view = ['Crédit', 'Courses'].includes(name) ? '3D' : 'Pièces';
+    await page.getByRole('button', {name: view, exact: true}).tap();
+    await open();
+    const title = page.getByRole('heading', {name, exact: true});
+    await expect(title).toBeVisible();
+    const card = title.locator('xpath=../..');
+    await expect
+      .poll(
+        async () => {
+          const box = (await card.boundingBox())!;
+          const fits = await card.evaluate(
+            element => element.scrollWidth <= element.clientWidth,
+          );
+          const width = await page.evaluate(() => innerWidth);
+          return {
+            x: box.x,
+            width: box.width,
+            inside: box.y >= 12 && box.y + box.height <= 832,
+            fits,
+            page: width,
+          };
+        },
+        {message: name},
+      )
+      .toEqual({x: 12, width: 366, inside: true, fits: true, page: 390});
+
+    await page.locator('#backdrop').click({position: {x: 195, y: 4}});
+    await expect(title).toBeHidden();
+  }
 });
 
 test('toucher le fond ferme la modale', async ({page}) => {
@@ -272,7 +350,7 @@ test('le filtre Volets ne garde que les volets', async ({page}) => {
   ).toBeVisible();
 });
 
-test('les avatars ouvrent la feuille Foyer', async ({page}) => {
+test('les avatars ouvrent le Foyer', async ({page}) => {
   await openFoyer(page);
 
   for (const name of ['Juliette', 'Roméo', 'Tom', 'Jerry'])

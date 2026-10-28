@@ -11,7 +11,7 @@ Le dashboard est construit pour la tablette murale : une barre latérale redimen
 Le propriétaire a comparé trois pistes sur maquettes (3D plein écran avec feuille, barre d'onglets, pièce par pièce), puis une fusion, puis une première version intégrée avec une barre d'onglets en bas. Il retient :
 
 - deux vues, **3D** (la maison avec un carrousel de pièces) et **Pièces** (liste filtrable), choisies en haut de l'écran ;
-- un en-tête sans heure ni météo, que le téléphone affiche déjà, dont les avatars ouvrent une feuille **Foyer** ;
+- un en-tête sans heure ni météo, que le téléphone affiche déjà, dont les avatars ouvrent le **Foyer** ;
 - des cartes de pièce toutes de la même taille, avec des tuiles toutes de la même taille.
 
 Contraintes :
@@ -27,7 +27,7 @@ Contraintes :
   - Le sélecteur est un `ToggleButtonGroup` de MUI, « 3D » et « Pièces ».
   - La page passe sous l'encoche et la barre d'accueil (`viewport-fit=cover`). Les îlots se posent sous la zone sûre du haut (`env(safe-area-inset-top)`), et entre eux les gestes vont à la scène.
   - Un voile de la couleur du fond, en dégradé, garde l'heure lisible sur la 3D et efface la liste qui défile sous les îlots.
-  - Le carrousel, la liste et les feuilles du bas s'arrêtent au-dessus de la barre d'accueil (`env(safe-area-inset-bottom)`). En paysage, `#root` s'écarte de l'encoche.
+  - Le carrousel et la liste s'arrêtent au-dessus de la barre d'accueil (`env(safe-area-inset-bottom)`). En paysage, `#root` s'écarte de l'encoche.
   - La vue 3D garde la scène, le menu rapide sous l'en-tête et un carrousel de pièces en `scroll-snap`, comme celui de l'[ADR 0035](0035-carrousel-de-cartes-et-actions.md).
   - La vue Pièces liste toutes les pièces, avec les filtres Toutes / Lumières / Volets / Climat.
 - **La 3D reste montée sous la vue Pièces** : elle est cachée (`visibility: hidden`) et mise en pause (`frameloop="never"`), puis une image au retour rattrape les changements. Démonter le `Canvas` coûterait une recompilation des shaders à chaque retour.
@@ -37,8 +37,10 @@ Contraintes :
   - Les cartes du carrousel ont la même hauteur : deux rangées de tuiles et le haut de la troisième. Au-delà, les tuiles défilent dans la carte.
   - Chaque carte a son `RoomProvider`, sinon la modale lumière ignore les lumières de la pièce.
   - Les `id` sont préfixés (`carrousel-…`, `liste-…`), pour ne pas croiser les `layoutId` des étiquettes 3D montées en même temps.
-- **Modales en feuille du bas** : sous `sm`, `Modal/Base/Container` fixe la modale en bas, sur toute la largeur, sur 85 % de la hauteur au plus. Les contenus larges de 500 px suivent la largeur. Partout, toucher le fond ferme la modale.
-- **Foyer** : une `Modal` (donc une feuille sur mobile) avec :
+- **Modales en carte centrée** : sous `sm`, `Modal/Base/Container` centre la modale entre les zones sûres du haut et du bas, à 12 px des bords. Une modale trop haute défile. Partout, toucher le fond ferme la modale.
+  - Le contenu prend toute la largeur de la carte : les largeurs fixes de 350 à 500 px la suivent, et les deux blocs du crédit et de l'imprimante 3D s'empilent.
+  - `html` et `body` sont en `overflow: hidden`. Sur téléphone, un élément qui sort de l'écran élargit toute la page. Ainsi, l'icône du menu rapide, qui grandit vers la modale Crédit ou Courses par `layoutId`, l'étirait jusqu'à 570 px : la modale glissait sous l'écran et la page se dézoomait.
+- **Foyer** : une `Modal` (donc une carte sur mobile) avec :
   - `PersonCard` et `PetCard` ;
   - le carrousel de raccourcis ;
   - la liste Thème / Maison / Système, qui remplace le dock.
@@ -60,6 +62,8 @@ Contraintes :
 - Toucher le fond d'une modale la ferme, sur la tablette aussi.
 - Le téléphone en paysage et la tablette en portrait restent sur la disposition tablette.
 - Un élément collé à un bord de l'écran doit ajouter la zone sûre à sa marge. Chromium ne la simule que par le protocole DevTools : le test E2E la fixe avec `Emulation.setSafeAreaInsetsOverride`.
+- La page ne défile jamais : ce qui déborde est coupé. Les tests E2E du mobile activent `isMobile`, sans quoi Chromium n'élargit pas la page et un débordement passe inaperçu.
+- Le bouton de fermeture d'une modale haute est loin du pouce. Toucher le fond la ferme aussi.
 
 ## Alternatives considérées
 
@@ -73,5 +77,6 @@ Contraintes :
 - **Route `/mobile` séparée** : deux points d'entrée à maintenir, et l'appli force déjà le chemin `/`.
 - **Démonter la 3D sous la vue Pièces** : moins de mémoire, mais une recompilation des shaders (plusieurs secondes sur un GPU faible) à chaque retour.
 - **Composants de tuile séparés** : la logique des entités, des gestes et des modales serait doublée.
+- **Feuille collée au bas de l'écran** (première version) : sur iPhone, les modales paraissaient basses et tassées, et le moindre débordement les poussait sous l'écran.
 - **`SwipeableDrawer` de MUI pour les feuilles** : on perdrait l'animation `layoutId` qui relie le bouton à sa modale, et il faudrait deux composants de modale.
 - **Bascule aussi en paysage** (hauteur < 600 px) : il faudrait une troisième disposition, et les tests E2E en 640 × 360 changeraient de disposition.

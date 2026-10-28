@@ -10,8 +10,7 @@ type ContainerProps = {
 
 export function Container(props: ContainerProps) {
   const {id, children} = props;
-  // Sur téléphone, la modale est une feuille posée en bas de l'écran.
-  const sheet = useIsMobile();
+  const isMobile = useIsMobile();
 
   return (
     <Stack
@@ -24,11 +23,7 @@ export function Container(props: ContainerProps) {
         mass: 0.55,
         stiffness: 100,
       }}
-      transformTemplate={
-        sheet
-          ? undefined
-          : (_, generated) => `translate(-50%, -50%) ${generated}`
-      }
+      transformTemplate={(_, generated) => `translate(-50%, -50%) ${generated}`}
       layoutId={id}
       spacing={2}
       sx={{
@@ -44,17 +39,15 @@ export function Container(props: ContainerProps) {
         maxHeight: 'calc(100% - 4rem)',
         alignItems: 'stretch',
         boxShadow: '0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)',
-        ...(sheet && {
-          position: 'fixed',
-          top: 'auto',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          maxHeight: '85dvh',
+        ...(isMobile && {
+          // Sur téléphone, une carte centrée entre l'encoche et la barre
+          // d'accueil de l'iPhone.
+          top: 'calc(50% + (env(safe-area-inset-top) - env(safe-area-inset-bottom)) / 2)',
+          width: 'calc(100% - 24px)',
+          maxHeight:
+            'calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px)',
           overflowY: 'auto',
-          borderRadius: '24px 24px 0 0',
-          // Au-dessus de la barre d'accueil de l'iPhone.
-          pb: 'max(16px, env(safe-area-inset-bottom))',
+          borderRadius: '24px',
         }),
       }}
     >
