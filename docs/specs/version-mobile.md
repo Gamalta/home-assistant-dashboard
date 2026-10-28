@@ -136,7 +136,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Système »
-- **Alors** la modale Système s'ouvre
+- **Alors** la modale Système s'ouvre, sans le réglage de la veille
 
 ### Scénario : le menu rapide reste sur la vue 3D
 

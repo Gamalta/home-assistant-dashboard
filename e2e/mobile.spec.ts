@@ -376,6 +376,8 @@ test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
   await page.getByRole('button', {name: /Système/}).tap();
 
   await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+  await expect(page.getByText('Affichage')).toBeVisible();
+  await expect(page.getByRole('combobox', {name: 'Veille'})).toHaveCount(0);
 });
 
 test('le menu rapide reste sur la vue 3D', async ({page}) => {

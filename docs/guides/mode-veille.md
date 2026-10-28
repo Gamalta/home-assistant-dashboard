@@ -13,4 +13,4 @@ Le fond est un ciel qui suit le jour, d'après `sun.sun` ou, à défaut, l'heure
 
 Un appui n'importe où réveille la tablette, sans actionner le bouton qui se trouve dessous.
 
-Le réglage est propre à l'appareil : il n'a pas d'effet sur les autres écrans qui ouvrent le dashboard. Le rétroéclairage et le maintien de l'écran allumé restent gérés par l'application kiosque de la tablette ([ADR 0026](../adr/0026-veille-par-appareil.md)).
+Le réglage est propre à l'appareil : il n'a pas d'effet sur les autres écrans qui ouvrent le dashboard. Sur téléphone, la disposition mobile ne propose pas ce réglage et n'affiche pas d'écran de veille. Le rétroéclairage et le maintien de l'écran allumé restent gérés par l'application kiosque de la tablette ([ADR 0026](../adr/0026-veille-par-appareil.md)).

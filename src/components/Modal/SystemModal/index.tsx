@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useHouseContext} from '../../../contexts/HouseContext';
+import {useIsMobile} from '../../../hooks/useIsMobile';
 import {SystemGraphDisplay} from './SystemGraphDisplay';
 
 type SystemModalProps = Omit<ModalProps, 'children'> & {
@@ -27,6 +28,7 @@ export function SystemModal(props: SystemModalProps) {
     setLightingTrial,
   } = useAppContext();
   const {houseConfig} = useHouseContext();
+  const mobile = useIsMobile();
   const house = houseConfig?.house;
   const is3d = webGLSupported && !!house?.model;
 
@@ -78,7 +80,7 @@ export function SystemModal(props: SystemModalProps) {
             disabled={!is3d || !webGPUSupported}
           />
           <OptionRow label="Debug" option="debug" disabled={!is3d} />
-          <ScreensaverRow />
+          {!mobile && <ScreensaverRow />}
           {is3d && configuration.debug && (
             <>
               <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />

@@ -16,6 +16,7 @@ Après un délai sans interaction, la tablette affiche un écran de veille lisib
 - Éteindre l'écran ou régler son rétroéclairage : un navigateur n'y a pas accès, c'est le rôle de l'application kiosque.
 - Garder l'écran allumé (Screen Wake Lock) : idem.
 - Une veille réglée par maison : le délai est propre à chaque appareil.
+- La veille sur téléphone : la disposition mobile n'affiche ni l'écran de veille ni son réglage.
 
 ## Comportement attendu
 
@@ -53,6 +54,7 @@ Après un délai sans interaction, la tablette affiche un écran de veille lisib
 
 - [x] Chaque interaction relance le délai (`hooks/useIdle.test.ts`).
 - [x] Les scénarios sont couverts par `e2e/veille.spec.ts`.
+- [x] La modale Système du téléphone ne propose pas de veille (`e2e/mobile.spec.ts`).
 - [x] La scène 3D ne dessine aucune image pendant la veille (0 appel de dessin en 60 s, build de production).
 
 ## Impacts

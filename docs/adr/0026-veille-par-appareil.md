@@ -11,6 +11,7 @@ Seule la tablette murale a besoin d'une veille : sur un ordinateur, un écran qu
 ## Décision
 
 - Le délai de veille est une option de l'appareil (`screensaverMinutes`, « Jamais » par défaut), réglée dans la modale Système.
+- Pas de veille sur téléphone : la disposition mobile ne monte pas `Screensaver`, et la modale Système y masque le réglage.
 - `useIdle` passe en veille après ce délai sans `pointerdown`, `keydown` ni `wheel`.
 - `Screensaver` recouvre toute l'interface. Il se ferme au `click`, pas au `pointerdown` : l'écran de veille reste sous le doigt jusqu'au relâcher, et le clic n'atteint jamais le bouton du dessous.
 - Il affiche l'heure, la météo, les trajets `trains` des raccourcis et les alertes, en lisant la config de la barre latérale : pas de config propre à la veille. Il réutilise `getHouseAlerts`, `useTrainDepartures` (extrait de la tuile des trains) et `TrainDepartureDisplay`.
