@@ -50,7 +50,7 @@ export function MortgageBalanceChart(props: MortgageBalanceChartProps) {
           color: colorOf(index),
           format: formatEuros,
         }))}
-        sx={{height: 140, width: 564}}
+        sx={{height: 140, width: {xs: '100%', sm: 564}}}
       />
     </Stack>
   );

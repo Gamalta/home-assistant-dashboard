@@ -37,9 +37,13 @@ export function Printer3dModal(props: Printer3dModalProps) {
         </Stack>
       }
     >
-      <Stack direction="row" spacing={3} sx={{mt: -2}}>
+      <Stack
+        direction={{xs: 'column', sm: 'row'}}
+        spacing={3}
+        sx={{mt: -2, alignItems: {xs: 'center', sm: 'normal'}}}
+      >
         <PrinterView ids={ids} />
-        <Stack spacing={2} sx={{width: 300}}>
+        <Stack spacing={2} sx={{width: {xs: '100%', sm: 300}}}>
           <PrinterAlerts ids={ids} />
           <PrintProgress ids={ids} />
           <PrintSpeed entityId={ids.printingSpeed} />
