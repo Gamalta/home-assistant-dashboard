@@ -31,6 +31,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Étant donné** un téléphone en portrait (390 × 844)
 - **Quand** le dashboard s'ouvre
 - **Alors** un en-tête s'affiche en haut de l'écran, avec le sélecteur « 3D » / « Pièces » et les avatars
+- **Et** les avatars se chevauchent, celui de gauche par-dessus celui de droite
 - **Et** il n'y a ni barre latérale, ni barre en bas, ni heure, ni météo
 
 ### Scénario : l'en-tête et le carrousel évitent l'encoche et la barre d'accueil
