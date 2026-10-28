@@ -37,7 +37,7 @@ test('la carte « Énergie » ouvre le mois en cours, comparé au mois précéde
   await expect(
     page.getByText(/^[−+]?\d+\s% par rapport à .+ \d{4}, à date égale$/),
   ).toBeVisible();
-  await expect(page.getByText(/^.+ sur 6 kVA$/)).toBeVisible();
+  await expect(page.getByText('sur 6 kVA', {exact: true})).toBeVisible();
   // Un segment heures pleines et un segment heures creuses par jour écoulé.
   await expect(chart.locator('.MuiBarChart-element')).toHaveCount(
     2 * new Date().getDate(),
@@ -54,6 +54,43 @@ test('le menu rapide ouvre la même modale, avec le prix du kWh de chaque pério
   const totals = page.getByRole('region', {name: 'Totaux'});
   await expect(totals).toContainText(/Heures pleines0,27\s€\/kWh/);
   await expect(totals).toContainText(/Heures creuses0,21\s€\/kWh/);
+});
+
+test('le courant circule du Linky à la maison par le fil de la période en cours', async ({
+  page,
+}) => {
+  await openEnergyModal(page);
+  const flow = page.getByRole('region', {name: 'Courant'});
+  await expect(flow).toContainText(/HP 0,27\s€\/kWh/);
+  await expect(flow).toContainText(/HC 0,21\s€\/kWh/);
+  await expect(flow).toContainText(/≈ \d+,\d{2}\s€\/h/);
+
+  const current = flow.locator('[aria-current="true"]');
+  await expect(current).toHaveCount(1);
+  await expect
+    .poll(() =>
+      current.evaluate(
+        element => element.getAnimations({subtree: true}).length,
+      ),
+    )
+    .toBe(1);
+});
+
+test('le fil reste immobile avec « réduire les animations »', async ({
+  page,
+}) => {
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  await openEnergyModal(page);
+  const current = page
+    .getByRole('region', {name: 'Courant'})
+    .locator('[aria-current="true"]');
+  await expect(current).toBeVisible();
+
+  expect(
+    await current.evaluate(
+      element => element.getAnimations({subtree: true}).length,
+    ),
+  ).toBe(0);
 });
 
 test('le total et l’écart restent hors du tracé, sous le survol', async ({
