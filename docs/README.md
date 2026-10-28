@@ -13,4 +13,4 @@
 | [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun       |
 | [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)   |
 | [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale         |
-| [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et ambilight HyperHDR    |
+| [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et modale TV HyperHDR    |

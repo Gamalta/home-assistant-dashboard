@@ -101,8 +101,9 @@ export const HouseConfig: HouseConfigType = {
           position: {x: -3.0, y: 0.4, z: 5.6},
         },
         {
-          type: 'ambilight',
+          type: 'tv',
           lightEntityId: 'light.tv_ambilight',
+          ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
           position: {x: -3.3, y: 2.6, z: 4.0},
         },
       ],

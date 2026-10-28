@@ -1,6 +1,6 @@
-# Bandeaux LED, effets et ambilight
+# Bandeaux LED, effets et modale TV
 
-La modale lumière a un onglet « Effets » pour toute lumière qui en propose, avec les réglages propres aux bandeaux WLED. L'élément `ambilight` pilote un ambilight HyperHDR ([spec](../specs/bandeaux-led-ambilight.md)).
+La modale lumière a un onglet « Effets » pour toute lumière qui en propose, avec les réglages propres aux bandeaux WLED. L'élément `tv` montre en direct l'image de la TV et ses LED, et pilote son ambilight HyperHDR ([spec](../specs/bandeaux-led-ambilight.md)).
 
 ## Effets d'une lumière
 
@@ -18,7 +18,7 @@ Un bandeau WLED est un élément `light` ordinaire :
 },
 ```
 
-Quand le bandeau est seul sélectionné, l'onglet « Effets » ajoute ses réglages. Ils sont trouvés à partir du nom de la lumière, comme l'intégration WLED les nomme ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-apercu-par-images.md)) :
+Quand le bandeau est seul sélectionné, l'onglet « Effets » ajoute ses réglages. Ils sont trouvés à partir du nom de la lumière, comme l'intégration WLED les nomme ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)) :
 
 | Entité                           | Affichage             |
 | -------------------------------- | --------------------- |
@@ -36,22 +36,34 @@ Zigbee2MQTT publie la liste des effets Hue (`candle`, `fireplace`, `colorloop`�
 
 La vitesse des effets, `number.<lumière>_effect_speed`, est désactivée par défaut dans Home Assistant. Une fois activée (Paramètres → Appareils et services → Entités), elle s'affiche comme curseur « Vitesse ». La couleur des effets (`text.<lumière>_effect_color`) n'est pas utilisée.
 
-## Ambilight HyperHDR
+## TV et ambilight HyperHDR
 
-L'ambilight utilise l'intégration HACS [HyperHDR](https://github.com/Shaffer-Softworks/hyperhdr-ha). Chaque instance HyperHDR crée une lumière `light.<instance>` et, désactivée par défaut, une caméra `camera.<instance>_led_gradient` : l'activer pour avoir l'aperçu.
+La TV utilise l'intégration HACS [HyperHDR](https://github.com/Shaffer-Softworks/hyperhdr-ha). Chaque instance HyperHDR crée une lumière `light.<instance>` et deux caméras, désactivées par défaut, à activer (Paramètres → Appareils et services → Entités) :
+
+| Caméra                           | Affichage                                    |
+| -------------------------------- | -------------------------------------------- |
+| `camera.<instance>_led_colors`   | L'image que capte HyperHDR, en direct        |
+| `camera.<instance>_led_gradient` | Le halo des LED autour de l'image, en direct |
+
+Si l'authentification locale de HyperHDR est active, donner le mot de passe administrateur dans les options de l'intégration : sans lui, « LED Colors » ne reçoit aucune image.
 
 ```ts
 {
-  type: 'ambilight',
+  type: 'tv',
   lightEntityId: 'light.tv_ambilight',
+  ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
   position: {x: -3.3, y: 1.1, z: 3.9},
 },
 ```
 
-Utiliser la lumière principale de l'instance, pas `light.<instance>_priority`, qui ne connaît ni la capture vidéo ni l'état réel des LED. Comme une lumière, un appui court sur le bouton allume ou éteint l'ambilight, et un appui long ouvre la modale :
+Utiliser la lumière principale de l'instance, pas `light.<instance>_priority`, qui ne connaît ni la capture vidéo ni l'état réel des LED.
 
-- **Allumé** et le curseur de luminosité ;
-- **l'aperçu** : l'image de la caméra « LED Gradient », redemandée toutes les 2 s, seulement modale ouverte ;
+`ledLayout` recopie la disposition classique de HyperHDR (Matériel LED → Disposition classique) : le nombre de LED en haut (`top`), à droite (`right`), en bas (`bottom`) et à gauche (`left`), la « Position d'entrée » (`position`, 0 par défaut) et la « Direction inverse » (`reverse`, `false` par défaut). Le halo place chaque LED à l'endroit qu'elle occupe autour de l'écran. Les espaces sans LED (« Longueur de l'espace »), les groupes et les matrices ne sont pas pris en charge : avec eux, les couleurs se décalent.
+
+Comme une lumière, un appui court sur le bouton TV allume ou éteint l'ambilight, et un appui long ouvre la modale TV :
+
+- **l'image de la TV**, en direct, entourée du halo des LED quand l'ambilight est allumé ; les flux s'arrêtent à la fermeture de la modale ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)) ;
+- **Ambilight** et le curseur de luminosité ;
 - **la source** :
   - « Vidéo » lance l'effet `USB Capture`, la capture de la carte d'acquisition HDMI-USB ;
   - « Couleur » propose huit couleurs fixes (effet `Solid`) ;
@@ -63,6 +75,6 @@ Les réglages de lissage, de moteur de couleur et de tone mapping HDR restent da
 
 ## Démo et mock
 
-La démo place près de la TV du séjour un bandeau WLED fictif, `light.living_room_strip`, et un ambilight fictif, `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). L'aperçu fictif est `public/ambilight/demo-led-gradient.svg`.
+La démo place près de la TV du séjour un bandeau WLED fictif, `light.living_room_strip`, et une TV dont l'ambilight fictif est `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). Les caméras fictives servent des images fixes, `public/ambilight/demo-tv-image.svg` et `demo-led-gradient.svg`, dont les couleurs se répondent pour la disposition de la démo (16, 9, 16, 9 LED) ; le halo ne suit donc pas la source choisie.
 
 Le bandeau n'a pas de lumière dans le modèle 3D de la démo : la console signale « Aucune lumière 3D trouvée pour light.living_room_strip », sans conséquence.

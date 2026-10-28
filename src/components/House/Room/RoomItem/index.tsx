@@ -1,5 +1,4 @@
 import {RoomItemConfigType} from '../../../../configs/house';
-import {RoomAmbilight} from './RoomAmbilight';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
@@ -7,6 +6,7 @@ import {RoomOutlet} from './RoomOutlet';
 import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomTemperature} from './RoomTemperature';
+import {RoomTv} from './RoomTv';
 
 type RoomItemProps = {
   id: string;
@@ -31,8 +31,8 @@ export function RoomItem(props: RoomItemProps) {
       return <RoomOutlet id={id} outletConfig={itemConfig} />;
     case 'printer3d':
       return <RoomPrinter3d id={id} printer3dConfig={itemConfig} />;
-    case 'ambilight':
-      return <RoomAmbilight id={id} ambilightConfig={itemConfig} />;
+    case 'tv':
+      return <RoomTv id={id} tvConfig={itemConfig} />;
     default:
       return <></>;
   }

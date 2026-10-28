@@ -3,24 +3,24 @@ import Button from '@mui/material/Button';
 import TvIcon from '@mui/icons-material/TvRounded';
 import {motion} from 'framer-motion';
 import {useState} from 'react';
-import {AmbilightConfigType} from '../../../../configs/house';
+import {TvConfigType} from '../../../../configs/house';
 import {useLongPress} from '../../../../hooks/useLongPress';
-import {AmbilightModal} from '../../../Modal/AmbilightModal';
+import {TvModal} from '../../../Modal/TvModal';
 
-type RoomAmbilightProps = {
+type RoomTvProps = {
   id: string;
-  ambilightConfig: AmbilightConfigType;
+  tvConfig: TvConfigType;
 };
 
-// Comme une lumière : un appui bascule, un appui long ouvre la modale.
-export function RoomAmbilight(props: RoomAmbilightProps) {
-  const {id, ambilightConfig} = props;
-  const [ambilightModal, setAmbilightModal] = useState(false);
-  const light = useEntity(ambilightConfig.lightEntityId, {
+// Comme une lumière : un appui bascule l'ambilight, un appui long ouvre la modale.
+export function RoomTv(props: RoomTvProps) {
+  const {id, tvConfig} = props;
+  const [tvModal, setTvModal] = useState(false);
+  const light = useEntity(tvConfig.lightEntityId, {
     returnNullIfNotFound: true,
   });
   const longPress = useLongPress(
-    () => setAmbilightModal(true),
+    () => setTvModal(true),
     () => light?.service.toggle(),
   );
 
@@ -28,11 +28,11 @@ export function RoomAmbilight(props: RoomAmbilightProps) {
   const unavailable = light.state === 'unavailable';
   return (
     <>
-      <motion.div layoutId={`${id}-ambilight`}>
+      <motion.div layoutId={`${id}-tv`}>
         <Button
           variant="contained"
           color="secondary"
-          aria-label="Ambilight"
+          aria-label="TV"
           sx={{
             height: '100%',
             minWidth: 0,
@@ -48,12 +48,13 @@ export function RoomAmbilight(props: RoomAmbilightProps) {
           <TvIcon />
         </Button>
       </motion.div>
-      <AmbilightModal
-        id={`${id}-ambilight`}
-        open={ambilightModal}
-        onClose={() => setAmbilightModal(false)}
-        title="Ambilight"
+      <TvModal
+        id={`${id}-tv`}
+        open={tvModal}
+        onClose={() => setTvModal(false)}
+        title="TV"
         light={light}
+        ledLayout={tvConfig.ledLayout}
       />
     </>
   );

@@ -8,7 +8,7 @@ import {
 import {createCamera} from './createCamera';
 import {createLight} from './createLight';
 
-// Instance HyperHDR fictive, en capture vidéo, et sa caméra « LED Gradient ».
+// Instance HyperHDR fictive, en capture vidéo, et ses caméras de l'image et des LED.
 export function createAmbilight(lightEntityId: string): HassEntities {
   const ids = ambilightEntityIds(lightEntityId);
 
@@ -37,7 +37,13 @@ export function createAmbilight(lightEntityId: string): HassEntities {
         ],
       },
     }),
-    ...createCamera(ids.gradient, {
+    ...createCamera(ids.image, {
+      attributes: {
+        friendly_name: 'Ambilight LED Colors',
+        entity_picture: '/ambilight/demo-tv-image.svg',
+      },
+    }),
+    ...createCamera(ids.leds, {
       attributes: {
         friendly_name: 'Ambilight LED Gradient',
         entity_picture: '/ambilight/demo-led-gradient.svg',

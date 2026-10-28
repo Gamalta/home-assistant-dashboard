@@ -50,9 +50,9 @@ test('règle un bandeau LED', async ({page}) => {
 });
 
 test('allume l’ambilight et change sa source', async ({page}) => {
-  await openModal(page, 'Ambilight', 'Ambilight');
+  await openModal(page, 'TV', 'TV');
 
-  const power = page.getByRole('switch', {name: 'Allumé'});
+  const power = page.getByRole('switch', {name: 'Ambilight'});
   await expect(power).not.toBeChecked();
   await power.check();
   await expect(power).toBeChecked();
@@ -72,22 +72,32 @@ test('allume l’ambilight et change sa source', async ({page}) => {
   await expect(candle).toHaveAttribute('aria-pressed', 'false');
 });
 
-test('rafraîchit l’aperçu des LED seulement modale ouverte', async ({page}) => {
-  const requests: string[] = [];
-  page.on('request', request => {
-    if (request.url().includes('/ambilight/')) requests.push(request.url());
-  });
+// Rouge moins bleu d'un pixel du halo, lu avant le flou CSS.
+function glowWarmth(page: Page, x: number, y: number) {
+  return page.getByTestId('led-glow').evaluate(
+    (canvas: HTMLCanvasElement, [x, y]) => {
+      const pixel = canvas.getContext('2d')?.getImageData(x, y, 1, 1).data;
+      return pixel ? pixel[0] - pixel[2] : 0;
+    },
+    [x, y],
+  );
+}
 
-  await openModal(page, 'Ambilight', 'Ambilight');
-  await expect(page.getByRole('img', {name: 'Aperçu des LED'})).toBeVisible();
-  await expect.poll(() => requests.length).toBeGreaterThanOrEqual(2);
+test('affiche l’image de la TV et le halo des LED en direct', async ({
+  page,
+}) => {
+  await openModal(page, 'TV', 'TV');
 
-  // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
-  const title = page.getByRole('heading', {name: 'Ambilight', exact: true});
-  await title.locator('..').getByRole('button').last().click();
-  await expect(title).toBeHidden();
-  const count = requests.length;
-  // Plus d'une période de rafraîchissement (2 s) sans aucune image demandée.
-  await page.waitForTimeout(3000);
-  expect(requests).toHaveLength(count);
+  await expect(page.getByRole('img', {name: 'Image de la TV'})).toBeVisible();
+  const glow = page.getByTestId('led-glow');
+  await expect(glow).toHaveCount(0);
+
+  const power = page.getByRole('switch', {name: 'Ambilight'});
+  await power.check();
+  // Le dégradé de la démo va de l'orange en haut à gauche au bleu en bas à droite.
+  await expect.poll(() => glowWarmth(page, 3, 3)).toBeGreaterThan(150);
+  await expect.poll(() => glowWarmth(page, 156, 86)).toBeLessThan(-150);
+
+  await power.uncheck();
+  await expect(glow).toHaveCount(0);
 });

@@ -28,7 +28,7 @@ Le modèle doit respecter le [budget de performance](../adr/0009-budget-performa
 Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`. Il exporte :
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
-- `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`ambilight`](bandeaux-led-ambilight.md)) ;
+- `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`tv`](bandeaux-led-ambilight.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
