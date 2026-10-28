@@ -96,6 +96,13 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
 - **Et** la page garde la largeur de l'écran
 
+### Scénario : la modale lumière tient dans la hauteur visible de Safari
+
+- **Étant donné** un iPhone 15 Pro dans Safari, avec 393 × 659 px visibles sous les barres
+- **Quand** l'utilisateur ouvre la modale d'une lumière
+- **Alors** la roue, les boutons et les cartes des lumières tiennent dans la carte, sans défilement
+- **Et** sur chaque carte de lumière, le bouton de lien flotte dans le coin
+
 ### Scénario : toucher le fond ferme la modale
 
 - **Étant donné** une modale ouverte

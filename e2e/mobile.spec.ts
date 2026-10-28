@@ -310,6 +310,32 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
   }
 });
 
+test.describe('Safari sur iPhone', () => {
+  // Hauteur visible d'un iPhone 15 Pro sous les barres de Safari.
+  test.use({viewport: {width: 393, height: 659}});
+
+  test('la modale lumière tient dans la hauteur visible de Safari', async ({
+    page,
+  }) => {
+    await longPress(
+      page,
+      page
+        .getByRole('region', {name: 'Séjour'})
+        .getByRole('button', {name: /Plafonnier du séjour/}),
+    );
+
+    const title = page.getByRole('heading', {name: 'Lumière', exact: true});
+    await expect(title).toBeVisible();
+    const card = title.locator('xpath=../..');
+    await expect(card.getByText('Hue Play du séjour')).toBeVisible();
+    await expect
+      .poll(() =>
+        card.evaluate(element => element.scrollHeight <= element.clientHeight),
+      )
+      .toBe(true);
+  });
+});
+
 test('toucher le fond ferme la modale', async ({page}) => {
   await longPress(
     page,
