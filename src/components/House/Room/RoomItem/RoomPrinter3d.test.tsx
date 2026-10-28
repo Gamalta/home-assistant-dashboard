@@ -17,6 +17,7 @@ async function openPrinterModal() {
           prefix: 'p1s_demo',
           position: {x: 0, y: 0, z: 0},
         }}
+        variant="label"
       />
     </HassConnect>,
   );

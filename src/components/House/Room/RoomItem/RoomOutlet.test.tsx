@@ -17,6 +17,7 @@ const renderOutlet = () =>
           powerEntityId: 'sensor.desk_outlet_power',
           position: {x: 0, y: 0, z: 0},
         }}
+        variant="label"
       />
     </HassConnect>,
   );
