@@ -22,7 +22,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - L'heure, la date et la météo : le téléphone les affiche déjà.
 - Une vue d'ensemble de la maison sur mobile : la caméra cadre toujours une pièce, on peut dézoomer à la main.
 - Un résumé de la maison (« 4 lumières allumées ») au-dessus de la liste des pièces.
-- Une application installable (PWA) et les notifications.
+- Les notifications. L'application installable a sa propre spec, [Application installable](application-installable.md).
 
 ## Comportement attendu
 

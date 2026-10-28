@@ -24,6 +24,15 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 - **Vibrations** : le téléphone vibre brièvement quand une modale s'ouvre et quand un appui court bascule une lumière ou une prise. Sur iPhone, il faut iOS 18 ([ADR 0044](../adr/0044-retour-haptique.md)).
 - Un appui long ne sélectionne jamais le texte et n'ouvre pas le menu du navigateur. Seuls les champs de saisie restent sélectionnables.
 
+## Installer l'application
+
+Le dashboard s'installe sur l'écran d'accueil et s'ouvre alors en plein écran, sans barre d'adresse ([ADR 0043](../adr/0043-application-installable-sans-service-worker.md)) :
+
+- **iPhone** : dans Safari, « Partager », puis « Sur l'écran d'accueil ».
+- **Android** : dans Chrome, le menu ⋮, puis « Installer l'application ».
+
+L'application installée garde sa propre connexion à Home Assistant : connectez-vous une fois à son premier lancement.
+
 ## Bien nommer les équipements
 
 Une tuile affiche le `friendly_name` de l'entité dans Home Assistant, sur deux lignes au plus. Préférez des noms courts (« Plafonnier », « Fenêtre ») à des noms qui répètent la pièce, déjà écrite en tête de carte.
@@ -40,4 +49,5 @@ La caméra se centre sur la lampe principale de la pièce : sa première lumièr
 - La page passe sous l'encoche et la barre d'accueil de l'iPhone (`viewport-fit=cover`). Un élément collé à un bord de l'écran ajoute `env(safe-area-inset-*)` à sa marge, comme l'en-tête et le carrousel. Les modales se centrent entre les zones sûres.
 - Une modale de téléphone donne toute sa carte au contenu, sans marge en plus. Elle doit tenir dans les 659 px que Safari laisse visibles sur un iPhone 15 Pro : une hauteur relative à l'écran s'y écrit en `svh`, car `vh` compte aussi les barres de Safari. Une largeur fixe y devient `{xs: '100%', sm: …}`, et deux blocs côte à côte s'empilent (`direction={{xs: 'column', sm: 'row'}}`). La page ne défile pas (`overflow: hidden` dans `theme/components/CssBaseline.ts`) : ce qui déborde est coupé.
 - Un retour haptique passe par `haptic()` (`src/utils/haptic.ts`), jamais directement par `navigator.vibrate`, absent de Safari.
+- Les icônes de l'application (`public/apple-touch-icon.png`, `icon-192.png`, `icon-512.png`) reprennent `public/icon.svg` à 60 % de leur taille, sur le fond `#1C1C1E`. Elles se régénèrent à la main si l'icône change.
 - Pour essayer : `pnpm build && pnpm preview`, puis la vue mobile des outils de développement, en 390 × 844. Les tests E2E sont dans `e2e/mobile.spec.ts`.

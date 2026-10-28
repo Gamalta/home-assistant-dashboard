@@ -387,6 +387,37 @@ test("le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre", as
   expect(await page.evaluate(() => window.__vibrations)).toEqual([10, 10]);
 });
 
+test('le dashboard s’installe sur l’écran d’accueil', async ({
+  page,
+  request,
+}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+  const icons: {src: string; sizes: string}[] = manifest.icons;
+
+  expect(manifest.short_name).toBe('Elihome');
+  expect(icons.map(icon => icon.sizes)).toEqual(
+    expect.arrayContaining(['192x192', '512x512']),
+  );
+  const appleIcon = await page
+    .locator('link[rel="apple-touch-icon"]')
+    .getAttribute('href');
+  for (const src of [...icons.map(icon => icon.src), appleIcon!]) {
+    const response = await request.get(src);
+    expect(response.headers()['content-type'], src).toBe('image/png');
+  }
+});
+
+test("l'application s'ouvre en plein écran", async ({page, request}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+
+  expect(manifest).toMatchObject({start_url: '/', display: 'standalone'});
+  await expect(
+    page.locator('meta[name="apple-mobile-web-app-status-bar-style"]'),
+  ).toHaveAttribute('content', 'black-translucent');
+});
+
 test('la vue Pièces liste toutes les pièces', async ({page}) => {
   await page.getByRole('button', {name: 'Pièces', exact: true}).tap();
 
