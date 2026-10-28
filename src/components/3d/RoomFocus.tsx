@@ -6,9 +6,6 @@ import {portraitDistance, roomCameraPose} from '../../utils/camera';
 
 // Distance caméra–pièce en paysage, en unités du modèle.
 const DISTANCE = 4;
-// La cible avance vers la caméra : la pièce remonte au-dessus du carrousel
-// qui couvre le bas de l'écran.
-const SHIFT = 0.45;
 const EPSILON = 0.01;
 
 type Controls = THREE.EventDispatcher<{start: object; end: object}> & {
@@ -53,7 +50,6 @@ export function RoomFocus(props: RoomFocusProps) {
       position,
       base,
       DISTANCE * portraitDistance(aspect),
-      SHIFT,
     );
     const next = {
       position: new THREE.Vector3(...pose.position),

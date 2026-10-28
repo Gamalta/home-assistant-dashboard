@@ -1,6 +1,6 @@
 import {Canvas, invalidate} from '@react-three/fiber';
 import Stack from '@mui/material/Stack';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   GizmoHelper,
   GizmoViewport,
@@ -12,7 +12,6 @@ import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
 import type {RenderBackend} from '../../../rendering/backends';
-import {roomCenter} from '../../../utils/model';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
 import {Camera} from '../Camera';
@@ -39,12 +38,6 @@ export function HouseScene(props: HouseSceneProps) {
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
   const focusRoom = rooms.find(room => room.id === focusRoomId);
-  // Identité stable : une nouvelle position relancerait le vol, même après un
-  // geste de l'utilisateur.
-  const focusCenter = useMemo(
-    () => focusRoom && roomCenter(focusRoom, scene),
-    [focusRoom, scene],
-  );
   const moving = useRef(false);
   // Options qui changent les shaders : la scène ne s'affiche qu'une fois
   // compilée pour celles en cours.
@@ -101,8 +94,8 @@ export function HouseScene(props: HouseSceneProps) {
             </>
           )}
           <Camera onMovingChange={value => (moving.current = value)} />
-          {focusCenter && (
-            <RoomFocus position={focusCenter} base={camera.position} />
+          {focusRoom && (
+            <RoomFocus position={focusRoom.position} base={camera.position} />
           )}
           {ready && <Benchmark backend={backend} />}
           <Scene scene={scene} backend={backend} />

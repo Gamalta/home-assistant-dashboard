@@ -60,7 +60,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Étant donné** la vue 3D sur le séjour
 - **Quand** l'utilisateur touche la puce « Cuisine »
 - **Alors** la caméra vole jusqu'à la cuisine et le carrousel affiche sa carte
-- **Et** elle se centre sur la lampe principale de la cuisine, la première lumière de sa config
+- **Et** elle vise le centre de la cuisine, sa position dans la config (`room.position`)
 - **Et** seules les étiquettes de la cuisine restent dans la scène
 - **Et** aucun shader n'est compilé pendant le vol
 
@@ -154,7 +154,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - [ ] La tablette (≥ 600 px de large) ne change pas : les tests E2E existants passent sans modification.
 - [ ] Les tuiles réutilisent la logique, les gestes et les modales des éléments de pièce : aucun équipement n'est piloté deux fois.
-- [ ] Les règles pures ont leurs tests unitaires : filtre des pièces (`utils/room.test.ts`), cadrage de la caméra (`utils/camera.test.ts`), lampe principale d'une pièce (`utils/model.test.ts`), libellés d'état des tuiles (`utils/entity/*.test.ts`), couleur d'icône lisible (`utils/color.test.ts`), tolérance au glissé (`hooks/useLongPress.test.ts`) et tuile (`Mobile/Tile.test.tsx`).
+- [ ] Les règles pures ont leurs tests unitaires : filtre des pièces (`utils/room.test.ts`), cadrage de la caméra (`utils/camera.test.ts`), libellés d'état des tuiles (`utils/entity/*.test.ts`), couleur d'icône lisible (`utils/color.test.ts`), tolérance au glissé (`hooks/useLongPress.test.ts`) et tuile (`Mobile/Tile.test.tsx`).
 - [ ] Chaque scénario visible est couvert par un test E2E de `e2e/mobile.spec.ts`, qui porte son nom.
 - [ ] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : aucun programme compilé pendant un vol de caméra.
 
