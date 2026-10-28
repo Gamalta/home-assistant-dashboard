@@ -18,6 +18,7 @@ import {
   STATISTICS_PERIOD,
 } from '../../../utils/energy';
 import {EnergyChart} from './EnergyChart';
+import {EnergyFlow} from './EnergyFlow';
 import {EnergyTotals} from './EnergyTotals';
 
 const SCALES: Record<Scale, string> = {
@@ -79,6 +80,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
         prices={prices}
       />
       <Stack spacing={3} sx={{width: {xs: '100%', sm: 300}}}>
+        <EnergyFlow shortcutConfig={shortcutConfig} />
         <ToggleButtonGroup
           exclusive
           fullWidth

@@ -246,6 +246,14 @@ export function getSubscribedPower(subscribedCurrent: number | null) {
   return subscribedCurrent ? subscribedCurrent * 200 : null;
 }
 
+/** Durée d'un tour du fil animé, en secondes : par paliers, pour qu'il ne saute pas à chaque relevé. */
+export function getFlowDuration(power: number) {
+  if (power < 500) return 2;
+  if (power < 1500) return 1.2;
+  if (power < 3000) return 0.7;
+  return 0.4;
+}
+
 const formatNumber = (value: number) =>
   value.toLocaleString('fr-FR', {maximumFractionDigits: 1});
 

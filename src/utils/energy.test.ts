@@ -12,6 +12,7 @@ import {
   getComparisonPeriod,
   getConsumption,
   getCost,
+  getFlowDuration,
   getPeriod,
   getSubscribedPower,
   getTariffPeriod,
@@ -439,6 +440,19 @@ describe('getSubscribedPower', () => {
   it('ne divise jamais par une intensité nulle ou absente', () => {
     expect(getSubscribedPower(0)).toBeNull();
     expect(getSubscribedPower(null)).toBeNull();
+  });
+});
+
+describe('getFlowDuration', () => {
+  it('fait circuler le courant plus vite quand la maison consomme plus', () => {
+    expect(getFlowDuration(300)).toBe(2);
+    expect(getFlowDuration(1200)).toBe(1.2);
+    expect(getFlowDuration(2500)).toBe(0.7);
+    expect(getFlowDuration(5000)).toBe(0.4);
+  });
+
+  it('garde la même vitesse entre deux relevés proches', () => {
+    expect(getFlowDuration(1520)).toBe(getFlowDuration(2980));
   });
 });
 
