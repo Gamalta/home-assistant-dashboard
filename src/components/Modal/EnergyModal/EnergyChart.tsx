@@ -75,7 +75,7 @@ export function EnergyChart(props: EnergyChartProps) {
             spacing={0.5}
             sx={{
               alignItems: 'center',
-              color: change < 0 ? 'success.main' : 'warning.main',
+              color: change < 0 ? 'success.main' : 'primary.main',
             }}
           >
             {change < 0 ? <TrendingDownIcon /> : <TrendingUpIcon />}

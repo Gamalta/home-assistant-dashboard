@@ -121,10 +121,10 @@ describe('EnergyModalContent', () => {
 
     expect(await screen.findByText('310 kWh')).toBeInTheDocument();
     expect(screen.getByText(/^71,30\s€$/)).toBeInTheDocument();
-    // En orange : on consomme plus.
+    // Dans la couleur principale : on consomme plus.
     expect(
       screen.getByText(/^\+29\s% par rapport à septembre 2026$/).parentElement,
-    ).toHaveStyle({color: palette.warning.main});
+    ).toHaveStyle({color: palette.primary.main});
     const totals = screen.getByRole('region', {name: 'Totaux'});
     expect(totals).toHaveTextContent(/Mois précédent240 kWh55,50\s€/);
     // Le prix du kWh retenu pour chaque période tarifaire.

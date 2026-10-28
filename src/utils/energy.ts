@@ -1,7 +1,12 @@
 export type TariffPeriod = 'peak' | 'offPeak';
 
 export const TARIFF_PERIODS = {
-  peak: {label: 'Heures pleines', short: 'HP', color: '#d95926'},
+  // La couleur primary du thème, qui suit le mode clair ou sombre.
+  peak: {
+    label: 'Heures pleines',
+    short: 'HP',
+    color: 'var(--mui-palette-primary-main)',
+  },
   offPeak: {label: 'Heures creuses', short: 'HC', color: '#2a78d6'},
 } as const;
 
