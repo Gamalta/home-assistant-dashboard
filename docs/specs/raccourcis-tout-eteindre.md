@@ -1,4 +1,4 @@
-# Carrousel et scénarios de la barre latérale
+# Carrousel et menu rapide de la barre latérale
 
 - Issue : #15
 - Statut : Livrée
@@ -9,7 +9,7 @@ Ce qui concerne toute la maison n'a pas d'emplacement : la carte sous les person
 
 ## Objectif
 
-Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, et un menu de scénarios (Départ, Température, Énergie…) en haut de la vue 3D, près de la barre latérale, qui lance chacun en deux appuis.
+Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, et un menu rapide de scénarios (Départ, Température, Énergie…) en haut de la vue 3D, près de la barre latérale, qui lance chacun en deux appuis.
 
 ## Hors périmètre
 
@@ -52,16 +52,16 @@ Un carrousel de cartes riches, qu'on fait défiler du doigt sous les personnes, 
 - **Et** les boutons « Pause » et « Suivant » agissent sans ouvrir la modale
 - **Et** un lecteur éteint affiche « Éteint », sans boutons
 
-### Scénario : ouvrir le menu des scénarios
+### Scénario : ouvrir le menu rapide
 
 - **Étant donné** une maison avec des scénarios configurés
-- **Quand** l'utilisateur touche le bouton rond « Scénarios », en haut à gauche de la vue 3D, près de la barre latérale et à la hauteur de l'en-tête
+- **Quand** l'utilisateur touche le bouton rond « Menu rapide », en haut à gauche de la vue 3D, près de la barre latérale et à la hauteur de l'en-tête
 - **Alors** le menu se déplie vers le bas, avec l'icône et le nom de chaque script, dans l'ordre de la config
 - **Et** il reste ouvert jusqu'au choix d'un scénario, sans réagir au survol
 
 ### Scénario : lancer un scénario d'un appui
 
-- **Étant donné** le menu des scénarios ouvert
+- **Étant donné** le menu rapide ouvert
 - **Quand** l'utilisateur touche « Départ »
 - **Alors** le script est lancé tout de suite, sans confirmation, et le menu se referme
 - **Et** le bouton rond montre une coche pendant 1,5 s, puis reprend son icône

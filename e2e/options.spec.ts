@@ -63,6 +63,14 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
   await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });
 
+// Elle ne s'affiche plus que depuis le menu rapide (ADR 0041).
+test('ne propose plus la carte des températures', async ({page}) => {
+  await page.goto('/');
+  await openSystemModal(page);
+  await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
+  await expect(page.getByText('Carte des températures')).toHaveCount(0);
+});
+
 // Le panneau d'essai se pose sur la vue 3D, à la place de la modale.
 async function openLightingTrial(page: Page) {
   await openSystemModal(page);

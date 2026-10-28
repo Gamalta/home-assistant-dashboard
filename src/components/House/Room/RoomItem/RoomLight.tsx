@@ -7,15 +7,19 @@ import {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 import {LightModal} from '../../../Modal/LightModal';
 import Button from '@mui/material/Button';
-import {lightColor} from '../../../../utils/entity/light';
+import {lightColor, lightStateLabel} from '../../../../utils/entity/light';
+import {readableOn} from '../../../../utils/color';
+import {Tile} from '../../../Mobile/Tile';
+import type {ItemVariant} from '.';
 
 type RoomLightProps = {
   id: string;
   lightConfig: LightConfigType;
+  variant: ItemVariant;
 };
 
 export function RoomLight(props: RoomLightProps) {
-  const {id, lightConfig} = props;
+  const {id, lightConfig, variant} = props;
 
   const [lightModal, setLightModal] = useState(false);
   const {setLightEntities} = useRoomContext();
@@ -47,25 +51,39 @@ export function RoomLight(props: RoomLightProps) {
   return (
     <>
       <motion.div layoutId={`${id}-light`}>
-        <Button
-          variant="contained"
-          color="secondary"
-          aria-label={light.attributes.friendly_name}
-          sx={{
-            height: '100%',
-            minWidth: 0,
-            px: '6px',
-            ...(light?.state === 'on' && {
-              color: `rgb(${lightColor(light).join(',')})`,
-            }),
+        {variant === 'tile' ? (
+          <Tile
+            icon={icon}
+            name={light.attributes.friendly_name ?? 'Lumière'}
+            state={lightStateLabel(light)}
+            active={light.state === 'on'}
+            aria-pressed={light.state === 'on'}
+            color={`rgb(${lightColor(light).join(',')})`}
+            iconColor={readableOn(lightColor(light))}
+            unavailable={unavailable}
+            {...(!unavailable && lightLongPress)}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            aria-label={light.attributes.friendly_name}
+            sx={{
+              height: '100%',
+              minWidth: 0,
+              px: '6px',
+              ...(light?.state === 'on' && {
+                color: `rgb(${lightColor(light).join(',')})`,
+              }),
 
-            cursor: unavailable ? 'not-allowed' : 'pointer',
-            opacity: unavailable ? 0.5 : 1,
-          }}
-          {...(!unavailable && lightLongPress)}
-        >
-          {icon}
-        </Button>
+              cursor: unavailable ? 'not-allowed' : 'pointer',
+              opacity: unavailable ? 0.5 : 1,
+            }}
+            {...(!unavailable && lightLongPress)}
+          >
+            {icon}
+          </Button>
+        )}
       </motion.div>
       <LightModal
         id={`${id}-light`}

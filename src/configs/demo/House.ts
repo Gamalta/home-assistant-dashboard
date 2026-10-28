@@ -67,7 +67,14 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.energy'],
+  mortgages: [
+    'sensor.loan_main',
+    'sensor.loan_ptz',
+    'sensor.loan_action_logement',
+    'sensor.loan_works',
+  ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},

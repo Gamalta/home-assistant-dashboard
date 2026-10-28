@@ -14,6 +14,7 @@ import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
+import {createLoan} from './createLoan';
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -99,12 +100,24 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createCover('cover.living_room_shutter'),
-  ...createCover('cover.kitchen_shutter'),
-  ...createCover('cover.kitchen_shutter_2'),
-  ...createCover('cover.bedroom_shutter'),
-  ...createCover('cover.bedroom_2_shutter'),
-  ...createCover('cover.bedroom_3_shutter'),
+  ...createCover('cover.living_room_shutter', {
+    attributes: {friendly_name: 'Volet du séjour'},
+  }),
+  ...createCover('cover.kitchen_shutter', {
+    attributes: {friendly_name: 'Fenêtre de la cuisine'},
+  }),
+  ...createCover('cover.kitchen_shutter_2', {
+    attributes: {friendly_name: 'Porte-fenêtre de la cuisine'},
+  }),
+  ...createCover('cover.bedroom_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre'},
+  }),
+  ...createCover('cover.bedroom_2_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre 2'},
+  }),
+  ...createCover('cover.bedroom_3_shutter', {
+    attributes: {friendly_name: 'Volet de la chambre 3'},
+  }),
 
   ...createLight('light.living_room_light', {
     state: 'off',
@@ -429,13 +442,10 @@ export const entities: HassEntities = {
     },
   }),
 
-  ...createScript('script.depart', {
+  ...createScript('script.leave_home', {
     attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
   }),
-  ...createScript('script.temperature', {
-    attributes: {friendly_name: 'Température', icon: 'mdi:thermometer'},
-  }),
-  ...createScript('script.energie', {
+  ...createScript('script.energy', {
     attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
   }),
 
@@ -476,5 +486,38 @@ export const entities: HassEntities = {
   ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
     state: 'on',
     attributes: {friendly_name: 'Pont Zigbee'},
+  }),
+
+  ...createLoan('sensor.loan_main', {
+    label: 'Prêt principal',
+    principal: 250_000,
+    annualRate: 1.45,
+    durationMonths: 300,
+    firstMonth: '2021-06',
+    monthlyInsurance: 28,
+  }),
+  ...createLoan('sensor.loan_ptz', {
+    label: 'PTZ',
+    principal: 40_000,
+    annualRate: 0,
+    durationMonths: 240,
+    firstMonth: '2021-06',
+    monthlyInsurance: 6,
+  }),
+  ...createLoan('sensor.loan_action_logement', {
+    label: 'Action Logement',
+    principal: 30_000,
+    annualRate: 0.5,
+    durationMonths: 240,
+    firstMonth: '2021-06',
+    monthlyInsurance: 4,
+  }),
+  ...createLoan('sensor.loan_works', {
+    label: 'Prêt travaux',
+    principal: 15_000,
+    annualRate: 2.9,
+    durationMonths: 120,
+    firstMonth: '2023-03',
+    monthlyInsurance: 3,
   }),
 } as const;
