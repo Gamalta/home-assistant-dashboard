@@ -4,6 +4,7 @@ import {expect, swipeLeft, test, waitForScene} from './fixtures';
 declare global {
   interface Window {
     __linkedPrograms: number;
+    __vibrations: number[];
   }
 }
 
@@ -360,6 +361,30 @@ test('un appui long ne sélectionne pas le texte', async ({page}) => {
     page.getByRole('heading', {name: 'Lumière', exact: true}),
   ).toBeVisible();
   expect(await page.evaluate(() => getSelection()?.toString())).toBe('');
+});
+
+test("le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre", async ({
+  page,
+}) => {
+  // Chromium sans tête ne vibre pas : on compte les appels.
+  await page.evaluate(() => {
+    window.__vibrations = [];
+    Object.defineProperty(navigator, 'vibrate', {
+      value: (pattern: number) => window.__vibrations.push(pattern) > 0,
+    });
+  });
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+
+  await tile.tap();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10]);
+
+  await longPress(page, tile);
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10, 10]);
 });
 
 test('la vue Pièces liste toutes les pièces', async ({page}) => {

@@ -121,6 +121,12 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur la garde enfoncée jusqu'à l'ouverture de sa modale
 - **Alors** aucun texte de la page n'est sélectionné, et le navigateur n'ouvre pas son menu
 
+### Scénario : le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre
+
+- **Étant donné** un téléphone qui sait vibrer
+- **Quand** l'utilisateur touche une tuile de lumière, puis la garde enfoncée
+- **Alors** le téléphone vibre brièvement à la bascule, puis à l'ouverture de la modale
+
 ### Scénario : la vue Pièces liste toutes les pièces
 
 - **Étant donné** la vue 3D

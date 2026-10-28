@@ -2,6 +2,9 @@ import {act, renderHook} from '@testing-library/react';
 import type {TouchEvent} from 'react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {useLongPress} from './useLongPress';
+import {haptic} from '../utils/haptic';
+
+vi.mock('../utils/haptic', () => ({haptic: vi.fn()}));
 
 const target = document.createElement('button');
 const touch = (x: number, y: number, preventDefault = vi.fn()) =>
@@ -20,7 +23,10 @@ function setup() {
 
 describe('useLongPress', () => {
   beforeEach(() => vi.useFakeTimers());
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.mocked(haptic).mockClear();
+  });
 
   it('déclenche l’appui court quand le doigt se lève vite', () => {
     const {handlers, onLongPress, onClick} = setup();
@@ -30,6 +36,7 @@ describe('useLongPress', () => {
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onLongPress).not.toHaveBeenCalled();
+    expect(haptic).toHaveBeenCalledTimes(1);
   });
 
   it('déclenche l’appui long sans appui court', () => {
@@ -53,6 +60,7 @@ describe('useLongPress', () => {
 
     expect(onLongPress).not.toHaveBeenCalled();
     expect(onClick).not.toHaveBeenCalled();
+    expect(haptic).not.toHaveBeenCalled();
   });
 
   it('tolère un léger tremblement du doigt', () => {

@@ -1,4 +1,5 @@
 import {MouseEvent, TouchEvent, useCallback, useRef, useState} from 'react';
+import {haptic} from '../utils/haptic';
 
 // Au-delà, le doigt fait défiler la page : ni appui long, ni appui court.
 const MOVE_TOLERANCE = 10;
@@ -50,6 +51,7 @@ export const useLongPress = (
         timeout.current = null;
       }
       if (shouldTriggerClick && !longPressTriggered && !moved.current) {
+        haptic();
         onClick(event);
       }
       setLongPressTriggered(false);
