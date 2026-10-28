@@ -31,8 +31,15 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 - **Étant donné** les statistiques de Home Assistant pour les deux index
 - **Quand** l'utilisateur touche la carte
 - **Alors** la modale montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), en orange si l'on consomme plus, en vert si l'on consomme moins
-- **Et** un graphique en barres empilées, heures pleines et heures creuses, montre chaque jour, aujourd'hui compris ; le mois précédent est tracé en pointillés, jour par jour
-- **Et** une légende donne les kWh et le coût des heures pleines, des heures creuses et du mois précédent
+- **Et** sous ces chiffres, hors du tracé pour que la bande du survol ne les traverse pas, un graphique en barres empilées, heures pleines et heures creuses, montre chaque jour, aujourd'hui compris ; le mois précédent est tracé en pointillés, jour par jour
+- **Et** une légende donne les kWh et le coût des heures pleines, des heures creuses et du mois précédent, avec sous chaque période tarifaire le prix du kWh retenu pour le coût (« 0,2516 €/kWh »)
+
+### Scénario : ouvrir la modale depuis le menu rapide
+
+- **Étant donné** une maison configurée avec la carte `energy`
+- **Quand** l'utilisateur ouvre le menu rapide et touche « Énergie »
+- **Alors** la même modale s'ouvre, depuis le bouton rond du menu
+- **Et** sur téléphone, le graphique passe au-dessus des réglages et la modale tient dans la largeur de l'écran
 
 ### Scénario : changer d'échelle
 
@@ -73,11 +80,11 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 - [x] Les index en Wh, kWh ou MWh sont convertis en kWh.
 - [x] Le graphique est le composant commun `Chart` ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).
 - [x] Lisible au doigt à 1280 × 800, en clair et en sombre.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/energie.spec.ts`, unitaires `src/utils/energy.test.ts`, `src/components/Modal/EnergyModal/EnergyModalContent.test.tsx` et `EnergyLoad.test.tsx`.
+- [x] Chaque scénario est couvert par un test : E2E `e2e/energie.spec.ts` et `e2e/mobile.spec.ts`, unitaires `src/utils/energy.test.ts`, `src/components/Modal/EnergyModal/EnergyModalContent.test.tsx`, `EnergyLoad.test.tsx` et `src/components/QuickMenu/index.test.tsx`.
 
 ## Impacts
 
-- Config : type de carte `energy` dans `ShortcutConfigType`.
+- Config : type de carte `energy` dans `ShortcutConfigType` ; le menu rapide reprend celle du carrousel, sans config de plus.
 - Mock : un compteur fictif (`src/mock/mocks/mockEnergy.ts`) dont la puissance varie toutes les 5 s, avec des index cohérents et des statistiques quotidiennes et mensuelles depuis le 1er janvier d'il y a deux ans, plus fortes en hiver, sans hasard.
 - Thème : les `ToggleButton` gardent la casse de leur libellé, comme les `Button`.
 - Performance : aucun impact sur la scène 3D. La carte fait une requête par jour ; la modale, deux par période affichée (elle et sa comparaison), pas à chaque rendu.

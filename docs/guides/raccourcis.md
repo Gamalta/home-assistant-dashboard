@@ -5,7 +5,7 @@ La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](.
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.leave_home', 'script.energy'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
   shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
@@ -16,7 +16,7 @@ export const SideBarConfig: SideBarConfigType = {
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie l'action « Température » puis la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `mortgages` : une entrée « Crédit » après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
 - `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
-- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
+- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste. Avec une carte [`energy`](#énergie), le menu rapide propose aussi « Énergie », avant « Crédit », qui ouvre la même modale.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
@@ -131,11 +131,11 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 }
 ```
 
-La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui ouvre la modale sur le mois en cours :
+La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui, ou l'entrée « Énergie » du menu rapide, ouvre la modale sur le mois en cours :
 
 - en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, en orange si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
-- un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
-- à droite, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros ;
+- dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
+- à droite (dessous sur téléphone), l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh de `prices` sous chaque période tarifaire ;
 - dans l'en-tête, la puissance instantanée, avec un éclair de la couleur de la période tarifaire, et, si l'intensité souscrite est fournie, la charge par rapport à la puissance souscrite.
 
 « Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
