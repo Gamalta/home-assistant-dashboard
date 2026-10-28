@@ -78,6 +78,10 @@ export function HouseScene(props: HouseSceneProps) {
         // des programmes.
         shadows={configuration.shadows && 'percentage'}
         gl={backend.createRenderer}
+        // drei donne aux étiquettes un z-index qui croît quand la caméra
+        // approche, jusqu'à 16 millions : isolées dans le canvas, elles
+        // restent sous le chargeur, le menu rapide et les modales.
+        style={{isolation: 'isolate'}}
       >
         <PerformanceMonitor ms={250} iterations={5} step={0.1} factor={1}>
           {configuration.debug && (
