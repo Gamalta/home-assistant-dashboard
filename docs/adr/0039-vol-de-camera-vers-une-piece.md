@@ -21,11 +21,10 @@ Contraintes :
 
 `RoomFocus`, monté dans le `Canvas` quand une pièce est choisie, cadre cette pièce.
 
-- **Centre** : `roomCenter` vise la lampe principale de la pièce, sa première lumière dans la config. Il la retrouve dans le modèle avec `findModelLight`, la règle de `RoomLight3d` : la caméra vise la lampe que pilote Home Assistant. Sans lumière dans le modèle, il vise l'étiquette de la pièce (`room.position`).
 - **Pose** : `roomCameraPose`, une fonction pure testée, la calcule.
   - La caméra garde la direction de celle du modèle, vue depuis l'origine, et se place à 4 unités de la cible.
   - `portraitDistance` multiplie cette distance par la largeur relative de la vue (au plus ×2,5), pour garder la même largeur de scène en portrait.
-  - La cible est à la hauteur de la lampe, et avance vers la caméra de 45 % de la distance : la lampe se place au milieu de la zone visible, entre l'en-tête et le carrousel.
+  - La cible est la position de la pièce (`room.position`) : elle se place au centre de l'écran, et les gestes tournent autour d'elle.
 - **Premier cadrage sans vol** : à l'ouverture, la caméra est posée directement sur la première pièce.
 - **Vol** : un `useFrame` rapproche `camera.position` et `controls.target` de la pose par lissage exponentiel (taux 6/s), à l'image de `RoomLight3d`.
   - Il appelle `controls.update()` pour orienter la caméra dès l'image en cours.
@@ -37,8 +36,9 @@ Contraintes :
 
 - Aucun programme compilé et aucune dépendance ajoutée : le vol réutilise le chemin du geste.
 - Un vol dure environ une seconde en qualité réduite, puis l'image se raffermit.
-- Les réglages (distance 4, avance 45 %) conviennent au modèle démo. Une maison à l'échelle très différente pourrait en demander d'autres.
-- Une fois la pièce cadrée, les gestes tournent autour de sa lampe.
+- La distance de 4 unités convient au modèle démo. Une maison à l'échelle très différente pourrait en demander une autre.
+- `room.position` doit être au centre de la pièce : c'est le point que la caméra vise.
+- Le centre de la pièce tombe juste au-dessus des puces : le carrousel cache le devant de la pièce.
 - En WebGPU, chaque vol paie la reconstruction des pipelines liée à `receiveShadow` ([ADR 0017](0017-webgl-par-defaut.md)).
 - La tablette n'a pas de pièce choisie : sa caméra ne change pas.
 
@@ -46,6 +46,7 @@ Contraintes :
 
 - **`CameraControls` de drei** : des transitions toutes faites, mais il remplace `OrbitControls`, dont `Camera` écoute les événements pour le mode mouvement.
 - **Cadrer la boîte englobante de la pièce** (`fitToBox`) : la config n'a pas la géométrie des pièces, et les retrouver dans le modèle dépend du nommage des meshes.
-- **Viser le sol sous l'étiquette** (première version) : la lampe et les étiquettes remontaient en haut de l'écran. L'étiquette est aussi placée à la main, parfois à côté de la lampe.
+- **Avancer la cible vers la caméra** (première version) : la pièce remontait au-dessus du carrousel, mais la caméra visait un point au sol devant elle, et les gestes tournaient autour de ce point.
+- **Viser la lampe principale de la pièce** (deuxième version) : la lampe n'est pas toujours au centre de la pièce.
 - **Élargir le champ en portrait** : au-delà de 100°, la perspective se déforme fortement.
 - **Sauter sans animation** : on perd le repère spatial qui montre où se trouve la pièce.
