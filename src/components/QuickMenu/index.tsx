@@ -32,10 +32,7 @@ export function QuickMenu() {
   }, [launched]);
 
   const scenarios = houseConfig?.sideBar.scenarios ?? [];
-  // La même configuration que la carte « Énergie » du carrousel.
-  const energy = houseConfig?.sideBar.shortcuts?.find(
-    shortcut => shortcut.type === 'energy',
-  );
+  const energy = houseConfig?.sideBar.energy;
   const mortgages = houseConfig?.sideBar.mortgages ?? [];
   const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
 
@@ -129,7 +126,7 @@ export function QuickMenu() {
           open={energyOpen}
           onClose={() => setEnergyOpen(false)}
           title="Énergie"
-          shortcutConfig={energy}
+          energyConfig={energy}
         />
       )}
       {mortgages.length > 0 && (

@@ -9,10 +9,11 @@ Avec un compteur Linky en option heures pleines / heures creuses, savoir ce que 
 
 ## Objectif
 
-Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un coup d'œil la puissance instantanée, la période tarifaire et le coût du jour ; sa modale montre la consommation et le coût d'une semaine, d'un mois ou d'une année, comparés à la période précédente ou à la même période un an avant, et la charge par rapport à la puissance souscrite.
+L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommation et le coût d'une semaine, d'un mois ou d'une année, comparés à la période précédente ou à la même période un an avant, et la charge par rapport à la puissance souscrite.
 
 ## Hors périmètre
 
+- Une carte dans le carrousel de la barre latérale : la modale ne s'ouvre que depuis le menu rapide.
 - Les options tarifaires autres que heures pleines / heures creuses (Base, Tempo, EJP).
 - L'abonnement et les taxes fixes : le coût est une estimation à partir du prix du kWh.
 - La production (panneaux solaires) et la consommation par appareil.
@@ -20,26 +21,18 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 
 ## Comportement attendu
 
-### Scénario : la carte affiche la puissance, la période tarifaire et le coût du jour
-
-- **Étant donné** une maison configurée avec la carte `energy`
-- **Quand** la barre latérale s'affiche
-- **Alors** la carte « Énergie » indique en grand la puissance instantanée (« 850 VA », « 1,2 kVA »), puis « Heures pleines » dans la couleur principale du thème ou « Heures creuses » en bleu, avec une icône de la même couleur, et le coût estimé du jour (« Aujourd’hui : 1,15 € »)
-
 ### Scénario : la modale ouvre le mois en cours, comparé au mois précédent
 
-- **Étant donné** les statistiques de Home Assistant pour les deux index
-- **Quand** l'utilisateur touche la carte
-- **Alors** la modale montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), dans la couleur principale si l'on consomme plus, en vert si l'on consomme moins
+- **Étant donné** une maison configurée avec `energy` et les statistiques de Home Assistant pour les deux index
+- **Quand** l'utilisateur ouvre le menu rapide et touche « Énergie »
+- **Alors** la modale s'ouvre depuis le bouton rond du menu et montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), dans la couleur principale si l'on consomme plus, en vert si l'on consomme moins
 - **Et** sous ces chiffres, hors du tracé pour que la bande du survol ne les traverse pas, un graphique en barres empilées, heures pleines et heures creuses, montre chaque jour, aujourd'hui compris ; le mois précédent est tracé en pointillés, jour par jour
 - **Et** une légende donne les kWh et le coût des heures pleines, des heures creuses et du mois précédent, avec sous chaque période tarifaire le prix du kWh retenu pour le coût (« 0,2516 €/kWh »)
 
-### Scénario : ouvrir la modale depuis le menu rapide
+### Scénario : la modale sur téléphone
 
-- **Étant donné** une maison configurée avec la carte `energy`
-- **Quand** l'utilisateur ouvre le menu rapide et touche « Énergie »
-- **Alors** la même modale s'ouvre, depuis le bouton rond du menu
-- **Et** sur téléphone, le graphique passe au-dessus des réglages et la modale tient dans la largeur de l'écran
+- **Étant donné** la modale ouverte sur téléphone
+- **Alors** le graphique passe au-dessus des réglages et la modale tient dans la largeur de l'écran
 
 ### Scénario : changer d'échelle
 
@@ -78,7 +71,7 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 
 ### Scénario : charge par rapport à la puissance souscrite
 
-- **Étant donné** une carte configurée avec `subscribedCurrentEntityId`
+- **Étant donné** une config `energy` avec `subscribedCurrentEntityId`
 - **Quand** la modale est ouverte
 - **Alors** sous la puissance, une jauge et « sur 6 kVA » donnent la charge par rapport à la puissance souscrite ; sans cette entité, seule la puissance apparaît
 
@@ -94,7 +87,7 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 
 ## Impacts
 
-- Config : type de carte `energy` dans `ShortcutConfigType` ; le menu rapide reprend celle du carrousel, sans config de plus.
+- Config : clé `energy` de `SideBarConfigType`, qui ajoute l'entrée « Énergie » au menu rapide. Il n'y a pas de carte dans le carrousel.
 - Mock : un compteur fictif (`src/mock/mocks/mockEnergy.ts`) dont la puissance varie toutes les 5 s, avec des index cohérents et des statistiques quotidiennes et mensuelles depuis le 1er janvier d'il y a deux ans, plus fortes en hiver, sans hasard.
 - Thème : les `ToggleButton` gardent la casse de leur libellé, comme les `Button`.
-- Performance : aucun impact sur la scène 3D. La carte fait une requête par jour ; la modale, deux par période affichée (elle et sa comparaison), pas à chaque rendu. Modale ouverte, le fil animé ne sollicite que le compositeur.
+- Performance : aucun impact sur la scène 3D. La modale fait deux requêtes par période affichée (elle et sa comparaison), pas à chaque rendu. Modale ouverte, le fil animé ne sollicite que le compositeur.
