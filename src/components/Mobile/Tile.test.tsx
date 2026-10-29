@@ -29,6 +29,21 @@ describe('Tile', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
+  it('relaie le toucher à un interrupteur natif caché, qui fait vibrer l’iPhone', () => {
+    const onClick = vi.fn();
+    const {container} = render(
+      <Tile icon={null} name="Plafonnier" state="Éteinte" onClick={onClick} />,
+    );
+    const input = container.querySelector('input')!;
+
+    // Le doigt touche le label qui couvre la tuile.
+    container.querySelector('label')!.click();
+
+    expect(input).toHaveAttribute('switch');
+    expect(input).toBeChecked();
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
   it('désactive un équipement indisponible', () => {
     render(<Tile icon={null} name="Volet" state="Indisponible" unavailable />);
 

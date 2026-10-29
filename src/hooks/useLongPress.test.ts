@@ -1,5 +1,5 @@
 import {act, renderHook} from '@testing-library/react';
-import type {TouchEvent} from 'react';
+import type {MouseEvent, TouchEvent} from 'react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {useLongPress} from './useLongPress';
 import {haptic} from '../utils/haptic';
@@ -13,6 +13,7 @@ const touch = (x: number, y: number, preventDefault = vi.fn()) =>
     touches: [{clientX: x, clientY: y}],
     preventDefault,
   }) as unknown as TouchEvent;
+const mouse = {target} as unknown as MouseEvent;
 
 function setup() {
   const onLongPress = vi.fn();
@@ -28,11 +29,12 @@ describe('useLongPress', () => {
     vi.mocked(haptic).mockClear();
   });
 
-  it('déclenche l’appui court quand le doigt se lève vite', () => {
+  it('déclenche l’appui court au clic qui suit le doigt levé', () => {
     const {handlers, onLongPress, onClick} = setup();
 
     act(() => handlers().onTouchStart(touch(0, 0)));
     act(() => handlers().onTouchEnd(touch(0, 0)));
+    act(() => handlers().onClick(mouse));
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onLongPress).not.toHaveBeenCalled();
@@ -41,13 +43,17 @@ describe('useLongPress', () => {
 
   it('déclenche l’appui long sans appui court', () => {
     const {handlers, onLongPress, onClick} = setup();
+    const preventDefault = vi.fn();
 
     act(() => handlers().onTouchStart(touch(0, 0)));
     act(() => vi.advanceTimersByTime(300));
-    act(() => handlers().onTouchEnd(touch(0, 0)));
+    act(() => handlers().onTouchEnd(touch(0, 0, preventDefault)));
+    act(() => handlers().onClick(mouse));
 
     expect(onLongPress).toHaveBeenCalledTimes(1);
     expect(onClick).not.toHaveBeenCalled();
+    // Le navigateur ne rejoue pas de clic sur la modale ouverte.
+    expect(preventDefault).toHaveBeenCalled();
   });
 
   it("un doigt qui fait défiler n'appuie sur rien", () => {
@@ -57,6 +63,7 @@ describe('useLongPress', () => {
     act(() => handlers().onTouchMove(touch(0, 30)));
     act(() => vi.advanceTimersByTime(300));
     act(() => handlers().onTouchEnd(touch(0, 30)));
+    act(() => handlers().onClick(mouse));
 
     expect(onLongPress).not.toHaveBeenCalled();
     expect(onClick).not.toHaveBeenCalled();
@@ -69,18 +76,23 @@ describe('useLongPress', () => {
     act(() => handlers().onTouchStart(touch(0, 0)));
     act(() => handlers().onTouchMove(touch(3, 4)));
     act(() => handlers().onTouchEnd(touch(3, 4)));
+    act(() => handlers().onClick(mouse));
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it("n'émet pas en plus l'appui souris que rejoue le navigateur", () => {
+  it('laisse passer le clic du navigateur sans appuyer deux fois', () => {
     const {handlers, onClick} = setup();
     const preventDefault = vi.fn();
 
     act(() => handlers().onTouchStart(touch(0, 0)));
     act(() => handlers().onTouchEnd(touch(0, 0, preventDefault)));
+    // Le navigateur rejoue le toucher en souris, puis clique.
+    act(() => handlers().onMouseDown(mouse));
+    act(() => handlers().onMouseUp());
+    act(() => handlers().onClick(mouse));
 
-    expect(preventDefault).toHaveBeenCalled();
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

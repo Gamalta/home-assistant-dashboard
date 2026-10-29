@@ -123,9 +123,16 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ### Scénario : le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre
 
-- **Étant donné** un téléphone qui sait vibrer
+- **Étant donné** un téléphone Android, qui a l'API Vibration
 - **Quand** l'utilisateur touche une tuile de lumière, puis la garde enfoncée
 - **Alors** le téléphone vibre brièvement à la bascule, puis à l'ouverture de la modale
+
+### Scénario : sur iPhone, toucher une tuile fait vibrer
+
+- **Étant donné** un iPhone, dont Safari n'a pas l'API Vibration
+- **Quand** l'utilisateur touche une tuile de lumière
+- **Alors** son doigt bascule l'interrupteur natif caché dans la tuile, et l'iPhone vibre
+- **Et** la lumière ne bascule qu'une fois
 
 ### Scénario : la vue Pièces liste toutes les pièces
 
@@ -184,7 +191,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
 - Page : `viewport-fit=cover`, et `html` comme `body` en `overflow: hidden`. L'en-tête, le menu rapide, la liste, le carrousel et les modales suivent les zones sûres de l'écran.
-- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
+- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi. L'appui court passe par le clic du navigateur, que seul l'appui long annule.
 - Performance : voir la section Mesures.
 
 ## Mesures

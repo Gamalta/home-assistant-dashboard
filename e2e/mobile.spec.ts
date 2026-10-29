@@ -387,6 +387,20 @@ test("le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre", as
   expect(await page.evaluate(() => window.__vibrations)).toEqual([10, 10]);
 });
 
+test('sur iPhone, toucher une tuile fait vibrer', async ({page}) => {
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+  const hapticSwitch = tile.locator('input[switch]');
+  await expect(hapticSwitch).not.toBeChecked();
+
+  await tile.tap();
+
+  // Le doigt a basculé l'interrupteur natif, et la lumière une seule fois.
+  await expect(hapticSwitch).toBeChecked();
+  await expect(tile).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('le dashboard s’installe sur l’écran d’accueil', async ({
   page,
   request,

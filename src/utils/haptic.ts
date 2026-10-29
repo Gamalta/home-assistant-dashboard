@@ -1,17 +1,6 @@
-// Safari n'a pas l'API Vibration : sur iPhone, basculer un interrupteur natif
-// (<input type="checkbox" switch>) fait vibrer le téléphone.
+// Safari n'a pas l'API Vibration, et depuis iOS 26.5 un clic de script ne
+// fait plus vibrer l'iPhone : c'est le toucher d'une tuile qui y bascule un
+// interrupteur caché (Mobile/Tile).
 export function haptic() {
-  if (navigator.vibrate) {
-    navigator.vibrate(10);
-    return;
-  }
-  const label = document.createElement('label');
-  const input = document.createElement('input');
-  input.type = 'checkbox';
-  input.setAttribute('switch', '');
-  label.style.display = 'none';
-  label.append(input);
-  document.body.append(label);
-  label.click();
-  label.remove();
+  navigator.vibrate?.(10);
 }
