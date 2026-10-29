@@ -7,7 +7,7 @@ import {
   formatTime,
   type TrainDeparture,
 } from '../../../utils/trains';
-import {TrainView} from './TrainView';
+import {TrainView} from '../../display/TrainView';
 
 type TrainsModalProps = Omit<ModalProps, 'children'> & {
   departures: TrainDeparture[];

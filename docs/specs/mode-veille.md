@@ -30,7 +30,7 @@ Après un délai sans interaction, la tablette affiche un écran de veille lisib
 
 - **Étant donné** la météo, des trajets `trains` dans les raccourcis et des alertes dans la config de la barre latérale
 - **Quand** l'écran de veille s'affiche
-- **Alors** il montre une carte « Météo » (température, minimale et maximale du jour, quatre jours suivants), une carte par trajet avec ses trois prochains départs, et une carte des alertes. La carte des alertes n'apparaît que s'il y en a.
+- **Alors** il montre une carte « Météo » (température, minimale et maximale du jour, quatre jours suivants), une carte par trajet avec la rame de la modale des trains et ses trois prochains départs, et une carte des alertes. La carte des alertes n'apparaît que s'il y en a.
 
 ### Scénario : ciel et luminosité selon l'heure
 

@@ -45,6 +45,7 @@ test('affiche la météo, les prochains trains et les alertes', async ({
   await expect(screensaver).toContainText(
     /Vers le travail\d{2}:\d{2}à l'heureVoie B\d{2}:\d{2}\+5 min\d{2}:\d{2}supprimé/,
   );
+   await expect(screensaver.getByTestId('train-view')).toBeVisible();
   await expect(screensaver).toContainText(
     '2 alertesPile faible : Bouton de la cuisine (12 %)Indisponible : Capteur de la cave',
   );

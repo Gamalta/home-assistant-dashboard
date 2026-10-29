@@ -36,6 +36,7 @@ export function TrainView(props: TrainViewProps) {
       viewBox="-12 0 712 64"
       preserveAspectRatio="xMinYMax slice"
       aria-hidden
+      data-testid="train-view"
       // Sans largeur propre : la rame prend celle du parent, sans l'élargir.
       style={{display: 'block', width: '100%', height, contain: 'inline-size'}}
     >

@@ -522,4 +522,43 @@ export const entities: HassEntities = {
     firstMonth: '2023-03',
     monthlyInsurance: 3,
   }),
+
+  // Alertes de la démo : une pile faible et un capteur indisponible.
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.cellar_sensor_battery', {
+    state: 'unavailable',
+    attributes: {
+      friendly_name: 'Capteur de la cave',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
+    state: 'on',
+    attributes: {friendly_name: 'Pont Zigbee'},
+  }),
 } as const;

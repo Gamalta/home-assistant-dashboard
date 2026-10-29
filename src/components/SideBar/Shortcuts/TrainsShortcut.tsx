@@ -7,7 +7,7 @@ import type {TrainsShortcutConfigType} from '../../../configs/sidebar';
 import {useTrainDepartures} from '../../../hooks/useTrainDepartures';
 import {departureStatus, formatTime} from '../../../utils/trains';
 import {TrainsModal} from '../../Modal/TrainsModal';
-import {TrainView} from '../../Modal/TrainsModal/TrainView';
+import {TrainView} from '../../display/TrainView';
 import {ShortcutCard} from './ShortcutCard';
 
 type TrainsShortcutProps = {

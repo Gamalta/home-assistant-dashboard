@@ -6,7 +6,7 @@ Après ce délai sans interaction, l'écran de veille affiche :
 
 - l'heure et la date ;
 - la météo de la barre latérale : température, minimale et maximale du jour, quatre jours suivants ;
-- une carte par trajet de train configuré dans les raccourcis ([guide des raccourcis](raccourcis.md)), avec ses trois prochains départs ;
+- une carte par trajet de train configuré dans les raccourcis ([guide des raccourcis](raccourcis.md)), avec la rame de la modale des trains et ses trois prochains départs ;
 - les alertes de la maison ([guide des alertes](alertes.md)), seulement s'il y en a.
 
 Le fond est un ciel qui suit le jour, d'après `sun.sun` ou, à défaut, l'heure. La nuit, le ciel est sombre et le contenu atténué, pour ne pas éclairer la pièce. Rien n'est à configurer en plus : l'écran de veille reprend la config de la barre latérale.
