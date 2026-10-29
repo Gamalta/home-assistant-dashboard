@@ -7,6 +7,21 @@ export const ConfigName = 'Démo';
 export const SideBarConfig: SideBarConfigType = {
   weatherEntityId: 'weather.home',
   pets: ['Tom', 'Jerry'],
+  alerts: {
+    smokeEntityIds: [
+      'binary_sensor.hallway_smoke_detector_smoke',
+      'binary_sensor.hallway_smoke_detector_heat',
+    ],
+    batteryLowEntityIds: ['binary_sensor.hallway_smoke_detector_battery_low'],
+    batteryLevelEntityIds: [
+      'sensor.kitchen_button_battery',
+      'sensor.bedroom_button_battery',
+      'sensor.cellar_sensor_battery',
+    ],
+    internetEntityId: 'binary_sensor.router_wan_status',
+    zigbeeEntityId: 'binary_sensor.zigbee_bridge_connection_state',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+  },
   persons: [
     {
       name: 'Juliette',

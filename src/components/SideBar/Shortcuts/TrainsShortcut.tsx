@@ -1,16 +1,11 @@
-import {useEntities} from '@hakit/core';
 import TrainIcon from '@mui/icons-material/TrainRounded';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import type {TrainsShortcutConfigType} from '../../../configs/sidebar';
-import {
-  departureStatus,
-  formatTime,
-  trainEntityIds,
-  upcomingDepartures,
-} from '../../../utils/trains';
+import {useTrainDepartures} from '../../../hooks/useTrainDepartures';
+import {departureStatus, formatTime} from '../../../utils/trains';
 import {TrainsModal} from '../../Modal/TrainsModal';
 import {TrainView} from '../../Modal/TrainsModal/TrainView';
 import {ShortcutCard} from './ShortcutCard';
@@ -23,19 +18,7 @@ type TrainsShortcutProps = {
 export function TrainsShortcut(props: TrainsShortcutProps) {
   const {id, shortcutConfig} = props;
   const [open, setOpen] = useState(false);
-  const [now, setNow] = useState(Date.now);
-
-  useEffect(() => {
-    // Un train parti disparaît sans attendre la mise à jour du capteur.
-    const interval = setInterval(() => setNow(Date.now()), 30_000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const trains = useEntities(trainEntityIds(shortcutConfig.prefix), {
-    returnNullIfNotFound: true,
-    historyOptions: {disable: true},
-  });
-  const departures = upcomingDepartures(trains, now);
+  const departures = useTrainDepartures(shortcutConfig.prefix);
   const [next, ...following] = departures.slice(0, 3);
 
   return (
