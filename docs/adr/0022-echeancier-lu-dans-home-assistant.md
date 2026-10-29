@@ -1,6 +1,6 @@
 # 0022 — Échéancier du crédit lu dans Home Assistant
 
-- Statut : Proposé
+- Statut : Remplacé par [0043](0043-tableau-d-amortissement-une-ligne-par-mois.md)
 - Date : 2026-10-24, révisé le 2026-10-26
 - Issue : #20
 

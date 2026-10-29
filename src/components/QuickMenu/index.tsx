@@ -1,4 +1,5 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeRounded';
+import BoltIcon from '@mui/icons-material/BoltRounded';
 import CheckIcon from '@mui/icons-material/CheckRounded';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import HouseIcon from '@mui/icons-material/HouseRounded';
@@ -10,6 +11,7 @@ import Stack from '@mui/material/Stack';
 import {motion} from 'framer-motion';
 import {useEffect, useState} from 'react';
 import {useHouseContext} from '../../contexts/HouseContext';
+import {EnergyModal} from '../Modal/EnergyModal';
 import {MortgageModal} from '../Modal/MortgageModal';
 import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {HeatmapAction} from './HeatmapAction';
@@ -19,6 +21,7 @@ export function QuickMenu() {
   const {houseConfig} = useHouseContext();
   const [open, setOpen] = useState(false);
   const [launched, setLaunched] = useState(false);
+  const [energyOpen, setEnergyOpen] = useState(false);
   const [mortgageOpen, setMortgageOpen] = useState(false);
   const [shoppingListOpen, setShoppingListOpen] = useState(false);
 
@@ -29,6 +32,7 @@ export function QuickMenu() {
   }, [launched]);
 
   const scenarios = houseConfig?.sideBar.scenarios ?? [];
+  const energy = houseConfig?.sideBar.energy;
   const mortgages = houseConfig?.sideBar.mortgages ?? [];
   const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
 
@@ -77,6 +81,18 @@ export function QuickMenu() {
             }}
           />
         ))}
+        {energy && (
+          <SpeedDialAction
+            icon={<BoltIcon />}
+            onClick={() => {
+              setOpen(false);
+              setEnergyOpen(true);
+            }}
+            slotProps={{
+              tooltip: {title: 'Énergie', open: true, placement: 'right'},
+            }}
+          />
+        )}
         {mortgages.length > 0 && (
           <SpeedDialAction
             icon={<HouseIcon />}
@@ -104,6 +120,15 @@ export function QuickMenu() {
       </SpeedDial>
       {/* Hors du SpeedDial : les événements d'un portail remontent l'arbre
           React, et le menu capterait les flèches et Échap des modales. */}
+      {energy && (
+        <EnergyModal
+          id="layoutid-quick-menu"
+          open={energyOpen}
+          onClose={() => setEnergyOpen(false)}
+          title="Énergie"
+          energyConfig={energy}
+        />
+      )}
       {mortgages.length > 0 && (
         <MortgageModal
           id="layoutid-quick-menu"

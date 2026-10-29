@@ -41,8 +41,9 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 - Un objet three.js créé par un composant est libéré (`dispose`) dans le nettoyage de son effet.
 - Changer les `defines` d'un matériau, le nombre de lumières visibles ou le nombre de lumières qui projettent une ombre recompile les shaders. On l'évite pendant une interaction : on préfère un uniform.
 - Chaque entité lumière pilote la **première** lumière du modèle dont le nom commence par l'identifiant de l'entité, sans le domaine.
+- Les étiquettes passent par `components/3d/Html.tsx`, sans `zIndexRange` : drei empile la plus proche de la caméra devant les autres, avec des z-index qui montent jusqu'à 16 millions. Le `Canvas` les isole (`isolation: isolate`) : un élément qui doit les couvrir se place hors du `Canvas`.
 - Le code propre à WebGL ou à WebGPU vit dans `src/rendering/backends/` et `src/rendering/shaders/<Matériau>/{WebGL,WebGPU}/`, derrière l'interface `RenderBackend`.
-- Toute modification du rendu se mesure (benchmark intégré, [guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md).
+- Toute modification du rendu se mesure ([guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md). Joindre la sortie de `pnpm bench --compare` à toute PR qui touche au rendu.
 
 ## TypeScript
 
@@ -56,7 +57,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 Le détail se trouve dans le [guide des tests](guides/tests.md) et l'[ADR 0010](adr/0010-strategie-de-tests.md).
 
 - Les tests **unitaires** (Vitest) sont colocalisés : `color.ts` → `color.test.ts`. Ils sont obligatoires pour toute logique pure ajoutée ou modifiée.
-- Les tests **E2E** (Playwright, dossier `e2e/`) sont obligatoires pour tout comportement visible par l'utilisateur. Ils tournent sur le build de production, avec le mock et la maison `demo`.
+- Les tests **E2E** (Playwright, dossier `e2e/`) sont obligatoires pour tout comportement visible qui passe par la scène 3D, le rendu, la mise en page, une animation ou un vrai pointeur. Ils tournent sur le build de production, avec le mock et la maison `demo`. Un comportement qui ne dépend que d'un composant et de sa modale se teste en unitaire, sur le mock ([ADR 0040](adr/0040-tests-plus-rapides.md)).
 - Un test décrit un comportement, en français : `it('borne l’écart de température à 1 °C')`.
 
 ## Git et GitHub

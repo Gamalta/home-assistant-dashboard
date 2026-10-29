@@ -7,6 +7,7 @@ import {
   formatTime,
   type TrainDeparture,
 } from '../../../utils/trains';
+import {TrainView} from './TrainView';
 
 type TrainsModalProps = Omit<ModalProps, 'children'> & {
   departures: TrainDeparture[];
@@ -17,11 +18,12 @@ export function TrainsModal(props: TrainsModalProps) {
 
   return (
     <Modal {...modalProps}>
+      <TrainView height={72} />
       {departures.length ? (
         <Stack
           component="ul"
           spacing={1}
-          sx={{m: 0, p: 0, minWidth: 320, listStyle: 'none'}}
+          sx={{mt: 2, mb: 0, p: 0, minWidth: 320, listStyle: 'none'}}
         >
           {departures.map(departure => {
             const status = departureStatus(departure);
@@ -81,7 +83,7 @@ export function TrainsModal(props: TrainsModalProps) {
           })}
         </Stack>
       ) : (
-        <Typography sx={{color: 'text.secondary'}}>
+        <Typography sx={{mt: 2, color: 'text.secondary'}}>
           Aucun départ prévu.
         </Typography>
       )}

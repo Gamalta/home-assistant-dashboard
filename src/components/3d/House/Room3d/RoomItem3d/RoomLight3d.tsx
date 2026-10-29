@@ -4,7 +4,6 @@ import {LightConfigType} from '../../../../../configs/house';
 import {useEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
 import {lightColor} from '../../../../../utils/entity/light';
-import {findModelLight} from '../../../../../utils/model';
 
 type RoomLight3dProps = {
   lightConfig: LightConfigType;
@@ -19,19 +18,24 @@ export function RoomLight3d(props: RoomLight3dProps) {
     returnNullIfNotFound: true,
   });
 
+  const prefix = lightConfig.lightEntityId.split('.')[1].toLowerCase();
   // Cherchée dans le modèle pendant le rendu : la lumière prend son état dès le
   // premier commit, avant la précompilation de la scène (Precompile).
-  const lightObject = useMemo(
-    () => findModelLight(model, lightConfig.lightEntityId),
-    [model, lightConfig.lightEntityId],
-  );
+  const lightObject = useMemo(() => {
+    let found: THREE.Light | undefined;
+    model.traverse(obj => {
+      if (found || !(obj instanceof THREE.Light)) return;
+      if (obj.name.toLowerCase().startsWith(prefix)) found = obj;
+    });
+    return found;
+  }, [model, prefix]);
   const phase = useRef<'hidden' | 'showing' | 'visible' | 'hiding'>('hidden');
   const transition = useRef(0);
 
   useEffect(() => {
     if (!lightObject) {
       console.warn(
-        `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId}`,
+        `Aucune lumière 3D trouvée pour ${lightConfig.lightEntityId} (${prefix})`,
       );
       return;
     }

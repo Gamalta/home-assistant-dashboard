@@ -10,6 +10,7 @@ import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
+import {energyEntities} from './mockEnergy';
 import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
@@ -384,6 +385,7 @@ export const entities: HassEntities = {
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
   ...createPrinter3d('p1s_demo'),
+  ...energyEntities,
   ...createTrain('sensor.sncf_paris_lyon_train_1', {
     departureIn: 6,
     trainNum: '6601',
@@ -445,8 +447,8 @@ export const entities: HassEntities = {
   ...createScript('script.leave_home', {
     attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
   }),
-  ...createScript('script.energy', {
-    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
+  ...createScript('script.eco_mode', {
+    attributes: {friendly_name: 'Économie', icon: 'mdi:leaf'},
   }),
 
   // Alertes de la démo : une pile faible et un capteur indisponible.
