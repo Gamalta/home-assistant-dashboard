@@ -15,7 +15,7 @@ export function Html({children, ...dreiProps}: HtmlProps) {
   const ContextBridge = useContextBridge(AppContext, HouseContext, RoomContext);
 
   return (
-    <DreiHtml center zIndexRange={[0]} {...dreiProps}>
+    <DreiHtml center {...dreiProps}>
       {/* eslint-disable-next-line react-hooks/static-components -- mémoïsé par drei, stable entre les rendus */}
       <ContextBridge>
         <ThemeProvider theme={theme}>

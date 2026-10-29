@@ -8,3 +8,9 @@ export function formatPower(power: number) {
   const digits = Math.abs(power) < 10 ? 1 : 0;
   return `${power.toLocaleString('fr', {maximumFractionDigits: digits})} W`;
 }
+
+export function outletStateLabel(state: string, power: number | null) {
+  if (state === 'unavailable') return 'Indisponible';
+  if (state !== 'on') return 'Éteinte';
+  return power === null ? 'Allumée' : formatPower(power);
+}

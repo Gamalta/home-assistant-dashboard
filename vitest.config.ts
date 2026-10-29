@@ -6,6 +6,8 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      // Un seul jsdom par worker au lieu d'un par fichier : deux fois plus rapide.
+      pool: 'vmThreads',
       include: ['{src,scripts}/**/*.test.{ts,tsx}'],
       setupFiles: ['./vitest.setup.ts'],
       restoreMocks: true,

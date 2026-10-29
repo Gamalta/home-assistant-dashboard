@@ -12,4 +12,5 @@
 | [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance       |
 | [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun       |
 | [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)   |
-| [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale         |
+| [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et menu rapide de la barre latérale       |
+| [Guide : version mobile](guides/version-mobile.md)         | Piloter la maison depuis un téléphone               |

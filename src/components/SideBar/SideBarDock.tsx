@@ -6,9 +6,14 @@ import {ThemeIcon} from '../Icons/ThemeIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
-import {themeType, useThemeContext} from '../../contexts/ThemeProvider';
+import {
+  themeOptions,
+  themeType,
+  useThemeContext,
+} from '../../contexts/ThemeProvider';
 import {AnimatePresence, motion} from 'framer-motion';
-import {ConfigType, HouseConfigsName, loadConfig} from '../../configs/configs';
+import {ConfigType, HouseConfigsName} from '../../configs/configs';
+import {useHouseConfigs} from '../../hooks/useHouseConfigs';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {SystemModal} from '../Modal/SystemModal';
 
@@ -24,7 +29,6 @@ export function SideBarDock(props: SideBarDockProps) {
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const [configAnchor, setConfigAnchor] = useState<null | HTMLElement>(null);
-  const [configs, setConfigs] = useState<ConfigType[]>([]);
   const {themeMode, setTheme} = useThemeContext();
   const {houseConfig, setHouseConfig} = useHouseContext();
 
@@ -72,17 +76,7 @@ export function SideBarDock(props: SideBarDockProps) {
     };
   }, [isVisible, sideBarRef, startX, startY]);
 
-  useEffect(() => {
-    if (!configAnchor) return;
-    async function loadConfigs() {
-      const promises = HouseConfigsName.map(name => loadConfig(name));
-      const loadedConfigs = await Promise.all(promises);
-      setConfigs(
-        loadedConfigs.filter(config => config !== null) as ConfigType[],
-      );
-    }
-    loadConfigs();
-  }, [configAnchor]);
+  const configs = useHouseConfigs(Boolean(configAnchor));
 
   const handleThemeMenuClick = (newTheme: themeType) => {
     setThemeAnchor(null);
@@ -136,17 +130,10 @@ export function SideBarDock(props: SideBarDockProps) {
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                 transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
               >
-                {[
-                  {value: 'system', name: 'Système'},
-                  {value: 'auto', name: 'Auto'},
-                  {value: 'light', name: 'Clair'},
-                  {value: 'dark', name: 'Sombre'},
-                ].map(option => (
+                {themeOptions.map(option => (
                   <MenuItem
                     key={option.value}
-                    onClick={() =>
-                      handleThemeMenuClick(option.value as themeType)
-                    }
+                    onClick={() => handleThemeMenuClick(option.value)}
                     selected={themeMode === option.value}
                   >
                     {option.name}
