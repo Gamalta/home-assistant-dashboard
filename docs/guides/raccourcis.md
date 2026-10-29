@@ -133,10 +133,10 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 
 La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui, ou l'entrée « Énergie » du menu rapide, ouvre la modale sur le mois en cours :
 
-- en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, en orange si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
+- en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, dans la couleur principale du thème si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
 - dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
-- à droite (dessous sur téléphone), l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh de `prices` sous chaque période tarifaire ;
-- dans l'en-tête, la puissance instantanée, avec un éclair de la couleur de la période tarifaire, et, si l'intensité souscrite est fournie, la charge par rapport à la puissance souscrite.
+- à droite (dessous sur téléphone), le courant du Linky à la maison : deux fils, « HP » et « HC », avec le prix du kWh de `prices`. Seul celui de la période en cours s'anime, d'autant plus vite que la puissance est forte, sauf si « réduire les animations » est activé ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)). Côté maison, la puissance instantanée, la charge par rapport à la puissance souscrite si l'intensité souscrite est fournie, et le coût horaire estimé (« ≈ 0,32 €/h ») ;
+- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire.
 
 « Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
 

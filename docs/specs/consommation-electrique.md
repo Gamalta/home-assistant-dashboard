@@ -24,13 +24,13 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 
 - **Étant donné** une maison configurée avec la carte `energy`
 - **Quand** la barre latérale s'affiche
-- **Alors** la carte « Énergie » indique en grand la puissance instantanée (« 850 VA », « 1,2 kVA »), puis « Heures pleines » en orange ou « Heures creuses » en bleu, avec une icône de la même couleur, et le coût estimé du jour (« Aujourd’hui : 1,15 € »)
+- **Alors** la carte « Énergie » indique en grand la puissance instantanée (« 850 VA », « 1,2 kVA »), puis « Heures pleines » dans la couleur principale du thème ou « Heures creuses » en bleu, avec une icône de la même couleur, et le coût estimé du jour (« Aujourd’hui : 1,15 € »)
 
 ### Scénario : la modale ouvre le mois en cours, comparé au mois précédent
 
 - **Étant donné** les statistiques de Home Assistant pour les deux index
 - **Quand** l'utilisateur touche la carte
-- **Alors** la modale montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), en orange si l'on consomme plus, en vert si l'on consomme moins
+- **Alors** la modale montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), dans la couleur principale si l'on consomme plus, en vert si l'on consomme moins
 - **Et** sous ces chiffres, hors du tracé pour que la bande du survol ne les traverse pas, un graphique en barres empilées, heures pleines et heures creuses, montre chaque jour, aujourd'hui compris ; le mois précédent est tracé en pointillés, jour par jour
 - **Et** une légende donne les kWh et le coût des heures pleines, des heures creuses et du mois précédent, avec sous chaque période tarifaire le prix du kWh retenu pour le coût (« 0,2516 €/kWh »)
 
@@ -67,11 +67,20 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 - **Quand** la modale est ouverte
 - **Alors** les valeurs inconnues s'affichent « — », sans écart, et le jour en cours ne cumule pas plusieurs jours
 
+### Scénario : le courant circule du compteur à la maison
+
+- **Étant donné** la modale ouverte, en heures pleines
+- **Quand** la maison consomme
+- **Alors** en haut de la colonne de droite, un schéma relie le Linky à la maison par deux fils courts, « HP » et « HC », chacun avec son prix du kWh
+- **Et** seul le fil des heures pleines s'anime, dans leur couleur, d'autant plus vite que la puissance est forte
+- **Et** côté maison, la puissance instantanée (« 1,5 kVA ») et le coût horaire estimé à ce prix (« ≈ 0,38 €/h »)
+- **Et** avec « réduire les animations » activé, le fil reste immobile, toujours dans la couleur de la période
+
 ### Scénario : charge par rapport à la puissance souscrite
 
 - **Étant donné** une carte configurée avec `subscribedCurrentEntityId`
 - **Quand** la modale est ouverte
-- **Alors** son en-tête affiche la puissance instantanée sur la puissance souscrite (« 1,5 kVA sur 6 kVA ») et une jauge, avec un éclair de la couleur de la période tarifaire ; sans cette entité, seule la puissance apparaît
+- **Alors** sous la puissance, une jauge et « sur 6 kVA » donnent la charge par rapport à la puissance souscrite ; sans cette entité, seule la puissance apparaît
 
 ## Critères d'acceptation
 
@@ -80,11 +89,12 @@ Une carte « Énergie », dans le carrousel de la barre latérale, donne d'un co
 - [x] Les index en Wh, kWh ou MWh sont convertis en kWh.
 - [x] Le graphique est le composant commun `Chart` ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).
 - [x] Lisible au doigt à 1280 × 800, en clair et en sombre.
-- [x] Chaque scénario est couvert par un test : E2E `e2e/energie.spec.ts` et `e2e/mobile.spec.ts`, unitaires `src/utils/energy.test.ts`, `src/components/Modal/EnergyModal/EnergyModalContent.test.tsx`, `EnergyLoad.test.tsx` et `src/components/QuickMenu/index.test.tsx`.
+- [x] Chaque scénario est couvert par un test : E2E `e2e/energie.spec.ts` et `e2e/mobile.spec.ts`, unitaires `src/utils/energy.test.ts`, `src/components/Modal/EnergyModal/EnergyModalContent.test.tsx`, `EnergyFlow.test.tsx` et `src/components/QuickMenu/index.test.tsx`.
+- [x] L'animation du courant ne déplace que des transformations CSS, ne tourne que modale ouverte et respecte « réduire les animations » ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)).
 
 ## Impacts
 
 - Config : type de carte `energy` dans `ShortcutConfigType` ; le menu rapide reprend celle du carrousel, sans config de plus.
 - Mock : un compteur fictif (`src/mock/mocks/mockEnergy.ts`) dont la puissance varie toutes les 5 s, avec des index cohérents et des statistiques quotidiennes et mensuelles depuis le 1er janvier d'il y a deux ans, plus fortes en hiver, sans hasard.
 - Thème : les `ToggleButton` gardent la casse de leur libellé, comme les `Button`.
-- Performance : aucun impact sur la scène 3D. La carte fait une requête par jour ; la modale, deux par période affichée (elle et sa comparaison), pas à chaque rendu.
+- Performance : aucun impact sur la scène 3D. La carte fait une requête par jour ; la modale, deux par période affichée (elle et sa comparaison), pas à chaque rendu. Modale ouverte, le fil animé ne sollicite que le compositeur.
