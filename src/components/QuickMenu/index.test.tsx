@@ -4,7 +4,7 @@ import {QuickMenu} from '.';
 
 const {sideBar} = vi.hoisted(() => ({
   sideBar: {
-    current: {} as {scenarios?: string[]; shortcuts?: {type: string}[]},
+    current: {} as {scenarios?: string[]; energy?: object},
   },
 }));
 
@@ -46,8 +46,8 @@ describe('QuickMenu', () => {
     expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
   });
 
-  it('propose l’entrée Énergie avec la carte « Énergie » du carrousel', () => {
-    sideBar.current = {shortcuts: [{type: 'media'}, {type: 'energy'}]};
+  it('propose l’entrée Énergie quand le compteur est configuré', () => {
+    sideBar.current = {energy: {}};
     render(<QuickMenu />);
     fireEvent.click(screen.getByRole('button', {name: 'Menu rapide'}));
 

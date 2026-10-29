@@ -53,6 +53,14 @@ export const SideBarConfig: SideBarConfigType = {
     ],
   },
   scenarios: ['script.leave_home', 'script.eco_mode'],
+  energy: {
+    powerEntityId: 'sensor.meter_apparent_power',
+    tariffPeriodEntityId: 'sensor.meter_tariff_period',
+    peakIndexEntityId: 'sensor.meter_peak_index',
+    offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+    subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+    prices: {peak: 0.27, offPeak: 0.21},
+  },
   mortgages: [
     'sensor.loan_main',
     'sensor.loan_ptz',
@@ -63,15 +71,6 @@ export const SideBarConfig: SideBarConfigType = {
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
-    {
-      type: 'energy',
-      powerEntityId: 'sensor.meter_apparent_power',
-      tariffPeriodEntityId: 'sensor.meter_tariff_period',
-      peakIndexEntityId: 'sensor.meter_peak_index',
-      offPeakIndexEntityId: 'sensor.meter_off_peak_index',
-      subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
-      prices: {peak: 0.27, offPeak: 0.21},
-    },
   ],
 };
 
