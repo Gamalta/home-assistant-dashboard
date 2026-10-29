@@ -30,13 +30,16 @@ export const LightPalette: ColorSystemOptions = {
       main: amber[700],
     },
     secondary: {
-      main: '#F2F2F7',
+      main: '#FFFFFF',
     },
     background: {
-      default: '#F2F2F7',
-      paper: '#F2F2F7',
-      primary: '#FFFFFF',
+      default: '#E2E2E7',
+      paper: '#E5E5EA',
+      primary: '#F2F2F7',
       tertiary: '#FFFFFF',
+    },
+    text: {
+      secondary: '#5C5C61',
     },
   },
 };
