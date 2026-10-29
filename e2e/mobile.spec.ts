@@ -72,8 +72,9 @@ async function longPress(page: Page, target: Locator) {
 
 async function openFoyer(page: Page) {
   await page.getByRole('button', {name: 'Foyer'}).tap();
-  // Le contenu d'une modale n'apparaît qu'après son animation d'ouverture.
-  await expect(page.getByRole('list', {name: 'Réglages'})).toBeVisible();
+  const menu = page.getByRole('dialog', {name: 'Foyer'});
+  await expect(menu).toBeVisible();
+  return menu;
 }
 
 test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
@@ -84,6 +85,18 @@ test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
   await expect(views.getByRole('button', {name: '3D'})).toBeVisible();
   await expect(views.getByRole('button', {name: 'Pièces'})).toBeVisible();
   await expect(header.getByRole('button', {name: 'Foyer'})).toBeVisible();
+  const leftOnTop = await header
+    .getByRole('button', {name: 'Foyer'})
+    .evaluate(button => {
+      const [left, right] = [...button.querySelectorAll('img')].map(
+        img => img.parentElement!,
+      );
+      const box = right.getBoundingClientRect();
+      // Bord gauche de l'avatar de droite, là où les deux se chevauchent.
+      const hit = document.elementFromPoint(box.left + 2, box.top + 19);
+      return left.contains(hit);
+    });
+  expect(leftOnTop).toBe(true);
   expect((await header.boundingBox())!.y).toBeLessThan(20);
   await expect(page.getByRole('separator')).toHaveCount(0);
   await expect(page.getByRole('navigation')).toHaveCount(0);
@@ -139,6 +152,21 @@ test("la vue 3D s'ouvre sur la première pièce", async ({page}) => {
   // Autant d'étiquettes dans la scène que de tuiles sur la carte.
   const tiles = await card.getByRole('button').count();
   await expect(sceneLabels(page)).toHaveCount(tiles);
+
+  // L'étiquette de la pièce, à sa position dans la config, se centre entre
+  // l'en-tête et les puces ; la scène continue derrière le carrousel.
+  const {top, bottom} = await visibleScene(page);
+  const label = sceneLabels(page).and(
+    page.getByRole('button', {name: /Plafonnier du séjour/}),
+  );
+  await expect
+    .poll(async () => {
+      const box = (await label.boundingBox())!;
+      return Math.abs(box.y + box.height / 2 - (top + bottom) / 2);
+    })
+    .toBeLessThan(30);
+  const canvas = (await page.locator('canvas').boundingBox())!;
+  expect(canvas.y + canvas.height).toBe(844);
 });
 
 test('choisir une pièce y amène la caméra', async ({page}) => {
@@ -235,6 +263,8 @@ test("un appui long sur une tuile ouvre sa modale au centre de l'écran", async 
 });
 
 test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
+  // Onze modales ouvertes l'une après l'autre.
+  test.slow();
   const room = (name: string) => page.getByRole('region', {name, exact: true});
   const quickMenu = async (name: string) => {
     await page.getByRole('button', {name: 'Menu rapide'}).tap();
@@ -272,15 +302,17 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
           .getByRole('button', {name: /Imprimante 3D/})
           .tap(),
     ],
+    ['Énergie', () => quickMenu('Énergie')],
     ['Crédit', () => quickMenu('Crédit')],
     ['Courses', () => quickMenu('Courses')],
-    ['Foyer', () => page.getByRole('button', {name: 'Foyer'}).tap()],
   ];
 
   for (const [name, open] of modals) {
     // Les tuiles de toutes les pièces sont dans la vue Pièces, le menu rapide
     // sur la vue 3D.
-    const view = ['Crédit', 'Courses'].includes(name) ? '3D' : 'Pièces';
+    const view = ['Énergie', 'Crédit', 'Courses'].includes(name)
+      ? '3D'
+      : 'Pièces';
     await page.getByRole('button', {name: view, exact: true}).tap();
     await open();
     const title = page.getByRole('heading', {name, exact: true});
@@ -457,32 +489,85 @@ test('le filtre Volets ne garde que les volets', async ({page}) => {
   ).toBeVisible();
 });
 
-test('les avatars ouvrent le Foyer', async ({page}) => {
-  await openFoyer(page);
+test('les avatars déroulent le Foyer en menu', async ({page}) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride', {
+    insets: {top: 59, bottom: 34},
+  });
+  const avatars = (await page
+    .getByRole('button', {name: 'Foyer'})
+    .boundingBox())!;
+
+  const menu = await openFoyer(page);
 
   for (const name of ['Juliette', 'Roméo', 'Tom', 'Jerry'])
-    await expect(page.getByText(name, {exact: true})).toBeVisible();
-  await expect(page.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
-  const settings = page.getByRole('list', {name: 'Réglages'});
-  await expect(settings.getByRole('button', {name: /Thème/})).toBeVisible();
-  await expect(settings.getByRole('button', {name: /Système/})).toBeVisible();
+    await expect(menu.getByText(name, {exact: true})).toBeVisible();
+  await expect(menu.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
+  const settings = menu.getByRole('list', {name: 'Réglages'});
+  for (const name of [/Thème/, /Système/, /Se déconnecter/])
+    await expect(settings.getByRole('button', {name})).toBeVisible();
+  // Sous les avatars, aligné sur eux à droite, au-dessus de la barre d'accueil.
+  await expect
+    .poll(async () => {
+      const box = (await menu.boundingBox())!;
+      return {
+        x: box.x,
+        right: box.x + box.width,
+        below: box.y >= avatars.y + avatars.height,
+        inside: box.y + box.height <= 844 - 34,
+        scrolls: await menu.evaluate(
+          element => element.scrollHeight > element.clientHeight,
+        ),
+      };
+    })
+    .toEqual({
+      x: 12,
+      right: avatars.x + avatars.width,
+      below: true,
+      inside: true,
+      scrolls: true,
+    });
+
+  await page.touchscreen.tap(195, 20);
+
+  await expect(menu).toBeHidden();
 });
 
 test('changer le thème depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Thème/}).tap();
+  await menu.getByRole('button', {name: /Thème/}).tap();
   await page.getByRole('menuitem', {name: 'Clair'}).tap();
 
   await expect(page.locator('html')).toHaveClass(/light/);
 });
 
 test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Système/}).tap();
+  await menu.getByRole('button', {name: /Système/}).tap();
 
-  await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+  const title = page.getByRole('heading', {name: 'Système'});
+  await expect(title).toBeVisible();
+  // Le fond de la modale passe devant le menu.
+  await page.locator('#backdrop').click({position: {x: 195, y: 4}});
+  await expect(title).toBeHidden();
+  await expect(menu).toBeVisible();
+});
+
+test('se déconnecter depuis le Foyer', async ({page}) => {
+  await page.evaluate(() => localStorage.setItem('hassTokens', '{}'));
+  const menu = await openFoyer(page);
+
+  await Promise.all([
+    page.waitForEvent('load'),
+    menu.getByRole('button', {name: /Se déconnecter/}).tap(),
+  ]);
+
+  // Sans jetons, HassConnect renvoie vers la connexion de Home Assistant.
+  expect(
+    await page.evaluate(() => localStorage.getItem('hassTokens')),
+  ).toBeNull();
 });
 
 test('le menu rapide reste sur la vue 3D', async ({page}) => {
@@ -498,7 +583,7 @@ test('le menu rapide reste sur la vue 3D', async ({page}) => {
   await expect(
     page.getByRole('menuitemcheckbox', {name: 'Température'}),
   ).toBeVisible();
-  for (const name of ['Départ', 'Crédit', 'Courses'])
+  for (const name of ['Départ', 'Énergie', 'Crédit', 'Courses'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 });
 

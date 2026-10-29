@@ -4,12 +4,12 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 
 ## Ce qu'on trouve où
 
-| Zone       | Contenu                                                                               | D'où ça vient                                     |
-| ---------- | ------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| En-tête    | Sélecteur « 3D » / « Pièces », avatars                                                | `SideBarConfig` (personnes)                       |
-| Vue 3D     | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                      | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
-| Vue Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                     | `HouseConfig.rooms[].items`                       |
-| Foyer      | Personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs) et Système | `SideBarConfig`                                   |
+| Zone       | Contenu                                                                                                                       | D'où ça vient                                     |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| En-tête    | Sélecteur « 3D » / « Pièces », avatars                                                                                        | `SideBarConfig` (personnes)                       |
+| Vue 3D     | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                                                              | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
+| Vue Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                                                             | `HouseConfig.rooms[].items`                       |
+| Foyer      | Menu sous les avatars : personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs), Système et Se déconnecter | `SideBarConfig`                                   |
 
 ## Gestes
 
@@ -39,13 +39,13 @@ Une tuile affiche le `friendly_name` de l'entité dans Home Assistant, sur deux 
 
 L'ordre des pièces, dans le carrousel comme dans la liste, est celui de `HouseConfig.rooms`. La première pièce est cadrée à l'ouverture.
 
-La caméra se centre sur la lampe principale de la pièce : sa première lumière dans `House.ts`, retrouvée dans le modèle. Mettez le plafonnier en premier. Une pièce sans lumière dans le modèle est centrée sur son étiquette (`position`).
+La caméra vise la `position` de la pièce dans `House.ts` : placez-la au centre de la pièce.
 
 ## Pour les développeurs
 
 - `useIsMobile` (`src/hooks/useIsMobile.ts`) est la seule source de la bascule. Il est lu dès le premier rendu.
 - Les composants propres au mobile vivent dans `src/components/Mobile/`. Les tuiles sont la variante `tile` des éléments de pièce (`House/Room/RoomItem`) : un nouveau type d'équipement doit prévoir les deux rendus.
-- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` (`DISTANCE`, `SHIFT`) : les calculs sont dans `src/utils/camera.ts`, la lampe visée dans `src/utils/model.ts`.
+- Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` : `DISTANCE` pour l'éloignement, `LIFT` pour remonter la pièce entre l'en-tête et le carrousel. Les calculs sont dans `src/utils/camera.ts`.
 - La page passe sous l'encoche et la barre d'accueil de l'iPhone (`viewport-fit=cover`). Un élément collé à un bord de l'écran ajoute `env(safe-area-inset-*)` à sa marge, comme l'en-tête et le carrousel. Les modales se centrent entre les zones sûres.
 - Une modale de téléphone donne toute sa carte au contenu, sans marge en plus. Elle doit tenir dans les 659 px que Safari laisse visibles sur un iPhone 15 Pro : une hauteur relative à l'écran s'y écrit en `svh`, car `vh` compte aussi les barres de Safari. Une largeur fixe y devient `{xs: '100%', sm: …}`, et deux blocs côte à côte s'empilent (`direction={{xs: 'column', sm: 'row'}}`). La page ne défile pas (`overflow: hidden` dans `theme/components/CssBaseline.ts`) : ce qui déborde est coupé.
 - Sur Android, un retour haptique passe par `haptic()` (`src/utils/haptic.ts`), jamais directement par `navigator.vibrate`, absent de Safari. Sur iPhone, seul un vrai toucher qui bascule un interrupteur natif fait vibrer : la tuile (`Mobile/Tile.tsx`) en cache un sous le doigt. C'est pourquoi l'appui court de `useLongPress` attend le clic du navigateur au lieu de l'annuler.

@@ -1,6 +1,6 @@
 # 0038 — Disposition mobile à deux vues
 
-- Statut : Proposé
+- Statut : Proposé. Le Foyer : remplacé par [0044](0044-foyer-en-menu-sous-les-avatars.md)
 - Date : 2026-10-25
 - Issue : #70
 
