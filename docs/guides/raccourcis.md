@@ -157,7 +157,7 @@ Les consommations viennent des statistiques à long terme de Home Assistant ([AD
 
 `{type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'}`
 
-Une carte par trajet de l'intégration HACS [sncf_trains](https://github.com/Master13011/SNCF-API-HA). Elle affiche les trois prochains départs : « 07:42 à l'heure », « 07:42 +5 min » en orange ou l'heure barrée et « supprimé » en rouge, et la voie si elle est connue. Un appui ouvre la liste des départs à venir : heure réelle en grand, heure prévue barrée en cas de retard, voie, train et heure d'arrivée. Les trains partis disparaissent d'eux-mêmes.
+Une carte par trajet de l'intégration HACS [sncf_trains](https://github.com/Master13011/SNCF-API-HA). Elle met en avant le prochain départ, « 07:42 à l'heure », « 07:42 +5 min » en orange ou l'heure barrée et « supprimé » en rouge, avec la voie si elle est connue, puis les deux suivants en plus petit. Dessous, un TER entre en gare. Un appui ouvre la modale : le même TER, puis la liste des départs à venir, avec l'heure réelle en grand, l'heure prévue barrée en cas de retard, la voie, le train et l'heure d'arrivée. Les trains partis disparaissent d'eux-mêmes.
 
 | Option   | Rôle                                                                                                                                                        |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |

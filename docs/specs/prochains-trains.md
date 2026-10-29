@@ -9,7 +9,7 @@ Avant de partir, il faut ouvrir l'application SNCF pour savoir si le prochain tr
 
 ## Objectif
 
-Une carte par trajet, dans le carrousel de la barre latérale, montre les trois prochains départs et leur retard, et sa modale liste tous les départs à venir.
+Une carte par trajet, dans le carrousel de la barre latérale, montre les trois prochains départs et leur retard, illustrés d'un TER, et sa modale liste tous les départs à venir.
 
 ## Hors périmètre
 
@@ -23,7 +23,7 @@ Une carte par trajet, dans le carrousel de la barre latérale, montre les trois 
 
 - **Étant donné** un trajet dont le prochain train part à 07:42
 - **Quand** la barre latérale s'affiche
-- **Alors** la carte porte le libellé du trajet et liste les trois prochains départs : « 07:42 à l'heure », ou « 07:42 +5 min » si le train part avec 5 minutes de retard, et la voie si elle est connue
+- **Alors** la carte porte le libellé du trajet et met en avant le prochain départ : « 07:42 à l'heure », ou « 07:42 +5 min » si le train part avec 5 minutes de retard, et la voie si elle est connue. Les deux départs suivants s'affichent dessous en plus petit, au-dessus d'un TER dessiné qui entre en gare
 
 ### Scénario : un départ supprimé ou en retard se voit
 
@@ -35,7 +35,7 @@ Une carte par trajet, dans le carrousel de la barre latérale, montre les trois 
 
 - **Étant donné** un trajet avec plusieurs départs à venir
 - **Quand** l'utilisateur touche la carte
-- **Alors** la modale liste les départs du plus proche au plus lointain. Pour chacun, elle met en avant l'heure de départ réelle, puis affiche l'heure prévue barrée si le train est en retard, le retard ou « supprimé », la voie si elle est connue, le mode, le numéro et l'heure d'arrivée
+- **Alors** la modale montre le même TER, puis liste les départs du plus proche au plus lointain. Pour chacun, elle met en avant l'heure de départ réelle, puis affiche l'heure prévue barrée si le train est en retard, le retard ou « supprimé », la voie si elle est connue, le mode, le numéro et l'heure d'arrivée
 
 ### Scénario : un train parti disparaît
 
@@ -59,4 +59,4 @@ Une carte par trajet, dans le carrousel de la barre latérale, montre les trois 
 
 - Config : nouveau type de carte `trains` dans `SideBarConfigType.shortcuts`.
 - Mock : un trajet fictif Paris → Lyon de 4 départs, dont un en retard et un supprimé, recalculés au chargement de la page.
-- Performance : aucun impact sur la scène 3D. La carte se redessine toutes les 30 s.
+- Performance : aucun impact sur la scène 3D. La carte se redessine toutes les 30 s. Le TER, en SVG, glisse une fois à l'affichage de la carte et de la modale, puis ne bouge plus.
