@@ -13,6 +13,8 @@ export type ConfigurationOptions = {
   heatmapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
+  /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
+  screensaverMinutes: number;
 };
 
 export type RendererInfo = {
@@ -66,6 +68,7 @@ const defaultConfiguration: ConfigurationOptions = {
   heatmapShader: false,
   shadows: false,
   webGPU: false,
+  screensaverMinutes: 0,
 };
 
 const defaultRendererInfo: RendererInfo = {

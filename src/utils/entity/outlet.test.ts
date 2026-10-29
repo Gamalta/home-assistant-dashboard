@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {formatPower, parsePower} from './outlet';
+import {formatPower, outletStateLabel, parsePower} from './outlet';
 
 describe('parsePower', () => {
   it('lit la puissance du capteur', () => {
@@ -23,5 +23,17 @@ describe('formatPower', () => {
   it('garde une décimale sous 10 W', () => {
     expect(formatPower(0.84)).toBe('0,8\u00a0W');
     expect(formatPower(3)).toBe('3\u00a0W');
+  });
+});
+
+describe('outletStateLabel', () => {
+  it('donne la puissance d’une prise allumée', () => {
+    expect(outletStateLabel('on', 85.4)).toBe('85\u00a0W');
+    expect(outletStateLabel('on', null)).toBe('Allumée');
+  });
+
+  it('dit « Éteinte » ou « Indisponible »', () => {
+    expect(outletStateLabel('off', 0)).toBe('Éteinte');
+    expect(outletStateLabel('unavailable', null)).toBe('Indisponible');
   });
 });

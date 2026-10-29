@@ -30,6 +30,7 @@ Tous les graphiques du dashboard ont le même design, celui de l'historique Clim
 - **Étant donné** l'historique affiché
 - **Quand** l'utilisateur survole un point de la courbe
 - **Alors** un trait vertical et un point marquent l'instant, et une infobulle donne l'heure et la valeur de chaque série, en français (« 21,5°C »)
+- **Et** l'infobulle s'affiche au-dessus du curseur, comme au doigt : elle ne couvre pas ce qui suit le graphique
 
 ### Scénario : valeur au doigt
 

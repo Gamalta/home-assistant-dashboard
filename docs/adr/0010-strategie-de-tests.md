@@ -1,6 +1,6 @@
 # 0010 — Stratégie de tests unitaires, E2E et CI
 
-- Statut : Proposé
+- Statut : Proposé, en partie remplacé par [0040](0040-tests-plus-rapides.md)
 - Date : 2026-10-24
 
 ## Contexte

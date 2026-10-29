@@ -1,16 +1,18 @@
 # Documentation
 
-| Document                                                   | Pour                                                |
-| ---------------------------------------------------------- | --------------------------------------------------- |
-| [État des lieux](etat-des-lieux.md)                        | Comprendre l'architecture et l'audit d'octobre 2026 |
-| [Conventions](conventions.md)                              | Écrire du code, des tests et des PR conformes       |
-| [ADR](adr/README.md)                                       | Savoir pourquoi le projet est construit ainsi       |
-| [Specs](specs/README.md)                                   | Décrire une fonctionnalité avant de la construire   |
-| [Guide : tests](guides/tests.md)                           | Lancer et écrire les tests unitaires et E2E         |
-| [Guide : performance](guides/performance.md)               | Mesurer le rendu et simuler la tablette             |
-| [Guide : ajouter une maison](guides/ajouter-une-maison.md) | Brancher un nouveau modèle 3D et ses entités        |
-| [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance       |
-| [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun       |
-| [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)   |
-| [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale         |
-| [Guide : alertes](guides/alertes.md)                       | Configurer la pastille d'alertes                    |
+| Document                                                   | Pour                                                 |
+| ---------------------------------------------------------- | ---------------------------------------------------- |
+| [État des lieux](etat-des-lieux.md)                        | Comprendre l'architecture et l'audit d'octobre 2026  |
+| [Conventions](conventions.md)                              | Écrire du code, des tests et des PR conformes        |
+| [ADR](adr/README.md)                                       | Savoir pourquoi le projet est construit ainsi        |
+| [Specs](specs/README.md)                                   | Décrire une fonctionnalité avant de la construire    |
+| [Guide : tests](guides/tests.md)                           | Lancer et écrire les tests unitaires et E2E          |
+| [Guide : performance](guides/performance.md)               | Mesurer le rendu et simuler la tablette              |
+| [Guide : ajouter une maison](guides/ajouter-une-maison.md) | Brancher un nouveau modèle 3D et ses entités         |
+| [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance        |
+| [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun        |
+| [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)    |
+| [Guide : mode veille](guides/mode-veille.md)               | Mettre la tablette murale en veille après inactivité |
+| [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale          |
+| [Guide : alertes](guides/alertes.md)                       | Configurer la pastille d'alertes                     |
+| [Guide : version mobile](guides/version-mobile.md)         | Piloter la maison depuis un téléphone                |

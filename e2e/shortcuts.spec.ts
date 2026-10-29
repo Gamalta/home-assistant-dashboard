@@ -1,5 +1,4 @@
-import {Page} from '@playwright/test';
-import {expect, test, waitForScene} from './fixtures';
+import {expect, swipeLeft, test, waitForScene} from './fixtures';
 
 // Taille de la tablette murale en pixels CSS, écran tactile.
 test.use({viewport: {width: 1280, height: 800}, hasTouch: true});
@@ -9,42 +8,10 @@ test.beforeEach(async ({page}) => {
   await waitForScene(page);
 });
 
-// Glissement du doigt vers la gauche, un peu de biais comme à la main.
-// Chromium headless ne simule pas le doigt de la même façon partout : sous
-// Linux (CI), synthesizeScrollGesture n'émet aucun touchmove, et sous macOS,
-// dispatchTouchEvent se bloque dès que le défilement commence.
-async function swipeLeft(page: Page, x: number, y: number) {
-  const client = await page.context().newCDPSession(page);
-  if (process.platform === 'darwin') {
-    await client.send('Input.synthesizeScrollGesture', {
-      x,
-      y,
-      xDistance: -240,
-      yDistance: -24,
-      gestureSourceType: 'touch',
-    });
-    return;
-  }
-  await client.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{x, y}],
-  });
-  for (let dx = 40; dx <= 240; dx += 40) {
-    await client.send('Input.dispatchTouchEvent', {
-      type: 'touchMove',
-      touchPoints: [{x: x - dx, y: y - dx / 10}],
-    });
-  }
-  await client.send('Input.dispatchTouchEvent', {
-    type: 'touchEnd',
-    touchPoints: [],
-  });
-}
-
-test('lance un scénario depuis le menu en haut de la vue 3D', async ({
+test('lance un scénario depuis le menu rapide en haut de la vue 3D', async ({
   page,
 }) => {
-  const dial = page.getByRole('button', {name: 'Scénarios'});
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
   const box = await dial.boundingBox();
   const separator = await page.getByRole('separator').boundingBox();
   const header = await page.getByRole('banner').boundingBox();
@@ -53,14 +20,43 @@ test('lance un scénario depuis le menu en haut de la vue 3D', async ({
 
   await dial.tap();
   await expect(dial).toHaveAttribute('aria-expanded', 'true');
-  for (const name of ['Départ', 'Température', 'Énergie'])
+  await expect(
+    page.getByRole('menuitemcheckbox', {name: 'Température'}),
+  ).toBeVisible();
+  for (const name of ['Départ', 'Économie'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 
   await page.getByRole('menuitem', {name: 'Départ'}).tap();
   await expect(dial).toHaveAttribute('aria-expanded', 'false');
-  const check = dial.getByTestId('coche');
+  const check = dial.getByTestId('launched');
   await expect(check).toBeVisible();
   await expect(check).toBeHidden();
+});
+
+test('n’affiche que les températures et la climatisation depuis le menu rapide', async ({
+  page,
+}) => {
+  const dial = page.getByRole('button', {name: 'Menu rapide'});
+  const temperature = page.getByRole('menuitemcheckbox', {
+    name: 'Température',
+  });
+  // Le bouton du volet n'a pas de nom : on le reconnaît à son icône de fenêtre.
+  const shutters = page.locator(
+    'button:has(path[transform="rotate(90 480 -480)"])',
+  );
+  const climate = page.getByRole('button', {name: '22°', exact: true}).first();
+  await expect(shutters.first()).toBeVisible();
+
+  await dial.tap();
+  await temperature.tap();
+  await expect(dial).toHaveAttribute('aria-expanded', 'false');
+  await expect(shutters).toHaveCount(0);
+  await expect(climate).toBeVisible();
+
+  await dial.tap();
+  await expect(temperature).toHaveAttribute('aria-checked', 'true');
+  await temperature.tap();
+  await expect(shutters.first()).toBeVisible();
 });
 
 test('fait défiler les cartes au doigt et suit la pagination', async ({
