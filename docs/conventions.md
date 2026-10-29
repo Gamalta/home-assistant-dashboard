@@ -57,7 +57,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 Le détail se trouve dans le [guide des tests](guides/tests.md) et l'[ADR 0010](adr/0010-strategie-de-tests.md).
 
 - Les tests **unitaires** (Vitest) sont colocalisés : `color.ts` → `color.test.ts`. Ils sont obligatoires pour toute logique pure ajoutée ou modifiée.
-- Les tests **E2E** (Playwright, dossier `e2e/`) sont obligatoires pour tout comportement visible par l'utilisateur. Ils tournent sur le build de production, avec le mock et la maison `demo`.
+- Les tests **E2E** (Playwright, dossier `e2e/`) sont obligatoires pour tout comportement visible qui passe par la scène 3D, le rendu, la mise en page, une animation ou un vrai pointeur. Ils tournent sur le build de production, avec le mock et la maison `demo`. Un comportement qui ne dépend que d'un composant et de sa modale se teste en unitaire, sur le mock ([ADR 0040](adr/0040-tests-plus-rapides.md)).
 - Un test décrit un comportement, en français : `it('borne l’écart de température à 1 °C')`.
 
 ## Git et GitHub
