@@ -94,7 +94,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 ### Scénario : chaque modale tient dans l'écran du téléphone
 
 - **Étant donné** un téléphone en portrait
-- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit, des courses ou le Foyer
+- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit ou des courses
 - **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
 - **Et** la page garde la largeur de l'écran
 
@@ -122,11 +122,13 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche le filtre « Volets »
 - **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
-### Scénario : les avatars ouvrent le Foyer
+### Scénario : les avatars déroulent le Foyer en menu
 
-- **Étant donné** un téléphone en portrait
+- **Étant donné** un iPhone à Dynamic Island en portrait
 - **Quand** l'utilisateur touche les avatars de l'en-tête
-- **Alors** le Foyer s'ouvre : personnes, animaux, carrousel de raccourcis, puis les réglages Thème et Système
+- **Alors** le Foyer se déroule en menu sous les avatars, aligné sur eux à droite : personnes, animaux, carrousel de raccourcis, puis Thème, Système et « Se déconnecter »
+- **Et** le menu s'arrête au-dessus de la barre d'accueil, et défile s'il est plus haut
+- **Et** toucher hors du menu le referme
 
 ### Scénario : changer le thème depuis le Foyer
 
@@ -138,7 +140,14 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Système »
-- **Alors** la modale Système s'ouvre
+- **Alors** la modale Système s'ouvre par-dessus le menu
+- **Et** toucher son fond la ferme, sans fermer le menu
+
+### Scénario : se déconnecter depuis le Foyer
+
+- **Étant donné** le Foyer ouvert
+- **Quand** l'utilisateur touche « Se déconnecter »
+- **Alors** le dashboard oublie ses jetons Home Assistant et se recharge sur la page de connexion de Home Assistant
 
 ### Scénario : le menu rapide reste sur la vue 3D
 
@@ -162,7 +171,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ## Impacts
 
-- Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
+- Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition), [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra) et [ADR 0044](../adr/0044-foyer-en-menu-sous-les-avatars.md) (Foyer en menu).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
