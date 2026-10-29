@@ -4,6 +4,7 @@ import {expect, swipeLeft, test, waitForScene} from './fixtures';
 declare global {
   interface Window {
     __linkedPrograms: number;
+    __vibrations: number[];
   }
 }
 
@@ -71,8 +72,9 @@ async function longPress(page: Page, target: Locator) {
 
 async function openFoyer(page: Page) {
   await page.getByRole('button', {name: 'Foyer'}).tap();
-  // Le contenu d'une modale n'apparaît qu'après son animation d'ouverture.
-  await expect(page.getByRole('list', {name: 'Réglages'})).toBeVisible();
+  const menu = page.getByRole('dialog', {name: 'Foyer'});
+  await expect(menu).toBeVisible();
+  return menu;
 }
 
 test('le sélecteur de vue remplace la barre latérale sous 600 px', async ({
@@ -150,6 +152,21 @@ test("la vue 3D s'ouvre sur la première pièce", async ({page}) => {
   // Autant d'étiquettes dans la scène que de tuiles sur la carte.
   const tiles = await card.getByRole('button').count();
   await expect(sceneLabels(page)).toHaveCount(tiles);
+
+  // L'étiquette de la pièce, à sa position dans la config, se centre entre
+  // l'en-tête et les puces ; la scène continue derrière le carrousel.
+  const {top, bottom} = await visibleScene(page);
+  const label = sceneLabels(page).and(
+    page.getByRole('button', {name: /Plafonnier du séjour/}),
+  );
+  await expect
+    .poll(async () => {
+      const box = (await label.boundingBox())!;
+      return Math.abs(box.y + box.height / 2 - (top + bottom) / 2);
+    })
+    .toBeLessThan(30);
+  const canvas = (await page.locator('canvas').boundingBox())!;
+  expect(canvas.y + canvas.height).toBe(844);
 });
 
 test('choisir une pièce y amène la caméra', async ({page}) => {
@@ -246,6 +263,8 @@ test("un appui long sur une tuile ouvre sa modale au centre de l'écran", async 
 });
 
 test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
+  // Onze modales ouvertes l'une après l'autre.
+  test.slow();
   const room = (name: string) => page.getByRole('region', {name, exact: true});
   const quickMenu = async (name: string) => {
     await page.getByRole('button', {name: 'Menu rapide'}).tap();
@@ -283,15 +302,17 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
           .getByRole('button', {name: /Imprimante 3D/})
           .tap(),
     ],
+    ['Énergie', () => quickMenu('Énergie')],
     ['Crédit', () => quickMenu('Crédit')],
     ['Courses', () => quickMenu('Courses')],
-    ['Foyer', () => page.getByRole('button', {name: 'Foyer'}).tap()],
   ];
 
   for (const [name, open] of modals) {
     // Les tuiles de toutes les pièces sont dans la vue Pièces, le menu rapide
     // sur la vue 3D.
-    const view = ['Crédit', 'Courses'].includes(name) ? '3D' : 'Pièces';
+    const view = ['Énergie', 'Crédit', 'Courses'].includes(name)
+      ? '3D'
+      : 'Pièces';
     await page.getByRole('button', {name: view, exact: true}).tap();
     await open();
     const title = page.getByRole('heading', {name, exact: true});
@@ -322,6 +343,32 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
   }
 });
 
+test.describe('Safari sur iPhone', () => {
+  // Hauteur visible d'un iPhone 15 Pro sous les barres de Safari.
+  test.use({viewport: {width: 393, height: 659}});
+
+  test('la modale lumière tient dans la hauteur visible de Safari', async ({
+    page,
+  }) => {
+    await longPress(
+      page,
+      page
+        .getByRole('region', {name: 'Séjour'})
+        .getByRole('button', {name: /Plafonnier du séjour/}),
+    );
+
+    const title = page.getByRole('heading', {name: 'Lumière', exact: true});
+    await expect(title).toBeVisible();
+    const card = title.locator('xpath=../..');
+    await expect(card.getByText('Hue Play du séjour')).toBeVisible();
+    await expect
+      .poll(() =>
+        card.evaluate(element => element.scrollHeight <= element.clientHeight),
+      )
+      .toBe(true);
+  });
+});
+
 test('toucher le fond ferme la modale', async ({page}) => {
   await longPress(
     page,
@@ -335,6 +382,86 @@ test('toucher le fond ferme la modale', async ({page}) => {
   await page.locator('#backdrop').click({position: {x: 195, y: 20}});
 
   await expect(title).toBeHidden();
+});
+
+test('un appui long ne sélectionne pas le texte', async ({page}) => {
+  const card = page.getByRole('region', {name: 'Séjour'});
+  await card.getByRole('heading').click({clickCount: 3});
+  await longPress(page, card.getByRole('button', {name: /Plafonnier/}));
+
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => getSelection()?.toString())).toBe('');
+});
+
+test("le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre", async ({
+  page,
+}) => {
+  // Chromium sans tête ne vibre pas : on compte les appels.
+  await page.evaluate(() => {
+    window.__vibrations = [];
+    Object.defineProperty(navigator, 'vibrate', {
+      value: (pattern: number) => window.__vibrations.push(pattern) > 0,
+    });
+  });
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+
+  await tile.tap();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10]);
+
+  await longPress(page, tile);
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10, 10]);
+});
+
+test('sur iPhone, toucher une tuile fait vibrer', async ({page}) => {
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+  const hapticSwitch = tile.locator('input[switch]');
+  await expect(hapticSwitch).not.toBeChecked();
+
+  await tile.tap();
+
+  // Le doigt a basculé l'interrupteur natif, et la lumière une seule fois.
+  await expect(hapticSwitch).toBeChecked();
+  await expect(tile).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('le dashboard s’installe sur l’écran d’accueil', async ({
+  page,
+  request,
+}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+  const icons: {src: string; sizes: string}[] = manifest.icons;
+
+  expect(manifest.short_name).toBe('Elihome');
+  expect(icons.map(icon => icon.sizes)).toEqual(
+    expect.arrayContaining(['192x192', '512x512']),
+  );
+  const appleIcon = await page
+    .locator('link[rel="apple-touch-icon"]')
+    .getAttribute('href');
+  for (const src of [...icons.map(icon => icon.src), appleIcon!]) {
+    const response = await request.get(src);
+    expect(response.headers()['content-type'], src).toBe('image/png');
+  }
+});
+
+test("l'application s'ouvre en plein écran", async ({page, request}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+
+  expect(manifest).toMatchObject({start_url: '/', display: 'standalone'});
+  await expect(
+    page.locator('meta[name="apple-mobile-web-app-status-bar-style"]'),
+  ).toHaveAttribute('content', 'black-translucent');
 });
 
 test('la vue Pièces liste toutes les pièces', async ({page}) => {
@@ -362,32 +489,85 @@ test('le filtre Volets ne garde que les volets', async ({page}) => {
   ).toBeVisible();
 });
 
-test('les avatars ouvrent le Foyer', async ({page}) => {
-  await openFoyer(page);
+test('les avatars déroulent le Foyer en menu', async ({page}) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride', {
+    insets: {top: 59, bottom: 34},
+  });
+  const avatars = (await page
+    .getByRole('button', {name: 'Foyer'})
+    .boundingBox())!;
+
+  const menu = await openFoyer(page);
 
   for (const name of ['Juliette', 'Roméo', 'Tom', 'Jerry'])
-    await expect(page.getByText(name, {exact: true})).toBeVisible();
-  await expect(page.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
-  const settings = page.getByRole('list', {name: 'Réglages'});
-  await expect(settings.getByRole('button', {name: /Thème/})).toBeVisible();
-  await expect(settings.getByRole('button', {name: /Système/})).toBeVisible();
+    await expect(menu.getByText(name, {exact: true})).toBeVisible();
+  await expect(menu.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
+  const settings = menu.getByRole('list', {name: 'Réglages'});
+  for (const name of [/Thème/, /Système/, /Se déconnecter/])
+    await expect(settings.getByRole('button', {name})).toBeVisible();
+  // Sous les avatars, aligné sur eux à droite, au-dessus de la barre d'accueil.
+  await expect
+    .poll(async () => {
+      const box = (await menu.boundingBox())!;
+      return {
+        x: box.x,
+        right: box.x + box.width,
+        below: box.y >= avatars.y + avatars.height,
+        inside: box.y + box.height <= 844 - 34,
+        scrolls: await menu.evaluate(
+          element => element.scrollHeight > element.clientHeight,
+        ),
+      };
+    })
+    .toEqual({
+      x: 12,
+      right: avatars.x + avatars.width,
+      below: true,
+      inside: true,
+      scrolls: true,
+    });
+
+  await page.touchscreen.tap(195, 20);
+
+  await expect(menu).toBeHidden();
 });
 
 test('changer le thème depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Thème/}).tap();
+  await menu.getByRole('button', {name: /Thème/}).tap();
   await page.getByRole('menuitem', {name: 'Clair'}).tap();
 
   await expect(page.locator('html')).toHaveClass(/light/);
 });
 
 test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
-  await openFoyer(page);
+  const menu = await openFoyer(page);
 
-  await page.getByRole('button', {name: /Système/}).tap();
+  await menu.getByRole('button', {name: /Système/}).tap();
 
-  await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+  const title = page.getByRole('heading', {name: 'Système'});
+  await expect(title).toBeVisible();
+  // Le fond de la modale passe devant le menu.
+  await page.locator('#backdrop').click({position: {x: 195, y: 4}});
+  await expect(title).toBeHidden();
+  await expect(menu).toBeVisible();
+});
+
+test('se déconnecter depuis le Foyer', async ({page}) => {
+  await page.evaluate(() => localStorage.setItem('hassTokens', '{}'));
+  const menu = await openFoyer(page);
+
+  await Promise.all([
+    page.waitForEvent('load'),
+    menu.getByRole('button', {name: /Se déconnecter/}).tap(),
+  ]);
+
+  // Sans jetons, HassConnect renvoie vers la connexion de Home Assistant.
+  expect(
+    await page.evaluate(() => localStorage.getItem('hassTokens')),
+  ).toBeNull();
 });
 
 test('le menu rapide reste sur la vue 3D', async ({page}) => {
@@ -403,7 +583,7 @@ test('le menu rapide reste sur la vue 3D', async ({page}) => {
   await expect(
     page.getByRole('menuitemcheckbox', {name: 'Température'}),
   ).toBeVisible();
-  for (const name of ['Départ', 'Crédit', 'Courses'])
+  for (const name of ['Départ', 'Énergie', 'Crédit', 'Courses'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 });
 

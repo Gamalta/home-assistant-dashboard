@@ -22,7 +22,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - L'heure, la date et la météo : le téléphone les affiche déjà.
 - Une vue d'ensemble de la maison sur mobile : la caméra cadre toujours une pièce, on peut dézoomer à la main.
 - Un résumé de la maison (« 4 lumières allumées ») au-dessus de la liste des pièces.
-- Une application installable (PWA) et les notifications.
+- Les notifications. L'application installable a sa propre spec, [Application installable](application-installable.md).
 
 ## Comportement attendu
 
@@ -54,6 +54,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** le dashboard s'ouvre
 - **Alors** la maison 3D s'affiche, cadrée sur la première pièce de la config
 - **Et** un carrousel en bas montre une puce par pièce et la carte de cette pièce, avec une tuile par équipement
+- **Et** la pièce s'affiche au milieu de l'espace entre l'en-tête et le carrousel, et la 3D reste visible derrière le carrousel
 - **Et** seules les étiquettes de cette pièce s'affichent dans la scène
 
 ### Scénario : choisir une pièce y amène la caméra
@@ -93,9 +94,16 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 ### Scénario : chaque modale tient dans l'écran du téléphone
 
 - **Étant donné** un téléphone en portrait
-- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit, des courses ou le Foyer
+- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit ou des courses
 - **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
 - **Et** la page garde la largeur de l'écran
+
+### Scénario : la modale lumière tient dans la hauteur visible de Safari
+
+- **Étant donné** un iPhone 15 Pro dans Safari, avec 393 × 659 px visibles sous les barres
+- **Quand** l'utilisateur ouvre la modale d'une lumière
+- **Alors** la roue, les boutons et les cartes des lumières tiennent dans la carte, sans défilement
+- **Et** sur chaque carte de lumière, le bouton de lien flotte dans le coin
 
 ### Scénario : toucher le fond ferme la modale
 
@@ -109,6 +117,25 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur pose le doigt sur une tuile et le glisse de plus de 10 px pour faire défiler
 - **Alors** ni l'appui court ni l'appui long ne se déclenchent
 
+### Scénario : un appui long ne sélectionne pas le texte
+
+- **Étant donné** une tuile de lumière
+- **Quand** l'utilisateur la garde enfoncée jusqu'à l'ouverture de sa modale
+- **Alors** aucun texte de la page n'est sélectionné, et le navigateur n'ouvre pas son menu
+
+### Scénario : le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre
+
+- **Étant donné** un téléphone Android, qui a l'API Vibration
+- **Quand** l'utilisateur touche une tuile de lumière, puis la garde enfoncée
+- **Alors** le téléphone vibre brièvement à la bascule, puis à l'ouverture de la modale
+
+### Scénario : sur iPhone, toucher une tuile fait vibrer
+
+- **Étant donné** un iPhone, dont Safari n'a pas l'API Vibration
+- **Quand** l'utilisateur touche une tuile de lumière
+- **Alors** son doigt bascule l'interrupteur natif caché dans la tuile, et l'iPhone vibre
+- **Et** la lumière ne bascule qu'une fois
+
 ### Scénario : la vue Pièces liste toutes les pièces
 
 - **Étant donné** la vue 3D
@@ -121,11 +148,13 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche le filtre « Volets »
 - **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
-### Scénario : les avatars ouvrent le Foyer
+### Scénario : les avatars déroulent le Foyer en menu
 
-- **Étant donné** un téléphone en portrait
+- **Étant donné** un iPhone à Dynamic Island en portrait
 - **Quand** l'utilisateur touche les avatars de l'en-tête
-- **Alors** le Foyer s'ouvre : personnes, animaux, carrousel de raccourcis, puis les réglages Thème et Système
+- **Alors** le Foyer se déroule en menu sous les avatars, aligné sur eux à droite : personnes, animaux, carrousel de raccourcis, puis Thème, Système et « Se déconnecter »
+- **Et** le menu s'arrête au-dessus de la barre d'accueil, et défile s'il est plus haut
+- **Et** toucher hors du menu le referme
 
 ### Scénario : changer le thème depuis le Foyer
 
@@ -137,7 +166,14 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Système »
-- **Alors** la modale Système s'ouvre
+- **Alors** la modale Système s'ouvre par-dessus le menu
+- **Et** toucher son fond la ferme, sans fermer le menu
+
+### Scénario : se déconnecter depuis le Foyer
+
+- **Étant donné** le Foyer ouvert
+- **Quand** l'utilisateur touche « Se déconnecter »
+- **Alors** le dashboard oublie ses jetons Home Assistant et se recharge sur la page de connexion de Home Assistant
 
 ### Scénario : le menu rapide reste sur la vue 3D
 
@@ -161,12 +197,12 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 ## Impacts
 
-- Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition) et [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra).
+- Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition), [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra) et [ADR 0044](../adr/0044-foyer-en-menu-sous-les-avatars.md) (Foyer en menu).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
 - Page : `viewport-fit=cover`, et `html` comme `body` en `overflow: hidden`. L'en-tête, le menu rapide, la liste, le carrousel et les modales suivent les zones sûres de l'écran.
-- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
+- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi. L'appui court passe par le clic du navigateur, que seul l'appui long annule.
 - Performance : voir la section Mesures.
 
 ## Mesures
@@ -185,3 +221,4 @@ Build de production, maison démo, en 390 × 844 avec un DPR de 3 (R3F le plafon
 - Le temps GPU au repos suit la surface du canvas : en pleine largeur, il couvre 1,4 fois plus de pixels que les 70 % de la disposition tablette.
 - Les appels de dessin restent sous les 150 du [budget](../adr/0009-budget-performance-tablette.md).
 - En rendu logiciel (SwiftShader, comme en CI), on compte les mêmes étiquettes, les mêmes appels de dessin et aucune compilation pendant le vol.
+- Remonter la pièce au-dessus du carrousel ne change que la projection. En SwiftShader, le GPU au repos passe de 36,2 à 37,5 ms (médiane de trois mesures), dans l'écart d'une mesure à l'autre, et le CPU reste à 0,3 ms. La tablette n'est pas concernée.

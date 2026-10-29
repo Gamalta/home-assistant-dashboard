@@ -3,7 +3,9 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {QuickMenu} from '.';
 
 const {sideBar} = vi.hoisted(() => ({
-  sideBar: {current: {} as {scenarios?: string[]}},
+  sideBar: {
+    current: {} as {scenarios?: string[]; shortcuts?: {type: string}[]},
+  },
 }));
 
 vi.mock('../../contexts/HouseContext', () => ({
@@ -42,5 +44,13 @@ describe('QuickMenu', () => {
       screen.getByRole('menuitemcheckbox', {name: 'Température'}),
     ).toBeInTheDocument();
     expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
+  });
+
+  it('propose l’entrée Énergie avec la carte « Énergie » du carrousel', () => {
+    sideBar.current = {shortcuts: [{type: 'media'}, {type: 'energy'}]};
+    render(<QuickMenu />);
+    fireEvent.click(screen.getByRole('button', {name: 'Menu rapide'}));
+
+    expect(screen.getByRole('menuitem', {name: 'Énergie'})).toBeInTheDocument();
   });
 });
