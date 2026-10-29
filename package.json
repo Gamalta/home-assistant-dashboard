@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "optimize-model": "sh scripts/optimize-model.sh"
+    "optimize-model": "sh scripts/optimize-model.sh",
+    "bake-lighting": "sh scripts/bake-lighting.sh"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
