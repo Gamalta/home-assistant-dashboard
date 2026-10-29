@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {portraitDistance, roomCameraPose} from './camera';
+import {FOV, FRAMING, portraitDistance, roomCameraPose} from './camera';
 
 const expectTuple = (actual: number[], expected: number[]) =>
   actual.forEach((value, index) => expect(value).toBeCloseTo(expected[index]));
@@ -33,5 +33,16 @@ describe('portraitDistance', () => {
   it('recule d’autant que la vue est étroite, dans une limite', () => {
     expect(portraitDistance(0.5)).toBe(2);
     expect(portraitDistance(0.2)).toBe(2.5);
+  });
+});
+
+describe('FRAMING', () => {
+  it('garde à 30° la hauteur de scène que la caméra voyait à 75°', () => {
+    const height = (fov: number, distance: number) =>
+      2 * distance * Math.tan((fov * Math.PI) / 360);
+
+    expect(FOV).toBe(30);
+    expect(height(FOV, 10 * FRAMING)).toBeCloseTo(height(75, 10));
+    expect(FRAMING).toBeCloseTo(2.86, 2);
   });
 });

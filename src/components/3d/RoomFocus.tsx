@@ -2,13 +2,15 @@ import {useFrame, useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {Position3dType} from '../../configs/house';
-import {portraitDistance, roomCameraPose} from '../../utils/camera';
+import {FRAMING, portraitDistance, roomCameraPose} from '../../utils/camera';
 
+// Réglages faits pour un champ de 75° : la caméra recule, et la cible avance
+// d'autant de mètres qu'avant.
 // Distance caméra–pièce en paysage, en unités du modèle.
-const DISTANCE = 4;
+const DISTANCE = 4 * FRAMING;
 // La cible avance vers la caméra : la pièce remonte au-dessus du carrousel
 // qui couvre le bas de l'écran.
-const SHIFT = 0.45;
+const SHIFT = 0.45 / FRAMING;
 const EPSILON = 0.01;
 
 type Controls = THREE.EventDispatcher<{start: object; end: object}> & {

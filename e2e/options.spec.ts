@@ -27,7 +27,13 @@ const canvasShot = (page: Page) =>
 test('redessine la scène après un changement d’option', async ({page}) => {
   await page.goto('/');
   await waitForScene(page);
-  // Attend la fin du fondu d'allumage des lumières.
+  // À l'ouverture, aucun mur n'est assez près de la caméra pour s'effacer
+  // (ADR 0047). Chaque cran de molette rapproche de 5 % : vingt crans
+  // ramènent la caméra à la distance de l'ancienne vue à 75°.
+  const box = (await page.locator('canvas').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  for (let i = 0; i < 20; i++) await page.mouse.wheel(0, -100);
+  // Attend la fin du zoom et du fondu d'allumage des lumières.
   let before = await canvasShot(page);
   await expect
     .poll(

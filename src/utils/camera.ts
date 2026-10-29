@@ -1,5 +1,13 @@
 import type {Vector3Tuple} from 'three';
 
+/** Champ vertical de la caméra, en degrés : une vue presque isométrique. */
+export const FOV = 30;
+
+// Les caméras des modèles ont été placées pour un champ de 75° : elles
+// reculent d'autant pour garder le même cadrage.
+export const FRAMING =
+  Math.tan((75 * Math.PI) / 360) / Math.tan((FOV * Math.PI) / 360);
+
 /**
  * Pose qui cadre une pièce sur son centre (sa lampe principale) : la caméra
  * garde la direction de celle du modèle (vue depuis l'origine), à `distance` de
