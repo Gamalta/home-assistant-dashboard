@@ -6,6 +6,7 @@ import {RoomOutlet} from './RoomOutlet';
 import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomTemperature} from './RoomTemperature';
+import {RoomTv} from './RoomTv';
 
 type RoomItemProps = {
   id: string;
@@ -44,6 +45,8 @@ export function RoomItem(props: RoomItemProps) {
       return (
         <RoomPrinter3d id={id} printer3dConfig={itemConfig} variant={variant} />
       );
+    case 'tv':
+      return <RoomTv id={id} tvConfig={itemConfig} variant={variant} />;
     default:
       return <></>;
   }

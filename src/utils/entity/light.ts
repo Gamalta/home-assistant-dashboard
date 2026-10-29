@@ -59,6 +59,34 @@ export function lightColor(entity: HassEntityWithService<'light'>) {
     : temperature2rgb(2000);
 }
 
+export enum LightTab {
+  ON_OFF = 'on-off',
+  COLOR = 'color',
+  COLOR_TEMP = 'color_temp',
+  EFFECT = 'effect',
+}
+
+export function supportedLightTab(entities: HassEntityWithService<'light'>[]) {
+  if (lightsHasColor(entities)) return LightTab.COLOR;
+  if (lightsHasColorTemp(entities)) return LightTab.COLOR_TEMP;
+  if (lightsHasEffect(entities)) return LightTab.EFFECT;
+  return LightTab.ON_OFF;
+}
+
+// Entités que WLED (préréglages, palette…) et Zigbee2MQTT (vitesse des effets
+// Hue) créent à côté de la lumière : `<domaine>.<lumière>_<clé>`.
+export function lightExtraEntityIds(lightEntityId: string) {
+  const name = lightEntityId.split('.')[1];
+  return {
+    preset: `select.${name}_preset`,
+    playlist: `select.${name}_playlist`,
+    palette: `select.${name}_color_palette`,
+    speed: `number.${name}_speed`,
+    effectSpeed: `number.${name}_effect_speed`,
+    intensity: `number.${name}_intensity`,
+  } as const;
+}
+
 export function lightStateLabel(entity: HassEntityWithService<'light'>) {
   if (entity.state === 'unavailable') return 'Indisponible';
   if (entity.state !== 'on') return 'Éteinte';

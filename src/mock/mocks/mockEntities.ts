@@ -14,6 +14,8 @@ import {energyEntities} from './mockEnergy';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
+import {createWledStrip} from './createWledStrip';
+import {createAmbilight} from './createAmbilight';
 import {createLoan} from './createLoan';
 
 export const entities: HassEntities = {
@@ -412,6 +414,8 @@ export const entities: HassEntities = {
     attributes: {friendly_name: 'Économie', icon: 'mdi:leaf'},
   }),
 
+  ...createWledStrip('light.living_room_strip'),
+  ...createAmbilight('light.tv_ambilight'),
   ...createLoan('sensor.loan_main', {
     label: 'Prêt principal',
     principal: 250_000,

@@ -91,6 +91,8 @@ export function lightUpdates({
           attributes.color_mode = 'white';
         }
 
+        if (serviceData?.effect) attributes.effect = serviceData.effect;
+
         return {
           ...entities,
           [target]: {

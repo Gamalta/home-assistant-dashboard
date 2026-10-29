@@ -14,3 +14,4 @@
 | [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)   |
 | [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et menu rapide de la barre latérale       |
 | [Guide : version mobile](guides/version-mobile.md)         | Piloter la maison depuis un téléphone               |
+| [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et modale TV HyperHDR    |

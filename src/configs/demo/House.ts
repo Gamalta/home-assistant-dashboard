@@ -111,6 +111,17 @@ export const HouseConfig: HouseConfigType = {
           powerEntityId: 'sensor.tv_outlet_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
         },
+        {
+          type: 'light',
+          lightEntityId: 'light.living_room_strip',
+          position: {x: -3.0, y: 0.4, z: 5.6},
+        },
+        {
+          type: 'tv',
+          lightEntityId: 'light.tv_ambilight',
+          ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
+          position: {x: -3.3, y: 2.6, z: 4.0},
+        },
       ],
     },
     {
@@ -133,12 +144,12 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: -0.6, y: 1.5, z: -7.2},
+          position: {x: 1.0, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: -2.5, y: 1.3, z: -4.2},
+          position: {x: -2.5, y: 0.8, z: -4.2},
         },
       ],
     },
