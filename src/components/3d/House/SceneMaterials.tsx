@@ -5,6 +5,7 @@ import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
 import {useHeatmapPoints} from '../../../hooks/useHeatmapPoints';
 import {createWallFade} from '../../../rendering/wallFade';
+import type {LightMaps} from '../../../rendering/shaders/BakedLight/common';
 
 type SceneMaterialsProps = {
   scene: THREE.Object3D;
@@ -12,6 +13,7 @@ type SceneMaterialsProps = {
   hideWalls: boolean;
   heatmap: boolean;
   rooms: HouseConfigType['rooms'];
+  lightMaps?: LightMaps;
 };
 
 type MaterialKind = 'wall' | 'ground' | 'other';
@@ -71,7 +73,7 @@ function toLambert(source: THREE.Material) {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {scene, backend, hideWalls, heatmap, rooms} = props;
+  const {scene, backend, hideWalls, heatmap, rooms, lightMaps} = props;
   const invalidate = useThree(state => state.invalidate);
 
   const heatmapPoints = useHeatmapPoints(rooms);
@@ -105,6 +107,10 @@ export function SceneMaterials(props: SceneMaterialsProps) {
 
       const original = toLambert(gltfMaterial);
       if (original !== gltfMaterial) createdMaterials.push(original);
+      // Avant le clonage des murs, qui garde la lightMap et le shader.
+      if (lightMaps && original instanceof THREE.MeshLambertMaterial) {
+        backend.applyBakedLight?.(original, lightMaps);
+      }
 
       let material = original;
       let fade: THREE.Material | undefined;
@@ -186,7 +192,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       heatmapMaterials.current = [];
       invalidate();
     };
-  }, [scene, backend, hideWalls, showHeatmap, invalidate]);
+  }, [scene, backend, hideWalls, showHeatmap, lightMaps, invalidate]);
 
   // Le fondu est transparent : les murs se dessinent du plus loin au plus
   // proche de la caméra (voir createWallFade).

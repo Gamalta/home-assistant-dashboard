@@ -4,6 +4,8 @@ type Position3dType = {x: number; y: number; z: number};
 
 type HouseConfigType = {
   model?: string;
+  /** Cartes de lumière du modèle, écrites par `pnpm bake-lighting`. */
+  lightMaps?: {sky: string; sun: string};
   camera?: string;
   rooms: {
     id: string;

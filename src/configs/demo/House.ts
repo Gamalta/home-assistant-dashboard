@@ -1,6 +1,8 @@
 import {HouseConfigType} from '../house';
 import {SideBarConfigType} from '../sidebar';
 import Demo from './Demo.glb?url';
+import DemoSky from './Demo-sky.webp?url';
+import DemoSun from './Demo-sun.webp?url';
 
 export const ConfigName = 'Démo';
 
@@ -92,6 +94,7 @@ export const SideBarConfig: SideBarConfigType = {
 
 export const HouseConfig: HouseConfigType = {
   model: Demo,
+  lightMaps: {sky: DemoSky, sun: DemoSun},
   rooms: [
     {
       id: 'Living_room',

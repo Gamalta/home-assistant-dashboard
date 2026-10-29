@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "bench": "node scripts/bench/bench.ts",
-    "optimize-model": "sh scripts/optimize-model.sh"
+    "optimize-model": "sh scripts/optimize-model.sh",
+    "bake-lighting": "sh scripts/bake-lighting.sh"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

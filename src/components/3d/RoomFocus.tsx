@@ -2,10 +2,11 @@ import {useFrame, useThree} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {Position3dType} from '../../configs/house';
-import {portraitDistance, roomCameraPose} from '../../utils/camera';
+import {FRAMING, portraitDistance, roomCameraPose} from '../../utils/camera';
 
-// Distance caméra–pièce en paysage, en unités du modèle.
-const DISTANCE = 4;
+// Distance caméra–pièce en paysage, en unités du modèle : 4 pour un champ
+// de 75°.
+const DISTANCE = 4 * FRAMING;
 // Pixels dont la pièce remonte : elle se centre entre l'en-tête (≈ 70 px) et
 // le carrousel (≈ 330 px), plutôt qu'au centre de l'écran.
 const LIFT = 130;
