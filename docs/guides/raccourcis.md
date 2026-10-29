@@ -14,9 +14,10 @@ export const SideBarConfig: SideBarConfigType = {
 ```
 
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie l'action « Température » puis la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
-- `mortgages` : une entrée « Crédit » après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
+- `energy` : une entrée « Énergie » après les scénarios, qui ouvre le [suivi de la consommation électrique](#énergie).
+- `mortgages` : une entrée « Crédit » ensuite, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
 - `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
-- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste. Avec une carte [`energy`](#énergie), le menu rapide propose aussi « Énergie », avant « Crédit », qui ouvre la même modale.
+- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
@@ -60,6 +61,41 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 ## Température
 
 La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Système ne le propose plus ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
+
+## Énergie
+
+```ts
+energy: {
+  powerEntityId: 'sensor.compteur_papp',
+  tariffPeriodEntityId: 'sensor.compteur_ptec',
+  peakIndexEntityId: 'sensor.compteur_hchp',
+  offPeakIndexEntityId: 'sensor.compteur_hchc',
+  subscribedCurrentEntityId: 'sensor.compteur_isousc',
+  prices: {peak: 0.27, offPeak: 0.21},
+},
+```
+
+Un appui sur « Énergie », dans le menu rapide, referme le menu et ouvre la modale sur le mois en cours :
+
+- en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, dans la couleur principale du thème si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
+- dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
+- à droite (dessous sur téléphone), le courant du Linky à la maison : deux fils, « HP » et « HC », avec le prix du kWh de `prices`. Seul celui de la période en cours s'anime, d'autant plus vite que la puissance est forte, sauf si « réduire les animations » est activé ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)). Côté maison, la puissance instantanée, la charge par rapport à la puissance souscrite si l'intensité souscrite est fournie, et le coût horaire estimé (« ≈ 0,32 €/h ») ;
+- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire.
+
+« Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
+
+| Option                      | Rôle                                                                                                                        |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `powerEntityId`             | Puissance instantanée, en VA (PAPP du Linky) ou en W.                                                                       |
+| `tariffPeriodEntityId`      | Période tarifaire en cours : PTEC du mode historique (« HP.. », « HC.. ») ou libellé du mode standard (« HEURES CREUSES »). |
+| `peakIndexEntityId`         | Index heures pleines (HCHP), en Wh, kWh ou MWh.                                                                             |
+| `offPeakIndexEntityId`      | Index heures creuses (HCHC), en Wh, kWh ou MWh.                                                                             |
+| `subscribedCurrentEntityId` | Facultatif. Intensité souscrite en A (ISOUSC) : la puissance souscrite vaut 200 V par ampère, soit 6 kVA pour 30 A.         |
+| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses. Le coût n'inclut pas l'abonnement.       |
+
+Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
+
+Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md), [ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)), par jour ou par mois : on remonte aussi loin qu'elles existent. Les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
 
 ## Crédit immobilier
 
@@ -117,41 +153,20 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
 
-### Énergie
+### Prochains trains
 
-```ts
-{
-  type: 'energy',
-  powerEntityId: 'sensor.compteur_papp',
-  tariffPeriodEntityId: 'sensor.compteur_ptec',
-  peakIndexEntityId: 'sensor.compteur_hchp',
-  offPeakIndexEntityId: 'sensor.compteur_hchc',
-  subscribedCurrentEntityId: 'sensor.compteur_isousc',
-  prices: {peak: 0.27, offPeak: 0.21},
-}
-```
+`{type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'}`
 
-La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui, ou l'entrée « Énergie » du menu rapide, ouvre la modale sur le mois en cours :
+Une carte par trajet de l'intégration HACS [sncf_trains](https://github.com/Master13011/SNCF-API-HA). Elle met en avant le prochain départ, « 07:42 à l'heure », « 07:42 +5 min » en orange ou l'heure barrée et « supprimé » en rouge, avec la voie si elle est connue, puis les deux suivants en plus petit. Dessous, un TER entre en gare. Un appui ouvre la modale : le même TER, puis la liste des départs à venir, avec l'heure réelle en grand, l'heure prévue barrée en cas de retard, la voie, le train et l'heure d'arrivée. Les trains partis disparaissent d'eux-mêmes.
 
-- en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, dans la couleur principale du thème si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
-- dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
-- à droite (dessous sur téléphone), le courant du Linky à la maison : deux fils, « HP » et « HC », avec le prix du kWh de `prices`. Seul celui de la période en cours s'anime, d'autant plus vite que la puissance est forte, sauf si « réduire les animations » est activé ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)). Côté maison, la puissance instantanée, la charge par rapport à la puissance souscrite si l'intensité souscrite est fournie, et le coût horaire estimé (« ≈ 0,32 €/h ») ;
-- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire.
+| Option   | Rôle                                                                                                                                                        |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`  | Titre de la carte et de la modale.                                                                                                                          |
+| `prefix` | Début des capteurs du trajet, sans le domaine ni `_train_<n>` : `sncf_paris_lyon` pour `sensor.sncf_paris_lyon_train_1`. Les capteurs absents sont ignorés. |
 
-« Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
+Pour trouver le préfixe, chercher `_train_1` dans **Paramètres → Entités** : l'intégration nomme ses capteurs `sensor.sncf_<départ>_<arrivée>_train_<n>`, avec `n` de 1 au nombre de trains choisi pour le trajet. Garder ces identifiants d'origine. Les capteurs `sncf_tous_les_trains_ligne`, `sncf_trajets` et le calendrier ne servent pas.
 
-| Option                      | Rôle                                                                                                                        |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `powerEntityId`             | Puissance instantanée, en VA (PAPP du Linky) ou en W.                                                                       |
-| `tariffPeriodEntityId`      | Période tarifaire en cours : PTEC du mode historique (« HP.. », « HC.. ») ou libellé du mode standard (« HEURES CREUSES »). |
-| `peakIndexEntityId`         | Index heures pleines (HCHP), en Wh, kWh ou MWh.                                                                             |
-| `offPeakIndexEntityId`      | Index heures creuses (HCHC), en Wh, kWh ou MWh.                                                                             |
-| `subscribedCurrentEntityId` | Facultatif. Intensité souscrite en A (ISOUSC) : la puissance souscrite vaut 200 V par ampère, soit 6 kVA pour 30 A.         |
-| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses. Le coût n'inclut pas l'abonnement.       |
-
-Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
-
-Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md), [ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)), par jour ou par mois : on remonte aussi loin qu'elles existent. Les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
+Le retard affiché est celui au départ, recalculé à partir des heures réelle et prévue : l'attribut `delay_minutes` de l'intégration est le retard à l'arrivée. sncf_trains 1.3.3 ne publie ni la voie ni les suppressions, et un train supprimé disparaît simplement de la liste. Le dashboard les affiche si un capteur porte les attributs `platform` (texte) ou `cancelled` (booléen), comme ceux du mock ([ADR 0027](../adr/0027-trains-sncf-par-prefixe.md)).
 
 ## Ajouter un type de carte
 

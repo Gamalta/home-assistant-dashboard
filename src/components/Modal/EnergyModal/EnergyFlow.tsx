@@ -6,7 +6,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {keyframes} from '@mui/material/styles';
-import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
+import type {EnergyConfigType} from '../../../configs/sidebar';
 import {
   formatCost,
   formatPower,
@@ -24,18 +24,18 @@ const ENTITY_OPTIONS = {returnNullIfNotFound: true} as const;
 const STEP = 16;
 
 type EnergyFlowProps = {
-  shortcutConfig: EnergyShortcutConfigType;
+  energyConfig: EnergyConfigType;
 };
 
 /** Le courant du Linky à la maison : un fil par période tarifaire, animé dans la période en cours. */
 export function EnergyFlow(props: EnergyFlowProps) {
-  const {shortcutConfig} = props;
+  const {energyConfig} = props;
   const {
     powerEntityId,
     tariffPeriodEntityId,
     subscribedCurrentEntityId,
     prices,
-  } = shortcutConfig;
+  } = energyConfig;
   const power = useEntity(powerEntityId, ENTITY_OPTIONS);
   const tariffPeriod = useEntity(tariffPeriodEntityId, ENTITY_OPTIONS);
   const subscribedCurrent = useEntity(

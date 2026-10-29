@@ -1,17 +1,17 @@
 import {Modal, ModalProps} from '..';
-import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
+import type {EnergyConfigType} from '../../../configs/sidebar';
 import {EnergyModalContent} from './EnergyModalContent';
 
 type EnergyModalProps = Omit<ModalProps, 'children'> & {
-  shortcutConfig: EnergyShortcutConfigType;
+  energyConfig: EnergyConfigType;
 };
 
 export function EnergyModal(props: EnergyModalProps) {
-  const {shortcutConfig, ...modalProps} = props;
+  const {energyConfig, ...modalProps} = props;
 
   return (
     <Modal {...modalProps}>
-      <EnergyModalContent shortcutConfig={shortcutConfig} />
+      <EnergyModalContent energyConfig={energyConfig} />
     </Modal>
   );
 }

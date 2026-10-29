@@ -1,16 +1,9 @@
-import {useEffect, useLayoutEffect, useState} from 'react';
+import {useLayoutEffect} from 'react';
 import {useThree} from '@react-three/fiber';
-import {useEntity} from '@hakit/core';
 import * as THREE from 'three';
-import {
-  daylightFactor,
-  sunAtHour,
-  sunDirection,
-  sunFromHour,
-  type SunPosition,
-} from '../../../rendering/daylight';
+import {sunDirection} from '../../../rendering/daylight';
 import {bakedLight} from '../../../rendering/shaders/BakedLight/common';
-import {useAppContext} from '../../../contexts/AppContext';
+import {useDaylight} from '../../../hooks/useDaylight';
 
 type Ambience = {
   sky: string;
@@ -88,26 +81,7 @@ const mix = (night: string, day: string, t: number) =>
 export function Daylight(props: DaylightProps) {
   const {baked} = props;
   const {gl, invalidate} = useThree();
-  const sunEntity = useEntity('sun.sun', {returnNullIfNotFound: true});
-  const {simulatedHour} = useAppContext();
-  const [hourSun, setHourSun] = useState(() => sunFromHour(new Date()));
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setHourSun(sunFromHour(new Date())),
-      60000,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
-  const elevation = Number(sunEntity?.attributes.elevation);
-  const sun: SunPosition =
-    simulatedHour !== null
-      ? sunAtHour(simulatedHour)
-      : isNaN(elevation)
-        ? hourSun
-        : {elevation, azimuth: Number(sunEntity!.attributes.azimuth)};
-  const day = daylightFactor(sun.elevation);
+  const day = useDaylight();
   const {day: DAY, night: NIGHT} = baked ? BAKED : SOFT;
   const sky = mix(NIGHT.sky, DAY.sky, day);
   const skyIntensity = THREE.MathUtils.lerp(

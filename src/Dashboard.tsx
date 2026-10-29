@@ -3,6 +3,7 @@ import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
 import {QuickMenu} from './components/QuickMenu';
+import {Screensaver} from './components/Screensaver';
 import {
   Group,
   Panel,
@@ -94,6 +95,7 @@ export default function Dashboard() {
           <QuickMenu />
         </Panel>
       </Group>
+      <Screensaver />
     </HouseProvider>
   );
 }

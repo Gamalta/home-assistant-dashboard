@@ -6,7 +6,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import {useState} from 'react';
-import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
+import type {EnergyConfigType} from '../../../configs/sidebar';
 import {useEnergyConsumption} from '../../../hooks/useEnergyConsumption';
 import {
   type Comparison,
@@ -34,12 +34,12 @@ const PREVIOUS: Record<Scale, string> = {
 };
 
 type EnergyModalContentProps = {
-  shortcutConfig: EnergyShortcutConfigType;
+  energyConfig: EnergyConfigType;
 };
 
 export function EnergyModalContent(props: EnergyModalContentProps) {
-  const {shortcutConfig} = props;
-  const {peakIndexEntityId, offPeakIndexEntityId, prices} = shortcutConfig;
+  const {energyConfig} = props;
+  const {peakIndexEntityId, offPeakIndexEntityId, prices} = energyConfig;
   const [scale, setScale] = useState<Scale>('month');
   const [comparison, setComparison] = useState<Comparison>('previous');
   // 0 pour la période en cours, -1 pour la précédente…
@@ -80,7 +80,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
         prices={prices}
       />
       <Stack spacing={3} sx={{width: {xs: '100%', sm: 300}}}>
-        <EnergyFlow shortcutConfig={shortcutConfig} />
+        <EnergyFlow energyConfig={energyConfig} />
         <ToggleButtonGroup
           exclusive
           fullWidth

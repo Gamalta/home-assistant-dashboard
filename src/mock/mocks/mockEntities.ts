@@ -11,6 +11,7 @@ import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
 import {energyEntities} from './mockEnergy';
+import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
@@ -62,6 +63,25 @@ export const entities: HassEntities = {
     last_updated: new Date(0).toISOString(),
   }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createBinarySensor('binary_sensor.router_wan_status', {
+    state: 'on',
+    attributes: {friendly_name: 'Connexion internet'},
+  }),
+  ...createSensor('sensor.wall_tablet_battery_level', {
+    state: '64',
+    attributes: {
+      friendly_name: 'Batterie de la tablette murale',
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.wall_tablet_battery_state', {
+    state: 'charging',
+    attributes: {friendly_name: 'Charge de la tablette murale'},
+  }),
+  ...createSensor('sensor.wall_tablet_charger_type', {
+    state: 'ac',
+    attributes: {friendly_name: 'Chargeur de la tablette murale'},
+  }),
   ...createSensor('sensor.system_monitor_memory_usage', {
     state: '50',
     attributes: {
@@ -366,6 +386,25 @@ export const entities: HassEntities = {
   }),
   ...createPrinter3d('p1s_demo'),
   ...energyEntities,
+  ...createTrain('sensor.sncf_paris_lyon_train_1', {
+    departureIn: 6,
+    trainNum: '6601',
+    platform: 'B',
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_2', {
+    departureIn: 21,
+    trainNum: '6603',
+    delay: 5,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_3', {
+    departureIn: 36,
+    trainNum: '6605',
+    cancelled: true,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_4', {
+    departureIn: 51,
+    trainNum: '6607',
+  }),
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {
@@ -410,6 +449,45 @@ export const entities: HassEntities = {
   }),
   ...createScript('script.eco_mode', {
     attributes: {friendly_name: 'Économie', icon: 'mdi:leaf'},
+  }),
+
+  // Alertes de la démo : une pile faible et un capteur indisponible.
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.cellar_sensor_battery', {
+    state: 'unavailable',
+    attributes: {
+      friendly_name: 'Capteur de la cave',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
+    state: 'on',
+    attributes: {friendly_name: 'Pont Zigbee'},
   }),
 
   ...createLoan('sensor.loan_main', {

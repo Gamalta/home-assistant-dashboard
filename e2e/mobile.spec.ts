@@ -549,6 +549,8 @@ test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
 
   const title = page.getByRole('heading', {name: 'Système'});
   await expect(title).toBeVisible();
+  await expect(page.getByText('Affichage')).toBeVisible();
+  await expect(page.getByRole('combobox', {name: 'Veille'})).toHaveCount(0);
   // Le fond de la modale passe devant le menu.
   await page.locator('#backdrop').click({position: {x: 195, y: 4}});
   await expect(title).toBeHidden();
