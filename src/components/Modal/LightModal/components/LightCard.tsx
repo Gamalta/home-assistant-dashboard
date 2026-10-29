@@ -91,14 +91,22 @@ export function LightCard(props: LightCardProps) {
         whileTap={{scale: 0.9}}
         whileHover={{scale: 0.95}}
         sx={{
+          position: 'relative',
           borderRadius: 1,
           background: lightOn ? color : 'rgba(102, 102, 102, 0.6)',
           transition: 'all 0.3s ease-out 0s, transform .15s',
         }}
       >
+        {/* Sur téléphone, le lien flotte sur la carte : la modale tient
+            dans l'écran. */}
         <Stack
           direction="row-reverse"
-          sx={{justifyContent: 'space-between', p: 1}}
+          sx={{
+            justifyContent: 'space-between',
+            p: 1,
+            position: {xs: 'absolute', sm: 'static'},
+            width: '100%',
+          }}
         >
           <IconButton
             size="small"

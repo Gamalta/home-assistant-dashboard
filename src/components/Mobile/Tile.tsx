@@ -84,6 +84,18 @@ export function Tile(props: TileProps) {
           {state}
         </Typography>
       </Stack>
+      {/* Sur iPhone, seul le doigt qui bascule un interrupteur natif fait
+          vibrer : ce label couvre la tuile et relaie son toucher à un
+          interrupteur caché. */}
+      <label aria-hidden style={{position: 'absolute', inset: 0}}>
+        <input
+          type="checkbox"
+          {...{switch: ''}}
+          style={{visibility: 'hidden', width: 1, height: 1, margin: 0}}
+          // Le clic relayé n'est pas un second appui.
+          onClick={event => event.stopPropagation()}
+        />
+      </label>
     </ButtonBase>
   );
 }

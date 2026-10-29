@@ -22,7 +22,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - L'heure, la date et la météo : le téléphone les affiche déjà.
 - Une vue d'ensemble de la maison sur mobile : la caméra cadre toujours une pièce, on peut dézoomer à la main.
 - Un résumé de la maison (« 4 lumières allumées ») au-dessus de la liste des pièces.
-- Une application installable (PWA) et les notifications.
+- Les notifications. L'application installable a sa propre spec, [Application installable](application-installable.md).
 
 ## Comportement attendu
 
@@ -98,6 +98,13 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
 - **Et** la page garde la largeur de l'écran
 
+### Scénario : la modale lumière tient dans la hauteur visible de Safari
+
+- **Étant donné** un iPhone 15 Pro dans Safari, avec 393 × 659 px visibles sous les barres
+- **Quand** l'utilisateur ouvre la modale d'une lumière
+- **Alors** la roue, les boutons et les cartes des lumières tiennent dans la carte, sans défilement
+- **Et** sur chaque carte de lumière, le bouton de lien flotte dans le coin
+
 ### Scénario : toucher le fond ferme la modale
 
 - **Étant donné** une modale ouverte
@@ -109,6 +116,25 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Étant donné** une liste de tuiles
 - **Quand** l'utilisateur pose le doigt sur une tuile et le glisse de plus de 10 px pour faire défiler
 - **Alors** ni l'appui court ni l'appui long ne se déclenchent
+
+### Scénario : un appui long ne sélectionne pas le texte
+
+- **Étant donné** une tuile de lumière
+- **Quand** l'utilisateur la garde enfoncée jusqu'à l'ouverture de sa modale
+- **Alors** aucun texte de la page n'est sélectionné, et le navigateur n'ouvre pas son menu
+
+### Scénario : le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre
+
+- **Étant donné** un téléphone Android, qui a l'API Vibration
+- **Quand** l'utilisateur touche une tuile de lumière, puis la garde enfoncée
+- **Alors** le téléphone vibre brièvement à la bascule, puis à l'ouverture de la modale
+
+### Scénario : sur iPhone, toucher une tuile fait vibrer
+
+- **Étant donné** un iPhone, dont Safari n'a pas l'API Vibration
+- **Quand** l'utilisateur touche une tuile de lumière
+- **Alors** son doigt bascule l'interrupteur natif caché dans la tuile, et l'iPhone vibre
+- **Et** la lumière ne bascule qu'une fois
 
 ### Scénario : la vue Pièces liste toutes les pièces
 
@@ -176,7 +202,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Mock : les volets de la démo ont un nom français.
 - Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
 - Page : `viewport-fit=cover`, et `html` comme `body` en `overflow: hidden`. L'en-tête, le menu rapide, la liste, le carrousel et les modales suivent les zones sûres de l'écran.
-- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi.
+- `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi. L'appui court passe par le clic du navigateur, que seul l'appui long annule.
 - Performance : voir la section Mesures.
 
 ## Mesures

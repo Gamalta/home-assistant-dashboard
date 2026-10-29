@@ -4,6 +4,7 @@ import {expect, swipeLeft, test, waitForScene} from './fixtures';
 declare global {
   interface Window {
     __linkedPrograms: number;
+    __vibrations: number[];
   }
 }
 
@@ -342,6 +343,32 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
   }
 });
 
+test.describe('Safari sur iPhone', () => {
+  // Hauteur visible d'un iPhone 15 Pro sous les barres de Safari.
+  test.use({viewport: {width: 393, height: 659}});
+
+  test('la modale lumière tient dans la hauteur visible de Safari', async ({
+    page,
+  }) => {
+    await longPress(
+      page,
+      page
+        .getByRole('region', {name: 'Séjour'})
+        .getByRole('button', {name: /Plafonnier du séjour/}),
+    );
+
+    const title = page.getByRole('heading', {name: 'Lumière', exact: true});
+    await expect(title).toBeVisible();
+    const card = title.locator('xpath=../..');
+    await expect(card.getByText('Hue Play du séjour')).toBeVisible();
+    await expect
+      .poll(() =>
+        card.evaluate(element => element.scrollHeight <= element.clientHeight),
+      )
+      .toBe(true);
+  });
+});
+
 test('toucher le fond ferme la modale', async ({page}) => {
   await longPress(
     page,
@@ -355,6 +382,86 @@ test('toucher le fond ferme la modale', async ({page}) => {
   await page.locator('#backdrop').click({position: {x: 195, y: 20}});
 
   await expect(title).toBeHidden();
+});
+
+test('un appui long ne sélectionne pas le texte', async ({page}) => {
+  const card = page.getByRole('region', {name: 'Séjour'});
+  await card.getByRole('heading').click({clickCount: 3});
+  await longPress(page, card.getByRole('button', {name: /Plafonnier/}));
+
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => getSelection()?.toString())).toBe('');
+});
+
+test("le téléphone vibre quand une tuile bascule ou qu'une modale s'ouvre", async ({
+  page,
+}) => {
+  // Chromium sans tête ne vibre pas : on compte les appels.
+  await page.evaluate(() => {
+    window.__vibrations = [];
+    Object.defineProperty(navigator, 'vibrate', {
+      value: (pattern: number) => window.__vibrations.push(pattern) > 0,
+    });
+  });
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+
+  await tile.tap();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10]);
+
+  await longPress(page, tile);
+  await expect(
+    page.getByRole('heading', {name: 'Lumière', exact: true}),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.__vibrations)).toEqual([10, 10]);
+});
+
+test('sur iPhone, toucher une tuile fait vibrer', async ({page}) => {
+  const tile = page
+    .getByRole('region', {name: 'Séjour'})
+    .getByRole('button', {name: /Plafonnier du séjour/});
+  const hapticSwitch = tile.locator('input[switch]');
+  await expect(hapticSwitch).not.toBeChecked();
+
+  await tile.tap();
+
+  // Le doigt a basculé l'interrupteur natif, et la lumière une seule fois.
+  await expect(hapticSwitch).toBeChecked();
+  await expect(tile).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('le dashboard s’installe sur l’écran d’accueil', async ({
+  page,
+  request,
+}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+  const icons: {src: string; sizes: string}[] = manifest.icons;
+
+  expect(manifest.short_name).toBe('Elihome');
+  expect(icons.map(icon => icon.sizes)).toEqual(
+    expect.arrayContaining(['192x192', '512x512']),
+  );
+  const appleIcon = await page
+    .locator('link[rel="apple-touch-icon"]')
+    .getAttribute('href');
+  for (const src of [...icons.map(icon => icon.src), appleIcon!]) {
+    const response = await request.get(src);
+    expect(response.headers()['content-type'], src).toBe('image/png');
+  }
+});
+
+test("l'application s'ouvre en plein écran", async ({page, request}) => {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const manifest = await (await request.get(href!)).json();
+
+  expect(manifest).toMatchObject({start_url: '/', display: 'standalone'});
+  await expect(
+    page.locator('meta[name="apple-mobile-web-app-status-bar-style"]'),
+  ).toHaveAttribute('content', 'black-translucent');
 });
 
 test('la vue Pièces liste toutes les pièces', async ({page}) => {

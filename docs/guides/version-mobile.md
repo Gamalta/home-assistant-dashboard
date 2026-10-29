@@ -20,7 +20,18 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
   - Un appui long ouvre la modale d'une lumière ou d'une prise.
   - Un doigt qui glisse pour faire défiler n'appuie sur rien.
 - **Modales** : elles s'ouvrent en carte, au centre de l'écran. Touchez le fond pour les fermer.
-- **Foyer** : touchez les avatars de l'en-tête, le menu se déroule dessous. Touchez à côté pour le refermer.
+- **Foyer** : touchez les avatars de l'en-tête.
+- **Vibrations** : le téléphone vibre brièvement quand on touche une tuile. Android vibre aussi quand une modale s'ouvre, même au bout d'un appui long. L'iPhone, lui, ne vibre qu'au toucher d'une tuile ([ADR 0044](../adr/0044-retour-haptique.md)).
+- Un appui long ne sélectionne jamais le texte et n'ouvre pas le menu du navigateur. Seuls les champs de saisie restent sélectionnables.
+
+## Installer l'application
+
+Le dashboard s'installe sur l'écran d'accueil et s'ouvre alors en plein écran, sans barre d'adresse ([ADR 0043](../adr/0043-application-installable-sans-service-worker.md)) :
+
+- **iPhone** : dans Safari, « Partager », puis « Sur l'écran d'accueil ».
+- **Android** : dans Chrome, le menu ⋮, puis « Installer l'application ».
+
+L'application installée garde sa propre connexion à Home Assistant : connectez-vous une fois à son premier lancement.
 
 ## Bien nommer les équipements
 
@@ -36,5 +47,7 @@ La caméra vise la `position` de la pièce dans `House.ts` : placez-la au centre
 - Les composants propres au mobile vivent dans `src/components/Mobile/`. Les tuiles sont la variante `tile` des éléments de pièce (`House/Room/RoomItem`) : un nouveau type d'équipement doit prévoir les deux rendus.
 - Le cadrage se règle dans `src/components/3d/RoomFocus.tsx` : `DISTANCE` pour l'éloignement, `LIFT` pour remonter la pièce entre l'en-tête et le carrousel. Les calculs sont dans `src/utils/camera.ts`.
 - La page passe sous l'encoche et la barre d'accueil de l'iPhone (`viewport-fit=cover`). Un élément collé à un bord de l'écran ajoute `env(safe-area-inset-*)` à sa marge, comme l'en-tête et le carrousel. Les modales se centrent entre les zones sûres.
-- Une modale de téléphone donne toute la largeur de sa carte au contenu. Une largeur fixe y devient `{xs: '100%', sm: …}`, et deux blocs côte à côte s'empilent (`direction={{xs: 'column', sm: 'row'}}`). La page ne défile pas (`overflow: hidden` dans `theme/components/CssBaseline.ts`) : ce qui déborde est coupé.
+- Une modale de téléphone donne toute sa carte au contenu, sans marge en plus. Elle doit tenir dans les 659 px que Safari laisse visibles sur un iPhone 15 Pro : une hauteur relative à l'écran s'y écrit en `svh`, car `vh` compte aussi les barres de Safari. Une largeur fixe y devient `{xs: '100%', sm: …}`, et deux blocs côte à côte s'empilent (`direction={{xs: 'column', sm: 'row'}}`). La page ne défile pas (`overflow: hidden` dans `theme/components/CssBaseline.ts`) : ce qui déborde est coupé.
+- Sur Android, un retour haptique passe par `haptic()` (`src/utils/haptic.ts`), jamais directement par `navigator.vibrate`, absent de Safari. Sur iPhone, seul un vrai toucher qui bascule un interrupteur natif fait vibrer : la tuile (`Mobile/Tile.tsx`) en cache un sous le doigt. C'est pourquoi l'appui court de `useLongPress` attend le clic du navigateur au lieu de l'annuler.
+- Les icônes de l'application (`public/apple-touch-icon.png`, `icon-192.png`, `icon-512.png`) reprennent `public/icon.svg` à 60 % de leur taille, sur le fond `#1C1C1E`. Elles se régénèrent à la main si l'icône change.
 - Pour essayer : `pnpm build && pnpm preview`, puis la vue mobile des outils de développement, en 390 × 844. Les tests E2E sont dans `e2e/mobile.spec.ts`.
