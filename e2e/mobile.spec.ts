@@ -262,6 +262,8 @@ test("un appui long sur une tuile ouvre sa modale au centre de l'écran", async 
 });
 
 test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
+  // Onze modales ouvertes l'une après l'autre.
+  test.slow();
   const room = (name: string) => page.getByRole('region', {name, exact: true});
   const quickMenu = async (name: string) => {
     await page.getByRole('button', {name: 'Menu rapide'}).tap();
@@ -299,6 +301,7 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
           .getByRole('button', {name: /Imprimante 3D/})
           .tap(),
     ],
+    ['Énergie', () => quickMenu('Énergie')],
     ['Crédit', () => quickMenu('Crédit')],
     ['Courses', () => quickMenu('Courses')],
   ];
@@ -306,7 +309,9 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
   for (const [name, open] of modals) {
     // Les tuiles de toutes les pièces sont dans la vue Pièces, le menu rapide
     // sur la vue 3D.
-    const view = ['Crédit', 'Courses'].includes(name) ? '3D' : 'Pièces';
+    const view = ['Énergie', 'Crédit', 'Courses'].includes(name)
+      ? '3D'
+      : 'Pièces';
     await page.getByRole('button', {name: view, exact: true}).tap();
     await open();
     const title = page.getByRole('heading', {name, exact: true});
@@ -471,7 +476,7 @@ test('le menu rapide reste sur la vue 3D', async ({page}) => {
   await expect(
     page.getByRole('menuitemcheckbox', {name: 'Température'}),
   ).toBeVisible();
-  for (const name of ['Départ', 'Crédit', 'Courses'])
+  for (const name of ['Départ', 'Énergie', 'Crédit', 'Courses'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 });
 

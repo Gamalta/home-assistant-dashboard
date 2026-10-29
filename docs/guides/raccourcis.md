@@ -5,7 +5,7 @@ La barre latérale donne accès à ce qui concerne toute la maison ([ADR 0035](.
 ```ts
 export const SideBarConfig: SideBarConfigType = {
   // …
-  scenarios: ['script.leave_home', 'script.energy'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
   shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
@@ -16,7 +16,7 @@ export const SideBarConfig: SideBarConfigType = {
 - `scenarios` : un bouton rond « Menu rapide » en haut à gauche de la vue 3D, près de la barre latérale. Il déplie l'action « Température » puis la liste des scripts, et un appui sur l'un d'eux le lance aussitôt.
 - `mortgages` : une entrée « Crédit » après les scénarios, qui ouvre le [suivi du crédit](#crédit-immobilier) de tous les prêts.
 - `shoppingListEntityId` : une entrée « Courses » à la fin de ce menu, qui ouvre la [liste de courses](#liste-de-courses).
-- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste.
+- `shortcuts` : les cartes du carrousel sous les personnes, dans l'ordre de la liste. Avec une carte [`energy`](#énergie), le menu rapide propose aussi « Énergie », avant « Crédit », qui ouvre la même modale.
   - On glisse du doigt pour passer d'une carte à l'autre, et les points en dessous indiquent la carte affichée.
   - Un appui sur un point fait défiler jusqu'à sa carte, et un appui sur une carte ouvre sa modale.
 
@@ -116,6 +116,42 @@ La carte affiche le nom du lecteur, la pochette, le titre et l'artiste du média
 | Option                | Rôle                                                  |
 | --------------------- | ----------------------------------------------------- |
 | `mediaPlayerEntityId` | Lecteur `media_player` : TV, Apple TV, enceinte, etc. |
+
+### Énergie
+
+```ts
+{
+  type: 'energy',
+  powerEntityId: 'sensor.compteur_papp',
+  tariffPeriodEntityId: 'sensor.compteur_ptec',
+  peakIndexEntityId: 'sensor.compteur_hchp',
+  offPeakIndexEntityId: 'sensor.compteur_hchc',
+  subscribedCurrentEntityId: 'sensor.compteur_isousc',
+  prices: {peak: 0.27, offPeak: 0.21},
+}
+```
+
+La carte affiche la puissance instantanée, la période tarifaire en cours et le coût estimé du jour (« 1,2 kVA Heures creuses, Aujourd’hui : 1,15 € »). Un appui, ou l'entrée « Énergie » du menu rapide, ouvre la modale sur le mois en cours :
+
+- en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, dans la couleur principale du thème si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
+- dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
+- à droite (dessous sur téléphone), le courant du Linky à la maison : deux fils, « HP » et « HC », avec le prix du kWh de `prices`. Seul celui de la période en cours s'anime, d'autant plus vite que la puissance est forte, sauf si « réduire les animations » est activé ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)). Côté maison, la puissance instantanée, la charge par rapport à la puissance souscrite si l'intensité souscrite est fournie, et le coût horaire estimé (« ≈ 0,32 €/h ») ;
+- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire.
+
+« Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
+
+| Option                      | Rôle                                                                                                                        |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `powerEntityId`             | Puissance instantanée, en VA (PAPP du Linky) ou en W.                                                                       |
+| `tariffPeriodEntityId`      | Période tarifaire en cours : PTEC du mode historique (« HP.. », « HC.. ») ou libellé du mode standard (« HEURES CREUSES »). |
+| `peakIndexEntityId`         | Index heures pleines (HCHP), en Wh, kWh ou MWh.                                                                             |
+| `offPeakIndexEntityId`      | Index heures creuses (HCHC), en Wh, kWh ou MWh.                                                                             |
+| `subscribedCurrentEntityId` | Facultatif. Intensité souscrite en A (ISOUSC) : la puissance souscrite vaut 200 V par ampère, soit 6 kVA pour 30 A.         |
+| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses. Le coût n'inclut pas l'abonnement.       |
+
+Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
+
+Les consommations viennent des statistiques à long terme de Home Assistant ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md), [ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)), par jour ou par mois : on remonte aussi loin qu'elles existent. Les deux index doivent avoir `state_class: total_increasing`, ce que Zigbee2MQTT pose sur les capteurs en kWh. On le vérifie dans **Outils de développement > Statistiques**. Une valeur absente s'affiche « — », par exemple le jour où les index viennent d'être créés.
 
 ## Ajouter un type de carte
 
