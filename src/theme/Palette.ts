@@ -15,6 +15,8 @@ export const DarkPalette: ColorSystemOptions = {
       paper: '#2C2C2E',
       primary: '#1C1C1E',
       tertiary: '#3A3A3C',
+      modal: '#2C2C2E',
+      modalTertiary: '#3A3A3C',
     },
     text: {
       primary: '#FFFFFF',
@@ -37,6 +39,8 @@ export const LightPalette: ColorSystemOptions = {
       paper: '#E5E5EA',
       primary: '#F2F2F7',
       tertiary: '#FFFFFF',
+      modal: '#FFFFFF',
+      modalTertiary: '#EEF1F6',
     },
     text: {
       secondary: '#5C5C61',

@@ -26,10 +26,13 @@ export function Container(props: ContainerProps) {
       transformTemplate={(_, generated) => `translate(-50%, -50%) ${generated}`}
       layoutId={id}
       spacing={2}
-      sx={{
+      sx={theme => ({
         position: 'absolute',
         justifyContent: 'space-between',
-        bgcolor: 'background.paper',
+        bgcolor: 'background.modal',
+        // Les tuiles de la modale prennent la teinte prévue pour son fond.
+        '--mui-palette-background-tertiary': (theme.vars ?? theme).palette
+          .background.modalTertiary,
         borderRadius: 1,
         zIndex: 100,
         overflow: 'hidden',
@@ -39,6 +42,9 @@ export function Container(props: ContainerProps) {
         maxHeight: 'calc(100% - 4rem)',
         alignItems: 'stretch',
         boxShadow: '0px 0px 10px hsla(200, calc(50% * 0.8), 3%, 0.6)',
+        ...theme.applyStyles('light', {
+          boxShadow: '0 16px 48px rgba(20, 30, 60, 0.18)',
+        }),
         ...(isMobile && {
           // Sur téléphone, une carte centrée entre l'encoche et la barre
           // d'accueil de l'iPhone.
@@ -49,7 +55,7 @@ export function Container(props: ContainerProps) {
           overflowY: 'auto',
           borderRadius: '24px',
         }),
-      }}
+      })}
     >
       {children}
     </Stack>
