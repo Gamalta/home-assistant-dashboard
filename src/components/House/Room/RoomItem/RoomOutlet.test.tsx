@@ -41,12 +41,11 @@ describe('RoomOutlet', () => {
     const outlet = await screen.findByRole('button', {name: 'Prise bureau'});
     expect(outlet).toHaveAttribute('aria-pressed', 'true');
 
-    fireEvent.mouseDown(outlet);
-    fireEvent.mouseUp(outlet);
+    // L'appui court attend le clic du navigateur (useLongPress).
+    fireEvent.click(outlet);
     expect(outlet).toHaveAttribute('aria-pressed', 'false');
 
-    fireEvent.mouseDown(outlet);
-    fireEvent.mouseUp(outlet);
+    fireEvent.click(outlet);
     expect(outlet).toHaveAttribute('aria-pressed', 'true');
   });
 

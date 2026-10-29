@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import type {HeatmapPoint} from '../shaders/HeatmapGroundMaterial/common';
+import type {LightMaps} from '../shaders/BakedLight/common';
 
 export type RenderBackend = {
   kind: 'webgl' | 'webgpu';
@@ -14,6 +15,11 @@ export type RenderBackend = {
   updateHeatmapMaterial: (
     material: THREE.Material,
     points: HeatmapPoint[],
+  ) => void;
+  /** Absent : le backend ne lit pas l'éclairage précalculé (repli Clair doux). */
+  applyBakedLight?: (
+    material: THREE.MeshLambertMaterial,
+    maps: LightMaps,
   ) => void;
   getMaxTextures: (renderer: unknown) => number | null;
   describeGpu: (renderer: unknown) => string;

@@ -166,7 +166,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** le Foyer ouvert
 - **Quand** l'utilisateur touche « Système »
-- **Alors** la modale Système s'ouvre par-dessus le menu
+- **Alors** la modale Système s'ouvre par-dessus le menu, sans le réglage de la veille
 - **Et** toucher son fond la ferme, sans fermer le menu
 
 ### Scénario : se déconnecter depuis le Foyer

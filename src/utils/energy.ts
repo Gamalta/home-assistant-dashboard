@@ -66,15 +66,6 @@ export function getTariffPeriod(
   return null;
 }
 
-/** Minuit, heure locale, `offset` jours après celui de `now`. */
-export function dayStart(now: Date, offset = 0) {
-  const date = new Date(now);
-  date.setHours(0, 0, 0, 0);
-  // setDate plutôt que 24 h : les jours de changement d'heure durent 23 ou 25 h.
-  date.setDate(date.getDate() + offset);
-  return date.getTime();
-}
-
 /** `time` décalé de `count` jours ou mois, en heure locale : un jour de changement d'heure dure 23 ou 25 h. */
 export function shift(time: number, unit: StatisticsPeriod, count: number) {
   const date = new Date(time);

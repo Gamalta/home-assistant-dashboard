@@ -13,7 +13,7 @@ Une seule entrée « Crédit » dans le menu rapide, qui ouvre une modale réuni
 
 ## Hors périmètre
 
-- Calcul de l'échéancier : Home Assistant le fournit, prêt par prêt ([ADR 0022](../adr/0022-echeancier-lu-dans-home-assistant.md)).
+- Calcul de l'échéancier : Home Assistant le fournit, prêt par prêt ([ADR 0043](../adr/0043-tableau-d-amortissement-une-ligne-par-mois.md)).
 - Synchronisation avec la banque : le tableau d'amortissement se met à jour dans Home Assistant.
 - Jour de prélèvement : l'échéance d'un mois compte dès le 1er.
 
@@ -21,7 +21,7 @@ Une seule entrée « Crédit » dans le menu rapide, qui ouvre une modale réuni
 
 ### Scénario : le récapitulatif réunit tous les prêts
 
-- **Étant donné** une ou plusieurs entités de prêt, avec leur échéancier en attributs
+- **Étant donné** une ou plusieurs entités de prêt, avec leur tableau d'amortissement en attribut
 - **Quand** l'utilisateur ouvre le menu rapide et touche « Crédit », sa seule entrée pour tous les prêts
 - **Alors** le menu se referme et la modale grandit depuis le bouton rond du menu, où elle se résorbe à la fermeture
 - **Et** la modale montre une maison qui se remplit, à l'ouverture, jusqu'à la part du capital remboursée, tous prêts confondus, avec ce pourcentage en grand dessous
@@ -50,7 +50,7 @@ Une seule entrée « Crédit » dans le menu rapide, qui ouvre une modale réuni
 
 ## Critères d'acceptation
 
-- [x] L'échéancier se lit dans les attributs `principal`, `interest` et `insurance`, trié par mois ; une entité sans `principal` n'a pas d'échéance (`utils/mortgage.test.ts`).
+- [x] L'échéancier se lit dans l'attribut `amortization`, une ligne `[capital, intérêts, assurance]` par mois, trié par mois ; une entité sans `amortization` n'a pas d'échéance, et une ligne à un seul montant est ignorée (`utils/mortgage.test.ts`).
 - [x] La maison se remplit à hauteur de la part remboursée, et n'affiche 100 % qu'une fois tout remboursé (`MortgageModal/MortgageHouse.test.tsx`).
 - [x] Plusieurs prêts : une seule entrée du menu, des totaux sur tous les prêts, plus de mensualité après la dernière échéance, et le capital de chaque prêt et le coût de chaque année justes (`utils/mortgage.test.ts`).
 - [x] Utiliser la modale ne rouvre pas le menu rapide.
@@ -59,5 +59,5 @@ Une seule entrée « Crédit » dans le menu rapide, qui ouvre une modale réuni
 ## Impacts
 
 - Config : liste `mortgages` d'entités `sensor` dans `SideBarConfigType`. L'entrée « Crédit » s'ajoute après les scénarios.
-- Home Assistant : un capteur template par prêt, avec son échéancier en attributs ([guide](../guides/raccourcis.md#crédit-immobilier)).
+- Home Assistant : un capteur template par prêt, avec son tableau d'amortissement dans l'attribut `amortization` ([guide](../guides/raccourcis.md#crédit-immobilier)).
 - Confidentialité : les montants réels restent dans Home Assistant ; le dépôt ne contient que des identifiants d'entités.
