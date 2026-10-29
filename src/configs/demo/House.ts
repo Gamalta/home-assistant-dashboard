@@ -52,10 +52,26 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
+  mortgages: [
+    'sensor.loan_main',
+    'sensor.loan_ptz',
+    'sensor.loan_action_logement',
+    'sensor.loan_works',
+  ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+    {
+      type: 'energy',
+      powerEntityId: 'sensor.meter_apparent_power',
+      tariffPeriodEntityId: 'sensor.meter_tariff_period',
+      peakIndexEntityId: 'sensor.meter_peak_index',
+      offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+      subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+      prices: {peak: 0.27, offPeak: 0.21},
+    },
     {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
   ],
 };

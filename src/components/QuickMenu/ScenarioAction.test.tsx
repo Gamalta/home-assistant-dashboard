@@ -29,7 +29,7 @@ describe('ScenarioAction', () => {
     render(
       <ScenarioAction
         open
-        scriptEntityId="script.depart"
+        scriptEntityId="script.leave_home"
         onLaunch={onLaunch}
       />,
     );
@@ -43,7 +43,11 @@ describe('ScenarioAction', () => {
   it('ne s’affiche pas sans le script dans Home Assistant', () => {
     script.current = null;
     render(
-      <ScenarioAction open scriptEntityId="script.depart" onLaunch={vi.fn()} />,
+      <ScenarioAction
+        open
+        scriptEntityId="script.leave_home"
+        onLaunch={vi.fn()}
+      />,
     );
 
     expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();

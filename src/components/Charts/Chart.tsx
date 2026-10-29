@@ -222,6 +222,8 @@ export function Chart(props: ChartProps) {
             <ChartsClipPath id={`${id}-clip`} />
             <ChartsTooltip
               trigger="axis"
+              // Au-dessus, à la souris comme au doigt : sinon elle couvre ce qui suit le graphique.
+              position="top"
               sx={{
                 [`& .${chartsTooltipClasses.paper}`]: {
                   borderRadius: 1,

@@ -20,6 +20,8 @@ const chromium = {
 export default defineConfig({
   testDir: 'e2e',
   forbidOnly: !!process.env.CI,
+  // Les tests, et non les fichiers, se répartissent entre workers et shards.
+  fullyParallel: true,
   workers: process.env.CI ? 1 : undefined,
   reporter: [[process.env.CI ? 'github' : 'list'], ['html', {open: 'never'}]],
   // Le rendu logiciel (SwiftShader) est lent, surtout sur les runners CI.
