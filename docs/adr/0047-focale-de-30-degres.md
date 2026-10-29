@@ -10,14 +10,14 @@
 - À 75° de près, la perspective déforme la maison : les murs du premier plan sont immenses et doivent s'effacer, ce qui laisse des pans translucides devant la vue.
 - Les rendus d'architecte que vise le propriétaire sont vus de haut avec une focale longue, autour de 25 à 30°. Sur une planche de captures, il a choisi 30°, en gardant le cadrage de la maison entière.
 - L'effacement des murs dépend de la distance à la caméra en mètres : un mur s'efface à moins de 8 m ([ADR 0011](0011-fusion-des-meshes-des-modeles.md)).
-- Le vol vers une pièce place la caméra à 4 unités de la lampe principale, réglage fait pour 75° ([ADR 0039](0039-vol-de-camera-vers-une-piece.md)).
+- Le vol vers une pièce place la caméra à 4 unités de la pièce, réglage fait pour 75° ([ADR 0039](0039-vol-de-camera-vers-une-piece.md)).
 
 ## Décision
 
 Le champ vertical passe à 30°. Pour garder le cadrage, chaque caméra recule de tan(37,5°) / tan(15°), soit 2,86 fois (`FRAMING` dans `src/utils/camera.ts`) :
 
 - `useModelCamera` multiplie la position de la caméra du modèle depuis l'origine, la cible d'`OrbitControls` ;
-- le vol vers une pièce se place à 4 × 2,86 unités de sa cible au lieu de 4. Sa cible avance toujours de 1,8 unité vers la caméra (45 % de 4) : à 30°, la même part de la distance remonterait la pièce trois fois trop haut à l'écran.
+- le vol vers une pièce se place à 4 × 2,86 unités de la pièce au lieu de 4. La pièce remonte au-dessus du carrousel par un décalage de la projection, compté en pixels : il ne dépend pas du champ.
 
 Les réglages de l'effacement des murs ne changent pas.
 

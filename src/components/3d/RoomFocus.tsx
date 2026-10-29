@@ -4,13 +4,12 @@ import * as THREE from 'three';
 import type {Position3dType} from '../../configs/house';
 import {FRAMING, portraitDistance, roomCameraPose} from '../../utils/camera';
 
-// Réglages faits pour un champ de 75° : la caméra recule, et la cible avance
-// d'autant de mètres qu'avant.
-// Distance caméra–pièce en paysage, en unités du modèle.
+// Distance caméra–pièce en paysage, en unités du modèle : 4 pour un champ
+// de 75°.
 const DISTANCE = 4 * FRAMING;
-// La cible avance vers la caméra : la pièce remonte au-dessus du carrousel
-// qui couvre le bas de l'écran.
-const SHIFT = 0.45 / FRAMING;
+// Pixels dont la pièce remonte : elle se centre entre l'en-tête (≈ 70 px) et
+// le carrousel (≈ 330 px), plutôt qu'au centre de l'écran.
+const LIFT = 130;
 const EPSILON = 0.01;
 
 type Controls = THREE.EventDispatcher<{start: object; end: object}> & {
@@ -30,10 +29,20 @@ export function RoomFocus(props: RoomFocusProps) {
   const camera = useThree(state => state.camera);
   const controls = useThree(state => state.controls) as Controls | null;
   const invalidate = useThree(state => state.invalidate);
-  const aspect = useThree(state => state.size.width / state.size.height);
+  const size = useThree(state => state.size);
+  const aspect = size.width / size.height;
   const goal = useRef<Pose | null>(null);
   const placed = useRef(false);
   const ownStart = useRef(false);
+
+  // La projection se décale, pas la cible : la 3D reste visible derrière le
+  // carrousel et les gestes tournent toujours autour de la pièce.
+  useEffect(() => {
+    const {width, height} = size;
+    camera.setViewOffset(width, height, 0, LIFT, width, height);
+    invalidate();
+    return () => camera.clearViewOffset();
+  }, [camera, size, invalidate]);
 
   // Un geste de l'utilisateur interrompt le vol ; son « end » viendra au relâcher.
   useEffect(() => {
@@ -55,7 +64,6 @@ export function RoomFocus(props: RoomFocusProps) {
       position,
       base,
       DISTANCE * portraitDistance(aspect),
-      SHIFT,
     );
     const next = {
       position: new THREE.Vector3(...pose.position),

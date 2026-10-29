@@ -9,29 +9,22 @@ export const FRAMING =
   Math.tan((75 * Math.PI) / 360) / Math.tan((FOV * Math.PI) / 360);
 
 /**
- * Pose qui cadre une pièce sur son centre (sa lampe principale) : la caméra
- * garde la direction de celle du modèle (vue depuis l'origine), à `distance` de
- * la cible. La cible avance vers la caméra d'une part `shift` de la distance,
- * ce qui remonte la pièce à l'écran.
+ * Pose qui cadre une pièce : la caméra vise sa position (`room.position`) et
+ * garde la direction de celle du modèle (vue depuis l'origine), à `distance`
+ * de la pièce.
  */
 export function roomCameraPose(
-  center: {x: number; y: number; z: number},
+  room: {x: number; y: number; z: number},
   base: Vector3Tuple,
   distance: number,
-  shift: number,
 ) {
   const length = Math.hypot(...base);
   const [dx, dy, dz] = base.map(value => value / length);
-  const ground = Math.hypot(dx, dz) || 1;
-  const target: Vector3Tuple = [
-    center.x + (dx / ground) * distance * shift,
-    center.y,
-    center.z + (dz / ground) * distance * shift,
-  ];
+  const target: Vector3Tuple = [room.x, room.y, room.z];
   const position: Vector3Tuple = [
-    target[0] + dx * distance,
-    target[1] + dy * distance,
-    target[2] + dz * distance,
+    room.x + dx * distance,
+    room.y + dy * distance,
+    room.z + dz * distance,
   ];
   return {position, target};
 }

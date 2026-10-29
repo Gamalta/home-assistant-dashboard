@@ -36,20 +36,24 @@ const second: Loan = {
 };
 
 describe('loanPayments', () => {
-  it('lit l’échéancier dans les attributs, trié par mois', () => {
+  it('lit une ligne [capital, intérêts, assurance] par mois, triée par mois', () => {
     expect(
       loanPayments({
-        principal: {'2025-02': 120, '2025-01': 118},
-        interest: {'2025-01': 25, '2025-02': 23},
-        insurance: {'2025-01': 5},
+        amortization: {'2025-02': [120, 23], '2025-01': [118, 25, 5]},
       }),
     ).toEqual([payment('2025-01', 118, 25, 5), payment('2025-02', 120, 23, 0)]);
   });
 
-  it('ne trouve aucune échéance sans attribut `principal`', () => {
-    expect(loanPayments({friendly_name: 'Prêt', principal: 'inconnu'})).toEqual(
-      [],
-    );
+  it('ne trouve aucune échéance sans attribut `amortization`', () => {
+    expect(
+      loanPayments({friendly_name: 'Prêt', amortization: 'inconnu'}),
+    ).toEqual([]);
+  });
+
+  it('ignore une ligne à l’ancien format, avec un seul montant', () => {
+    expect(
+      loanPayments({amortization: {'2025-01': 142.97, '2025-02': [120, 23]}}),
+    ).toEqual([payment('2025-02', 120, 23)]);
   });
 });
 
