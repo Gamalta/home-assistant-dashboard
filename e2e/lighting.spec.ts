@@ -67,6 +67,19 @@ test('la nuit tombe sur la maison sans recompiler de shader', async ({
   expect(await programs()).toBe(compiled);
 });
 
+test('éclaire la démo par ses cartes de lumière précalculées', async ({
+  page,
+}) => {
+  const maps: string[] = [];
+  page.on('requestfinished', request => {
+    const name = request.url().match(/Demo-(sky|sun)[\w-]*\.webp$/)?.[1];
+    if (name) maps.push(name);
+  });
+  await page.goto('/');
+  await waitForScene(page);
+  expect(maps.sort()).toEqual(['sky', 'sun']);
+});
+
 test('ne télécharge plus de carte d’environnement HDR', async ({page}) => {
   const hdr: string[] = [];
   page.on('request', request => {

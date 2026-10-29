@@ -2,6 +2,8 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import {Suspense, useEffect, useState} from 'react';
 import {useGLTF} from '@react-three/drei';
+import {useLoader} from '@react-three/fiber';
+import * as THREE from 'three';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
@@ -22,6 +24,7 @@ export default function House(props: HouseProps) {
     useAppContext();
   const {houseConfig} = useHouseContext();
   const model = houseConfig?.house.model;
+  const lightMaps = houseConfig?.house.lightMaps;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
   const wantedKind = configuration.webGPU ? 'webgpu' : 'webgl';
 
@@ -37,9 +40,13 @@ export default function House(props: HouseProps) {
   }, [configuration.webGPU]);
 
   // Hors du rendu : sinon useGLTF met à jour ModelLoader pendant le rendu de HouseScene.
+  // Les cartes de lumière se téléchargent en même temps que le modèle.
   useEffect(() => {
     if (model) useGLTF.preload(model);
-  }, [model]);
+    if (lightMaps) {
+      useLoader.preload(THREE.TextureLoader, [lightMaps.sky, lightMaps.sun]);
+    }
+  }, [model, lightMaps]);
 
   if (!webGLSupported || !model) {
     return (

@@ -6,6 +6,7 @@ import {
   createHeatmapGroundMaterialWebGl,
   updateHeatmapGroundMaterialWebGl,
 } from '../shaders/HeatmapGroundMaterial/WebGL';
+import {applyBakedLightWebGl} from '../shaders/BakedLight/WebGL';
 
 export const webGLBackend: RenderBackend = {
   kind: 'webgl',
@@ -22,6 +23,7 @@ export const webGLBackend: RenderBackend = {
   createHeatmapMaterial: createHeatmapGroundMaterialWebGl,
   updateHeatmapMaterial: (material, points) =>
     updateHeatmapGroundMaterialWebGl(material as THREE.ShaderMaterial, points),
+  applyBakedLight: applyBakedLightWebGl,
   getMaxTextures: renderer =>
     renderer instanceof THREE.WebGLRenderer
       ? renderer.capabilities.maxTextures
