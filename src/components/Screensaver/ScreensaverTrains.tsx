@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import type {TrainsShortcutConfigType} from '../../configs/sidebar';
 import {useTrainDepartures} from '../../hooks/useTrainDepartures';
 import {TrainDepartureDisplay} from '../display/TrainDepartureDisplay';
+import {TrainView} from '../display/TrainView';
 import {ScreensaverCard} from './ScreensaverCard';
 
 type ScreensaverTrainsProps = {
@@ -15,6 +16,7 @@ export function ScreensaverTrains(props: ScreensaverTrainsProps) {
 
   return (
     <ScreensaverCard icon={<TrainIcon />} title={trains.label}>
+      <TrainView height={56} />
       {departures.length ? (
         departures
           .slice(0, 3)
