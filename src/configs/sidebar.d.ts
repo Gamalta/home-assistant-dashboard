@@ -24,7 +24,7 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType = MediaShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType | TrainsShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
@@ -43,6 +43,13 @@ type EnergyConfigType = {
   subscribedCurrentEntityId?: FilterByDomain<EntityName, 'sensor'>;
   /** Prix du kWh en euros, en heures pleines et en heures creuses. */
   prices: {peak: number; offPeak: number};
+};
+
+type TrainsShortcutConfigType = {
+  type: 'trains';
+  label: string;
+  /** Début des capteurs sncf_trains du trajet : `sncf_paris_lyon` pour `sensor.sncf_paris_lyon_train_1`. */
+  prefix: string;
 };
 
 type SystemGraphConfigType = {

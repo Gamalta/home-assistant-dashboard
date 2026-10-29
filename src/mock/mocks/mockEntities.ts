@@ -11,6 +11,7 @@ import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
 import {energyEntities} from './mockEnergy';
+import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
@@ -366,6 +367,25 @@ export const entities: HassEntities = {
   }),
   ...createPrinter3d('p1s_demo'),
   ...energyEntities,
+  ...createTrain('sensor.sncf_paris_lyon_train_1', {
+    departureIn: 6,
+    trainNum: '6601',
+    platform: 'B',
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_2', {
+    departureIn: 21,
+    trainNum: '6603',
+    delay: 5,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_3', {
+    departureIn: 36,
+    trainNum: '6605',
+    cancelled: true,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_4', {
+    departureIn: 51,
+    trainNum: '6607',
+  }),
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {
