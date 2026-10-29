@@ -18,6 +18,15 @@ type HouseProps = {
   paused?: boolean;
 };
 
+// Derrière la maison, un cran plus sombre que l'interface, selon le thème et
+// non l'heure : la maison, blanche, s'en détache.
+const sceneBackground = (center: string, middle: string, edge: string) =>
+  `radial-gradient(ellipse at 50% 45%, ${center} 0%, ${middle} 55%, ${edge} 100%)`;
+const SCENE_BACKGROUND = {
+  light: sceneBackground('#E9E9EE', '#DCDCE2', '#CDCDD5'),
+  dark: sceneBackground('#232325', '#1C1C1E', '#121213'),
+};
+
 export default function House(props: HouseProps) {
   const {focusRoomId, paused} = props;
   const {configuration, setConfiguration, webGLSupported, lightingTrial} =
@@ -65,7 +74,15 @@ export default function House(props: HouseProps) {
   if (backend?.kind !== wantedKind) return <ModelLoader />;
 
   return (
-    <Stack sx={{position: 'relative', height: '100%', width: '100%'}}>
+    <Stack
+      sx={theme => ({
+        position: 'relative',
+        height: '100%',
+        width: '100%',
+        background: SCENE_BACKGROUND.light,
+        ...theme.applyStyles('dark', {background: SCENE_BACKGROUND.dark}),
+      })}
+    >
       <ErrorBoundary
         resetKey={`${houseConfig?.id}-${backend.kind}`}
         onError={() => {

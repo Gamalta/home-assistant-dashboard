@@ -24,19 +24,25 @@ Une maison éclairée comme une maquette d'architecte, jour et nuit, vue de haut
 
 - **Étant donné** la maison démo et le soleil au-dessus de l'horizon
 - **Quand** la maison s'affiche
-- **Alors** elle est claire et douce, avec des taches de soleil au sol, des ombres douces sous les meubles et des coins plus sombres, sur un fond gris bleuté
+- **Alors** elle est claire et douce, avec des taches de soleil au sol, des ombres douces sous les meubles et des coins plus sombres
 
 ### Scénario : la nuit
 
 - **Étant donné** le soleil sous l'horizon
 - **Quand** la maison s'affiche
-- **Alors** elle baigne dans une lueur bleue sur un fond bleu nuit, et les lampes allumées dominent par leur lumière chaude
+- **Alors** elle baigne dans une lueur bleue, et les lampes allumées dominent par leur lumière chaude
 
 ### Scénario : la nuit tombe
 
 - **Étant donné** la maison affichée en journée
 - **Quand** le soleil se couche
 - **Alors** l'éclairage passe progressivement du jour à la nuit, sans recompiler de shader
+
+### Scénario : fond selon le thème
+
+- **Étant donné** le thème de l'app, clair ou sombre, de jour comme de nuit
+- **Quand** la maison s'affiche
+- **Alors** elle se détache sur un fond un cran plus sombre que l'interface : gris clair en thème clair, presque noir en thème sombre
 
 ### Scénario : maison sans éclairage précalculé
 
@@ -60,6 +66,7 @@ Une maison éclairée comme une maquette d'architecte, jour et nuit, vue de haut
 
 - [x] La démo charge ses deux cartes de lumière et s'affiche sans erreur (`e2e/lighting.spec.ts`).
 - [x] La nuit qui tombe ne recompile aucun shader, et la maison est plus sombre la nuit (`e2e/lighting.spec.ts`).
+- [x] Le fond suit le thème et non l'heure : clair en thème clair la nuit, sombre en thème sombre le jour (`e2e/lighting.spec.ts`).
 - [x] Le shader ajoute la lumière du soleil à celle de la lightMap (`src/rendering/shaders/BakedLight/WebGL/index.test.ts`).
 - [x] Chaque primitive de la démo a un second jeu d'UV, et le modèle et ses cartes tiennent dans 2 Mo (`src/configs/models.test.ts`).
 - [x] La focale de 30° garde le cadrage d'un champ de 75° (`src/utils/camera.test.ts`), les murs s'effacent toujours une fois zoomé (`e2e/options.spec.ts`), et la pièce choisie reste cadrée sur mobile (`e2e/mobile.spec.ts`).

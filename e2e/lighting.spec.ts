@@ -80,6 +80,39 @@ test('éclaire la démo par ses cartes de lumière précalculées', async ({
   expect(maps.sort()).toEqual(['sky', 'sun']);
 });
 
+// Dégradé derrière la maison : celui du premier conteneur du canvas qui en a un.
+async function sceneBackground(page: Page, theme: string, hour: number) {
+  await page.addInitScript(
+    theme => localStorage.setItem('theme', theme),
+    theme,
+  );
+  await page.clock.install({time: new Date(2026, 5, 21, hour)});
+  await page.goto('/');
+  await waitForScene(page);
+  return page.locator('canvas').evaluate(canvas => {
+    for (let element = canvas.parentElement; element; ) {
+      const {backgroundImage} = getComputedStyle(element);
+      if (backgroundImage !== 'none') return backgroundImage;
+      element = element.parentElement;
+    }
+    return 'none';
+  });
+}
+
+test('pose un fond clair derrière la maison en thème clair, même la nuit', async ({
+  page,
+}) => {
+  expect(await sceneBackground(page, 'light', 22)).toContain(
+    'rgb(220, 220, 226)',
+  );
+});
+
+test('pose un fond sombre derrière la maison en thème sombre, même le jour', async ({
+  page,
+}) => {
+  expect(await sceneBackground(page, 'dark', 12)).toContain('rgb(28, 28, 30)');
+});
+
 test('ne télécharge plus de carte d’environnement HDR', async ({page}) => {
   const hdr: string[] = [];
   page.on('request', request => {

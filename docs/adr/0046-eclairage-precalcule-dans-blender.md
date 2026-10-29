@@ -28,7 +28,7 @@ L'éclairage du ciel et du soleil est calculé une fois, dans Blender, et lu dan
 - `SceneMaterials` les applique par `backend.applyBakedLight` : la carte du ciel devient la `lightMap` du matériau Lambert, et le shader remplace l'irradiance de la lightMap par 1,5 π × (ciel × couleur du ciel + soleil × couleur du soleil).
 - Ces deux couleurs sont des uniforms partagés par tous les matériaux. `Daylight` les fait suivre l'heure, comme avant les lumières : la journée ne recompile rien.
 - Avec les cartes, il n'y a plus de lumière directionnelle. La lumière hémisphérique garde la moitié du ciel, en appoint : le calcul voit la maison fermée, et laisse sombres des faces que l'effacement des murs dévoile.
-- Le fond derrière la maison devient un dégradé gris bleuté le jour, d'où la maison blanche se détache, et bleu nuit la nuit.
+- Le fond derrière la maison suit le thème de l'app, et non l'heure : un dégradé un cran plus sombre que l'interface, gris clair en thème clair et presque noir en thème sombre, d'où la maison blanche se détache. Le propriétaire l'a choisi parmi quatre variantes.
 
 **Sans cartes** (maison non calculée, ou moteur WebGPU), la scène est éclairée en temps réel avec l'ambiance Clair doux : ciel bleuté, soleil chaud, nuit bleue.
 
