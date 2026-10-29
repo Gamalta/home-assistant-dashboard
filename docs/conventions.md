@@ -43,7 +43,7 @@ Un fichier simple et compréhensible vaut mieux qu'un fichier malin.
 - Chaque entité lumière pilote la **première** lumière du modèle dont le nom commence par l'identifiant de l'entité, sans le domaine.
 - Les étiquettes passent par `components/3d/Html.tsx`, sans `zIndexRange` : drei empile la plus proche de la caméra devant les autres, avec des z-index qui montent jusqu'à 16 millions. Le `Canvas` les isole (`isolation: isolate`) : un élément qui doit les couvrir se place hors du `Canvas`.
 - Le code propre à WebGL ou à WebGPU vit dans `src/rendering/backends/` et `src/rendering/shaders/<Matériau>/{WebGL,WebGPU}/`, derrière l'interface `RenderBackend`.
-- Toute modification du rendu se mesure (benchmark intégré, [guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md).
+- Toute modification du rendu se mesure ([guide performance](guides/performance.md)) et respecte le [budget tablette](adr/0009-budget-performance-tablette.md). Joindre la sortie de `pnpm bench --compare` à toute PR qui touche au rendu.
 
 ## TypeScript
 

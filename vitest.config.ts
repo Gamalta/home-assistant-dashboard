@@ -8,7 +8,7 @@ export default mergeConfig(
       environment: 'jsdom',
       // Un seul jsdom par worker au lieu d'un par fichier : deux fois plus rapide.
       pool: 'vmThreads',
-      include: ['src/**/*.test.{ts,tsx}'],
+      include: ['{src,scripts}/**/*.test.{ts,tsx}'],
       setupFiles: ['./vitest.setup.ts'],
       restoreMocks: true,
       // @hakit/core (ESM) importe lodash (CommonJS) par exports nommés.

@@ -32,6 +32,7 @@ Sans accès au sous-module privé `src/configs/apartment`, utiliser la maison `d
 | `pnpm build` / `pnpm preview`            | Build de production et serveur local             |
 | `pnpm lint` / `pnpm fix`                 | Lint gts, avec correction automatique pour `fix` |
 | `pnpm optimize-model <in.glb> [out.glb]` | Compression d'un modèle glTF pour le web         |
+| `pnpm bench`                             | Mesure du rendu sur le build de production       |
 
 ## Documentation
 

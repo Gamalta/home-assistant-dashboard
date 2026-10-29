@@ -4,7 +4,7 @@ Deux niveaux de tests, choisis dans l'[ADR 0010](../adr/0010-strategie-de-tests.
 
 | Type      | Outil                                    | Emplacement                              | Commande        |
 | --------- | ---------------------------------------- | ---------------------------------------- | --------------- |
-| Unitaires | Vitest, Testing Library, jsdom           | `src/**/*.test.ts(x)`, à côté du fichier | `pnpm test`     |
+| Unitaires | Vitest, Testing Library, jsdom           | `src/`, `scripts/`, à côté du code testé | `pnpm test`     |
 | E2E       | Playwright (Chromium, WebGL SwiftShader) | `e2e/*.spec.ts`                          | `pnpm test:e2e` |
 
 La CI (`.github/workflows/ci.yml`) tourne sur chaque pull request et à chaque push sur `dev` et `master`. Deux jobs y tournent en parallèle ([ADR 0040](../adr/0040-tests-plus-rapides.md)) : `check` lance `pnpm lint`, `pnpm typecheck` et `pnpm test`, et `e2e` lance `pnpm test:e2e` sur 4 runners : `e2e/shadows.spec.ts` a le sien, car ses deux tests durent autant qu'un shard entier, et les autres tests se partagent les 3 restants (`--shard=n/3`). Le job `e2e` tourne dans l'image Docker de Playwright, qui contient déjà Chromium : en montant `@playwright/test`, changer aussi le tag de l'image dans `ci.yml`.
@@ -30,7 +30,7 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 
 ## Écrire un test unitaire
 
-- Un fichier `Nom.test.ts` (ou `.tsx`) à côté de `Nom.ts`. Vitest ne cherche que dans `src/`.
+- Un fichier `Nom.test.ts` (ou `.tsx`) à côté de `Nom.ts`. Vitest ne cherche que dans `src/` et `scripts/`.
 - Importer explicitement `describe`, `it`, `expect` et `vi` depuis `vitest` (pas de globales).
 - Titres en français, qui décrivent le comportement attendu : `it('borne la saturation au bord de la roue')`.
 - Composants : `render` et `screen` de `@testing-library/react`, en cherchant par rôle, texte ou libellé (`getByRole`, `getByText`, `getByLabelText`). Les matchers de `@testing-library/jest-dom` (`toBeInTheDocument`…) sont chargés par `vitest.setup.ts`. N'ajouter le `ThemeProvider` MUI que si le composant lit le thème de l'application.
@@ -51,8 +51,9 @@ Les E2E tournent sur le build, car c'est lui qui est déployé. Seul `e2e/dev.sp
 - Locators par rôle ou par texte. Quand l'élément n'a pas de nom accessible (bouton de fermeture des modales, interrupteurs des options), passer par un voisin nommé et l'expliquer en commentaire.
 - Les données viennent du mock (`src/mock/mocks/mockEntities.ts`) et de la config `src/configs/demo/House.ts` : un changement de mock peut demander d'adapter un test.
 - Un élément qui vient d'apparaître avec une animation framer-motion peut bouger après le clic : attendre la fin de l'animation (par exemple `toHaveCSS('opacity', '1')`) avant de cliquer.
-- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres) : la page y devient trop lente pour être pilotée. Seul `e2e/shadows.spec.ts` active les ombres. Il le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
+- En CI, le rendu logiciel est plusieurs fois plus lent qu'en local. Éviter d'activer les options graphiques lourdes (« Debug », ombres) : la page y devient trop lente pour être pilotée. Seuls `e2e/shadows.spec.ts` et un test de `e2e/budget.spec.ts` activent les ombres. `e2e/shadows.spec.ts` le fait dans une fenêtre de 640 × 360, avec `test.slow()`, et il attend le repos en comptant les images sans rendu plutôt qu'en mesurant une durée.
 - Pour vérifier une animation image par image, le rendu logiciel saute trop d'images : piloter l'horloge (`page.clock.install()` avant `goto`, puis `pauseAt` et `runFor(16)` entre deux mesures), comme le test d'ouverture de `e2e/light-shutter-modals.spec.ts`.
+- Les tests de budget (`e2e/budget.spec.ts`) mesurent avec `scripts/bench/measure.ts`, comme `pnpm bench`. Ils ne vérifient que des comptes, jamais une durée ([ADR 0029](../adr/0029-budget-performance-automatise.md)).
 
 ## Déboguer un E2E
 
