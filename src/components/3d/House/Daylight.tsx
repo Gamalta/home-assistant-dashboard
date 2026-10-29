@@ -70,8 +70,9 @@ const BAKED: typeof SOFT = {
 // éclaire les faces que l'effacement des murs dévoile et que le calcul,
 // fait maison fermée, laisse sombres.
 const BAKED_FILL = 0.5;
+// Gris bleuté le jour : la maison, blanche, s'en détache.
 const BACKGROUND = {
-  day: 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f1f0ed 60%, #e4e2de 100%)',
+  day: 'radial-gradient(ellipse at 50% 40%, #eef1f5 0%, #d9dee6 60%, #c5ccd6 100%)',
   night:
     'radial-gradient(ellipse at 50% 40%, #27314a 0%, #161c2b 55%, #0c0f18 100%)',
 };

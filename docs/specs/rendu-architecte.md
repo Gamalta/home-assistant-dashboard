@@ -24,7 +24,7 @@ Une maison éclairée comme une maquette d'architecte, jour et nuit, vue de haut
 
 - **Étant donné** la maison démo et le soleil au-dessus de l'horizon
 - **Quand** la maison s'affiche
-- **Alors** elle est claire et douce, avec des taches de soleil au sol, des ombres douces sous les meubles et des coins plus sombres, sur un fond blanc cassé
+- **Alors** elle est claire et douce, avec des taches de soleil au sol, des ombres douces sous les meubles et des coins plus sombres, sur un fond gris bleuté
 
 ### Scénario : la nuit
 
