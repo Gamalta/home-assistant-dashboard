@@ -7,7 +7,8 @@ test.beforeEach(async ({page}) => {
 });
 
 async function openEnergyModal(page: Page) {
-  await page.getByRole('button', {name: /^Énergie/}).click();
+  await page.getByRole('button', {name: 'Menu rapide'}).click();
+  await page.getByRole('menuitem', {name: 'Énergie'}).click();
   await expect(page.getByRole('heading', {name: 'Énergie'})).toBeVisible();
   return page.getByRole('img', {name: /^Heures creuses, Heures pleines, /});
 }
@@ -16,15 +17,7 @@ async function openEnergyModal(page: Page) {
 const month = (date: Date) =>
   date.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'});
 
-test('la carte « Énergie » affiche la puissance, la période et le coût du jour', async ({
-  page,
-}) => {
-  await expect(page.getByRole('button', {name: /^Énergie/})).toContainText(
-    /^Énergie\d+(,\d)? k?VAHeures (pleines|creuses)Aujourd’hui : \d+,\d{2}\s€$/,
-  );
-});
-
-test('la carte « Énergie » ouvre le mois en cours, comparé au mois précédent', async ({
+test('le menu rapide ouvre le mois en cours, comparé au mois précédent', async ({
   page,
 }) => {
   const chart = await openEnergyModal(page);
@@ -44,13 +37,8 @@ test('la carte « Énergie » ouvre le mois en cours, comparé au mois précéde
   );
 });
 
-test('le menu rapide ouvre la même modale, avec le prix du kWh de chaque période', async ({
-  page,
-}) => {
-  await page.getByRole('button', {name: 'Menu rapide'}).click();
-  await page.getByRole('menuitem', {name: 'Énergie'}).click();
-
-  await expect(page.getByRole('heading', {name: 'Énergie'})).toBeVisible();
+test('les totaux donnent le prix du kWh de chaque période', async ({page}) => {
+  await openEnergyModal(page);
   const totals = page.getByRole('region', {name: 'Totaux'});
   await expect(totals).toContainText(/Heures pleines0,27\s€\/kWh/);
   await expect(totals).toContainText(/Heures creuses0,21\s€\/kWh/);

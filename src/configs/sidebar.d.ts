@@ -11,9 +11,11 @@ type SideBarConfigType = {
   };
   /** Scripts Home Assistant lancés d'un appui depuis le menu rapide. */
   scenarios?: FilterByDomain<EntityName, 'script'>[];
+  /** Compteur Linky suivi par l'entrée « Énergie » du menu rapide. */
+  energy?: EnergyConfigType;
   /**
-   * Prêts réunis dans l'entrée « Crédit » du menu rapide : des entités dont les
-   * attributs `principal`, `interest` et `insurance` donnent l'échéancier.
+   * Prêts réunis dans l'entrée « Crédit » du menu rapide : des entités dont
+   * l'attribut `amortization` donne le tableau d'amortissement.
    */
   mortgages?: FilterByDomain<EntityName, 'sensor'>[];
   /** Liste `todo` ouverte par l'entrée « Courses » du menu rapide. */
@@ -22,18 +24,14 @@ type SideBarConfigType = {
   shortcuts?: ShortcutConfigType[];
 };
 
-type ShortcutConfigType =
-  | MediaShortcutConfigType
-  | EnergyShortcutConfigType
-  | TrainsShortcutConfigType;
+type ShortcutConfigType = MediaShortcutConfigType | TrainsShortcutConfigType;
 
 type MediaShortcutConfigType = {
   type: 'media';
   mediaPlayerEntityId: FilterByDomain<EntityName, 'media_player'>;
 };
 
-type EnergyShortcutConfigType = {
-  type: 'energy';
+type EnergyConfigType = {
   /** Puissance instantanée, en VA (PAPP du Linky) ou en W. */
   powerEntityId: FilterByDomain<EntityName, 'sensor'>;
   /** Période tarifaire en cours (PTEC du Linky : « HP.. », « HC.. »). */

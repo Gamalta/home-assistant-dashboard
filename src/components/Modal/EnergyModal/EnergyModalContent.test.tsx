@@ -1,7 +1,7 @@
 import {createTheme} from '@mui/material/styles';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
+import type {EnergyConfigType} from '../../../configs/sidebar';
 import {getBuckets} from '../../../utils/energy';
 import {EnergyModalContent} from './EnergyModalContent';
 
@@ -26,8 +26,7 @@ vi.mock('@hakit/core', () => ({
     selector({connection}),
 }));
 
-const config: EnergyShortcutConfigType = {
-  type: 'energy',
+const config: EnergyConfigType = {
   powerEntityId: 'sensor.puissance',
   tariffPeriodEntityId: 'sensor.ptec',
   peakIndexEntityId: 'sensor.index_hp',
@@ -72,7 +71,7 @@ describe('EnergyModalContent', () => {
   });
 
   it('charge le mois en cours et le mois précédent jour par jour, puis l’année mois par mois', async () => {
-    render(<EnergyModalContent shortcutConfig={config} />);
+    render(<EnergyModalContent energyConfig={config} />);
     await screen.findByText(/par rapport à octobre 2026/);
 
     // La veille du mois en cours donne l'index de départ du jour.
@@ -116,7 +115,7 @@ describe('EnergyModalContent', () => {
   });
 
   it('affiche le total, le coût et l’écart d’un mois écoulé avec le précédent', async () => {
-    render(<EnergyModalContent shortcutConfig={config} />);
+    render(<EnergyModalContent energyConfig={config} />);
     fireEvent.click(screen.getByRole('button', {name: 'Période précédente'}));
 
     expect(await screen.findByText('310 kWh')).toBeInTheDocument();
@@ -137,7 +136,7 @@ describe('EnergyModalContent', () => {
   });
 
   it('compare le mois en cours au même mois un an avant, à date égale', async () => {
-    render(<EnergyModalContent shortcutConfig={config} />);
+    render(<EnergyModalContent energyConfig={config} />);
     await screen.findByText(/par rapport à octobre 2026/);
     const calls = connection.sendMessagePromise.mock.calls.length;
 
@@ -158,7 +157,7 @@ describe('EnergyModalContent', () => {
   });
 
   it('recule et avance d’une période, sans dépasser la période en cours', async () => {
-    render(<EnergyModalContent shortcutConfig={config} />);
+    render(<EnergyModalContent energyConfig={config} />);
     const previous = screen.getByRole('button', {name: 'Période précédente'});
     const next = screen.getByRole('button', {name: 'Période suivante'});
     expect(screen.getByText('novembre 2026')).toBeInTheDocument();
@@ -178,7 +177,7 @@ describe('EnergyModalContent', () => {
 
   it('affiche des tirets sans statistiques', async () => {
     connection.sendMessagePromise.mockResolvedValue({});
-    render(<EnergyModalContent shortcutConfig={config} />);
+    render(<EnergyModalContent energyConfig={config} />);
 
     expect(await screen.findAllByText('—')).not.toHaveLength(0);
     expect(screen.queryByText(/par rapport à/)).not.toBeInTheDocument();

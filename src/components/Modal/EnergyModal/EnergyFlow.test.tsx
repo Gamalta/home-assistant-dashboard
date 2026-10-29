@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import {describe, expect, it, vi} from 'vitest';
-import type {EnergyShortcutConfigType} from '../../../configs/sidebar';
+import type {EnergyConfigType} from '../../../configs/sidebar';
 import {EnergyFlow} from './EnergyFlow';
 
 vi.mock('@hakit/core', () => ({
@@ -15,8 +15,7 @@ vi.mock('@hakit/core', () => ({
     })[entityId] ?? null,
 }));
 
-const config: EnergyShortcutConfigType = {
-  type: 'energy',
+const config: EnergyConfigType = {
   powerEntityId: 'sensor.puissance',
   tariffPeriodEntityId: 'sensor.ptec',
   peakIndexEntityId: 'sensor.index_hp',
@@ -26,7 +25,7 @@ const config: EnergyShortcutConfigType = {
 
 describe('EnergyFlow', () => {
   it('fait passer le courant par le fil de la période en cours, avec son prix', () => {
-    render(<EnergyFlow shortcutConfig={config} />);
+    render(<EnergyFlow energyConfig={config} />);
 
     const current = screen.getByText('HP').closest('[aria-current]');
     expect(current).toHaveAttribute('aria-current', 'true');
@@ -41,7 +40,7 @@ describe('EnergyFlow', () => {
   it('affiche la charge si l’intensité souscrite est configurée', () => {
     render(
       <EnergyFlow
-        shortcutConfig={{...config, subscribedCurrentEntityId: 'sensor.isousc'}}
+        energyConfig={{...config, subscribedCurrentEntityId: 'sensor.isousc'}}
       />,
     );
 
@@ -54,7 +53,7 @@ describe('EnergyFlow', () => {
   });
 
   it('n’affiche que la puissance sans intensité souscrite', () => {
-    render(<EnergyFlow shortcutConfig={config} />);
+    render(<EnergyFlow energyConfig={config} />);
 
     expect(screen.getByText('1,5 kVA')).toBeInTheDocument();
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();

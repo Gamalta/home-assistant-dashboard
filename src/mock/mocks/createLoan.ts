@@ -26,9 +26,7 @@ export function createLoan(entity_id: string, options: LoanOptions) {
     : principal / durationMonths;
   const attributes = {
     friendly_name: label,
-    principal: {} as Record<string, number>,
-    interest: {} as Record<string, number>,
-    insurance: {} as Record<string, number>,
+    amortization: {} as Record<string, number[]>,
   };
 
   let remaining = principal;
@@ -40,9 +38,11 @@ export function createLoan(entity_id: string, options: LoanOptions) {
       index === durationMonths - 1
         ? cents(remaining)
         : cents(payment - interest);
-    attributes.principal[month] = repaid;
-    attributes.interest[month] = interest;
-    attributes.insurance[month] = options.monthlyInsurance;
+    attributes.amortization[month] = [
+      repaid,
+      interest,
+      options.monthlyInsurance,
+    ];
     remaining -= repaid;
   }
 
