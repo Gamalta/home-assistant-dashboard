@@ -54,6 +54,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** le dashboard s'ouvre
 - **Alors** la maison 3D s'affiche, cadrée sur la première pièce de la config
 - **Et** un carrousel en bas montre une puce par pièce et la carte de cette pièce, avec une tuile par équipement
+- **Et** la pièce s'affiche au milieu de l'espace entre l'en-tête et le carrousel, et la 3D reste visible derrière le carrousel
 - **Et** seules les étiquettes de cette pièce s'affichent dans la scène
 
 ### Scénario : choisir une pièce y amène la caméra
@@ -185,3 +186,4 @@ Build de production, maison démo, en 390 × 844 avec un DPR de 3 (R3F le plafon
 - Le temps GPU au repos suit la surface du canvas : en pleine largeur, il couvre 1,4 fois plus de pixels que les 70 % de la disposition tablette.
 - Les appels de dessin restent sous les 150 du [budget](../adr/0009-budget-performance-tablette.md).
 - En rendu logiciel (SwiftShader, comme en CI), on compte les mêmes étiquettes, les mêmes appels de dessin et aucune compilation pendant le vol.
+- Remonter la pièce au-dessus du carrousel ne change que la projection. En SwiftShader, le GPU au repos passe de 36,2 à 37,5 ms (médiane de trois mesures), dans l'écart d'une mesure à l'autre, et le CPU reste à 0,3 ms. La tablette n'est pas concernée.
