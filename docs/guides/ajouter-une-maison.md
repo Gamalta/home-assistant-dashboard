@@ -16,23 +16,36 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
 pnpm optimize-model mon-modele.glb src/configs/<id>/<Nom>.glb
 ```
 
-Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets.
+Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets. La géométrie est simplifiée avec un écart d'au moins 2 mm, invisible à la distance de la caméra : les petits objets trop détaillés perdent l'essentiel de leurs triangles ([ADR 0048](../adr/0048-simplifier-a-2-mm.md)).
 
 - Lancer le script sur l'export Blender, jamais sur un modèle déjà optimisé : les simplifications se cumuleraient.
+- Un objet fait de bandes de faces ouvertes ne se simplifie pas, quel que soit l'écart. S'il est lourd, le remplacer par une forme simple : c'est le cas des chaises de la salle à manger, sur la démo comme sur l'appartement.
 - Pour réduire le nombre de draw calls, réutiliser les matériaux dans Blender plutôt que d'en créer un par objet.
 
 Le modèle doit respecter le [budget de performance](../adr/0009-budget-performance-tablette.md) : 2 Mo au plus, et 150 draw calls au plus une fois chargé. `pnpm test` vérifie le poids et le nombre de primitives de chaque modèle présent dans `src/configs/`.
 
-## 3. Décrire la maison
+## 3. Précalculer l'éclairage
+
+```sh
+pnpm bake-lighting src/configs/<id>/<Nom>.glb
+```
+
+Blender 5 calcule la lumière du ciel et du soleil, avec ses rebonds, dans deux cartes écrites à côté du modèle : `<Nom>-sky.webp` et `<Nom>-sun.webp` ([ADR 0046](../adr/0046-eclairage-precalcule-dans-blender.md)). Le modèle est réécrit avec le second jeu d'UV que lisent ces cartes. Compter quelques minutes. Blender est attendu dans `/Applications`, sinon le désigner par `BLENDER=<chemin>`.
+
+- Relancer le script après chaque `pnpm optimize-model` : les cartes ne valent que pour le modèle sur lequel elles ont été calculées.
+- Deux objets qui se chevauchent dans le même plan, comme les dessus de deux meubles qui s'interpénètrent, sortent noirs : les écarter dans Blender. La démo en garde deux, sur l'armoire et la vitrine du séjour.
+- Sans cette étape, la maison s'affiche avec l'ambiance Clair doux, en temps réel.
+
+## 4. Décrire la maison
 
 Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`. Il exporte :
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
-- `HouseConfig` : le modèle, la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`battery` et `smoke`](appareils-sur-pile.md)) ;
+- `HouseConfig` : le modèle, ses cartes de lumière (`lightMaps`), la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`battery` et `smoke`](appareils-sur-pile.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
 
-## 4. Activer la maison
+## 5. Activer la maison
 
 Ajouter `<id>` à `VITE_HOUSE_CONFIGS` dans `.env`, par exemple `["demo", "<id>"]`. La première maison de la liste est celle qui s'ouvre par défaut. Le dock de la barre latérale permet ensuite de passer de l'une à l'autre.

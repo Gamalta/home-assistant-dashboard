@@ -5,14 +5,18 @@ import {TemperatureConfigType} from '../../../../configs/house';
 import {useState} from 'react';
 import {motion} from 'framer-motion';
 import {TemperatureModal} from '../../../Modal/TemperatureModal';
+import {ThermostatIcon} from '../../../Icons/ThermostatIcon';
+import {Tile} from '../../../Mobile/Tile';
+import type {ItemVariant} from '.';
 
 type RoomTemperatureProps = {
   id: string;
   tempConfig: TemperatureConfigType;
+  variant: ItemVariant;
 };
 
 export function RoomTemperature(props: RoomTemperatureProps) {
-  const {id, tempConfig} = props;
+  const {id, tempConfig, variant} = props;
 
   const [tempModal, setTempModal] = useState(false);
 
@@ -37,25 +41,35 @@ export function RoomTemperature(props: RoomTemperatureProps) {
   });
 
   if (!temperature) return;
+  const degrees =
+    temperature.state === UNKNOWN ? '-' : Math.floor(Number(temperature.state));
 
   return (
     <>
       <motion.div layoutId={`${id}-temp`}>
-        <Button
-          variant="contained"
-          color="secondary"
-          sx={{
-            height: '100%',
-            minWidth: 0,
-            px: '6px',
-          }}
-          {...tempLongPress}
-        >
-          {temperature.state === UNKNOWN
-            ? '-'
-            : Math.floor(Number(temperature.state))}
-          °
-        </Button>
+        {variant === 'tile' ? (
+          <Tile
+            icon={<ThermostatIcon />}
+            name="Thermomètre"
+            state={
+              humidity ? `${degrees}° · ${humidity.state} %` : `${degrees}°`
+            }
+            {...tempLongPress}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{
+              height: '100%',
+              minWidth: 0,
+              px: '6px',
+            }}
+            {...tempLongPress}
+          >
+            {degrees}°
+          </Button>
+        )}
       </motion.div>
       <TemperatureModal
         id={`${id}-temp`}

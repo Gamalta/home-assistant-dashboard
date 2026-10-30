@@ -32,14 +32,21 @@ test('trace l’historique de la température et de l’humidité', async ({
   await expect(page.getByText(/^min: \d+(,\d)?°C$/)).toBeVisible();
 });
 
-test('donne la valeur et l’heure sous le curseur', async ({page}) => {
+test('donne la valeur et l’heure au-dessus du curseur', async ({page}) => {
   const chart = await openClimateHistory(page);
-  await chart.hover();
+  // Attend la fin de l'animation d'ouverture avant de viser.
+  await chart.click({trial: true});
+  const box = await chart.boundingBox();
+  if (!box) throw new Error('graphique absent');
+  const pointer = {x: box.x + box.width / 2, y: box.y + box.height * 0.75};
+  await page.mouse.move(pointer.x, pointer.y);
 
   const tooltip = page.getByRole('table');
   await expect(tooltip).toContainText(/\d{2}:\d{2}/);
   await expect(tooltip).toContainText(/Température\s*\d+(,\d)?°C/);
   await expect(tooltip).toContainText(/Humidité\s*\d+(,\d)?%/);
+  const tooltipBox = await tooltip.boundingBox();
+  expect(tooltipBox!.y + tooltipBox!.height).toBeLessThan(pointer.y);
 });
 
 test('revient au réglage depuis l’historique', async ({page}) => {

@@ -1,12 +1,29 @@
 import {HouseConfigType} from '../house';
 import {SideBarConfigType} from '../sidebar';
 import Demo from './Demo.glb?url';
+import DemoSky from './Demo-sky.webp?url';
+import DemoSun from './Demo-sun.webp?url';
 
 export const ConfigName = 'Démo';
 
 export const SideBarConfig: SideBarConfigType = {
   weatherEntityId: 'weather.home',
   pets: ['Tom', 'Jerry'],
+  alerts: {
+    smokeEntityIds: [
+      'binary_sensor.hallway_smoke_detector_smoke',
+      'binary_sensor.hallway_smoke_detector_heat',
+    ],
+    batteryLowEntityIds: ['binary_sensor.hallway_smoke_detector_battery_low'],
+    batteryLevelEntityIds: [
+      'sensor.kitchen_button_battery',
+      'sensor.bedroom_button_battery',
+      'sensor.cellar_sensor_battery',
+    ],
+    internetEntityId: 'binary_sensor.router_wan_status',
+    zigbeeEntityId: 'binary_sensor.zigbee_bridge_connection_state',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+  },
   persons: [
     {
       name: 'Juliette',
@@ -52,15 +69,32 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
+  energy: {
+    powerEntityId: 'sensor.meter_apparent_power',
+    tariffPeriodEntityId: 'sensor.meter_tariff_period',
+    peakIndexEntityId: 'sensor.meter_peak_index',
+    offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+    subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+    prices: {peak: 0.27, offPeak: 0.21},
+  },
+  mortgages: [
+    'sensor.loan_main',
+    'sensor.loan_ptz',
+    'sensor.loan_action_logement',
+    'sensor.loan_works',
+  ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
   ],
 };
 
 export const HouseConfig: HouseConfigType = {
   model: Demo,
+  lightMaps: {sky: DemoSky, sun: DemoSun},
   rooms: [
     {
       id: 'Living_room',

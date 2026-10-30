@@ -146,3 +146,10 @@ export const getColorTempFromCoord = (
   );
   return temp;
 };
+
+// Sombre sur une couleur claire, blanc sur une couleur foncée (luminance perçue).
+export function readableOn(rgb: number[]) {
+  const [red, green, blue] = rgb;
+  const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+  return luminance > 0.5 ? '#1C1C1E' : '#FFFFFF';
+}

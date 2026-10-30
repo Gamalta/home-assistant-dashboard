@@ -16,7 +16,11 @@ function createVariant(source: WallMaterial, fade: boolean) {
     material.depthWrite = false;
   }
 
-  material.onBeforeCompile = shader => {
+  // clone() ne copie pas onBeforeCompile : on garde celui de l'éclairage
+  // précalculé.
+  const sourceHook = source.onBeforeCompile;
+  material.onBeforeCompile = (shader, renderer) => {
+    sourceHook.call(material, shader, renderer);
     shader.uniforms.fadeRadius = {value: FADE_RADIUS};
     shader.uniforms.minOpacity = {value: 0.05};
     shader.uniforms.nearFadeDistance = {value: 6.0};

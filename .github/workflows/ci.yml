@@ -1,7 +1,9 @@
 name: CI
 
 on:
+  # Les autres branches sont vérifiées par leur pull request : pas de run en double.
   push:
+    branches: [dev, master]
   pull_request:
 
 concurrency:
@@ -14,7 +16,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -46,16 +48,54 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
-      - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Chromium et ses dépendances déjà installés. Même version que @playwright/test.
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        # En rendu logiciel, les deux tests d'ombres durent autant qu'un shard
+        # entier : ils ont leur propre job.
+        args:
+          - --shard=1/3 --grep-invert shadows.spec
+          - --shard=2/3 --grep-invert shadows.spec
+          - --shard=3/3 --grep-invert shadows.spec
+          - e2e/shadows.spec.ts
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      # Le dépôt appartient à l'utilisateur du runner, pas à root : sans cela,
+      # git refuse le `git rev-parse` de vite.config.ts.
+      - name: Trust the checkout
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: E2E tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e ${{ matrix.args }}
 
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ strategy.job-index }}
           path: playwright-report/
           retention-days: 7

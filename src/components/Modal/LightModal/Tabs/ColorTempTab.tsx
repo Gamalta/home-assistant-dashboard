@@ -77,13 +77,19 @@ export function ColorTempTab() {
 
   return (
     <Stack
-      sx={{maxWidth: '500px', minWidth: '500px', p: 2, alignItems: 'center'}}
+      sx={{
+        maxWidth: '500px',
+        minWidth: {xs: '100%', sm: '500px'},
+        p: 2,
+        alignItems: 'center',
+      }}
     >
       <Stack
         component={motion.div}
         sx={{
           position: 'relative',
-          height: '30vh',
+          // Hauteur visible : sur iPhone, vh compte aussi les barres de Safari.
+          height: '30svh',
           maxHeight: '320px',
           maxWidth: '320px',
           minHeight: '200px',

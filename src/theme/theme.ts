@@ -36,5 +36,7 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     primary: string;
     tertiary: string;
+    modal: string;
+    modalTertiary: string;
   }
 }
