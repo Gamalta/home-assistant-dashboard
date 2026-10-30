@@ -21,9 +21,13 @@ export function BatteryModal(props: BatteryModalProps) {
 
   return (
     <Modal {...modalProps}>
-      <Stack direction="row" spacing={3} sx={{alignItems: 'center'}}>
+      <Stack
+        direction={{xs: 'column', sm: 'row'}}
+        spacing={3}
+        sx={{alignItems: 'center'}}
+      >
         <WallSwitchView level={level} />
-        <Stack spacing={1.5} sx={{width: 300}}>
+        <Stack spacing={1.5} sx={{width: {xs: '100%', sm: 300}}}>
           <Stack sx={{color: low ? 'error.main' : undefined}}>
             <Typography variant="h3">
               {level === null ? '--' : `${level}%`}

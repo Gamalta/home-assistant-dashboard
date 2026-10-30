@@ -45,9 +45,13 @@ export function SmokeModal(props: SmokeModalProps) {
 
   return (
     <Modal {...modalProps}>
-      <Stack direction="row" spacing={3} sx={{alignItems: 'center'}}>
+      <Stack
+        direction={{xs: 'column', sm: 'row'}}
+        spacing={3}
+        sx={{alignItems: 'center'}}
+      >
         <SmokeDetectorView status={status} />
-        <Stack spacing={1.5} sx={{width: 300}}>
+        <Stack spacing={1.5} sx={{width: {xs: '100%', sm: 300}}}>
           <Typography variant="h4" sx={{color: STATUS_COLORS[status]}}>
             {SMOKE_STATUSES[status].label}
           </Typography>
