@@ -12,6 +12,7 @@
 | [Guide : prises connectées](guides/prises.md)              | Afficher et piloter une prise et sa puissance        |
 | [Guide : ajouter un graphique](guides/graphiques.md)       | Tracer un historique avec le composant commun        |
 | [Guide : imprimante 3D](guides/imprimante-3d.md)           | Configurer une imprimante Bambu Lab (ha-bambulab)    |
+| [Guide : appareils sur pile](guides/appareils-sur-pile.md) | Afficher les piles et le détecteur de fumée          |
 | [Guide : mode veille](guides/mode-veille.md)               | Mettre la tablette murale en veille après inactivité |
 | [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale          |
 | [Guide : alertes](guides/alertes.md)                       | Configurer la pastille d'alertes                     |

@@ -41,7 +41,7 @@ Blender 5 calcule la lumière du ciel et du soleil, avec ses rebonds, dans deux 
 Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`. Il exporte :
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
-- `HouseConfig` : le modèle, ses cartes de lumière (`lightMaps`), la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md)) ;
+- `HouseConfig` : le modèle, ses cartes de lumière (`lightMaps`), la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`battery` et `smoke`](appareils-sur-pile.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.

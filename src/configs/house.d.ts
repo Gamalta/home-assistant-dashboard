@@ -22,7 +22,9 @@ type RoomItemConfigType =
   | ShutterConfigType
   | DestkopConfigType
   | OutletConfigType
-  | Printer3dConfigType;
+  | Printer3dConfigType
+  | BatteryConfigType
+  | SmokeConfigType;
 
 type BaseItemConfigType =
   | {
@@ -82,4 +84,20 @@ type Printer3dConfigType = BaseItemConfigType & {
   type: 'printer3d';
   // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
   prefix: string;
+};
+
+type BatteryConfigType = BaseItemConfigType & {
+  type: 'battery';
+  name: string;
+  batteryEntityId: FilterByDomain<EntityName, 'sensor'>;
+};
+
+type SmokeConfigType = BaseItemConfigType & {
+  type: 'smoke';
+  smokeEntityId: FilterByDomain<EntityName, 'binary_sensor'>;
+  heatEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  batteryEntityId?: FilterByDomain<EntityName, 'sensor'>;
+  batteryLowEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  tamperEntityId?: FilterByDomain<EntityName, 'binary_sensor'>;
+  testEntityId?: FilterByDomain<EntityName, 'button'>;
 };
