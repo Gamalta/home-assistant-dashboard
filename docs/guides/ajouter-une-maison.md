@@ -16,9 +16,10 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
 pnpm optimize-model mon-modele.glb src/configs/<id>/<Nom>.glb
 ```
 
-Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets.
+Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets. La géométrie est simplifiée avec un écart d'au moins 2 mm, invisible à la distance de la caméra : les petits objets trop détaillés perdent l'essentiel de leurs triangles ([ADR 0048](../adr/0048-simplifier-a-2-mm.md)).
 
 - Lancer le script sur l'export Blender, jamais sur un modèle déjà optimisé : les simplifications se cumuleraient.
+- Un objet fait de bandes de faces ouvertes ne se simplifie pas, quel que soit l'écart. S'il est lourd, le remplacer par une forme simple : c'est le cas des chaises de la salle à manger, sur la démo comme sur l'appartement.
 - Pour réduire le nombre de draw calls, réutiliser les matériaux dans Blender plutôt que d'en créer un par objet.
 
 Le modèle doit respecter le [budget de performance](../adr/0009-budget-performance-tablette.md) : 2 Mo au plus, et 150 draw calls au plus une fois chargé. `pnpm test` vérifie le poids et le nombre de primitives de chaque modèle présent dans `src/configs/`.
