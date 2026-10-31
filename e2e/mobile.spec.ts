@@ -263,7 +263,7 @@ test("un appui long sur une tuile ouvre sa modale au centre de l'écran", async 
 });
 
 test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
-  // Onze modales ouvertes l'une après l'autre.
+  // Dix modales ouvertes l'une après l'autre.
   test.slow();
   const room = (name: string) => page.getByRole('region', {name, exact: true});
   const quickMenu = async (name: string) => {
@@ -300,6 +300,20 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
       () =>
         room('Chambre 2')
           .getByRole('button', {name: /Imprimante 3D/})
+          .tap(),
+    ],
+    [
+      'Interrupteur du séjour',
+      () =>
+        room('Séjour')
+          .getByRole('button', {name: /Interrupteur du séjour/})
+          .tap(),
+    ],
+    [
+      'Détecteur de fumée',
+      () =>
+        room('Couloir')
+          .getByRole('button', {name: /Détecteur de fumée/})
           .tap(),
     ],
     ['Énergie', () => quickMenu('Énergie')],
@@ -487,6 +501,25 @@ test('le filtre Volets ne garde que les volets', async ({page}) => {
   await expect(
     rooms.getByRole('button', {name: /Volet du séjour/}),
   ).toBeVisible();
+});
+
+test('les tuiles des appareils sur pile montrent leur état', async ({page}) => {
+  await page.getByRole('button', {name: 'Pièces', exact: true}).tap();
+  const tile = (room: string, name: RegExp) =>
+    page.getByRole('region', {name: room, exact: true}).getByRole('button', {
+      name,
+    });
+
+  await expect(tile('Cuisine', /Interrupteur de la cuisine/)).toContainText(
+    '12 %',
+  );
+  const smoke = tile('Couloir', /Détecteur de fumée/);
+  await expect(smoke).toContainText('Aucune fumée');
+
+  await page.evaluate(() =>
+    window.__mockSetState?.('binary_sensor.hallway_smoke_detector_smoke', 'on'),
+  );
+  await expect(smoke).toContainText('Fumée détectée !');
 });
 
 test('les avatars déroulent le Foyer en menu', async ({page}) => {

@@ -94,7 +94,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 ### Scénario : chaque modale tient dans l'écran du téléphone
 
 - **Étant donné** un téléphone en portrait
-- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, du crédit ou des courses
+- **Quand** l'utilisateur ouvre la modale d'une lumière, d'un volet, d'une prise, d'une climatisation, de l'imprimante 3D, d'un interrupteur sur pile, du détecteur de fumée, du crédit ou des courses
 - **Alors** elle tient dans l'écran, centrée, sans défilement horizontal
 - **Et** la page garde la largeur de l'écran
 
@@ -148,6 +148,13 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche le filtre « Volets »
 - **Alors** seules les tuiles de volet restent, et les pièces sans volet disparaissent
 
+### Scénario : les tuiles des appareils sur pile montrent leur état
+
+- **Étant donné** la vue Pièces de la démo
+- **Quand** elle s'affiche
+- **Alors** la tuile « Interrupteur de la cuisine » montre « 12 % » et se teinte en rouge, sa pile étant faible
+- **Et** la tuile « Détecteur de fumée » du couloir montre « Aucune fumée », puis « Fumée détectée ! » en rouge quand le détecteur voit de la fumée
+
 ### Scénario : les avatars déroulent le Foyer en menu
 
 - **Étant donné** un iPhone à Dynamic Island en portrait
@@ -200,7 +207,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - Décisions : [ADR 0038](../adr/0038-disposition-mobile-a-deux-vues.md) (disposition), [ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md) (caméra) et [ADR 0044](../adr/0044-foyer-en-menu-sous-les-avatars.md) (Foyer en menu).
 - Config : aucune. La liste des pièces, leur ordre et leurs équipements viennent de `HouseConfig.rooms`, le Foyer de `SideBarConfig`. Le nom d'une tuile est le `friendly_name` de l'entité dans Home Assistant.
 - Mock : les volets de la démo ont un nom français.
-- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit et de l'imprimante 3D y empilent leurs deux blocs.
+- Modales : partout, toucher le fond ferme la modale. Sous 600 px, elles deviennent des cartes centrées dans l'écran. Celles du crédit, de l'imprimante 3D, des interrupteurs sur pile et du détecteur de fumée y empilent leurs deux blocs.
 - Page : `viewport-fit=cover`, et `html` comme `body` en `overflow: hidden`. L'en-tête, le menu rapide, la liste, le carrousel et les modales suivent les zones sûres de l'écran.
 - `useLongPress` : un glissé de plus de 10 px annule l'appui, sur les étiquettes 3D aussi. L'appui court passe par le clic du navigateur, que seul l'appui long annule.
 - Performance : voir la section Mesures.

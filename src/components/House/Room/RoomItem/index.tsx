@@ -43,9 +43,13 @@ export function RoomItem(props: RoomItemProps) {
     case 'outlet':
       return <RoomOutlet id={id} outletConfig={itemConfig} variant={variant} />;
     case 'printer3d':
-      return <RoomPrinter3d id={id} printer3dConfig={itemConfig} variant={variant} />;
+      return (
+        <RoomPrinter3d id={id} printer3dConfig={itemConfig} variant={variant} />
+      );
     case 'battery':
-      return <RoomBattery id={id} batteryConfig={itemConfig} variant={variant} />;
+      return (
+        <RoomBattery id={id} batteryConfig={itemConfig} variant={variant} />
+      );
     case 'smoke':
       return <RoomSmoke id={id} smokeConfig={itemConfig} variant={variant} />;
     default:
