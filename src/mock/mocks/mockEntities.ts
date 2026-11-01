@@ -10,6 +10,7 @@ import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
+import {createVacuum} from './createVacuum';
 import {energyEntities} from './mockEnergy';
 import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
@@ -386,6 +387,7 @@ export const entities: HassEntities = {
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
   ...createPrinter3d('p1s_demo'),
+  ...createVacuum('dreame_demo'),
   ...energyEntities,
   ...createTrain('sensor.sncf_paris_lyon_train_1', {
     departureIn: 6,
