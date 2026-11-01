@@ -22,6 +22,7 @@ export function HeatmapAction(props: HeatmapActionProps) {
         setConfiguration(prev => ({
           ...prev,
           heatmapShader: !prev.heatmapShader,
+          vacuumMapShader: false,
         }));
         onToggle();
       }}

@@ -87,7 +87,7 @@ async function openAtRest(page: Page, shadows: boolean) {
 
 // Luminance moyenne du canvas, sans les boutons des pièces : insensible au
 // pixel près laissé par l'inertie d'OrbitControls, pas à une ombre manquante
-// (environ 5 points d'écart sur la démo).
+// (environ 4 points d'écart sur la démo, de nuit).
 async function canvasLuminance(page: Page) {
   const png = await page.locator('canvas').screenshot({
     style: 'div:has(> canvas) ~ div {visibility: hidden}',
@@ -122,6 +122,9 @@ async function rotate(page: Page) {
 test('ne compile aucun shader pendant une rotation, ombres activées', async ({
   page,
 }) => {
+  // De nuit : en journée, le ciel noie les ombres des lampes et l'écart
+  // tombe sous 1 point.
+  await page.clock.setFixedTime(new Date(2026, 5, 21, 22));
   await openAtRest(page, true);
   const programs = await page.evaluate(() => window.__linkedPrograms);
   const before = await canvasLuminance(page);

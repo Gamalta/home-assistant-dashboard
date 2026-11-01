@@ -17,11 +17,16 @@ export function Room3d(props: RoomProps) {
   const {room, model, showLabels} = props;
   const {configuration} = useAppContext();
 
+  // Sur une carte au sol, seuls ses éléments gardent leur étiquette.
+  const display = configuration.heatmapShader
+    ? heatmapDisplay
+    : configuration.vacuumMapShader
+      ? ['vacuum']
+      : undefined;
   const cleanedRoom = {
     ...room,
     items: (room.items ?? []).filter(
-      item =>
-        !configuration.heatmapShader || heatmapDisplay.includes(item.type),
+      item => !display || display.includes(item.type),
     ),
   };
 

@@ -3,6 +3,7 @@ import type {Page} from '@playwright/test';
 export type GraphicsOptions = {
   shadows?: boolean;
   heatmapShader?: boolean;
+  vacuumMapShader?: boolean;
 };
 
 type Counters = {

@@ -9,6 +9,7 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
   - `room_*` pour les sols, colorés par la carte des températures ;
   - `wall_*`, `white` ou `yellowbrt` pour les murs, qui s'effacent près de la caméra. Les murs sont des couleurs unies : là où ils s'effacent, ils partagent un même matériau dont seule la couleur change ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
 - Nommer chaque lumière en commençant par l'identifiant de son entité sans le domaine : `kitchen_light` pour `light.kitchen_light`. L'entité pilote la première lumière dont le nom commence ainsi.
+- Un ruban LED ou une lampe d'appoint devient un seul spot, posé à quelques centimètres de la surface qu'il éclaire. Un mur du côté de la caméra ne se voit que de dos : un ruban qui l'éclaire (derrière une TV, sous une étagère) se tourne plutôt vers l'intérieur de la pièce.
 
 ## 2. Optimiser le modèle
 
@@ -16,9 +17,10 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
 pnpm optimize-model mon-modele.glb src/configs/<id>/<Nom>.glb
 ```
 
-Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets.
+Le script compresse les textures et la géométrie, et fusionne les objets qui partagent un matériau : le modèle optimisé compte un draw call par matériau ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Les noms des matériaux, des lumières et de la caméra sont conservés, mais pas ceux des objets. La géométrie est simplifiée avec un écart d'au moins 2 mm, invisible à la distance de la caméra : les petits objets trop détaillés perdent l'essentiel de leurs triangles ([ADR 0048](../adr/0048-simplifier-a-2-mm.md)).
 
 - Lancer le script sur l'export Blender, jamais sur un modèle déjà optimisé : les simplifications se cumuleraient.
+- Un objet fait de bandes de faces ouvertes ne se simplifie pas, quel que soit l'écart. S'il est lourd, le remplacer par une forme simple : c'est le cas des chaises de la salle à manger, sur la démo comme sur l'appartement.
 - Pour réduire le nombre de draw calls, réutiliser les matériaux dans Blender plutôt que d'en créer un par objet.
 
 Le modèle doit respecter le [budget de performance](../adr/0009-budget-performance-tablette.md) : 2 Mo au plus, et 150 draw calls au plus une fois chargé. `pnpm test` vérifie le poids et le nombre de primitives de chaque modèle présent dans `src/configs/`.
@@ -40,10 +42,12 @@ Blender 5 calcule la lumière du ciel et du soleil, avec ses rebonds, dans deux 
 Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`. Il exporte :
 
 - `ConfigName` : le nom affiché dans le menu « Configuration » ;
-- `HouseConfig` : le modèle, ses cartes de lumière (`lightMaps`), la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md)) ;
+- `HouseConfig` : le modèle, ses cartes de lumière (`lightMaps`), la caméra, et les pièces avec leur position 3D et leurs éléments (`light`, `climate`, `temperature`, `shutter`, `desktop`, [`printer3d`](imprimante-3d.md), [`vacuum`](aspirateur-robot.md), [`battery` et `smoke`](appareils-sur-pile.md)) ;
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
+
+Un élément `light` peut désigner un groupe de lumières Home Assistant : chaque membre pilote alors sa lumière du modèle, nommée d'après lui, et toutes suivent l'état du groupe ([ADR 0049](../adr/0049-groupes-de-lumieres.md)).
 
 ## 5. Activer la maison
 

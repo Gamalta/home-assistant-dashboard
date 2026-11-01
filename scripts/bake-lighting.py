@@ -35,7 +35,8 @@ log('objets', len(meshes), 'faces', sum(len(o.data.polygons) for o in meshes))
 for o in meshes:
     uvs = o.data.uv_layers
     if not uvs:
-        uvs.new(name='UVMap')
+        # Des UV nulles : celles par défaut de Blender découpent chaque face.
+        uvs.new(name='UVMap').data.foreach_set('uv', [0.0] * 2 * len(o.data.loops))
     uvs[0].active_render = True
     uvs.active = uvs.new(name='lightmap')
 bpy.ops.object.select_all(action='DESELECT')

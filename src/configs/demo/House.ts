@@ -129,6 +129,17 @@ export const HouseConfig: HouseConfigType = {
           powerEntityId: 'sensor.tv_outlet_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
         },
+        {
+          type: 'vacuum',
+          prefix: 'dreame_demo',
+          position: {x: 0.6, y: 0.3, z: 4.6},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur du séjour',
+          batteryEntityId: 'sensor.living_room_button_battery',
+          position: {x: 1.4, y: 1.1, z: 1.6},
+        },
       ],
     },
     {
@@ -157,6 +168,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
           position: {x: -2.5, y: 1.3, z: -4.2},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la cuisine',
+          batteryEntityId: 'sensor.kitchen_button_battery',
+          position: {x: 1.4, y: 1.1, z: -5},
         },
       ],
     },
@@ -193,6 +210,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
           position: {x: -5.6, y: 1.3, z: 4},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la chambre',
+          batteryEntityId: 'sensor.bedroom_button_battery',
+          position: {x: -3.9, y: 1.1, z: 0.9},
         },
       ],
     },
@@ -325,7 +348,18 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.corridor_light',
+          lightEntityId: 'light.corridor_spots',
+        },
+        {
+          type: 'smoke',
+          smokeEntityId: 'binary_sensor.hallway_smoke_detector_smoke',
+          heatEntityId: 'binary_sensor.hallway_smoke_detector_heat',
+          batteryEntityId: 'sensor.hallway_smoke_detector_battery',
+          batteryLowEntityId:
+            'binary_sensor.hallway_smoke_detector_battery_low',
+          tamperEntityId: 'binary_sensor.hallway_smoke_detector_tamper',
+          testEntityId: 'button.hallway_smoke_detector_test',
+          position: {x: 2.9, y: 2.4, z: -1.1},
         },
       ],
     },

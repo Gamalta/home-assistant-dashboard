@@ -3,40 +3,42 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import {printSpeedLabel} from '../../../utils/entity/printer3d';
 
-type PrintSpeedProps = {
+type SelectToggleProps = {
   entityId: `select.${string}`;
+  label: string;
+  optionLabel: (option: string) => string;
 };
 
-export function PrintSpeed(props: PrintSpeedProps) {
-  const {entityId} = props;
-  const speed = useEntity(entityId, {returnNullIfNotFound: true});
+export function SelectToggle(props: SelectToggleProps) {
+  const {entityId, label, optionLabel} = props;
+  const select = useEntity(entityId, {returnNullIfNotFound: true});
 
-  // ha-bambulab ne la rend disponible que pendant l'impression, hors pause.
-  if (!speed || speed.state === 'unavailable') return null;
+  // L'intégration la rend indisponible quand elle ne s'applique pas
+  // (vitesse hors impression, puissance pendant un lavage seul).
+  if (!select || select.state === 'unavailable') return null;
   return (
     <Stack spacing={0.5}>
       <Typography variant="body2" color="textSecondary">
-        Vitesse
+        {label}
       </Typography>
       <ToggleButtonGroup
         exclusive
         fullWidth
         size="small"
-        aria-label="Vitesse d'impression"
-        value={speed.state}
+        aria-label={label}
+        value={select.state}
         onChange={(_, option: string | null) =>
-          option && speed.service.selectOption({serviceData: {option}})
+          option && select.service.selectOption({serviceData: {option}})
         }
       >
-        {(speed.attributes.options ?? []).map(option => (
+        {(select.attributes.options ?? []).map(option => (
           <ToggleButton
             key={option}
             value={option}
             sx={{px: 0.5, textTransform: 'none'}}
           >
-            {printSpeedLabel(option)}
+            {optionLabel(option)}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
