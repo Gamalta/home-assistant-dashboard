@@ -138,6 +138,15 @@ export const entities: HassEntities = {
       hs_color: [240, 100],
     },
   }),
+  ...createLight('light.living_room_led_strip', {
+    state: 'off',
+    attributes: {
+      friendly_name: 'Ruban LED de la TV',
+      icon: 'hue:lightstrip',
+      color_mode: 'hs',
+      hs_color: [28, 64],
+    },
+  }),
   ...createLight('light.kitchen_light', {
     state: 'off',
     attributes: {

@@ -119,6 +119,11 @@ export const HouseConfig: HouseConfigType = {
           position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
+          type: 'light',
+          lightEntityId: 'light.living_room_led_strip',
+          position: {x: -3.3, y: 1.4, z: 4.1},
+        },
+        {
           type: 'shutter',
           shutterEntityId: 'cover.living_room_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},

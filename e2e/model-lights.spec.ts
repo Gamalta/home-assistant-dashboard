@@ -1,3 +1,4 @@
+import type {Page} from '@playwright/test';
 import {expect, test, waitForScene} from './fixtures';
 
 declare global {
@@ -6,9 +7,9 @@ declare global {
   }
 }
 
-test('un groupe allume la lumière 3D de chacun de ses membres', async ({
-  page,
-}) => {
+const spotLights = (page: Page) => page.evaluate(() => window.__spotLights);
+
+test.beforeEach(async ({page}) => {
   // Nombre de spots visibles, lu dans le dernier shader compilé par three.
   await page.addInitScript(() => {
     const {shaderSource} = WebGL2RenderingContext.prototype;
@@ -20,12 +21,25 @@ test('un groupe allume la lumière 3D de chacun de ses membres', async ({
   });
   await page.goto('/');
   await waitForScene(page);
-  const spotLights = () => page.evaluate(() => window.__spotLights);
-  const before = await spotLights();
+});
+
+test('un groupe allume la lumière 3D de chacun de ses membres', async ({
+  page,
+}) => {
+  const before = await spotLights(page);
 
   // Le groupe du couloir réunit ses deux spots.
   await page.evaluate(() =>
     window.__mockSetState?.('light.corridor_spots', 'on'),
   );
-  await expect.poll(spotLights).toBe(before + 2);
+  await expect.poll(() => spotLights(page)).toBe(before + 2);
+});
+
+test('un ruban LED allume ses quatre spots', async ({page}) => {
+  const before = await spotLights(page);
+
+  await page.evaluate(() =>
+    window.__mockSetState?.('light.living_room_led_strip', 'on'),
+  );
+  await expect.poll(() => spotLights(page)).toBe(before + 4);
 });

@@ -8,8 +8,9 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
 - Nommer les matériaux selon le rôle qu'ils jouent dans les effets ([ADR 0004](../adr/0004-scenematerials-proprietaire-unique.md)) :
   - `room_*` pour les sols, colorés par la carte des températures ;
   - `wall_*`, `white` ou `yellowbrt` pour les murs, qui s'effacent près de la caméra. Les murs sont des couleurs unies : là où ils s'effacent, ils partagent un même matériau dont seule la couleur change ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
-- Nommer chaque lumière en commençant par l'identifiant de son entité sans le domaine : `kitchen_light` pour `light.kitchen_light`. L'entité pilote la première lumière dont le nom commence ainsi.
-- Un ruban LED ou une lampe d'appoint devient un seul spot, posé à quelques centimètres de la surface qu'il éclaire. Un mur du côté de la caméra ne se voit que de dos : un ruban qui l'éclaire (derrière une TV, sous une étagère) se tourne plutôt vers l'intérieur de la pièce.
+- Nommer chaque lumière en commençant par l'identifiant de son entité sans le domaine : `kitchen_light` pour `light.kitchen_light`. L'entité pilote la première lumière dont le nom commence ainsi, et ses copies (`kitchen_light.001`…).
+- Une lampe d'appoint devient un spot, posé à quelques centimètres de la surface qu'il éclaire. Un ruban LED devient quatre spots répartis sur sa longueur : le spot nommé d'après l'entité et trois copies (Maj+D), au centre de quatre tronçons égaux ([ADR 0052](../adr/0052-rubans-led-en-plusieurs-spots.md)). Un Ambilight en compte un par côté de la TV, derrière l'écran, tourné vers le mur.
+- Un mur du côté de la caméra ne se voit que de dos : un ruban qui l'éclaire, sous une étagère par exemple, se tourne plutôt vers l'intérieur de la pièce. Le halo d'un Ambilight sur ce mur ne se voit qu'en tournant la vue vers la TV.
 
 ## 2. Optimiser le modèle
 
