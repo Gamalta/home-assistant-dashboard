@@ -24,16 +24,17 @@ const livingRoomLight = (page: Page) =>
     .first()
     .locator('xpath=../preceding-sibling::div[1]//button');
 
-// Un appui long sur le bouton d'une lumière ouvre sa modale.
+// Un appui long sur le bouton d'une lumière ouvre sa modale. On ne relâche
+// qu'une fois la modale ouverte : sous charge, un relâchement traité avant le
+// minuteur compterait comme un appui court.
 async function openLight(page: Page, light: Locator) {
   const box = (await light.boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
-  await page.waitForTimeout(500);
+  const title = page.getByRole('heading', {name: 'Lumière', exact: true});
+  await expect(title).toBeVisible();
   await page.mouse.up();
-  return modalContent(
-    page.getByRole('heading', {name: 'Lumière', exact: true}),
-  );
+  return modalContent(title);
 }
 
 // Variateur de l'entrée, éteint et sans lumière dans le modèle 3D : l'allumer
