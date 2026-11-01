@@ -224,10 +224,11 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.corridor_light', {
+  ...createLight('light.corridor_spots', {
     state: 'off',
     attributes: {
       friendly_name: 'Couloir',
+      entity_id: ['light.corridor_light', 'light.corridor_light_2'],
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],

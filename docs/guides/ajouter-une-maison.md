@@ -46,6 +46,8 @@ Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
 
+Un élément `light` peut désigner un groupe de lumières Home Assistant : chaque membre pilote alors sa lumière du modèle, nommée d'après lui, et toutes suivent l'état du groupe ([ADR 0049](../adr/0049-groupes-de-lumieres.md)).
+
 ## 5. Activer la maison
 
 Ajouter `<id>` à `VITE_HOUSE_CONFIGS` dans `.env`, par exemple `["demo", "<id>"]`. La première maison de la liste est celle qui s'ouvre par défaut. Le dock de la barre latérale permet ensuite de passer de l'une à l'autre.

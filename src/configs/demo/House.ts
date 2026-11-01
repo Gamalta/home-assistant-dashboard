@@ -343,7 +343,7 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.corridor_light',
+          lightEntityId: 'light.corridor_spots',
         },
         {
           type: 'smoke',
