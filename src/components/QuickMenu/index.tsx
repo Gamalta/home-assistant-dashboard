@@ -16,6 +16,7 @@ import {MortgageModal} from '../Modal/MortgageModal';
 import {ShoppingListModal} from '../Modal/ShoppingListModal';
 import {HeatmapAction} from './HeatmapAction';
 import {ScenarioAction} from './ScenarioAction';
+import {VacuumMapAction} from './VacuumMapAction';
 
 export function QuickMenu() {
   const {houseConfig} = useHouseContext();
@@ -35,6 +36,9 @@ export function QuickMenu() {
   const energy = houseConfig?.sideBar.energy;
   const mortgages = houseConfig?.sideBar.mortgages ?? [];
   const shoppingListEntityId = houseConfig?.sideBar.shoppingListEntityId;
+  const vacuum = houseConfig?.house.rooms.some(room =>
+    room.items?.some(item => item.type === 'vacuum'),
+  );
 
   return (
     <>
@@ -71,6 +75,7 @@ export function QuickMenu() {
         }}
       >
         <HeatmapAction onToggle={() => setOpen(false)} />
+        {vacuum && <VacuumMapAction onToggle={() => setOpen(false)} />}
         {scenarios.map(scriptEntityId => (
           <ScenarioAction
             key={scriptEntityId}
