@@ -9,7 +9,7 @@ const switchButton = (page: Page, name: string) =>
 const RED = 'rgb(211, 47, 47)';
 
 test.beforeEach(async ({page}) => {
-  // Le thème suit l'heure par défaut : on fixe le clair pour la couleur d'alerte.
+  // Le thème est sombre par défaut : on fixe le clair pour la couleur d'alerte.
   await page.addInitScript(() => localStorage.setItem('theme', 'light'));
   await page.goto('/');
   await waitForScene(page);

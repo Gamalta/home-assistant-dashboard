@@ -96,6 +96,7 @@ test('simule une heure pour essayer le jour et la nuit', async ({page}) => {
   const [simulated, label, theme] = day
     ? [22, 'Heure 22:00', /dark/]
     : [12, 'Heure 12:00', /light/];
+  await page.addInitScript(() => localStorage.setItem('theme', 'auto'));
   await page.goto('/');
   const trial = await openLightingTrial(page);
   await expect(trial.getByText('Heure réelle')).toBeVisible();
