@@ -6,7 +6,11 @@ import {BulbSultanIcon} from '../components/Icons/BulbSultanIcon';
 import Icon, {IconProps} from '@mui/material/Icon';
 import {BulbCableIcon} from '../components/Icons/BulbCandleIcon';
 import {LightStripIcon} from '../components/Icons/LightStripIcon';
-import {BulbSpotHungIcon} from '../components/Icons/BulbSpotHungIcon';
+import {BulbSpotIcon} from '../components/Icons/BulbSpotIcon';
+import {BulbFilamentIcon} from '../components/Icons/BulbFilamentIcon';
+import {BulbGroupSpotIcon} from '../components/Icons/BulbGroupSpotIcon';
+import { BulbGroupFilamentIcon } from '../components/Icons/BulbGroupFilamentIcon';
+import { BulbFilamentCandleIcon } from '../components/Icons/BulbFilamentCandleIcon';
 
 export function useIcon(
   icon?: string | null,
@@ -18,10 +22,18 @@ export function useIcon(
       switch (icon) {
         case 'hue:bulb-candle':
           return <BulbCableIcon />;
+        case 'hue:bulb-filament':
+          return <BulbFilamentIcon />;
+        case 'hue:bulb-group-filament':
+          return <BulbGroupFilamentIcon />;
+        case 'hue:bulb-filament-candle':
+          return <BulbFilamentCandleIcon />;
         case 'hue:bulb-sultan':
           return <BulbSultanIcon />;
-        case 'hue:bulb-spot-hung':
-          return <BulbSpotHungIcon />;
+        case 'hue:bulb-spot':
+          return <BulbSpotIcon />;
+        case 'hue:bulb-group-spot':
+          return <BulbGroupSpotIcon />;
         case 'hue:iris':
           return <IrisIcon />;
         case 'hue:play-bar-v':
