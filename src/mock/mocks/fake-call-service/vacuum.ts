@@ -1,7 +1,19 @@
+import type {HassEntities} from 'home-assistant-js-websocket';
+import {vacuumEntityIds} from '../../../utils/entity/vacuum';
 import type {ServiceArgs} from './types';
 
-let returningTimeout: NodeJS.Timeout;
+let dockingTimeout: NodeJS.Timeout;
 
+// État de l'entité et état détaillé (`vacuum_state`) après chaque service.
+const VACUUM_STATES: Record<string, [state: string, vacuumState: string]> = {
+  start: ['cleaning', 'sweeping_and_mopping'],
+  vacuum_clean_segment: ['cleaning', 'sweeping_and_mopping'],
+  pause: ['paused', 'paused'],
+  stop: ['idle', 'idle'],
+  returnToBase: ['returning', 'returning'],
+};
+
+// Reçoit aussi `dreame_vacuum.vacuum_clean_segment`, absent des types de @hakit/core.
 export function vacuumUpdates({
   now,
   target,
@@ -9,83 +21,61 @@ export function vacuumUpdates({
   serviceData,
   setEntities,
 }: ServiceArgs<'vacuum'>) {
-  const dates = {
-    last_changed: now,
-    last_updated: now,
-  };
-  if (typeof target !== 'string') return true;
+  const states = VACUUM_STATES[service as string];
+  if (typeof target !== 'string' || !states) return true;
 
-  if (returningTimeout) {
-    clearTimeout(returningTimeout);
-  }
-  switch (service) {
-    case 'returnToBase':
-      returningTimeout = setTimeout(() => {
-        setEntities(entities => ({
-          ...entities,
-          [target]: {
-            ...entities[target],
-            ...dates,
-            attributes: {
-              ...entities[target].attributes,
-              status: 'Docked',
-            },
-            state: 'docked',
-          },
-        }));
-      }, 5000);
-      return setEntities(entities => ({
-        ...entities,
-        [target]: {
-          ...entities[target],
-          ...dates,
-          attributes: {
-            ...entities[target].attributes,
-            status: 'Returning to base',
-          },
-          state: 'returning',
+  const {map} = vacuumEntityIds(target.replace('vacuum.', ''));
+  const dates = {last_changed: now, last_updated: now};
+  const update = (
+    entities: HassEntities,
+    [state, vacuumState]: [string, string],
+  ) => ({
+    ...entities,
+    [target]: {
+      ...entities[target],
+      ...dates,
+      state,
+      attributes: {
+        ...entities[target].attributes,
+        vacuum_state: vacuumState,
+        charging: state === 'docked',
+      },
+    },
+  });
+
+  clearTimeout(dockingTimeout);
+  if (service === 'returnToBase')
+    dockingTimeout = setTimeout(
+      () => setEntities(entities => update(entities, ['docked', 'charging'])),
+      5000,
+    );
+  if (service !== ('vacuum_clean_segment' as string))
+    return setEntities(entities => update(entities, states));
+
+  const {segments} = serviceData as {segments: number[]};
+  return setEntities(entities => {
+    const cleaning = update(entities, states);
+    return {
+      ...cleaning,
+      [target]: {
+        ...cleaning[target],
+        attributes: {
+          ...cleaning[target].attributes,
+          cleaning_progress: 0,
+          cleaned_area: 0,
+          cleaning_time: 0,
+          current_segment: segments[0],
         },
-      }));
-    case 'setFanSpeed':
-      return setEntities(entities => ({
-        ...entities,
-        [target]: {
-          ...entities[target],
-          attributes: {
-            ...entities[target].attributes,
-            ...serviceData,
-          },
-          ...dates,
+      },
+      [map]: {
+        ...entities[map],
+        ...dates,
+        attributes: {
+          ...entities[map].attributes,
+          active_segments: segments,
+          completed_segments: [],
         },
-      }));
-    case 'start':
-    case 'cleanSpot':
-      return setEntities(entities => ({
-        ...entities,
-        [target]: {
-          ...entities[target],
-          ...dates,
-          attributes: {
-            ...entities[target].attributes,
-            status: service === 'start' ? 'Cleaning' : 'Cleaning spot',
-          },
-          state: 'cleaning',
-        },
-      }));
-    case 'pause':
-    case 'stop':
-      return setEntities(entities => ({
-        ...entities,
-        [target]: {
-          ...entities[target],
-          ...dates,
-          attributes: {
-            ...entities[target].attributes,
-            status: service === 'pause' ? 'Paused' : 'Stopped',
-          },
-          state: 'paused',
-        },
-      }));
-  }
-  return true;
+      },
+    };
+  });
 }

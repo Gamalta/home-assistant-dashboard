@@ -97,6 +97,6 @@ Le profil CPU de la rotation attribue environ 90 % du temps à la boucle de rend
 ## Pistes produit
 
 - La barre latérale contient une carte vide sous les personnes : c'est un emplacement libre.
-- Le mock fournit déjà des scènes, automatisations, calendriers, lecteurs multimédia, aspirateurs, caméras et alarmes, qui ne sont pas encore affichés.
+- Le mock fournit déjà des scènes, automatisations, calendriers, lecteurs multimédia, caméras et alarmes, qui ne sont pas encore affichés.
 - Rien ne signale une perte de connexion à Home Assistant ou une entité indisponible à l'échelle de la maison.
 - Sur une tablette murale, il manque un mode veille (arrêt du rendu, écran assombri) et le maintien de l'écran allumé.

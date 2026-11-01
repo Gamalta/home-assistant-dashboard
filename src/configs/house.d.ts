@@ -23,6 +23,7 @@ type RoomItemConfigType =
   | DestkopConfigType
   | OutletConfigType
   | Printer3dConfigType
+  | VacuumConfigType
   | BatteryConfigType
   | SmokeConfigType;
 
@@ -83,6 +84,12 @@ type OutletConfigType = BaseItemConfigType & {
 type Printer3dConfigType = BaseItemConfigType & {
   type: 'printer3d';
   // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
+  prefix: string;
+};
+
+type VacuumConfigType = BaseItemConfigType & {
+  type: 'vacuum';
+  // Préfixe des entités dreame-vacuum, sans domaine : le nom de l'appareil.
   prefix: string;
 };
 
