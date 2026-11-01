@@ -41,8 +41,44 @@ Le nettoyage des pièces choisies appelle le service `dreame_vacuum.vacuum_clean
 
 Les étiquettes se placent au centre de chaque pièce, par les points de calibration de la carte ([ADR 0050](../adr/0050-plan-de-l-aspirateur-dessine-par-l-integration.md)). Pendant un nettoyage, le plan se recharge à chaque nouvelle carte tant que la modale est ouverte.
 
+## Plan sur le sol de la vue 3D
+
+Quand la maison a un aspirateur, le menu rapide propose « Aspirateur » : le plan de nettoyage se pose sur le sol de la scène, comme la carte des températures, qu'il remplace ([spec](../specs/plan-de-l-aspirateur-sur-le-sol.md), [ADR 0051](../adr/0051-plan-de-l-aspirateur-sur-le-sol-de-la-scene.md)). La maison devient translucide et seule l'étiquette de l'aspirateur reste. Pendant un nettoyage, le sol suit chaque nouvelle carte.
+
+### Autoriser le dashboard à lire le plan
+
+Pour envoyer l'image au GPU, le navigateur demande à Home Assistant d'autoriser l'adresse du dashboard, s'il est servi ailleurs. Dans `configuration.yaml`, puis redémarrer Home Assistant :
+
+```yaml
+http:
+  cors_allowed_origins:
+    - https://dashboard.example.com
+```
+
+L'adresse est l'origine du dashboard : protocole, nom et port, sans chemin. Sans elle, le sol reste gris et la console du navigateur affiche « Plan de l'aspirateur illisible ».
+
+### Aligner le plan sur la maison
+
+Le robot compte en millimètres, dans son propre repère. `mapAlignment` le place dans la scène :
+
+```ts
+{
+  type: 'vacuum',
+  prefix: 'dreame_demo',
+  position: {x: 0.6, y: 0.3, z: 4.6},
+  mapAlignment: {x: 0, z: 0, rotation: 0},
+},
+```
+
+- `x` et `z` : la position, dans la scène, du point (0, 0) du robot ;
+- `rotation` : la rotation du plan autour de la verticale, en degrés, dans le sens de `rotation.y` de three (anti-horaire vu de dessus).
+
+Un mètre de la scène vaut 1000 mm du robot. Sans `mapAlignment`, l'origine du robot est au centre de la scène, sans rotation.
+
+Pour le régler, choisir d'abord le quart de tour qui rend les murs du plan parallèles à ceux de la maison, puis déplacer `x` et `z` jusqu'à ce qu'ils tombent dessous.
+
 ## Démo et mock
 
 La démo place un aspirateur fictif, `dreame_demo`, dans le séjour, en train de laver le séjour après la cuisine. Ses entités sont créées par `createVacuum` (`src/mock/mocks/createVacuum.ts`) avec la même déduction d'identifiants que l'application. Ses services modifient son état simulé (`src/mock/mocks/fake-call-service/vacuum.ts`) : il rentre à sa station en cinq secondes.
 
-Son plan, `public/vacuum/demo_map.svg`, est un dessin fictif calqué sur la maison 3D de la démo, avec ses points de calibration : 40 pixels par mètre, axe vertical inversé comme chez Dreame.
+Son plan, `public/vacuum/demo_map.svg`, est un dessin fictif calqué sur la maison 3D de la démo, avec ses points de calibration : 40 pixels par mètre, axe vertical inversé comme chez Dreame. L'origine du robot y est celle de la scène : le plan se pose sur le sol sans `mapAlignment`.

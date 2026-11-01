@@ -74,7 +74,7 @@ Les alertes se testent en unitaire (`VacuumAlerts.test.tsx`) : le mock de la dé
 - [x] L'élément se configure par un seul préfixe d'entités ([ADR 0018](../adr/0018-appareil-configure-par-prefixe.md)).
 - [x] Le plan est l'image de l'intégration, et les pièces s'y placent par ses points de calibration ([ADR 0050](../adr/0050-plan-de-l-aspirateur-dessine-par-l-integration.md)).
 - [x] Les états du robot, les modes et les puissances de dreame-vacuum s'affichent en français ; une valeur inconnue s'affiche telle quelle.
-- [x] Le plan ne se charge qu'à l'ouverture de la modale.
+- [x] Le plan ne se charge qu'à l'ouverture de la modale, ou quand il est posé sur le sol de la vue 3D ([spec](plan-de-l-aspirateur-sur-le-sol.md)).
 - [x] La démo et le mock contiennent un aspirateur fictif (`dreame_demo`) dont les boutons, les pièces, le mode et la puissance modifient l'état simulé.
 - [ ] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : le bouton est un élément HTML, sans draw call ni programme de plus. Mesure `pnpm bench --compare` à joindre à la PR.
 

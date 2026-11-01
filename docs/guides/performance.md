@@ -9,7 +9,7 @@ Les seuils à respecter sont ceux de l'[ADR 0009](../adr/0009-budget-performance
 ```sh
 pnpm bench                          # demo, et apartment si le sous-module est présent
 pnpm bench --houses demo            # une seule maison
-pnpm bench --options defaut,chaleur # parmi defaut, ombres et chaleur
+pnpm bench --options defaut,chaleur # parmi defaut, ombres, chaleur et aspirateur
 pnpm bench --cpu 4                  # CPU bridé ×4 pendant les mesures
 pnpm bench --url http://localhost:4173/  # un build déjà servi, avec le mock
 pnpm bench --ci                     # rendu logiciel SwiftShader, comme les E2E
