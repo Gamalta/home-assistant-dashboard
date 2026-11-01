@@ -92,6 +92,7 @@ export function ShutterModal(props: DesktopModalProps) {
         <Stack
           sx={{
             position: 'relative',
+            alignSelf: {xs: 'center', sm: 'auto'},
             width: '200px',
             height: '197px',
             pl: '11px',

@@ -27,7 +27,13 @@ const canvasShot = (page: Page) =>
 test('redessine la scène après un changement d’option', async ({page}) => {
   await page.goto('/');
   await waitForScene(page);
-  // Attend la fin du fondu d'allumage des lumières.
+  // À l'ouverture, aucun mur n'est assez près de la caméra pour s'effacer
+  // (ADR 0047). Chaque cran de molette rapproche de 5 % : vingt crans
+  // ramènent la caméra à la distance de l'ancienne vue à 75°.
+  const box = (await page.locator('canvas').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  for (let i = 0; i < 20; i++) await page.mouse.wheel(0, -100);
+  // Attend la fin du zoom et du fondu d'allumage des lumières.
   let before = await canvasShot(page);
   await expect
     .poll(
@@ -63,6 +69,14 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
   await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });
 
+// Elle ne s'affiche plus que depuis le menu rapide (ADR 0041).
+test('ne propose plus la carte des températures', async ({page}) => {
+  await page.goto('/');
+  await openSystemModal(page);
+  await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
+  await expect(page.getByText('Carte des températures')).toHaveCount(0);
+});
+
 // Le panneau d'essai se pose sur la vue 3D, à la place de la modale.
 async function openLightingTrial(page: Page) {
   await openSystemModal(page);
@@ -82,6 +96,7 @@ test('simule une heure pour essayer le jour et la nuit', async ({page}) => {
   const [simulated, label, theme] = day
     ? [22, 'Heure 22:00', /dark/]
     : [12, 'Heure 12:00', /light/];
+  await page.addInitScript(() => localStorage.setItem('theme', 'auto'));
   await page.goto('/');
   const trial = await openLightingTrial(page);
   await expect(trial.getByText('Heure réelle')).toBeVisible();

@@ -6,6 +6,7 @@ import {vacuumUpdates} from './vacuum';
 import {alarmControlPanelUpdates} from './alarmControlPanel';
 import {buttonUpdates} from './button';
 import {selectUpdates} from './select';
+import {numberUpdates} from './number';
 
 export default {
   scene: sceneUpdates,
@@ -14,8 +15,10 @@ export default {
   mediaPlayer: mediaPlayerUpdates,
   media_player: mediaPlayerUpdates,
   vacuum: vacuumUpdates,
+  dreame_vacuum: vacuumUpdates,
   alarmControlPanel: alarmControlPanelUpdates,
   alarm_control_panel: alarmControlPanelUpdates,
   button: buttonUpdates,
   select: selectUpdates,
+  number: numberUpdates,
 };

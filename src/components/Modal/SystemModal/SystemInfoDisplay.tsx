@@ -11,10 +11,16 @@ type SystemInfoDisplayProps = {
   label: string;
   sensor?: FilterByDomain<EntityName, 'sensor' | 'binary_sensor'>;
   formatEntity?: (entity: HassEntityWithService<'sensor'>) => string;
+  isWarning?: (entity: HassEntityWithService<'sensor'>) => boolean;
 };
 
 export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
-  const {label, sensor, formatEntity = entity => entity.state} = props;
+  const {
+    label,
+    sensor,
+    formatEntity = entity => entity.state,
+    isWarning,
+  } = props;
 
   const entity = useEntity(sensor ?? 'unknown', {returnNullIfNotFound: true});
   if (!entity) return null;
@@ -25,7 +31,9 @@ export function SystemInfoDisplay(props: SystemInfoDisplayProps) {
       sx={{justifyContent: 'space-between', alignItems: 'center'}}
     >
       <Typography>{label}</Typography>
-      <Typography color="textSecondary">{formatEntity(entity)}</Typography>
+      <Typography color={isWarning?.(entity) ? 'error' : 'textSecondary'}>
+        {formatEntity(entity)}
+      </Typography>
     </Stack>
   );
 }

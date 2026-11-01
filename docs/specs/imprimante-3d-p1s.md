@@ -72,6 +72,8 @@ La vitesse n'est proposée que lorsque l'intégration la rend disponible, c'est-
 
 Les trois alertes se testent en unitaire (`PrinterAlerts.test.tsx`) : le mock de la démo n'a pas d'imprimante en erreur.
 
+Le pilotage, la pause et l'arrêt ne dépendent que du bouton et de la modale : ils se testent en unitaire sur le mock (`RoomPrinter3d.test.tsx`). Seul le suivi depuis la scène est un test E2E.
+
 ## Critères d'acceptation
 
 - [x] L'élément se configure par un seul préfixe d'entités ([ADR 0018](../adr/0018-appareil-configure-par-prefixe.md)).

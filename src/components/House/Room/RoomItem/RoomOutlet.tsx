@@ -5,16 +5,19 @@ import {motion} from 'framer-motion';
 import {useState} from 'react';
 import type {OutletConfigType} from '../../../../configs/house';
 import {useLongPress} from '../../../../hooks/useLongPress';
-import {parsePower} from '../../../../utils/entity/outlet';
+import {outletStateLabel, parsePower} from '../../../../utils/entity/outlet';
+import {Tile} from '../../../Mobile/Tile';
+import type {ItemVariant} from '.';
 import {OutletModal} from '../../../Modal/OutletModal';
 
 type RoomOutletProps = {
   id: string;
   outletConfig: OutletConfigType;
+  variant: ItemVariant;
 };
 
 export function RoomOutlet(props: RoomOutletProps) {
-  const {id, outletConfig} = props;
+  const {id, outletConfig, variant} = props;
   const [outletModal, setOutletModal] = useState(false);
 
   const outlet = useEntity(outletConfig.switchEntityId, {
@@ -38,23 +41,35 @@ export function RoomOutlet(props: RoomOutletProps) {
   return (
     <>
       <motion.div layoutId={`${id}-outlet`}>
-        <Button
-          variant="contained"
-          color="secondary"
-          aria-label={name}
-          aria-pressed={on}
-          sx={{
-            height: '100%',
-            minWidth: 0,
-            px: '6px',
-            ...(on && {color: 'primary.main'}),
-            cursor: unavailable ? 'not-allowed' : 'pointer',
-            opacity: unavailable ? 0.5 : 1,
-          }}
-          {...(!unavailable && outletLongPress)}
-        >
-          <PowerIcon />
-        </Button>
+        {variant === 'tile' ? (
+          <Tile
+            icon={<PowerIcon />}
+            name={name}
+            state={outletStateLabel(outlet.state, power)}
+            active={on}
+            aria-pressed={on}
+            unavailable={unavailable}
+            {...(!unavailable && outletLongPress)}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            aria-label={name}
+            aria-pressed={on}
+            sx={{
+              height: '100%',
+              minWidth: 0,
+              px: '6px',
+              ...(on && {color: 'primary.main'}),
+              cursor: unavailable ? 'not-allowed' : 'pointer',
+              opacity: unavailable ? 0.5 : 1,
+            }}
+            {...(!unavailable && outletLongPress)}
+          >
+            <PowerIcon />
+          </Button>
+        )}
       </motion.div>
       <OutletModal
         id={`${id}-outlet`}

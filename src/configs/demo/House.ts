@@ -1,12 +1,29 @@
 import {HouseConfigType} from '../house';
 import {SideBarConfigType} from '../sidebar';
 import Demo from './Demo.glb?url';
+import DemoSky from './Demo-sky.webp?url';
+import DemoSun from './Demo-sun.webp?url';
 
 export const ConfigName = 'Démo';
 
 export const SideBarConfig: SideBarConfigType = {
   weatherEntityId: 'weather.home',
   pets: ['Tom', 'Jerry'],
+  alerts: {
+    smokeEntityIds: [
+      'binary_sensor.hallway_smoke_detector_smoke',
+      'binary_sensor.hallway_smoke_detector_heat',
+    ],
+    batteryLowEntityIds: ['binary_sensor.hallway_smoke_detector_battery_low'],
+    batteryLevelEntityIds: [
+      'sensor.kitchen_button_battery',
+      'sensor.bedroom_button_battery',
+      'sensor.cellar_sensor_battery',
+    ],
+    internetEntityId: 'binary_sensor.router_wan_status',
+    zigbeeEntityId: 'binary_sensor.zigbee_bridge_connection_state',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+  },
   persons: [
     {
       name: 'Juliette',
@@ -34,6 +51,14 @@ export const SideBarConfig: SideBarConfigType = {
   system: {
     uptimeEntityId: 'sensor.system_monitor_last_boot',
     powerStatusEntityId: 'binary_sensor.rpi_power_status',
+    internetEntityId: 'binary_sensor.router_wan_status',
+    lastBackupEntityId: 'sensor.backup_last_successful',
+    lastBackupAttemptEntityId: 'sensor.backup_last_attempted',
+    nextBackupEntityId: 'sensor.backup_next_scheduled',
+    backupStateEntityId: 'sensor.backup_manager_state',
+    tabletBatteryLevelEntityId: 'sensor.wall_tablet_battery_level',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+    tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
         color: 'red',
@@ -52,15 +77,32 @@ export const SideBarConfig: SideBarConfigType = {
       },
     ],
   },
-  scenarios: ['script.depart', 'script.temperature', 'script.energie'],
+  scenarios: ['script.leave_home', 'script.eco_mode'],
+  energy: {
+    powerEntityId: 'sensor.meter_apparent_power',
+    tariffPeriodEntityId: 'sensor.meter_tariff_period',
+    peakIndexEntityId: 'sensor.meter_peak_index',
+    offPeakIndexEntityId: 'sensor.meter_off_peak_index',
+    subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
+    prices: {peak: 0.27, offPeak: 0.21},
+  },
+  mortgages: [
+    'sensor.loan_main',
+    'sensor.loan_ptz',
+    'sensor.loan_action_logement',
+    'sensor.loan_works',
+  ],
+  shoppingListEntityId: 'todo.shopping_list',
   shortcuts: [
     {type: 'media', mediaPlayerEntityId: 'media_player.living_room_tv'},
     {type: 'media', mediaPlayerEntityId: 'media_player.bedroom_speaker'},
+    {type: 'trains', label: 'Vers le travail', prefix: 'sncf_paris_lyon'},
   ],
 };
 
 export const HouseConfig: HouseConfigType = {
   model: Demo,
+  lightMaps: {sky: DemoSky, sun: DemoSun},
   rooms: [
     {
       id: 'Living_room',
@@ -85,6 +127,11 @@ export const HouseConfig: HouseConfigType = {
           position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
+          type: 'light',
+          lightEntityId: 'light.living_room_led_strip',
+          position: {x: -3.3, y: 1.4, z: 4.1},
+        },
+        {
           type: 'shutter',
           shutterEntityId: 'cover.living_room_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
@@ -94,6 +141,28 @@ export const HouseConfig: HouseConfigType = {
           switchEntityId: 'switch.tv_outlet',
           powerEntityId: 'sensor.tv_outlet_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
+        },
+        {
+          type: 'light',
+          lightEntityId: 'light.living_room_strip',
+          position: {x: -3.0, y: 0.4, z: 5.6},
+        },
+        {
+          type: 'tv',
+          lightEntityId: 'light.tv_ambilight',
+          ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
+          position: {x: -3.3, y: 2.6, z: 4.0},
+        },
+        {
+          type: 'vacuum',
+          prefix: 'dreame_demo',
+          position: {x: 0.6, y: 0.3, z: 4.6},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur du séjour',
+          batteryEntityId: 'sensor.living_room_button_battery',
+          position: {x: 1.4, y: 1.1, z: 1.6},
         },
       ],
     },
@@ -117,12 +186,18 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: -0.6, y: 1.5, z: -7.2},
+          position: {x: 1.0, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: -2.5, y: 1.3, z: -4.2},
+          position: {x: -2.5, y: 0.8, z: -4.2},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la cuisine',
+          batteryEntityId: 'sensor.kitchen_button_battery',
+          position: {x: 1.4, y: 1.1, z: -5},
         },
       ],
     },
@@ -159,6 +234,12 @@ export const HouseConfig: HouseConfigType = {
           type: 'shutter',
           shutterEntityId: 'cover.bedroom_shutter',
           position: {x: -5.6, y: 1.3, z: 4},
+        },
+        {
+          type: 'battery',
+          name: 'Interrupteur de la chambre',
+          batteryEntityId: 'sensor.bedroom_button_battery',
+          position: {x: -3.9, y: 1.1, z: 0.9},
         },
       ],
     },
@@ -291,7 +372,18 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'light',
           roomDisplay: true,
-          lightEntityId: 'light.corridor_light',
+          lightEntityId: 'light.corridor_spots',
+        },
+        {
+          type: 'smoke',
+          smokeEntityId: 'binary_sensor.hallway_smoke_detector_smoke',
+          heatEntityId: 'binary_sensor.hallway_smoke_detector_heat',
+          batteryEntityId: 'sensor.hallway_smoke_detector_battery',
+          batteryLowEntityId:
+            'binary_sensor.hallway_smoke_detector_battery_low',
+          tamperEntityId: 'binary_sensor.hallway_smoke_detector_tamper',
+          testEntityId: 'button.hallway_smoke_detector_test',
+          position: {x: 2.9, y: 2.4, z: -1.1},
         },
       ],
     },

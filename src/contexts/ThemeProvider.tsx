@@ -14,13 +14,21 @@ import {theme} from '../theme/theme';
 import {useAppContext} from './AppContext';
 
 export type themeType = 'auto' | 'light' | 'dark' | 'system';
+
+export const themeOptions: {value: themeType; name: string}[] = [
+  {value: 'system', name: 'Système'},
+  {value: 'auto', name: 'Auto'},
+  {value: 'light', name: 'Clair'},
+  {value: 'dark', name: 'Sombre'},
+];
+
 type ThemeContextType = {
   themeMode: string;
   setTheme: (newTheme: themeType) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType>({
-  themeMode: 'auto',
+  themeMode: 'dark',
   setTheme: () => {},
 });
 
@@ -28,7 +36,7 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   const {children} = props;
-  const [themeMode, setThemeMode] = useState<themeType>('auto');
+  const [themeMode, setThemeMode] = useState<themeType>('dark');
   const {mode, setMode} = useColorScheme();
   const {simulatedHour} = useAppContext();
 
@@ -53,7 +61,7 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   }, [setMode, themeMode, mode, simulatedHour]);
 
   useEffect(() => {
-    const theme = (window.localStorage.getItem('theme') || 'auto') as themeType;
+    const theme = (window.localStorage.getItem('theme') || 'dark') as themeType;
     if (theme === mode) return;
     setThemeMode(theme);
     if (theme !== 'auto') setMode(theme);

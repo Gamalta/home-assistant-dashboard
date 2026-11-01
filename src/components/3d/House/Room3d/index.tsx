@@ -9,19 +9,25 @@ import {isLabelShown} from '../../../../utils/labelCategories';
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
   model: THREE.Object3D;
+  showLabels: boolean;
 };
 
 const heatmapDisplay = ['climate', 'temperature'];
 
 export function Room3d(props: RoomProps) {
-  const {room, model} = props;
+  const {room, model, showLabels} = props;
   const {configuration} = useAppContext();
 
+  // Sur une carte au sol, seuls ses éléments gardent leur étiquette.
+  const display = configuration.heatmapShader
+    ? heatmapDisplay
+    : configuration.vacuumMapShader
+      ? ['vacuum']
+      : undefined;
   const cleanedRoom = {
     ...room,
     items: (room.items ?? []).filter(
-      item =>
-        !configuration.heatmapShader || heatmapDisplay.includes(item.type),
+      item => !display || display.includes(item.type),
     ),
   };
   // Le filtre ne retire que les étiquettes : les lumières 3D restent pilotées.
@@ -34,7 +40,8 @@ export function Room3d(props: RoomProps) {
 
   return (
     <RoomProvider>
-      <Room room={labelledRoom} />
+      {/* Les lumières 3D suivent Home Assistant même sans étiquettes. */}
+      {showLabels && <Room room={labelledRoom} />}
       {cleanedRoom.items.map((item, id) => (
         <RoomItem3d key={`item-3d-${id}`} itemConfig={item} model={model} />
       ))}

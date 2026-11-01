@@ -55,6 +55,8 @@ La fiche se branche et se débranche en glissant et en fondu, le voyant change d
 
 La puissance s'affiche avec une décimale sous 10 W (« 0,8 W ») et au watt au-dessus, règle testée en unitaire (`src/utils/entity/outlet.test.ts`). Une prise sans capteur de puissance n'a ni puissance ni onglet Consommation.
 
+L'appui court, l'illustration et l'onglet Consommation ne dépendent que du bouton et de la modale : ils se testent en unitaire sur le mock (`RoomOutlet.test.tsx`). Seul l'appui long, avec les couleurs et le fondu du voyant, est un test E2E.
+
 ## Critères d'acceptation
 
 - [x] L'élément `outlet` se configure par l'entité `switch`, et en option le capteur de puissance.

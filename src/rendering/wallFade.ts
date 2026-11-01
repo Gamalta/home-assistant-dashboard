@@ -19,6 +19,8 @@ export function createWallFade(walls: Wall[]) {
   const positions: number[] = [];
   const normals: number[] = [];
   const colors: number[] = [];
+  // Second jeu d'UV, celui de l'éclairage précalculé.
+  const uv1s: number[] = [];
   const vertex = new THREE.Vector3();
   const normalMatrix = new THREE.Matrix3();
   for (const {mesh, color} of walls) {
@@ -37,6 +39,7 @@ export function createWallFade(walls: Wall[]) {
         .normalize()
         .toArray(normals, normals.length);
       color.toArray(colors, colors.length);
+      uv1s.push(attributes.uv1?.getX(v) ?? 0, attributes.uv1?.getY(v) ?? 0);
     }
   }
   const vertexCount = positions.length / 3;
@@ -47,6 +50,7 @@ export function createWallFade(walls: Wall[]) {
   );
   geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setAttribute('uv1', new THREE.Float32BufferAttribute(uv1s, 2));
   const index = new THREE.Uint32BufferAttribute(
     new Uint32Array(vertexCount),
     1,

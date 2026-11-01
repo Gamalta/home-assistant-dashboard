@@ -35,6 +35,19 @@ it('réunit les murs en coordonnées monde, avec la couleur de chacun', () => {
   expect(geometry.attributes.color.getZ(3)).toBe(1);
 });
 
+it('garde le second jeu d’UV, celui des cartes de lumière', () => {
+  const wall = createWall([0, 0, 0, 1, 0, 0, 0, 1, 0]);
+  wall.geometry.setAttribute(
+    'uv1',
+    new THREE.Float32BufferAttribute([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 2),
+  );
+
+  const {geometry} = createWallFade([{mesh: wall, color: red}]);
+
+  expect(geometry.attributes.uv1.getX(2)).toBeCloseTo(0.5);
+  expect(geometry.attributes.uv1.getY(2)).toBeCloseTo(0.6);
+});
+
 it('dessine les objets du plus loin au plus proche, chacun d’un bloc', () => {
   // Deux triangles reliés par un sommet (un objet, centré à z = 2), et un
   // triangle seul à z = 2,5, d'un autre matériau.

@@ -75,7 +75,7 @@ export function TemperatureModalContent(props: TemperatureModalContentProps) {
             ]
           : []),
       ]}
-      sx={{height: 300, width: 500}}
+      sx={{height: 300, width: {xs: '100%', sm: 500}}}
     >
       <Stack direction="row" sx={{justifyContent: 'space-between'}}>
         <Stack spacing={1}>

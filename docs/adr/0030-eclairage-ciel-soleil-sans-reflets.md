@@ -1,6 +1,6 @@
 # 0030 — Éclairer par un ciel et un soleil, sans reflets d'environnement
 
-- Statut : Proposé
+- Statut : Proposé ; ambiance et soleil remplacés par [0046](0046-eclairage-precalcule-dans-blender.md)
 - Date : 2026-10-24
 - Issue : #56
 

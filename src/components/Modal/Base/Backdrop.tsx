@@ -1,7 +1,12 @@
 import Stack from '@mui/material/Stack';
 import {motion, useIsPresent} from 'framer-motion';
 
-export function Backdrop() {
+type BackdropProps = {
+  onClick: () => void;
+};
+
+export function Backdrop(props: BackdropProps) {
+  const {onClick} = props;
   // En sortie, laisse passer les clics : on peut rouvrir aussitôt.
   const isPresent = useIsPresent();
 
@@ -9,6 +14,7 @@ export function Backdrop() {
     <Stack
       id="backdrop"
       component={motion.div}
+      onClick={onClick}
       sx={{
         position: 'absolute',
         width: '100%',
