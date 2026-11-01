@@ -289,6 +289,10 @@ test("chaque modale tient dans l'écran du téléphone", async ({page}) => {
         longPress(page, room('Séjour').getByRole('button', {name: /Prise TV/})),
     ],
     [
+      'TV',
+      () => longPress(page, room('Séjour').getByRole('button', {name: /^TV/})),
+    ],
+    [
       'Climatisation',
       () =>
         room('Séjour')

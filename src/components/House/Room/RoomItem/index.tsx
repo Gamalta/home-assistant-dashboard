@@ -8,6 +8,7 @@ import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomSmoke} from './RoomSmoke';
 import {RoomTemperature} from './RoomTemperature';
+import {RoomTv} from './RoomTv';
 import {RoomVacuum} from './RoomVacuum';
 
 type RoomItemProps = {
@@ -47,6 +48,8 @@ export function RoomItem(props: RoomItemProps) {
       return (
         <RoomPrinter3d id={id} printer3dConfig={itemConfig} variant={variant} />
       );
+    case 'tv':
+      return <RoomTv id={id} tvConfig={itemConfig} variant={variant} />;
     case 'vacuum':
       return <RoomVacuum id={id} vacuumConfig={itemConfig} variant={variant} />;
     case 'battery':

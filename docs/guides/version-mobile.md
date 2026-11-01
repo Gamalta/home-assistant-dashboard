@@ -16,8 +16,8 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 - **Choisir une pièce** : touchez sa puce, ou glissez le carrousel. La caméra vole jusqu'à elle, et seules ses étiquettes restent dans la scène ([ADR 0039](../adr/0039-vol-de-camera-vers-une-piece.md)).
 - **Carte de pièce** : dans le carrousel, toutes les cartes ont la même hauteur. Quand une pièce a plus de quatre équipements, faites défiler ses tuiles dans la carte.
 - **Tuile** : elle se comporte comme l'étiquette de la scène.
-  - Un appui court bascule une lumière ou une prise, et ouvre la modale des autres équipements.
-  - Un appui long ouvre la modale d'une lumière ou d'une prise.
+  - Un appui court bascule une lumière, une prise ou l'ambilight de la TV, et ouvre la modale des autres équipements.
+  - Un appui long ouvre la modale d'une lumière, d'une prise ou de la TV.
   - Un doigt qui glisse pour faire défiler n'appuie sur rien.
 - **Modales** : elles s'ouvrent en carte, au centre de l'écran. Touchez le fond pour les fermer.
 - **Foyer** : touchez les avatars de l'en-tête.

@@ -18,3 +18,4 @@
 | [Guide : raccourcis](guides/raccourcis.md)                 | Carrousel et scénarios de la barre latérale          |
 | [Guide : alertes](guides/alertes.md)                       | Configurer la pastille d'alertes                     |
 | [Guide : version mobile](guides/version-mobile.md)         | Piloter la maison depuis un téléphone                |
+| [Guide : bandeaux LED](guides/bandeaux-led-ambilight.md)   | Effets, bandeaux WLED, Hue et modale TV HyperHDR     |

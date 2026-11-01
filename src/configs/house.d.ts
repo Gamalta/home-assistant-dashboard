@@ -23,6 +23,7 @@ type RoomItemConfigType =
   | DestkopConfigType
   | OutletConfigType
   | Printer3dConfigType
+  | TvConfigType
   | VacuumConfigType
   | BatteryConfigType
   | SmokeConfigType;
@@ -85,6 +86,24 @@ type Printer3dConfigType = BaseItemConfigType & {
   type: 'printer3d';
   // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
   prefix: string;
+};
+
+type TvConfigType = BaseItemConfigType & {
+  type: 'tv';
+  // Lumière principale de l'instance HyperHDR de l'ambilight.
+  lightEntityId: FilterByDomain<EntityName, 'light'>;
+  ledLayout: LedLayoutType;
+};
+
+// Disposition « classique » des LED dans HyperHDR : nombre de LED par côté,
+// « Position d'entrée » et « Direction inverse ».
+type LedLayoutType = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  position?: number;
+  reverse?: boolean;
 };
 
 type VacuumConfigType = BaseItemConfigType & {
