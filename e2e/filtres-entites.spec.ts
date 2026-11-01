@@ -125,3 +125,30 @@ test('reste utilisable au doigt à 1280 × 800 sans cacher la maison', async ({
     expect(box.y).toBeGreaterThan(bar.y + bar.height);
   }
 });
+
+test.describe('téléphone', () => {
+  test.use({
+    viewport: {width: 390, height: 844},
+    hasTouch: true,
+    isMobile: true,
+  });
+
+  test('reste accessible au doigt sous l’en-tête du téléphone', async ({
+    page,
+  }) => {
+    const header = (await page.getByRole('banner').boundingBox())!;
+    const ceiling = labels(page).getByRole('button', {
+      name: /Plafonnier du séjour/,
+    });
+    await expect(ceiling).toBeVisible();
+
+    for (const name of ['Lumières', 'Climat', 'Volets']) {
+      const button = (await filter(page, name).boundingBox())!;
+      expect(button.y).toBeGreaterThanOrEqual(header.y + header.height);
+      // tap échoue si l'en-tête recouvre la puce.
+      await filter(page, name).tap();
+      await expect(filter(page, name)).toHaveAttribute('aria-pressed', 'false');
+    }
+    await expect(ceiling).toHaveCount(0);
+  });
+});

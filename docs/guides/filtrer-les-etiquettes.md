@@ -1,6 +1,6 @@
 # Filtrer les étiquettes de la vue 3D
 
-En haut de la vue 3D, une rangée de puces affiche ou masque les étiquettes par catégorie : **Lumières**, **Climat** (climatisations et thermomètres), **Volets** et **Ordinateurs**. Seules les catégories présentes dans la maison apparaissent.
+En haut de la vue 3D (sur téléphone, sous l'en-tête), une rangée de puces affiche ou masque les étiquettes par catégorie : **Lumières**, **Climat** (climatisations et thermomètres), **Volets** et **Ordinateurs**. Seules les catégories présentes dans la maison apparaissent.
 
 - **Toucher une puce** masque ses étiquettes ; la toucher à nouveau les réaffiche. Une icône ambre signifie « affiché », une icône grise « masqué ».
 - **Le nom de la catégorie** s'affiche au toucher, dans une infobulle.

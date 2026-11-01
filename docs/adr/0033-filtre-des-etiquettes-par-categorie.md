@@ -52,6 +52,7 @@ Les colonnes « Avant » et « Après, tout affiché » ne diffèrent que par le
 
 - Le budget de l'[ADR 0009](0009-budget-performance-tablette.md) est respecté, et masquer des étiquettes allège chaque image en mouvement.
 - Les puces occupent 148 × 52 px, à 16 px du haut de la vue 3D. Sur la démo, aucune étiquette n'y passe au repos.
+- Sur téléphone, l'en-tête de la version mobile couvre le haut de la vue 3D : la rangée descend sous lui, à la hauteur du menu rapide (76 px sous la zone sûre).
 - Une branche qui ajoute un type n'a qu'une ligne à écrire, et rien ne casse si elle l'oublie.
 - Les clés des étiquettes d'une pièce sont des index : masquer une catégorie peut remonter les étiquettes voisines de la même pièce. Le coût est compris dans les mesures ci-dessus.
 - En mode carte des températures, les puces des autres catégories restent visibles mais sans effet, puisque ce mode n'affiche déjà que le climat.

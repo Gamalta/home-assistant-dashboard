@@ -51,6 +51,13 @@ Choisir d'un appui quelles catégories d'étiquettes la vue 3D affiche, et retro
 - **Quand** la vue 3D s'affiche
 - **Alors** les puces forment une rangée courte en haut de la vue 3D, chacune d'au moins 40 × 40 px, et aucune étiquette ne passe dessous
 
+### Scénario : reste accessible au doigt sous l'en-tête du téléphone
+
+- **Étant donné** la version mobile (390 × 844), dont l'en-tête est posé sur la vue 3D
+- **Quand** l'utilisateur touche chaque puce
+- **Alors** la rangée passe sous l'en-tête, à la hauteur du menu rapide, chaque appui atteint sa puce
+- **Et** les étiquettes masquées disparaissent de la pièce affichée
+
 ## Critères d'acceptation
 
 - [x] Une puce par catégorie présente dans la maison : la démo, sans ordinateur, n'en affiche que trois.

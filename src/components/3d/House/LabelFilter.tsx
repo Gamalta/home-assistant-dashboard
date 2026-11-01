@@ -29,7 +29,8 @@ export function LabelFilter(props: LabelFilterProps) {
       direction="row"
       sx={{
         position: 'absolute',
-        top: theme => theme.spacing(2),
+        // Sur téléphone, sous l'en-tête, à la hauteur du menu rapide.
+        top: {xs: 'calc(env(safe-area-inset-top) + 76px)', sm: '16px'},
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 1,
