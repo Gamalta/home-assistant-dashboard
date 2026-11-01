@@ -91,7 +91,12 @@ type VacuumConfigType = BaseItemConfigType & {
   type: 'vacuum';
   // Préfixe des entités dreame-vacuum, sans domaine : le nom de l'appareil.
   prefix: string;
+  mapAlignment?: MapAlignmentType;
 };
+
+// Origine du plan du robot dans la scène, et rotation du plan autour de la
+// verticale en degrés, comme `rotation.y` de three.
+type MapAlignmentType = {x: number; z: number; rotation: number};
 
 type BatteryConfigType = BaseItemConfigType & {
   type: 'battery';

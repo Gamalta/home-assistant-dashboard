@@ -23,6 +23,7 @@ const SCENARIOS: Record<string, GraphicsOptions> = {
   defaut: {},
   ombres: {shadows: true},
   chaleur: {heatmapShader: true},
+  aspirateur: {vacuumMapShader: true},
 };
 const VIEWPORT = {width: 1280, height: 800};
 

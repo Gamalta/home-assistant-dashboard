@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {
   cleaningModeLabel,
+  floorToMapUv,
   formatCleaningTime,
   isCleaningActive,
   suctionLevelLabel,
@@ -84,5 +85,32 @@ describe('toMapPixel', () => {
       {vacuum: {x: 0, y: 1000}, map: {x: 150, y: 100}},
     ];
     expect(toMapPixel({x: 2000, y: 1000}, rotated)).toEqual({x: 150, y: 200});
+  });
+});
+
+describe('floorToMapUv', () => {
+  const calibration = [
+    {vacuum: {x: 0, y: 0}, map: {x: 310, y: 300}},
+    {vacuum: {x: 1000, y: 0}, map: {x: 350, y: 300}},
+    {vacuum: {x: 0, y: 1000}, map: {x: 310, y: 260}},
+  ];
+  const size = {width: 640, height: 548};
+  const apply = (uv: ReturnType<typeof floorToMapUv>, x: number, z: number) =>
+    uv.map(([a, b, c]) => a * x + b * z + c);
+
+  it('pose le centre du séjour de la démo sous le séjour de la scène', () => {
+    const [u, v] = apply(floorToMapUv(calibration, size), -1.3, 2.6);
+
+    expect(u).toBeCloseTo(258 / 640);
+    expect(v).toBeCloseTo(404 / 548);
+  });
+
+  it('suit l’origine et la rotation du plan dans la scène', () => {
+    const uv = floorToMapUv(calibration, size, {x: 1, z: 2, rotation: 90});
+
+    // Le point (1000, 0) du robot, tourné d'un quart de tour autour de (1, 2).
+    const [u, v] = apply(uv, 1, 1);
+    expect(u).toBeCloseTo(350 / 640);
+    expect(v).toBeCloseTo(300 / 548);
   });
 });

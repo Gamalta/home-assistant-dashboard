@@ -49,6 +49,7 @@ export function HouseScene(props: HouseSceneProps) {
   const graphics = [
     configuration.hideWallsShader,
     configuration.heatmapShader,
+    configuration.vacuumMapShader,
     configuration.shadows,
   ].join();
   const [compiled, setCompiled] = useState<string>();
@@ -113,6 +114,7 @@ export function HouseScene(props: HouseSceneProps) {
             backend={backend}
             hideWalls={configuration.hideWallsShader}
             heatmap={configuration.heatmapShader}
+            vacuumMap={configuration.vacuumMapShader}
             rooms={rooms}
             lightMaps={lightMaps}
           />

@@ -1,3 +1,5 @@
+import type {MapAlignmentType} from '../../configs/house';
+
 // Entités créées par l'intégration dreame-vacuum, nommées `<domaine>.<préfixe>_<clé>`,
 // où le préfixe est le nom de l'appareil.
 export function vacuumEntityIds(prefix: string) {
@@ -99,4 +101,41 @@ export function toMapPixel(point: Point, calibration: CalibrationPoint[]) {
     x: p0.map.x + s * (p1.map.x - p0.map.x) + t * (p2.map.x - p0.map.x),
     y: p0.map.y + s * (p1.map.y - p0.map.y) + t * (p2.map.y - p0.map.y),
   };
+}
+
+// Celui de la démo : l'origine du robot au centre de la scène.
+const DEFAULT_ALIGNMENT: MapAlignmentType = {x: 0, z: 0, rotation: 0};
+
+// Passe d'un point du sol de la scène aux millimètres du robot : un mètre par
+// unité, et l'axe y du robot vers -z.
+function toVacuumPoint(x: number, z: number, alignment: MapAlignmentType) {
+  const angle = (alignment.rotation * Math.PI) / 180;
+  const dx = x - alignment.x;
+  const dz = z - alignment.z;
+  return {
+    x: (dx * Math.cos(angle) - dz * Math.sin(angle)) * 1000,
+    y: -(dx * Math.sin(angle) + dz * Math.cos(angle)) * 1000,
+  };
+}
+
+export type FloorUv = [[number, number, number], [number, number, number]];
+
+// Passage affine du sol (x, z) aux coordonnées de l'image, prise sans
+// retournement : u = a·x + b·z + c, puis v de même.
+export function floorToMapUv(
+  calibration: CalibrationPoint[],
+  size: {width: number; height: number},
+  alignment = DEFAULT_ALIGNMENT,
+): FloorUv {
+  const uv = (x: number, z: number) => {
+    const pixel = toMapPixel(toVacuumPoint(x, z, alignment), calibration);
+    return [pixel.x / size.width, pixel.y / size.height];
+  };
+  const [u0, v0] = uv(0, 0);
+  const [ux, vx] = uv(1, 0);
+  const [uz, vz] = uv(0, 1);
+  return [
+    [ux - u0, uz - u0, u0],
+    [vx - v0, vz - v0, v0],
+  ];
 }
