@@ -40,9 +40,10 @@ test('n’affiche que les températures et la climatisation depuis le menu rapid
   const temperature = page.getByRole('menuitemcheckbox', {
     name: 'Température',
   });
-  // Le bouton du volet n'a pas de nom : on le reconnaît à son icône de fenêtre.
+  // Le bouton du volet n'a pas de nom : on le reconnaît à son icône de fenêtre,
+  // dans les étiquettes, car la puce « Volets » du filtre porte la même.
   const shutters = page.locator(
-    'button:has(path[transform="rotate(90 480 -480)"])',
+    'div:has(> canvas) ~ div button:has(path[transform="rotate(90 480 -480)"])',
   );
   const climate = page.getByRole('button', {name: '22°', exact: true}).first();
   await expect(shutters.first()).toBeVisible();

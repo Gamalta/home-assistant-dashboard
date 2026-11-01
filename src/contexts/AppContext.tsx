@@ -14,6 +14,8 @@ export type ConfigurationOptions = {
   vacuumMapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
+  // Catégories d'étiquettes masquées dans la vue 3D (voir labelCategories).
+  hiddenCategories: string[];
   /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
   screensaverMinutes: number;
 };
@@ -70,6 +72,7 @@ const defaultConfiguration: ConfigurationOptions = {
   vacuumMapShader: false,
   shadows: false,
   webGPU: false,
+  hiddenCategories: [],
   screensaverMinutes: 0,
 };
 

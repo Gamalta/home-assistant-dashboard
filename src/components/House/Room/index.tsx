@@ -11,29 +11,30 @@ type RoomProps = {
 export function Room(props: RoomProps) {
   const {room} = props;
   const items = room.items ?? [];
+  const roomItems = items.filter(item => item.roomDisplay);
 
   return (
     <>
-      <Html position={[room.position.x, room.position.y, room.position.z]}>
-        <ButtonGroup
-          variant="contained"
-          size="small"
-          sx={{
-            border: 0,
-            boxShadow: 0,
-          }}
-        >
-          {items
-            .filter(item => item.roomDisplay)
-            .map((item, id) => (
+      {roomItems.length > 0 && (
+        <Html position={[room.position.x, room.position.y, room.position.z]}>
+          <ButtonGroup
+            variant="contained"
+            size="small"
+            sx={{
+              border: 0,
+              boxShadow: 0,
+            }}
+          >
+            {roomItems.map((item, id) => (
               <RoomItem
                 key={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 id={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 itemConfig={item}
               />
             ))}
-        </ButtonGroup>
-      </Html>
+          </ButtonGroup>
+        </Html>
+      )}
       {items.map((item, id) =>
         item.roomDisplay ? null : (
           <Html
