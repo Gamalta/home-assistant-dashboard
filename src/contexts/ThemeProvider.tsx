@@ -14,6 +14,14 @@ import {theme} from '../theme/theme';
 import {useAppContext} from './AppContext';
 
 export type themeType = 'auto' | 'light' | 'dark' | 'system';
+
+export const themeOptions: {value: themeType; name: string}[] = [
+  {value: 'system', name: 'Système'},
+  {value: 'auto', name: 'Auto'},
+  {value: 'light', name: 'Clair'},
+  {value: 'dark', name: 'Sombre'},
+];
+
 type ThemeContextType = {
   themeMode: string;
   setTheme: (newTheme: themeType) => void;

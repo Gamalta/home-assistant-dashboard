@@ -117,7 +117,7 @@ export function LightModal(props: LightModalProps) {
                   -100 +
                 '%',
             }}
-            sx={{width: '500px'}}
+            sx={{width: {xs: '100%', sm: '500px'}}}
           >
             <OnOffTab />
             {hasColor && <ColorTab />}

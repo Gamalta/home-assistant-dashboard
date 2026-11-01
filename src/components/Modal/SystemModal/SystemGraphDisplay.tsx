@@ -48,14 +48,15 @@ export function SystemGraphDisplay(props: SystemGraphDisplayProps) {
       sx={{
         width: 175,
         height: 150,
-        p: 1.5,
+        p: {xs: 1, sm: 1.5},
         bgcolor: 'background.tertiary',
         borderRadius: 1,
         overflow: 'hidden',
       }}
     >
+      {/* Sur téléphone, la valeur passe sous le libellé. */}
       <Stack
-        direction="row"
+        direction={{xs: 'column', sm: 'row'}}
         sx={{justifyContent: 'space-between', alignItems: 'baseline'}}
       >
         <Typography variant="body2" color="textSecondary">

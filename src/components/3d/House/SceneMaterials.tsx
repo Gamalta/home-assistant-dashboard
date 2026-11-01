@@ -4,14 +4,18 @@ import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
 import {useHeatmapPoints} from '../../../hooks/useHeatmapPoints';
+import {useVacuumFloorMap} from '../../../hooks/useVacuumFloorMap';
 import {createWallFade} from '../../../rendering/wallFade';
+import type {LightMaps} from '../../../rendering/shaders/BakedLight/common';
 
 type SceneMaterialsProps = {
   scene: THREE.Object3D;
   backend: RenderBackend;
   hideWalls: boolean;
   heatmap: boolean;
+  vacuumMap: boolean;
   rooms: HouseConfigType['rooms'];
+  lightMaps?: LightMaps;
 };
 
 type MaterialKind = 'wall' | 'ground' | 'other';
@@ -71,7 +75,8 @@ function toLambert(source: THREE.Material) {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {scene, backend, hideWalls, heatmap, rooms} = props;
+  const {scene, backend, hideWalls, heatmap, vacuumMap, rooms, lightMaps} =
+    props;
   const invalidate = useThree(state => state.invalidate);
 
   const heatmapPoints = useHeatmapPoints(rooms);
@@ -79,6 +84,11 @@ export function SceneMaterials(props: SceneMaterialsProps) {
   heatmapPointsRef.current = heatmapPoints;
   const heatmapMaterials = useRef<THREE.Material[]>([]);
   const showHeatmap = heatmap && heatmapPoints.length > 0;
+  const floorMap = useVacuumFloorMap(rooms, vacuumMap);
+  const floorMapRef = useRef(floorMap);
+  floorMapRef.current = floorMap;
+  const vacuumMapMaterials = useRef<THREE.Material[]>([]);
+  const showVacuumMap = !!floorMap;
   const wallFade = useRef<ReturnType<typeof createWallFade>>(undefined);
   const sortedFrom = useRef(new THREE.Vector3());
 
@@ -102,9 +112,19 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         createdMaterials.push(material);
         return {material};
       }
+      if (showVacuumMap && kind === 'ground') {
+        const material = backend.createVacuumMapMaterial(floorMapRef.current!);
+        vacuumMapMaterials.current.push(material);
+        createdMaterials.push(material);
+        return {material};
+      }
 
       const original = toLambert(gltfMaterial);
       if (original !== gltfMaterial) createdMaterials.push(original);
+      // Avant le clonage des murs, qui garde la lightMap et le shader.
+      if (lightMaps && original instanceof THREE.MeshLambertMaterial) {
+        backend.applyBakedLight?.(original, lightMaps);
+      }
 
       let material = original;
       let fade: THREE.Material | undefined;
@@ -114,7 +134,7 @@ export function SceneMaterials(props: SceneMaterialsProps) {
         fade = wall.fade;
         createdMaterials.push(wall.opaque, wall.fade);
       }
-      if (showHeatmap) {
+      if (showHeatmap || showVacuumMap) {
         // Le reste de la maison devient translucide pour laisser voir le sol.
         if (material === gltfMaterial) {
           material = original.clone();
@@ -184,9 +204,18 @@ export function SceneMaterials(props: SceneMaterialsProps) {
       });
       createdMaterials.forEach(material => material.dispose());
       heatmapMaterials.current = [];
+      vacuumMapMaterials.current = [];
       invalidate();
     };
-  }, [scene, backend, hideWalls, showHeatmap, invalidate]);
+  }, [
+    scene,
+    backend,
+    hideWalls,
+    showHeatmap,
+    showVacuumMap,
+    lightMaps,
+    invalidate,
+  ]);
 
   // Le fondu est transparent : les murs se dessinent du plus loin au plus
   // proche de la caméra (voir createWallFade).
@@ -203,6 +232,15 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     );
     invalidate();
   }, [heatmapPointsKey, backend, invalidate]);
+
+  const floorMapKey =
+    floorMap && floorMap.texture.uuid + JSON.stringify(floorMap.uv);
+  useEffect(() => {
+    vacuumMapMaterials.current.forEach(material =>
+      backend.updateVacuumMapMaterial(material, floorMapRef.current!),
+    );
+    invalidate();
+  }, [floorMapKey, backend, invalidate]);
 
   return null;
 }

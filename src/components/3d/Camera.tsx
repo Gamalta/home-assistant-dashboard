@@ -7,14 +7,25 @@ type CameraProps = {
   onMovingChange?: (moving: boolean) => void;
 };
 
+type Damping = {enableDamping: boolean; getDistance: () => number};
+
 const MOTION_MIN_DPR = 0.5;
 const MOTION_MAX_DPR = 1;
 const REST_DELAY = 250;
+// OrbitControls arrête l'inertie sous 1 mm de déplacement par image : avec la
+// focale de 30°, la caméra est 2,86 fois plus loin, et l'inertie durerait une
+// vingtaine d'images de plus, invisibles mais en qualité réduite. On l'arrête
+// au même angle qu'une caméra à 10 m ; le reste, moins d'un pixel, s'applique
+// d'un coup.
+const INERTIA_STOP = 1e-4;
 
 export function Camera(props: CameraProps) {
   const {onMovingChange} = props;
   const setDpr = useThree(state => state.setDpr);
   const invalidate = useThree(state => state.invalidate);
+  const camera = useThree(state => state.camera);
+  const controls = useThree(state => state.controls) as Damping | null;
+  const lastPosition = useRef(new THREE.Vector3());
 
   const factor = useRef(1);
   const isMoving = useRef(false);
@@ -66,6 +77,12 @@ export function Camera(props: CameraProps) {
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={0}
       onChange={() => {
+        const step = camera.position.distanceTo(lastPosition.current);
+        lastPosition.current.copy(camera.position);
+        const inertia = controls && !isDragging.current;
+        if (inertia && step < INERTIA_STOP * controls.getDistance()) {
+          controls.enableDamping = false;
+        }
         // Une fois l'inertie finie, OrbitControls applique encore des restes
         // sous son seuil à chaque image : sans geste, ils ne relancent pas le
         // mouvement (sinon les ombres et le DPR clignotent).
@@ -77,7 +94,10 @@ export function Camera(props: CameraProps) {
         lastMove.current = performance.now();
         if (!isMoving.current) startMoving();
       }}
-      onStart={() => (isDragging.current = true)}
+      onStart={() => {
+        isDragging.current = true;
+        if (controls) controls.enableDamping = true;
+      }}
       onEnd={() => {
         isDragging.current = false;
         // Une image de plus pour constater l'arrêt d'un geste fini immobile.

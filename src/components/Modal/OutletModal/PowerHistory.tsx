@@ -46,7 +46,7 @@ export function PowerHistory(props: PowerHistoryProps) {
         },
       ]}
       // Même taille que l'historique de la modale Climat : la modale s'élargit.
-      sx={{height: 300, width: 500}}
+      sx={{height: 300, width: {xs: '100%', sm: 500}}}
     >
       <Typography variant="h4">
         {current === null ? '—' : formatPower(current)}

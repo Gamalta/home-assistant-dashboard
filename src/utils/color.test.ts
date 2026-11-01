@@ -5,6 +5,7 @@ import {
   getCoordFromColor,
   getCoordFromColorTemp,
   getWheelPosition,
+  readableOn,
 } from './color';
 
 const canvas = {clientWidth: 200, clientHeight: 200} as HTMLCanvasElement;
@@ -53,4 +54,16 @@ describe('roue des températures', () => {
       expect(position.y).toBeCloseTo(y);
     },
   );
+});
+
+describe('readableOn', () => {
+  it('écrit en sombre sur une couleur claire', () => {
+    expect(readableOn([255, 179, 0])).toBe('#1C1C1E');
+    expect(readableOn([255, 255, 255])).toBe('#1C1C1E');
+  });
+
+  it('écrit en blanc sur une couleur foncée', () => {
+    expect(readableOn([0, 0, 255])).toBe('#FFFFFF');
+    expect(readableOn([139, 92, 246])).toBe('#FFFFFF');
+  });
 });

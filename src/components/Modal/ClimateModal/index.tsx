@@ -111,19 +111,22 @@ export default function ClimateModal(props: ClimateModalProps) {
 
   const isActive = presetMode !== PresetMode.Off;
   const theme = useTheme();
+  // Attributs absents (entité indisponible) : react-thermostat appellerait getImageData(NaN)
+  const minTemp = climateEntity.attributes.min_temp ?? 7;
+  const maxTemp = climateEntity.attributes.max_temp ?? 35;
+  const thermostatValue = Math.min(
+    Math.max(targetTemperature ?? minTemp, minTemp),
+    maxTemp,
+  );
 
   const getThermostatColors = useCallback(
     () =>
       getModeColors(
         presetMode,
         climateEntity.attributes.current_temperature ?? 22,
-        targetTemperature,
+        thermostatValue,
       ),
-    [
-      presetMode,
-      climateEntity.attributes.current_temperature,
-      targetTemperature,
-    ],
+    [presetMode, climateEntity.attributes.current_temperature, thermostatValue],
   );
 
   return (
@@ -152,14 +155,18 @@ export default function ClimateModal(props: ClimateModalProps) {
         {
           control: (
             <Stack
-              sx={{position: 'relative', alignItems: 'center', width: '350px'}}
+              sx={{
+                position: 'relative',
+                alignItems: 'center',
+                width: {xs: '100%', sm: '350px'},
+              }}
             >
               <Stack sx={{width: '200px', mt: 7, alignItems: 'center'}}>
                 <Thermostat
-                  min={climateEntity.attributes.min_temp}
-                  max={climateEntity.attributes.max_temp}
+                  min={minTemp}
+                  max={maxTemp}
                   disabled={!isActive}
-                  value={targetTemperature}
+                  value={thermostatValue}
                   valueSuffix="°C"
                   track={{
                     colors: getThermostatColors(),

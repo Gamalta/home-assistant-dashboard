@@ -15,6 +15,8 @@ export const DarkPalette: ColorSystemOptions = {
       paper: '#2C2C2E',
       primary: '#1C1C1E',
       tertiary: '#3A3A3C',
+      modal: '#2C2C2E',
+      modalTertiary: '#3A3A3C',
     },
     text: {
       primary: '#FFFFFF',
@@ -30,13 +32,18 @@ export const LightPalette: ColorSystemOptions = {
       main: amber[700],
     },
     secondary: {
-      main: '#F2F2F7',
+      main: '#FFFFFF',
     },
     background: {
-      default: '#F2F2F7',
-      paper: '#F2F2F7',
-      primary: '#FFFFFF',
+      default: '#E2E2E7',
+      paper: '#E5E5EA',
+      primary: '#F2F2F7',
       tertiary: '#FFFFFF',
+      modal: '#FFFFFF',
+      modalTertiary: '#EEF1F6',
+    },
+    text: {
+      secondary: '#5C5C61',
     },
   },
 };

@@ -1,6 +1,6 @@
 # 0008 — Spec, ADR, doc et tests dans chaque PR de fonctionnalité
 
-- Statut : Accepté
+- Statut : Accepté, en partie remplacé par [0040](0040-tests-plus-rapides.md)
 - Date : 2026-10-24
 
 ## Contexte

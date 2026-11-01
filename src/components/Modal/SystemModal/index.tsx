@@ -5,11 +5,13 @@ import {SystemInfoDisplay} from './SystemInfoDisplay';
 import {OptionRow} from './OptionRow';
 import {BenchmarkRow} from './BenchmarkRow';
 import {InfoRow} from './InfoRow';
+import {ScreensaverRow} from './ScreensaverRow';
 import {SideBarConfigType} from '../../../configs/sidebar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useHouseContext} from '../../../contexts/HouseContext';
+import {useIsMobile} from '../../../hooks/useIsMobile';
 import {SystemGraphDisplay} from './SystemGraphDisplay';
 import {UpdatesInfo} from './UpdatesInfo';
 import {BackupInfo} from './BackupInfo';
@@ -29,14 +31,15 @@ export function SystemModal(props: SystemModalProps) {
     setLightingTrial,
   } = useAppContext();
   const {houseConfig} = useHouseContext();
+  const mobile = useIsMobile();
   const house = houseConfig?.house;
   const is3d = webGLSupported && !!house?.model;
 
   return (
     <Modal {...modalProps}>
-      <Stack direction="row" spacing={3}>
+      <Stack direction={{xs: 'column', sm: 'row'}} spacing={3}>
         <Stack spacing={2}>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={{xs: 1, sm: 2}}>
             {(systemConfig?.graphs ?? []).map(graph => (
               <SystemGraphDisplay key={graph.label} graphConfig={graph} />
             ))}
@@ -76,16 +79,12 @@ export function SystemModal(props: SystemModalProps) {
             />
             <OptionRow label="Ombres" option="shadows" disabled={!is3d} />
             <OptionRow
-              label="Carte des températures"
-              option="heatmapShader"
-              disabled={!is3d}
-            />
-            <OptionRow
               label="WebGPU"
               option="webGPU"
               disabled={!is3d || !webGPUSupported}
             />
             <OptionRow label="Debug" option="debug" disabled={!is3d} />
+            {!mobile && <ScreensaverRow />}
             {is3d && configuration.debug && (
               <>
                 <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />
@@ -105,7 +104,7 @@ export function SystemModal(props: SystemModalProps) {
             )}
           </Stack>
         </Stack>
-        <Stack spacing={1} sx={{width: 300}}>
+        <Stack spacing={1} sx={{width: {xs: '100%', sm: 300}}}>
           <SystemInfoDisplay
             label="Internet"
             sensor={systemConfig?.internetEntityId}

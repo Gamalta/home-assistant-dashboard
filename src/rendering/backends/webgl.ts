@@ -6,6 +6,11 @@ import {
   createHeatmapGroundMaterialWebGl,
   updateHeatmapGroundMaterialWebGl,
 } from '../shaders/HeatmapGroundMaterial/WebGL';
+import {applyBakedLightWebGl} from '../shaders/BakedLight/WebGL';
+import {
+  createVacuumMapGroundMaterialWebGl,
+  updateVacuumMapGroundMaterialWebGl,
+} from '../shaders/VacuumMapGroundMaterial/WebGL';
 
 export const webGLBackend: RenderBackend = {
   kind: 'webgl',
@@ -22,6 +27,13 @@ export const webGLBackend: RenderBackend = {
   createHeatmapMaterial: createHeatmapGroundMaterialWebGl,
   updateHeatmapMaterial: (material, points) =>
     updateHeatmapGroundMaterialWebGl(material as THREE.ShaderMaterial, points),
+  createVacuumMapMaterial: createVacuumMapGroundMaterialWebGl,
+  updateVacuumMapMaterial: (material, floorMap) =>
+    updateVacuumMapGroundMaterialWebGl(
+      material as THREE.ShaderMaterial,
+      floorMap,
+    ),
+  applyBakedLight: applyBakedLightWebGl,
   getMaxTextures: renderer =>
     renderer instanceof THREE.WebGLRenderer
       ? renderer.capabilities.maxTextures

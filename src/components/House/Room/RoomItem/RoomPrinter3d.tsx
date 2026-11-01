@@ -6,17 +6,21 @@ import {Printer3dConfigType} from '../../../../configs/house';
 import {
   isPrintActive,
   printer3dEntityIds,
+  printStatusLabel,
 } from '../../../../utils/entity/printer3d';
+import {Tile} from '../../../Mobile/Tile';
+import type {ItemVariant} from '.';
 import {Printer3dIcon} from '../../../Icons/Printer3dIcon';
 import {Printer3dModal} from '../../../Modal/Printer3dModal';
 
 type RoomPrinter3dProps = {
   id: string;
   printer3dConfig: Printer3dConfigType;
+  variant: ItemVariant;
 };
 
 export function RoomPrinter3d(props: RoomPrinter3dProps) {
-  const {id, printer3dConfig} = props;
+  const {id, printer3dConfig, variant} = props;
   const [printerModal, setPrinterModal] = useState(false);
 
   const ids = printer3dEntityIds(printer3dConfig.prefix);
@@ -24,19 +28,34 @@ export function RoomPrinter3d(props: RoomPrinter3dProps) {
   const progress = useEntity(ids.progress, {returnNullIfNotFound: true});
 
   if (!status) return <></>;
+  const printing = isPrintActive(status.state);
   return (
     <>
       <motion.div layoutId={`layoutid-${id}`}>
-        <Button
-          variant="contained"
-          color="secondary"
-          aria-label="Imprimante 3D"
-          sx={{height: '100%', minWidth: 0, px: '6px', gap: 0.5}}
-          onClick={() => setPrinterModal(true)}
-        >
-          <Printer3dIcon />
-          {isPrintActive(status.state) && `${progress?.state ?? '--'}%`}
-        </Button>
+        {variant === 'tile' ? (
+          <Tile
+            icon={<Printer3dIcon />}
+            name="Imprimante 3D"
+            state={
+              printing
+                ? `${progress?.state ?? '--'} %`
+                : printStatusLabel(status.state)
+            }
+            active={printing}
+            onClick={() => setPrinterModal(true)}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            aria-label="Imprimante 3D"
+            sx={{height: '100%', minWidth: 0, px: '6px', gap: 0.5}}
+            onClick={() => setPrinterModal(true)}
+          >
+            <Printer3dIcon />
+            {printing && `${progress?.state ?? '--'}%`}
+          </Button>
+        )}
       </motion.div>
       <Printer3dModal
         id={`layoutid-${id}`}
