@@ -11,6 +11,7 @@ import {
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
 import {useModelCamera} from '../../../hooks/useModelCamera';
+import {useLightMaps} from '../../../hooks/useLightMaps';
 import type {RenderBackend} from '../../../rendering/backends';
 import {Scene} from './Scene';
 import {Daylight} from './Daylight';
@@ -35,6 +36,10 @@ export function HouseScene(props: HouseSceneProps) {
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
   const {scene, cameras} = useGLTF(model);
+  // Sans cartes, ou en WebGPU, la scène garde un éclairage en temps réel.
+  const lightMaps = useLightMaps(
+    backend.applyBakedLight && houseConfig?.house.lightMaps,
+  );
   const camera = useModelCamera(cameras, houseConfig?.house.camera);
   const rooms = houseConfig?.house.rooms ?? [];
   const focusRoom = rooms.find(room => room.id === focusRoomId);
@@ -44,6 +49,7 @@ export function HouseScene(props: HouseSceneProps) {
   const graphics = [
     configuration.hideWallsShader,
     configuration.heatmapShader,
+    configuration.vacuumMapShader,
     configuration.shadows,
   ].join();
   const [compiled, setCompiled] = useState<string>();
@@ -108,14 +114,16 @@ export function HouseScene(props: HouseSceneProps) {
             backend={backend}
             hideWalls={configuration.hideWallsShader}
             heatmap={configuration.heatmapShader}
+            vacuumMap={configuration.vacuumMapShader}
             rooms={rooms}
+            lightMaps={lightMaps}
           />
           <LightShadows
             scene={scene}
             enabled={configuration.shadows}
             moving={moving}
           />
-          <Daylight />
+          <Daylight baked={!!lightMaps} />
           {rooms.map(room => (
             <Room3d
               key={room.id}

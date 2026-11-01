@@ -13,29 +13,29 @@ export type Loan = {
   payments: Payment[];
 };
 
-type Amounts = Record<string, number>;
+type Row = [principal: number, interest: number, insurance?: number];
 
 // Les attributs Home Assistant sont du JSON sans type.
-const amountsOf = (value: unknown) =>
-  (value && typeof value === 'object' ? value : {}) as Amounts;
+const rowsOf = (value: unknown) =>
+  (value && typeof value === 'object' ? value : {}) as Record<string, Row>;
 
 /**
- * Échéancier lu dans les attributs `principal`, `interest` et `insurance`
- * d'une entité : chacun associe un mois `AAAA-MM` à un montant.
+ * Échéancier lu dans l'attribut `amortization` d'une entité : chaque mois
+ * `AAAA-MM` y a sa ligne du tableau, `[capital, intérêts, assurance]`.
  */
 export function loanPayments(attributes: Record<string, unknown>): Payment[] {
-  const principal = amountsOf(attributes.principal);
-  const interest = amountsOf(attributes.interest);
-  const insurance = amountsOf(attributes.insurance);
+  const amortization = rowsOf(attributes.amortization);
 
-  return Object.keys(principal)
-    .sort()
-    .map(month => ({
-      month,
-      principal: principal[month],
-      interest: interest[month] ?? 0,
-      insurance: insurance[month] ?? 0,
-    }));
+  return (
+    Object.keys(amortization)
+      // Une ligne à l'ancien format `monthly` (un seul montant) ne se lit pas.
+      .filter(month => Array.isArray(amortization[month]))
+      .sort()
+      .map(month => {
+        const [principal, interest, insurance = 0] = amortization[month];
+        return {month, principal, interest, insurance};
+      })
+  );
 }
 
 const sum = (values: number[]) =>

@@ -2,12 +2,17 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {QuickMenu} from '.';
 
-const {sideBar} = vi.hoisted(() => ({
-  sideBar: {current: {} as {scenarios?: string[]}},
+const {sideBar, rooms} = vi.hoisted(() => ({
+  sideBar: {
+    current: {} as {scenarios?: string[]; energy?: object},
+  },
+  rooms: {current: [] as {items: {type: string}[]}[]},
 }));
 
 vi.mock('../../contexts/HouseContext', () => ({
-  useHouseContext: () => ({houseConfig: {sideBar: sideBar.current}}),
+  useHouseContext: () => ({
+    houseConfig: {sideBar: sideBar.current, house: {rooms: rooms.current}},
+  }),
 }));
 
 vi.mock('@hakit/core', async importOriginal => ({
@@ -21,6 +26,7 @@ vi.mock('@hakit/core', async importOriginal => ({
 describe('QuickMenu', () => {
   beforeEach(() => {
     sideBar.current = {scenarios: ['script.leave_home']};
+    rooms.current = [];
   });
 
   it('garde le menu ouvert quand la souris quitte le bouton après un appui', () => {
@@ -42,5 +48,26 @@ describe('QuickMenu', () => {
       screen.getByRole('menuitemcheckbox', {name: 'Température'}),
     ).toBeInTheDocument();
     expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('menuitemcheckbox', {name: 'Aspirateur'}),
+    ).not.toBeInTheDocument();
+  });
+
+  it('propose l’entrée Énergie quand le compteur est configuré', () => {
+    sideBar.current = {energy: {}};
+    render(<QuickMenu />);
+    fireEvent.click(screen.getByRole('button', {name: 'Menu rapide'}));
+
+    expect(screen.getByRole('menuitem', {name: 'Énergie'})).toBeInTheDocument();
+  });
+
+  it('propose le plan de l’aspirateur quand la maison en a un', () => {
+    rooms.current = [{items: [{type: 'vacuum'}]}];
+    render(<QuickMenu />);
+    fireEvent.click(screen.getByRole('button', {name: 'Menu rapide'}));
+
+    expect(
+      screen.getByRole('menuitemcheckbox', {name: 'Aspirateur'}),
+    ).toBeInTheDocument();
   });
 });

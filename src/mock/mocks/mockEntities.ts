@@ -10,12 +10,18 @@ import {createSensor} from './createSensor';
 import {createBinarySensor} from './createBinarySensor';
 import {createSwitch} from './createSwitch';
 import {createPrinter3d} from './createPrinter3d';
+import {createVacuum} from './createVacuum';
+import {energyEntities} from './mockEnergy';
+import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
 import {createWledStrip} from './createWledStrip';
 import {createAmbilight} from './createAmbilight';
 import {createLoan} from './createLoan';
+import {createUpdate} from './createUpdate';
+
+const DAY = 24 * 60 * 60 * 1000;
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -63,6 +69,25 @@ export const entities: HassEntities = {
     last_updated: new Date(0).toISOString(),
   }),
   ...createBinarySensor('binary_sensor.rpi_power_status'),
+  ...createBinarySensor('binary_sensor.router_wan_status', {
+    state: 'on',
+    attributes: {friendly_name: 'Connexion internet'},
+  }),
+  ...createSensor('sensor.wall_tablet_battery_level', {
+    state: '64',
+    attributes: {
+      friendly_name: 'Batterie de la tablette murale',
+      unit_of_measurement: '%',
+    },
+  }),
+  ...createSensor('sensor.wall_tablet_battery_state', {
+    state: 'charging',
+    attributes: {friendly_name: 'Charge de la tablette murale'},
+  }),
+  ...createSensor('sensor.wall_tablet_charger_type', {
+    state: 'ac',
+    attributes: {friendly_name: 'Chargeur de la tablette murale'},
+  }),
   ...createSensor('sensor.system_monitor_memory_usage', {
     state: '50',
     attributes: {
@@ -79,6 +104,36 @@ export const entities: HassEntities = {
     state: '50',
     attributes: {
       unit_of_measurement: '%',
+    },
+  }),
+  // Sauvegarde quotidienne : réussie il y a 3 jours, échouée hier.
+  ...createSensor('sensor.backup_last_successful', {
+    state: new Date(Date.now() - 3.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_last_attempted', {
+    state: new Date(Date.now() - 1.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_next_scheduled', {
+    state: new Date(Date.now() + 0.9 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_manager_state', {state: 'idle'}),
+  ...createUpdate('update.home_assistant_core_update', {
+    state: 'on',
+    attributes: {latest_version: '2026.10.2'},
+  }),
+  ...createUpdate('update.zigbee_bridge_update', {
+    state: 'on',
+    attributes: {
+      friendly_name: 'Pont Zigbee',
+      installed_version: '2.6.0',
+      latest_version: '2.7.0',
+    },
+  }),
+  ...createUpdate('update.home_assistant_operating_system_update', {
+    attributes: {
+      friendly_name: 'Home Assistant Operating System',
+      installed_version: '16.2',
+      latest_version: '16.2',
     },
   }),
 
@@ -116,6 +171,15 @@ export const entities: HassEntities = {
       icon: 'hue:play-bar-v',
       color_mode: 'hs',
       hs_color: [240, 100],
+    },
+  }),
+  ...createLight('light.living_room_led_strip', {
+    state: 'off',
+    attributes: {
+      friendly_name: 'Ruban LED de la TV',
+      icon: 'hue:lightstrip',
+      color_mode: 'hs',
+      hs_color: [28, 64],
     },
   }),
   ...createLight('light.kitchen_light', {
@@ -205,10 +269,11 @@ export const entities: HassEntities = {
       hs_color: [28, 64],
     },
   }),
-  ...createLight('light.corridor_light', {
+  ...createLight('light.corridor_spots', {
     state: 'off',
     attributes: {
       friendly_name: 'Couloir',
+      entity_id: ['light.corridor_light', 'light.corridor_light_2'],
       icon: 'hue:bulb-spot-hung',
       color_mode: 'hs',
       hs_color: [28, 64],
@@ -366,6 +431,27 @@ export const entities: HassEntities = {
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
   ...createPrinter3d('p1s_demo'),
+  ...createVacuum('dreame_demo'),
+  ...energyEntities,
+  ...createTrain('sensor.sncf_paris_lyon_train_1', {
+    departureIn: 6,
+    trainNum: '6601',
+    platform: 'B',
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_2', {
+    departureIn: 21,
+    trainNum: '6603',
+    delay: 5,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_3', {
+    departureIn: 36,
+    trainNum: '6605',
+    cancelled: true,
+  }),
+  ...createTrain('sensor.sncf_paris_lyon_train_4', {
+    departureIn: 51,
+    trainNum: '6607',
+  }),
   ...createMediaPlayer('media_player.living_room_tv', {
     state: 'playing',
     attributes: {
@@ -408,8 +494,47 @@ export const entities: HassEntities = {
   ...createScript('script.leave_home', {
     attributes: {friendly_name: 'Départ', icon: 'mdi:exit-run'},
   }),
-  ...createScript('script.energy', {
-    attributes: {friendly_name: 'Énergie', icon: 'mdi:lightning-bolt'},
+  ...createScript('script.eco_mode', {
+    attributes: {friendly_name: 'Économie', icon: 'mdi:leaf'},
+  }),
+
+  // Alertes de la démo : une pile faible et un capteur indisponible.
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.cellar_sensor_battery', {
+    state: 'unavailable',
+    attributes: {
+      friendly_name: 'Capteur de la cave',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
+    state: 'on',
+    attributes: {friendly_name: 'Pont Zigbee'},
   }),
 
   ...createWledStrip('light.living_room_strip'),
@@ -445,5 +570,98 @@ export const entities: HassEntities = {
     durationMonths: 120,
     firstMonth: '2023-03',
     monthlyInsurance: 3,
+  }),
+
+  // Alertes de la démo : une pile faible et un capteur indisponible.
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.cellar_sensor_battery', {
+    state: 'unavailable',
+    attributes: {
+      friendly_name: 'Capteur de la cave',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.zigbee_bridge_connection_state', {
+    state: 'on',
+    attributes: {friendly_name: 'Pont Zigbee'},
+  }),
+
+  // Appareils sur pile de la démo : trois interrupteurs sans fil, dont un à
+  // changer, et le détecteur de fumée du couloir.
+  ...createSensor('sensor.kitchen_button_battery', {
+    state: '12',
+    attributes: {
+      friendly_name: 'Bouton de la cuisine',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.bedroom_button_battery', {
+    state: '85',
+    attributes: {
+      friendly_name: 'Bouton de la chambre',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('sensor.living_room_button_battery', {
+    state: '54',
+    attributes: {
+      friendly_name: 'Bouton du séjour',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_smoke', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'smoke'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_heat', {
+    attributes: {friendly_name: 'Détecteur du couloir', device_class: 'heat'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_battery_low', {
+    attributes: {friendly_name: 'Pile du détecteur du couloir'},
+  }),
+  ...createBinarySensor('binary_sensor.hallway_smoke_detector_tamper', {
+    attributes: {
+      friendly_name: 'Autoprotection du détecteur du couloir',
+      device_class: 'tamper',
+    },
+  }),
+  ...createSensor('sensor.hallway_smoke_detector_battery', {
+    state: '90',
+    attributes: {
+      friendly_name: 'Pile du détecteur du couloir',
+      unit_of_measurement: '%',
+      device_class: 'battery',
+    },
+  }),
+  ...createSensor('button.hallway_smoke_detector_test', {
+    state: 'unknown',
+    attributes: {friendly_name: 'Test du détecteur du couloir'},
   }),
 } as const;

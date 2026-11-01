@@ -1,12 +1,15 @@
 import {RoomItemConfigType} from '../../../../configs/house';
+import {RoomBattery} from './RoomBattery';
 import {RoomClimate} from './RoomClimate';
 import {RoomDesktop} from './RoomDesktop';
 import {RoomLight} from './RoomLight';
 import {RoomOutlet} from './RoomOutlet';
 import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
+import {RoomSmoke} from './RoomSmoke';
 import {RoomTemperature} from './RoomTemperature';
 import {RoomTv} from './RoomTv';
+import {RoomVacuum} from './RoomVacuum';
 
 type RoomItemProps = {
   id: string;
@@ -47,6 +50,14 @@ export function RoomItem(props: RoomItemProps) {
       );
     case 'tv':
       return <RoomTv id={id} tvConfig={itemConfig} variant={variant} />;
+    case 'vacuum':
+      return <RoomVacuum id={id} vacuumConfig={itemConfig} variant={variant} />;
+    case 'battery':
+      return (
+        <RoomBattery id={id} batteryConfig={itemConfig} variant={variant} />
+      );
+    case 'smoke':
+      return <RoomSmoke id={id} smokeConfig={itemConfig} variant={variant} />;
     default:
       return <></>;
   }

@@ -5,6 +5,7 @@ import {createPortal} from 'react-dom';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import {Backdrop} from './Base/Backdrop';
 import {Container} from './Base/Container';
+import {haptic} from '../../utils/haptic';
 
 export interface ModalProps {
   open: boolean;
@@ -54,6 +55,7 @@ function ModalWindow(props: ModalProps) {
       setReady(false);
       return;
     }
+    haptic();
     timerRef.current = setTimeout(() => {
       setReady(true);
       timerRef.current = null;
@@ -92,8 +94,8 @@ function ModalWindow(props: ModalProps) {
               animate={ready ? 'show' : 'hidden'}
               exit="hidden"
               variants={variants}
-              // Sur téléphone, la carte garde toute sa largeur au contenu.
-              sx={{p: 2, px: {xs: 0, sm: 2}, maxHeight: '100%'}}
+              // Sur téléphone, la carte donne toute sa place au contenu.
+              sx={{p: {xs: 0, sm: 2}, maxHeight: '100%'}}
             >
               <AnimatePresence initial={false} mode="wait">
                 {ready && children}

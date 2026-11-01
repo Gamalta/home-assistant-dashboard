@@ -17,6 +17,10 @@ import {
   createHeatmapGroundMaterialWebGPU,
   updateHeatmapGroundMaterialWebGPU,
 } from '../shaders/HeatmapGroundMaterial/WebGPU';
+import {
+  createVacuumMapGroundMaterialWebGPU,
+  updateVacuumMapGroundMaterialWebGPU,
+} from '../shaders/VacuumMapGroundMaterial/WebGPU';
 
 export const webGPUBackend: RenderBackend = {
   kind: 'webgpu',
@@ -35,6 +39,8 @@ export const webGPUBackend: RenderBackend = {
     ),
   createHeatmapMaterial: createHeatmapGroundMaterialWebGPU,
   updateHeatmapMaterial: updateHeatmapGroundMaterialWebGPU,
+  createVacuumMapMaterial: createVacuumMapGroundMaterialWebGPU,
+  updateVacuumMapMaterial: updateVacuumMapGroundMaterialWebGPU,
   getMaxTextures: () => null,
   describeGpu: renderer => {
     const {isWebGLBackend, gl, device} = getBackend(renderer);

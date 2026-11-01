@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="548" viewBox="0 0 640 548">
+<g stroke="#3c4a5c" stroke-width="4" stroke-linejoin="round">
+<path d="M166 276H390V364H350V532H166Z" fill="#8ec9f0"/>
+<path d="M254 156H390V276H254Z" fill="#f6d27a"/>
+<path d="M206 12H374V156H206Z" fill="#a9dc95"/>
+<path d="M390 212H494V364H430V532H390Z" fill="#d9b3ee"/>
+<path d="M30 324H166V532H30Z" fill="#f4ae98"/>
+<path d="M446 60H606V212H446Z" fill="#94d8d2"/>
+<path d="M494 308H606V460H494Z" fill="#f2b6cf"/>
+<path d="M350 364H390V532H350Z" fill="#b9b4f0"/>
+</g>
+<g fill="none" stroke="#fff" stroke-opacity="0.85" stroke-width="1.5" stroke-linejoin="round">
+<polyline points="300,516 300,300 290,150"/>
+<polyline points="214,22 366,22 366,30 214,30 214,38 366,38 366,46 214,46 214,54 366,54 366,62 214,62 214,70 366,70 366,78 214,78 214,86 366,86 366,94 214,94 214,102 366,102 366,110 214,110 214,118 366,118 366,126 214,126 214,134 366,134 366,142 214,142"/>
+<polyline points="174,284 382,284 382,292 174,292 174,300 382,300 382,308 174,308 174,316 382,316 382,324 174,324 174,332 382,332 382,340 174,340 174,348 382,348 382,356 174,356 174,364 342,364 342,372 174,372 174,380 342,380"/>
+</g>
+<rect x="288" y="520" width="24" height="10" rx="3" fill="#3c4a5c"/>
+<circle cx="342" cy="380" r="10" fill="#fff" stroke="#2f7cf6" stroke-width="3"/>
+<circle cx="342" cy="380" r="4" fill="#2f7cf6"/>
+</svg>

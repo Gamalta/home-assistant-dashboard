@@ -46,7 +46,7 @@ Un beau rendu plutôt qu'un rendu réaliste, léger pour la tablette : doux et c
 
 - **Étant donné** le panneau « Éclairage selon l'heure », ouvert depuis la modale Système et posé sur la vue 3D
 - **Quand** on fait glisser l'heure, de 0 h à 24 h par quart d'heure
-- **Alors** l'éclairage et le thème du dashboard suivent cette heure ; fermer le panneau, ou recharger la page, revient à l'heure réelle
+- **Alors** l'éclairage suit cette heure, et le thème aussi s'il est sur « Auto » ; fermer le panneau, ou recharger la page, revient à l'heure réelle
 
 ### Scénario : plus de reflets d'environnement
 
@@ -58,7 +58,7 @@ Un beau rendu plutôt qu'un rendu réaliste, léger pour la tablette : doux et c
 
 - [x] La nuit qui tombe ne recompile aucun shader (`e2e/lighting.spec.ts`).
 - [x] La maison est plus sombre la nuit que le jour (`e2e/lighting.spec.ts`).
-- [x] L'heure simulée change le thème, et fermer le panneau revient à l'heure réelle (`e2e/options.spec.ts`).
+- [x] L'heure simulée change le thème « Auto », et fermer le panneau revient à l'heure réelle (`e2e/options.spec.ts`).
 - [x] Hauteur du soleil d'après l'heure testée (`src/rendering/daylight.test.ts`).
 - [x] L'option a disparu de la modale Système et aucun `.hdr` n'est demandé (`e2e/options.spec.ts`, `e2e/lighting.spec.ts`).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : GPU égal au repos, mêmes programmes au démarrage.

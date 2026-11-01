@@ -23,7 +23,7 @@ test('lance un scénario depuis le menu rapide en haut de la vue 3D', async ({
   await expect(
     page.getByRole('menuitemcheckbox', {name: 'Température'}),
   ).toBeVisible();
-  for (const name of ['Départ', 'Énergie'])
+  for (const name of ['Départ', 'Économie'])
     await expect(page.getByRole('menuitem', {name})).toBeVisible();
 
   await page.getByRole('menuitem', {name: 'Départ'}).tap();

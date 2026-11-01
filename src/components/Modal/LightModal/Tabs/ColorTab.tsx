@@ -58,7 +58,8 @@ export function ColorTab() {
         component={motion.div}
         sx={{
           position: 'relative',
-          height: '30vh',
+          // Hauteur visible : sur iPhone, vh compte aussi les barres de Safari.
+          height: '30svh',
           maxHeight: '320px',
           maxWidth: '320px',
           minHeight: '200px',

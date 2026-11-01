@@ -1,6 +1,9 @@
+import {useHass} from '@hakit/core';
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeIcon from '@mui/icons-material/HomeRounded';
+import LogoutIcon from '@mui/icons-material/LogoutRounded';
 import MemoryIcon from '@mui/icons-material/MemoryRounded';
+import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -23,6 +26,7 @@ export function SettingsList() {
   const [themeAnchor, setThemeAnchor] = useState<HTMLElement | null>(null);
   const [houseAnchor, setHouseAnchor] = useState<HTMLElement | null>(null);
   const [systemModal, setSystemModal] = useState(false);
+  const logout = useHass(state => state.helpers.logout);
   const configs = useHouseConfigs(Boolean(houseAnchor));
   const system = houseConfig?.sideBar.system;
   const theme = themeOptions.find(option => option.value === themeMode);
@@ -109,6 +113,13 @@ export function SettingsList() {
           />
         </>
       )}
+      <Divider />
+      <ListItemButton onClick={logout}>
+        <ListItemIcon>
+          <LogoutIcon />
+        </ListItemIcon>
+        <ListItemText primary="Se déconnecter" />
+      </ListItemButton>
     </List>
   );
 }
