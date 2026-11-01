@@ -48,7 +48,7 @@ Un niveau inconnu ou indisponible s'affiche `--`, avec une pile vide.
 
 - **Étant donné** le détecteur au repos
 - **Quand** j'appuie sur son étiquette
-- **Alors** la modale « Détecteur de fumée » montre le détecteur vu de dessous avec son voyant vert, « Aucune fumée » en grand, puis la pile (90%), la chaleur (« Normale »), l'autoprotection (« OK ») et la dernière mise à jour ;
+- **Alors** la modale « Détecteur de fumée » montre le détecteur carré vu de dessous avec son voyant vert, « Aucune fumée » en grand, puis la pile (90%), la chaleur (« Normale »), l'autoprotection (« OK ») et la dernière mise à jour ;
 - **et** un bouton « Tester », parce que la démo configure un bouton de test.
 
 Sans entité de test dans la config, le bouton « Tester » n'existe pas. Une ligne n'apparaît que si son entité est configurée.

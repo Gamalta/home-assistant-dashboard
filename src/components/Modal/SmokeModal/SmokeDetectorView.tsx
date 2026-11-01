@@ -10,13 +10,13 @@ type SmokeDetectorViewProps = {
 const ring = {
   position: 'absolute',
   inset: '7%',
-  borderRadius: '50%',
+  borderRadius: '21%',
   border: '4px solid',
   borderColor: 'error.main',
   opacity: 0,
 } as const;
 
-// Détecteur vu de dessous. En alarme, son voyant clignote et des ondes s'en échappent.
+// Détecteur carré vu de dessous. En alarme, son voyant clignote et des ondes s'en échappent.
 export function SmokeDetectorView(props: SmokeDetectorViewProps) {
   const {status} = props;
   const alarm = status === 'smoke' || status === 'heat';
@@ -54,31 +54,35 @@ export function SmokeDetectorView(props: SmokeDetectorViewProps) {
             <stop offset="1" stopColor="#e1e4e8" />
           </radialGradient>
         </defs>
-        <circle
-          cx="100"
-          cy="100"
-          r="86"
+        <rect
+          x="14"
+          y="14"
+          width="172"
+          height="172"
+          rx="36"
           fill="url(#smoke-body)"
           stroke="#cdd0d5"
         />
-        <circle
-          cx="100"
-          cy="100"
-          r="70"
+        <rect
+          x="28"
+          y="28"
+          width="144"
+          height="144"
+          rx="26"
           fill="none"
           stroke="#d3d6db"
           strokeWidth="1.5"
         />
-        {Array.from({length: 24}, (_, i) => (
+        {Array.from({length: 28}, (_, i) => (
           <rect
             key={i}
-            x="98"
-            y="36"
+            x={62 + (i % 7) * 12}
+            y="38"
             width="4"
             height="16"
             rx="2"
             fill="#c2c6cc"
-            transform={`rotate(${i * 15} 100 100)`}
+            transform={`rotate(${Math.floor(i / 7) * 90} 100 100)`}
           />
         ))}
         <circle
