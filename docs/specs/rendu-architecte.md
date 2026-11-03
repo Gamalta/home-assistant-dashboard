@@ -44,6 +44,12 @@ Une maison éclairée comme une maquette d'architecte, jour et nuit, vue de haut
 - **Quand** la maison s'affiche
 - **Alors** elle se détache sur un fond un cran plus sombre que l'interface : gris clair en thème clair, presque noir en thème sombre
 
+### Scénario : jonction de deux murs
+
+- **Étant donné** deux murs qui se rejoignent, dont les blocs s'interpénètrent dans le modèle
+- **Quand** la maison s'affiche
+- **Alors** le dessus de la jonction est éclairé comme le reste des murs, sans tache sombre ni marches d'escalier
+
 ### Scénario : maison sans éclairage précalculé
 
 - **Étant donné** une maison dont la config ne donne pas de cartes de lumière, ou le moteur WebGPU
@@ -69,6 +75,7 @@ Une maison éclairée comme une maquette d'architecte, jour et nuit, vue de haut
 - [x] Le fond suit le thème et non l'heure : clair en thème clair la nuit, sombre en thème sombre le jour (`e2e/lighting.spec.ts`).
 - [x] Le shader ajoute la lumière du soleil à celle de la lightMap (`src/rendering/shaders/BakedLight/WebGL/index.test.ts`).
 - [x] Chaque primitive de la démo a un second jeu d'UV, et le modèle et ses cartes tiennent dans 2 Mo (`src/configs/models.test.ts`).
+- [x] Aucun dessus de mur n'en recouvre un autre dans un modèle précalculé ([ADR 0053](../adr/0053-unir-les-murs-avant-le-precalcul.md), `src/configs/models.test.ts`).
 - [x] La focale de 30° garde le cadrage d'un champ de 75° (`src/utils/camera.test.ts`), les murs s'effacent toujours une fois zoomé (`e2e/options.spec.ts`), et la pièce choisie reste cadrée sur mobile (`e2e/mobile.spec.ts`).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : GPU de 7,5 à 5,0 ms par image au repos sur M4, mêmes draw calls, aucun programme compilé pendant une rotation. La tablette reste à mesurer.
 
