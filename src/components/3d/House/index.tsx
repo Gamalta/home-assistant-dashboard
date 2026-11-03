@@ -10,6 +10,7 @@ import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
+import {LabelFilter} from './LabelFilter';
 import {LightingTrial} from '../../LightingTrial';
 
 type HouseProps = {
@@ -113,6 +114,7 @@ export default function House(props: HouseProps) {
             paused={paused}
           />
         </Suspense>
+        <LabelFilter rooms={houseConfig?.house.rooms ?? []} />
         {lightingTrial && <LightingTrial />}
       </ErrorBoundary>
     </Stack>
