@@ -24,7 +24,7 @@ Sous **20 %**, une pile est faible. Les éléments se configurent dans la pièce
 
 ### Scénario : affiche le niveau de pile dans la scène
 
-- **Étant donné** la démo, avec les interrupteurs du séjour à 54 %, de la cuisine à 12 % et de la chambre à 85 %
+- **Étant donné** la démo, avec les interrupteurs du séjour à 54 %, de la cuisine à 12 % et de la chambre à 85 %, et les appareils sur pile affichés dans la modale Configuration (ils sont masqués par défaut)
 - **Quand** j'ouvre le dashboard
 - **Alors** chaque interrupteur a une étiquette avec une icône de pile remplie selon le niveau et le pourcentage ;
 - **et** l'étiquette de la cuisine, sous 20 %, est en rouge, les autres dans la couleur habituelle des étiquettes.

@@ -19,7 +19,7 @@ Voir d'un coup d'œil, depuis la tablette murale, l'état de santé de l'install
 
 ## Comportement attendu
 
-Chaque bloc n'apparaît que si son entité est configurée dans le bloc `system` de la maison et existe dans Home Assistant. Les mises à jour ne se configurent pas : la modale lit toutes les entités `update`. Les nouveaux blocs forment une seconde colonne, à droite des réglages d'affichage.
+Chaque bloc n'apparaît que si son entité est configurée dans le bloc `system` de la maison et existe dans Home Assistant. Les mises à jour ne se configurent pas : la modale lit toutes les entités `update`. Les nouveaux blocs forment une seconde colonne, à droite des graphes. Les réglages d'affichage vivent dans la modale Configuration ([ADR 0053](../adr/0053-reglages-dans-la-modale-configuration.md)).
 
 ### Scénario : liste les mises à jour disponibles
 

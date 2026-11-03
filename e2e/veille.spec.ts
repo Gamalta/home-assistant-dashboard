@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {expect, openSystemModal, test, waitForScene} from './fixtures';
+import {expect, openConfigurationModal, test, waitForScene} from './fixtures';
 
 function sleepAfter(page: Page, minutes: number) {
   return page.addInitScript(
@@ -68,16 +68,18 @@ for (const [time, opacity] of [
   });
 }
 
-test('règle le délai de veille depuis la modale Système', async ({page}) => {
+test('règle le délai de veille depuis la modale Configuration', async ({
+  page,
+}) => {
   await page.goto('/');
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   const delay = page.getByRole('combobox', {name: 'Veille'});
   await expect(delay).toHaveText('Jamais');
   await delay.click();
   await page.getByRole('option', {name: 'Après 5 min'}).click();
 
   await page.reload();
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await expect(page.getByRole('combobox', {name: 'Veille'})).toHaveText(
     'Après 5 min',
   );

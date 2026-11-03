@@ -3,6 +3,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeIcon from '@mui/icons-material/HomeRounded';
 import LogoutIcon from '@mui/icons-material/LogoutRounded';
 import MemoryIcon from '@mui/icons-material/MemoryRounded';
+import TuneIcon from '@mui/icons-material/TuneRounded';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -19,6 +20,7 @@ import {themeOptions, useThemeContext} from '../../contexts/ThemeProvider';
 import {useHouseConfigs} from '../../hooks/useHouseConfigs';
 import {ThemeIcon} from '../Icons/ThemeIcon';
 import {SystemModal} from '../Modal/SystemModal';
+import {ConfigurationModal} from '../Modal/ConfigurationModal';
 
 export function SettingsList() {
   const {themeMode, setTheme} = useThemeContext();
@@ -26,6 +28,7 @@ export function SettingsList() {
   const [themeAnchor, setThemeAnchor] = useState<HTMLElement | null>(null);
   const [houseAnchor, setHouseAnchor] = useState<HTMLElement | null>(null);
   const [systemModal, setSystemModal] = useState(false);
+  const [configurationModal, setConfigurationModal] = useState(false);
   const logout = useHass(state => state.helpers.logout);
   const configs = useHouseConfigs(Boolean(houseAnchor));
   const system = houseConfig?.sideBar.system;
@@ -93,6 +96,21 @@ export function SettingsList() {
           </Menu>
         </>
       )}
+      <motion.div layoutId="layoutid-configuration-modal">
+        <ListItemButton onClick={() => setConfigurationModal(true)}>
+          <ListItemIcon>
+            <TuneIcon />
+          </ListItemIcon>
+          <ListItemText primary="Configuration" />
+          <ChevronRightIcon color="action" />
+        </ListItemButton>
+      </motion.div>
+      <ConfigurationModal
+        id="layoutid-configuration-modal"
+        title="Configuration"
+        open={configurationModal}
+        onClose={() => setConfigurationModal(false)}
+      />
       {system && (
         <>
           <motion.div layoutId="layoutid-system-modal">

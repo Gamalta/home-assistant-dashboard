@@ -5,27 +5,35 @@
 
 ## Problème
 
-Chaque pièce et chaque élément de la vue 3D affichent une étiquette : lumières, climatisations, thermomètres, volets, ordinateurs. Sur la démo, cela fait déjà 39 boutons sur 32 étiquettes, qui se chevauchent par endroits (le volet de la cuisine cache sa température). Sur la tablette murale, on cherche souvent une seule chose (« quels volets sont ouverts ? », « quelle température dans les chambres ? ») et le reste gêne.
+Chaque pièce et chaque élément de la vue 3D affichent une étiquette : lumières, climatisations, thermomètres, volets, prises, appareils sur pile… Sur la démo, cela fait 39 boutons sur 32 étiquettes, qui se chevauchent par endroits. Sur la tablette murale, on cherche souvent une seule chose (« quels volets sont ouverts ? », « quelle pile faiblit ? ») et le reste gêne. Les appareils passifs, comme les interrupteurs sans fil, encombrent la vue alors qu'on ne les consulte que pour leur pile.
 
 ## Objectif
 
-Choisir d'un appui quelles catégories d'étiquettes la vue 3D affiche, et retrouver ce choix au prochain démarrage de la tablette.
+Choisir dans la modale Configuration quels éléments la vue 3D affiche, avec les appareils passifs masqués par défaut, voir d'un geste la pile de tous les éléments, et retrouver ces choix au prochain démarrage de la tablette.
 
 ## Hors périmètre
 
 - Filtrer pièce par pièce ou entité par entité : le filtre porte sur des catégories.
 - Éteindre ou masquer les lumières 3D : seules les étiquettes disparaissent.
-- La carte des températures, qui n'affiche déjà que les climatisations et les thermomètres : les autres puces y restent sans effet.
-- Synchroniser le filtre entre appareils : il est mémorisé par appareil, comme les options graphiques.
+- Les tuiles de la version mobile, qui listent toujours tous les éléments d'une pièce.
+- La pile de l'aspirateur, donnée par un attribut et non par un `sensor`.
+- Synchroniser les choix entre appareils : ils sont mémorisés par appareil, comme les options graphiques.
 
 ## Comportement attendu
 
 ### Scénario : masque puis réaffiche les étiquettes d'une catégorie
 
-- **Étant donné** la vue 3D avec toutes ses étiquettes
-- **Quand** l'utilisateur touche la puce « Volets », puis la puce « Climat »
+- **Étant donné** la modale Configuration ouverte depuis le dock
+- **Quand** l'utilisateur coupe « Volets », puis « Climat »
 - **Alors** les étiquettes des volets, puis celles des climatisations et des thermomètres disparaissent, les autres restent
-- **Et** un nouvel appui sur chaque puce les réaffiche
+- **Et** réactiver chaque interrupteur les réaffiche
+
+### Scénario : masque par défaut les appareils sur pile
+
+- **Étant donné** un appareil qui n'a jamais enregistré de choix
+- **Quand** la vue 3D s'affiche
+- **Alors** les interrupteurs sans fil n'ont pas d'étiquette, et « Appareils sur pile » est coupé dans la modale
+- **Et** l'activer affiche leurs étiquettes
 
 ### Scénario : retire l'étiquette d'une pièce dont tous les éléments sont masqués
 
@@ -45,30 +53,32 @@ Choisir d'un appui quelles catégories d'étiquettes la vue 3D affiche, et retro
 - **Quand** la page est rechargée
 - **Alors** les volets sont toujours masqués et les autres catégories affichées
 
-### Scénario : reste utilisable au doigt à 1280 × 800 sans cacher la maison
+### Scénario : n'affiche que les piles de tous les éléments
 
-- **Étant donné** la tablette (1280 × 800)
-- **Quand** la vue 3D s'affiche
-- **Alors** les puces forment une rangée courte en haut de la vue 3D, chacune d'au moins 40 × 40 px, et aucune étiquette ne passe dessous
+- **Étant donné** la modale Configuration ouverte
+- **Quand** l'utilisateur active « Batteries uniquement »
+- **Alors** seuls les éléments qui donnent un niveau de pile gardent une étiquette, qui montre ce niveau : les trois interrupteurs (54 %, 12 %, 85 %), même masqués, et le détecteur de fumée (90 %)
+- **Et** les interrupteurs des catégories sont grisés, puis couper l'option rend les étiquettes habituelles
 
-### Scénario : reste accessible au doigt sous l'en-tête du téléphone
+### Scénario : ouvre la modale Configuration depuis le Foyer
 
-- **Étant donné** la version mobile (390 × 844), dont l'en-tête est posé sur la vue 3D
-- **Quand** l'utilisateur touche chaque puce
-- **Alors** la rangée passe sous l'en-tête, à la hauteur du menu rapide, chaque appui atteint sa puce
-- **Et** les étiquettes masquées disparaissent de la pièce affichée
+- **Étant donné** la version mobile, le Foyer ouvert
+- **Quand** l'utilisateur touche « Configuration »
+- **Alors** la modale Configuration s'ouvre par-dessus le menu, sans le réglage de la veille
 
 ## Critères d'acceptation
 
-- [x] Une puce par catégorie présente dans la maison : la démo, sans ordinateur, n'en affiche que trois.
-- [x] Chaque puce porte le nom de sa catégorie, affiché au toucher dans une infobulle.
+- [x] Une ligne par catégorie présente dans la maison, avec son icône et son nom : la démo, sans ordinateur, en affiche neuf.
 - [x] Un type d'élément qui n'a pas de catégorie reste toujours affiché.
+- [x] En mode « Batteries uniquement », un appui sur une étiquette ouvre la modale habituelle de l'élément.
 - [x] Masquer ou afficher une catégorie ne compile aucun shader et ne lance pas de rendu continu.
 - [x] Une étiquette masquée est démontée : elle ne coûte plus rien à chaque image.
+- [x] La modale Système ne garde que le serveur, internet, les mises à jour, les sauvegardes et la tablette.
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)).
 
 ## Impacts
 
-- Configuration des maisons : aucune. Un nouveau type d'élément s'ajoute à la table `src/utils/labelCategories.ts` ([ADR 0033](../adr/0033-filtre-des-etiquettes-par-categorie.md)).
-- Options stockées : `graphics-options` gagne `hiddenCategories`, vide par défaut. Les options déjà enregistrées restent valables.
-- Performance : voir l'ADR 0033.
+- Configuration des maisons : aucune. Un nouveau type d'élément s'ajoute à la table `src/utils/labelCategories.ts` ([ADR 0053](../adr/0053-reglages-dans-la-modale-configuration.md)).
+- Options stockées : `graphics-options` gagne `shownCategories` (vide par défaut) et `batteriesOnly` (coupé). L'ancien `hiddenCategories` est ignoré.
+- Interface : le dock gagne « Configuration », et son bouton de choix de la maison devient « Maison ». Le Foyer gagne « Configuration ».
+- Performance : voir l'[ADR 0033](../adr/0033-filtre-des-etiquettes-par-categorie.md) ; la rangée de puces ne coûte plus rien sur la vue 3D.

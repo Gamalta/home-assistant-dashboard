@@ -46,7 +46,7 @@ Après un délai sans interaction, la tablette affiche un écran de veille lisib
 
 ### Scénario : réglage par appareil
 
-- **Étant donné** la modale Système
+- **Étant donné** la modale Configuration
 - **Quand** l'utilisateur choisit un délai (« Jamais », 1, 5, 10 ou 30 min)
 - **Alors** le choix est gardé sur cet appareil après un rechargement. « Jamais » est la valeur par défaut.
 
@@ -54,7 +54,7 @@ Après un délai sans interaction, la tablette affiche un écran de veille lisib
 
 - [x] Chaque interaction relance le délai (`hooks/useIdle.test.ts`).
 - [x] Les scénarios sont couverts par `e2e/veille.spec.ts`.
-- [x] La modale Système du téléphone ne propose pas de veille (`e2e/mobile.spec.ts`).
+- [x] La modale Configuration du téléphone ne propose pas de veille (`e2e/mobile.spec.ts`).
 - [x] La scène 3D ne dessine aucune image pendant la veille (0 appel de dessin en 60 s, build de production).
 
 ## Impacts

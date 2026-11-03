@@ -67,7 +67,7 @@ await __dashboardBenchmark(60, 1); // idem, avec un DPR forcé à 1
 await __dashboardMotionBenchmark(); // rotation réelle : img/s, pire image
 ```
 
-La modale **Système** (dock en bas de la barre latérale) lance les mêmes mesures depuis la tablette.
+La modale **Configuration** (dock en bas de la barre latérale) lance les mêmes mesures depuis la tablette.
 
 ## Lire les chiffres
 
@@ -97,8 +97,8 @@ Le ciel et le soleil sont deux lumières fixes : l'heure ne change que leurs uni
 
 ## Simuler la tablette
 
-`pnpm bench --cpu 4`, ou dans les DevTools, onglet Performance, **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Système.
+`pnpm bench --cpu 4`, ou dans les DevTools, onglet Performance, **CPU : 4× slowdown**. Ce réglage reproduit l'ordre de grandeur du CPU de la tablette, mais pas celui de son GPU. Les coûts GPU se vérifient sur la tablette elle-même, avec la modale Configuration.
 
 ## Moteur de rendu
 
-Le benchmark mesure le moteur actif. WebGL est le moteur par défaut ([ADR 0017](../adr/0017-webgl-par-defaut.md)). Pour comparer avec WebGPU, l'activer dans la modale Système, puis refaire la même mesure.
+Le benchmark mesure le moteur actif. WebGL est le moteur par défaut ([ADR 0017](../adr/0017-webgl-par-defaut.md)). Pour comparer avec WebGPU, l'activer dans la modale Configuration, puis refaire la même mesure.

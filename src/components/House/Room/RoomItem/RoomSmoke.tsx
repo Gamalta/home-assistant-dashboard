@@ -60,7 +60,11 @@ export function RoomSmoke(props: RoomSmokeProps) {
             }}
             onClick={() => setSmokeModal(true)}
           >
-            {icon}
+            {variant === 'battery' ? (
+              <BatteryLevelDisplay state={battery?.state} />
+            ) : (
+              icon
+            )}
           </Button>
         )}
       </motion.div>

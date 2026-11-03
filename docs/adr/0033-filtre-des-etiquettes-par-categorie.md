@@ -1,6 +1,6 @@
 # 0033 — Filtre des étiquettes 3D par catégorie, en puces au-dessus de la vue
 
-- Statut : Proposé
+- Statut : Remplacé par [0053](0053-reglages-dans-la-modale-configuration.md)
 - Date : 2026-10-24
 - Issue : #59
 

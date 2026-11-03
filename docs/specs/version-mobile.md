@@ -159,7 +159,7 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 
 - **Étant donné** un iPhone à Dynamic Island en portrait
 - **Quand** l'utilisateur touche les avatars de l'en-tête
-- **Alors** le Foyer se déroule en menu sous les avatars, aligné sur eux à droite : personnes, animaux, carrousel de raccourcis, puis Thème, Système et « Se déconnecter »
+- **Alors** le Foyer se déroule en menu sous les avatars, aligné sur eux à droite : personnes, animaux, carrousel de raccourcis, puis Thème, Configuration, Système et « Se déconnecter »
 - **Et** le menu s'arrête au-dessus de la barre d'accueil, et défile s'il est plus haut
 - **Et** toucher hors du menu le referme
 
@@ -169,11 +169,11 @@ Sur un téléphone en portrait, piloter la maison d'un pouce, pièce par pièce 
 - **Quand** l'utilisateur touche « Thème » puis « Clair »
 - **Alors** le dashboard passe en thème clair
 
-### Scénario : ouvrir la modale Système depuis le Foyer
+### Scénario : ouvrir la modale Configuration depuis le Foyer
 
 - **Étant donné** le Foyer ouvert
-- **Quand** l'utilisateur touche « Système »
-- **Alors** la modale Système s'ouvre par-dessus le menu, sans le réglage de la veille
+- **Quand** l'utilisateur touche « Configuration »
+- **Alors** la modale Configuration s'ouvre par-dessus le menu, sans le réglage de la veille
 - **Et** toucher son fond la ferme, sans fermer le menu
 
 ### Scénario : se déconnecter depuis le Foyer
