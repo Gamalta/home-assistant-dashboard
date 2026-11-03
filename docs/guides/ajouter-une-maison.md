@@ -34,8 +34,8 @@ pnpm bake-lighting src/configs/<id>/<Nom>.glb
 
 Blender 5 calcule la lumière du ciel et du soleil, avec ses rebonds, dans deux cartes écrites à côté du modèle : `<Nom>-sky.webp` et `<Nom>-sun.webp` ([ADR 0046](../adr/0046-eclairage-precalcule-dans-blender.md)). Le modèle est réécrit avec le second jeu d'UV que lisent ces cartes. Compter quelques minutes. Blender est attendu dans `/Applications`, sinon le désigner par `BLENDER=<chemin>`.
 
-- Relancer le script après chaque `pnpm optimize-model` : les cartes ne valent que pour le modèle sur lequel elles ont été calculées.
-- Deux objets qui se chevauchent dans le même plan, comme les dessus de deux meubles qui s'interpénètrent, sortent noirs : les écarter dans Blender. La démo en garde deux, sur l'armoire et la vitrine du séjour.
+- Relancer le script après chaque `pnpm optimize-model` : les cartes ne valent que pour le modèle sur lequel elles ont été calculées. Il se relance aussi sur un modèle déjà précalculé, après une mise à jour du script.
+- Le script unit les murs, qui s'interpénètrent à leurs jonctions ([ADR 0053](../adr/0053-unir-les-murs-avant-le-precalcul.md)). Deux meubles qui se chevauchent dans le même plan sortent encore noirs : les écarter dans Blender. La démo en garde deux, sur l'armoire et la vitrine du séjour.
 - Sans cette étape, la maison s'affiche avec l'ambiance Clair doux, en temps réel.
 
 ## 4. Décrire la maison
