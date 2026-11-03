@@ -16,6 +16,7 @@ import {ConfigType, HouseConfigsName} from '../../configs/configs';
 import {useHouseConfigs} from '../../hooks/useHouseConfigs';
 import {useHouseContext} from '../../contexts/HouseContext';
 import {SystemModal} from '../Modal/SystemModal';
+import {ConfigurationModal} from '../Modal/ConfigurationModal';
 
 type SideBarDockProps = {
   sideBarRef: React.RefObject<HTMLDivElement | null>;
@@ -25,6 +26,7 @@ export function SideBarDock(props: SideBarDockProps) {
   const {sideBarRef} = props;
   const [isVisible, setIsVisible] = useState(false);
   const [systemModal, setSystemModal] = useState(false);
+  const [configurationModal, setConfigurationModal] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
@@ -148,7 +150,7 @@ export function SideBarDock(props: SideBarDockProps) {
           {HouseConfigsName.length > 1 && (
             <>
               <Button onClick={event => setConfigAnchor(event.currentTarget)}>
-                Configuration
+                Maison
               </Button>
               <Menu
                 anchorEl={configAnchor}
@@ -169,6 +171,16 @@ export function SideBarDock(props: SideBarDockProps) {
               </Menu>
             </>
           )}
+          <Button onClick={() => setConfigurationModal(true)}>
+            Configuration
+          </Button>
+          <motion.div layoutId="layoutid-configuration-modal" />
+          <ConfigurationModal
+            id="layoutid-configuration-modal"
+            title="Configuration"
+            open={configurationModal}
+            onClose={() => setConfigurationModal(false)}
+          />
           {houseConfig?.sideBar.system && (
             <>
               <Button onClick={() => setSystemModal(true)}>Système</Button>

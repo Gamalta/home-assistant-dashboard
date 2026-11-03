@@ -149,9 +149,10 @@ test("la vue 3D s'ouvre sur la première pièce", async ({page}) => {
     card.getByRole('button', {name: /Plafonnier du séjour/}),
   ).toBeVisible();
 
-  // Autant d'étiquettes dans la scène que de tuiles sur la carte.
+  // Autant d'étiquettes dans la scène que de tuiles sur la carte, sauf
+  // l'interrupteur sur pile, masqué par défaut dans la scène.
   const tiles = await card.getByRole('button').count();
-  await expect(sceneLabels(page)).toHaveCount(tiles);
+  await expect(sceneLabels(page)).toHaveCount(tiles - 1);
 
   // L'étiquette de la pièce, à sa position dans la config, se centre entre
   // l'en-tête et les puces ; la scène continue derrière le carrousel.
@@ -179,9 +180,10 @@ test('choisir une pièce y amène la caméra', async ({page}) => {
   await expect(chip(page, 'Cuisine')).toHaveAttribute('aria-pressed', 'true');
   const card = page.getByRole('region', {name: 'Cuisine'});
   await expect(card).toBeInViewport({ratio: 0.9});
+  // L'interrupteur sur pile n'a pas d'étiquette par défaut.
   const tiles = await card.getByRole('button').count();
   const labels = sceneLabels(page);
-  await expect(labels).toHaveCount(tiles);
+  await expect(labels).toHaveCount(tiles - 1);
   // À l'arrivée, toutes les étiquettes de la cuisine sont dans le cadre.
   await expect.poll(() => labelsInside(labels, top, bottom)).toBe(true);
   expect(await page.evaluate(() => window.__linkedPrograms)).toBe(programs);
@@ -541,7 +543,7 @@ test('les avatars déroulent le Foyer en menu', async ({page}) => {
     await expect(menu.getByText(name, {exact: true})).toBeVisible();
   await expect(menu.getByRole('region', {name: 'Raccourcis'})).toBeVisible();
   const settings = menu.getByRole('list', {name: 'Réglages'});
-  for (const name of [/Thème/, /Système/, /Se déconnecter/])
+  for (const name of [/Thème/, /Configuration/, /Système/, /Se déconnecter/])
     await expect(settings.getByRole('button', {name})).toBeVisible();
   // Sous les avatars, aligné sur eux à droite, au-dessus de la barre d'accueil.
   await expect
@@ -579,12 +581,12 @@ test('changer le thème depuis le Foyer', async ({page}) => {
   await expect(page.locator('html')).toHaveClass(/light/);
 });
 
-test('ouvrir la modale Système depuis le Foyer', async ({page}) => {
+test('ouvrir la modale Configuration depuis le Foyer', async ({page}) => {
   const menu = await openFoyer(page);
 
-  await menu.getByRole('button', {name: /Système/}).tap();
+  await menu.getByRole('button', {name: /Configuration/}).tap();
 
-  const title = page.getByRole('heading', {name: 'Système'});
+  const title = page.getByRole('heading', {name: 'Configuration'});
   await expect(title).toBeVisible();
   await expect(page.getByText('Affichage')).toBeVisible();
   await expect(page.getByRole('combobox', {name: 'Veille'})).toHaveCount(0);

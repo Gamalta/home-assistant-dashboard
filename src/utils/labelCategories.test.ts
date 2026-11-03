@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import type {HouseConfigType, RoomItemConfigType} from '../configs/house';
 import {
+  hasBattery,
   houseLabelCategories,
   isLabelShown,
   labelCategories,
@@ -16,25 +17,66 @@ const room = (
 });
 
 describe('isLabelShown', () => {
-  it('affiche les étiquettes quand rien n’est masqué', () => {
-    expect(isLabelShown('light', [])).toBe(true);
+  it('affiche les étiquettes quand rien n’est choisi', () => {
+    expect(isLabelShown('light', {})).toBe(true);
+  });
+
+  it('masque par défaut les appareils sur pile, qui sont passifs', () => {
+    expect(isLabelShown('battery', {})).toBe(false);
+    expect(isLabelShown('battery', {battery: true})).toBe(true);
   });
 
   it('masque seulement les étiquettes de la catégorie masquée', () => {
-    expect(isLabelShown('shutter', ['shutter'])).toBe(false);
-    expect(isLabelShown('light', ['shutter'])).toBe(true);
+    expect(isLabelShown('shutter', {shutter: false})).toBe(false);
+    expect(isLabelShown('light', {shutter: false})).toBe(true);
   });
 
   it('range climatisations et thermomètres dans la même catégorie', () => {
-    expect(isLabelShown('climate', ['climate'])).toBe(false);
-    expect(isLabelShown('temperature', ['climate'])).toBe(false);
+    expect(isLabelShown('climate', {climate: false})).toBe(false);
+    expect(isLabelShown('temperature', {climate: false})).toBe(false);
   });
 
   it('affiche toujours un type absent de la table', () => {
     // Un type ajouté par une autre branche, sans ligne dans la table.
-    const type = 'smoke' as RoomItemConfigType['type'];
-    const allHidden = labelCategories.map(c => c.id);
+    const type = 'fan' as RoomItemConfigType['type'];
+    const allHidden = Object.fromEntries(
+      labelCategories.map(c => [c.id, false]),
+    );
     expect(isLabelShown(type, allHidden)).toBe(true);
+  });
+});
+
+describe('hasBattery', () => {
+  it('reconnaît les éléments qui donnent un niveau de pile', () => {
+    expect(
+      hasBattery({
+        type: 'battery',
+        name: 'Interrupteur',
+        batteryEntityId: 'sensor.button_battery',
+        roomDisplay: true,
+      }),
+    ).toBe(true);
+    expect(
+      hasBattery({
+        type: 'temperature',
+        roomDisplay: true,
+        temperatureEntityId: 'sensor.salon_temperature',
+        batteryEntityId: 'sensor.salon_battery',
+      }),
+    ).toBe(true);
+  });
+
+  it('ignore un thermomètre sans pile et une lumière', () => {
+    expect(
+      hasBattery({
+        type: 'temperature',
+        roomDisplay: true,
+        temperatureEntityId: 'sensor.salon_temperature',
+      }),
+    ).toBe(false);
+    expect(
+      hasBattery({type: 'light', roomDisplay: true, lightEntityId: 'light.a'}),
+    ).toBe(false);
   });
 });
 

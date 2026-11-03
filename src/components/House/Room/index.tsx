@@ -1,15 +1,16 @@
 import Stack from '@mui/material/Stack';
 import type {HouseConfigType} from '../../../configs/house';
 import {Html} from '../../3d/Html';
-import {RoomItem} from './RoomItem';
+import {RoomItem, type ItemVariant} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
+  variant?: ItemVariant;
 };
 
 export function Room(props: RoomProps) {
-  const {room} = props;
+  const {room, variant} = props;
   const items = room.items ?? [];
   const roomItems = items.filter(item => item.roomDisplay);
 
@@ -30,6 +31,7 @@ export function Room(props: RoomProps) {
                 key={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 id={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 itemConfig={item}
+                variant={variant}
               />
             ))}
           </ButtonGroup>
@@ -45,6 +47,7 @@ export function Room(props: RoomProps) {
               <RoomItem
                 id={`room-${room.id}-item-${item.type}-id-${id}`}
                 itemConfig={item}
+                variant={variant}
               />
             </Stack>
           </Html>

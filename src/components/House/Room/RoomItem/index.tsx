@@ -14,11 +14,11 @@ import {RoomVacuum} from './RoomVacuum';
 type RoomItemProps = {
   id: string;
   itemConfig: RoomItemConfigType;
-  // Étiquette de la scène 3D, ou tuile de la version mobile.
+  // Étiquette de la scène 3D, sa pile seule, ou tuile de la version mobile.
   variant?: ItemVariant;
 };
 
-export type ItemVariant = 'label' | 'tile';
+export type ItemVariant = 'label' | 'battery' | 'tile';
 
 export function RoomItem(props: RoomItemProps) {
   const {id, itemConfig, variant = 'label'} = props;

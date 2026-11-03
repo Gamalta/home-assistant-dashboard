@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {expect, test, waitForScene} from './fixtures';
+import {expect, openConfigurationModal, test, waitForScene} from './fixtures';
 
 // Taille de la tablette, au doigt.
 test.use({viewport: {width: 1280, height: 800}, hasTouch: true});
@@ -8,8 +8,20 @@ test.use({viewport: {width: 1280, height: 800}, hasTouch: true});
 const labels = (page: Page) => page.locator('div:has(> canvas) ~ div');
 const temperatures = (page: Page) =>
   labels(page).getByRole('button', {name: /°$/});
-const filter = (page: Page, name: string) =>
-  page.getByRole('button', {name, exact: true});
+const category = (page: Page, name: string) =>
+  page.getByRole('switch', {name, exact: true});
+const batteriesOnly = (page: Page) =>
+  page
+    .getByText('Batteries uniquement', {exact: true})
+    .locator('..')
+    .getByRole('switch');
+
+// Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
+async function closeModal(page: Page) {
+  const title = page.getByRole('heading', {name: 'Configuration'});
+  await title.locator('..').getByRole('button').last().click();
+  await expect(title).toBeHidden();
+}
 
 // Luminosité moyenne du canvas, sans les étiquettes : elle chute si des lumières s'éteignent.
 async function canvasBrightness(page: Page) {
@@ -37,33 +49,47 @@ test.beforeEach(async ({page}) => {
 });
 
 // Démo : 14 pièces, 17 lumières, 7 climatisations, 6 volets, 2 prises, 1 imprimante,
-// 1 TV, 1 aspirateur, 3 appareils sur pile et 1 détecteur de fumée.
+// 1 TV, 1 aspirateur, 3 appareils sur pile (masqués par défaut) et 1 détecteur de fumée.
 test('masque puis réaffiche les étiquettes d’une catégorie', async ({page}) => {
-  await expect(labels(page).getByRole('button')).toHaveCount(39);
+  await openConfigurationModal(page);
+  await expect(labels(page).getByRole('button')).toHaveCount(36);
   await expect(temperatures(page)).toHaveCount(7);
 
-  await filter(page, 'Volets').tap();
-  await expect(filter(page, 'Volets')).toHaveAttribute('aria-pressed', 'false');
-  await expect(labels(page).getByRole('button')).toHaveCount(33);
+  await category(page, 'Volets').uncheck();
+  await expect(labels(page).getByRole('button')).toHaveCount(30);
   await expect(temperatures(page)).toHaveCount(7);
 
-  await filter(page, 'Climat').tap();
+  await category(page, 'Climat').uncheck();
   await expect(temperatures(page)).toHaveCount(0);
-  await expect(labels(page).getByRole('button')).toHaveCount(26);
+  await expect(labels(page).getByRole('button')).toHaveCount(23);
 
-  await filter(page, 'Volets').tap();
-  await filter(page, 'Climat').tap();
-  await expect(labels(page).getByRole('button')).toHaveCount(39);
+  await category(page, 'Volets').check();
+  await category(page, 'Climat').check();
+  await expect(labels(page).getByRole('button')).toHaveCount(36);
   await expect(temperatures(page)).toHaveCount(7);
+});
+
+test('masque par défaut les appareils sur pile', async ({page}) => {
+  const switches = labels(page).getByRole('button', {
+    name: /^Interrupteur (du séjour|de la cuisine|de la chambre)$/,
+  });
+  await expect(labels(page).getByRole('button')).toHaveCount(36);
+  await expect(switches).toHaveCount(0);
+
+  await openConfigurationModal(page);
+  await expect(category(page, 'Appareils sur pile')).not.toBeChecked();
+  await category(page, 'Appareils sur pile').check();
+  await expect(switches).toHaveCount(3);
 });
 
 test('retire l’étiquette d’une pièce dont tous les éléments sont masqués', async ({
   page,
 }) => {
-  await expect(labels(page)).toHaveCount(32);
+  await expect(labels(page)).toHaveCount(29);
   // 7 pièces n'ont qu'une lumière, et 3 lumières du séjour ont leur propre étiquette.
-  await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(22);
+  await openConfigurationModal(page);
+  await category(page, 'Lumières').uncheck();
+  await expect(labels(page)).toHaveCount(19);
   await expect(temperatures(page)).toHaveCount(7);
 });
 
@@ -83,72 +109,37 @@ test('garde les lumières 3D allumées quand leurs étiquettes sont masquées', 
     )
     .toBe(0);
 
-  await filter(page, 'Lumières').tap();
-  await expect(labels(page)).toHaveCount(22);
+  await openConfigurationModal(page);
+  await category(page, 'Lumières').uncheck();
+  await expect(labels(page)).toHaveCount(19);
+  await closeModal(page);
   expect(await canvasBrightness(page)).toBeCloseTo(before, 0);
 });
 
 test('mémorise le filtre après rechargement', async ({page}) => {
-  await filter(page, 'Volets').tap();
-  await expect(labels(page)).toHaveCount(26);
+  await openConfigurationModal(page);
+  await category(page, 'Volets').uncheck();
+  await expect(labels(page)).toHaveCount(23);
 
   await page.reload();
-  await waitForScene(page);
-  await expect(filter(page, 'Volets')).toHaveAttribute('aria-pressed', 'false');
-  await expect(filter(page, 'Lumières')).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await expect(labels(page)).toHaveCount(26);
+  await openConfigurationModal(page);
+  await expect(category(page, 'Volets')).not.toBeChecked();
+  await expect(category(page, 'Lumières')).toBeChecked();
+  await expect(labels(page)).toHaveCount(23);
 });
 
-test('reste utilisable au doigt à 1280 × 800 sans cacher la maison', async ({
-  page,
-}) => {
-  const canvas = (await page.locator('canvas').boundingBox())!;
-  const bar = (await filter(page, 'Lumières').locator('..').boundingBox())!;
-  // Une rangée courte, en haut de la vue 3D.
-  expect(bar.x).toBeGreaterThan(canvas.x);
-  expect(bar.x + bar.width).toBeLessThan(canvas.x + canvas.width);
-  expect(bar.y + bar.height).toBeLessThan(80);
-  expect(bar.width).toBeLessThan(canvas.width / 3);
+test('n’affiche que les piles de tous les éléments', async ({page}) => {
+  await openConfigurationModal(page);
+  await batteriesOnly(page).check();
+  await expect(category(page, 'Lumières')).toBeDisabled();
 
-  for (const name of ['Lumières', 'Climat', 'Volets']) {
-    const button = (await filter(page, name).boundingBox())!;
-    expect(button.width).toBeGreaterThanOrEqual(40);
-    expect(button.height).toBeGreaterThanOrEqual(40);
+  // Les 3 interrupteurs, masqués par défaut, et le détecteur de fumée.
+  await expect(labels(page).getByRole('button')).toHaveCount(4);
+  for (const level of ['54%', '12%', '85%', '90%']) {
+    await expect(labels(page).getByText(level, {exact: true})).toHaveCount(1);
   }
+  await expect(temperatures(page)).toHaveCount(0);
 
-  // Aucune étiquette ne passe sous la rangée.
-  for (const label of await labels(page).all()) {
-    const box = (await label.boundingBox())!;
-    expect(box.y).toBeGreaterThan(bar.y + bar.height);
-  }
-});
-
-test.describe('téléphone', () => {
-  test.use({
-    viewport: {width: 390, height: 844},
-    hasTouch: true,
-    isMobile: true,
-  });
-
-  test('reste accessible au doigt sous l’en-tête du téléphone', async ({
-    page,
-  }) => {
-    const header = (await page.getByRole('banner').boundingBox())!;
-    const ceiling = labels(page).getByRole('button', {
-      name: /Plafonnier du séjour/,
-    });
-    await expect(ceiling).toBeVisible();
-
-    for (const name of ['Lumières', 'Climat', 'Volets']) {
-      const button = (await filter(page, name).boundingBox())!;
-      expect(button.y).toBeGreaterThanOrEqual(header.y + header.height);
-      // tap échoue si l'en-tête recouvre la puce.
-      await filter(page, name).tap();
-      await expect(filter(page, name)).toHaveAttribute('aria-pressed', 'false');
-    }
-    await expect(ceiling).toHaveCount(0);
-  });
+  await batteriesOnly(page).uncheck();
+  await expect(labels(page).getByRole('button')).toHaveCount(36);
 });
