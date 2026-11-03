@@ -7,6 +7,8 @@ Deux éléments de pièce montrent les appareils passifs dans la scène 3D ([spe
 
 Une pile est faible sous **20 %** : l'étiquette passe alors en rouge.
 
+Les appareils sur pile sont masqués par défaut dans la vue 3D : les afficher, ou n'afficher que les piles, depuis la modale Configuration ([guide](filtrer-les-etiquettes.md)).
+
 ## Trouver les entités
 
 Dans Home Assistant, ouvrir l'appareil (Paramètres → Appareils et services → Zigbee), puis chaque entité, et copier son identifiant (roue dentée → « ID de l'entité »). Avec Zigbee2MQTT, elles portent le nom de l'appareil suivi de la donnée : `sensor.<nom>_battery`, `binary_sensor.<nom>_smoke`…

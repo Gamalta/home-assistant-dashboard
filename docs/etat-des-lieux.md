@@ -6,7 +6,7 @@ Photographie du projet sur la branche `feat/three-js` (commit `6e12129`), avant 
 
 Un dashboard Home Assistant pensé pour une **tablette murale**. L'écran se compose de deux panneaux redimensionnables :
 
-- **la barre latérale** : date et heure, météo, deux personnes (zone, distance, batterie, mode concentration), deux animaux, puis un dock caché (thème, choix de la maison, modale Système) ;
+- **la barre latérale** : date et heure, météo, deux personnes (zone, distance, batterie, mode concentration), deux animaux, puis un dock caché (thème, choix de la maison, modales Configuration et Système) ;
 - **la maison en 3D** : modèle glTF exporté de Blender, avec des étiquettes HTML posées dans l'espace pour les lumières, la climatisation, les thermomètres, les volets et les ordinateurs. Un appui ouvre une modale animée (framer-motion `layoutId`).
 
 La tablette cible a un GPU **Qualcomm Adreno 610**. Le rendu y est limité par le GPU : de 40 à 300 ms par image selon le DPR et les ombres, d'après les mesures des itérations « tablette » 1 à 7.

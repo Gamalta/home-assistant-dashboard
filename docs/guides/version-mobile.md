@@ -9,7 +9,7 @@ Sous 600 px de large, sur un téléphone en portrait, le dashboard remplace la b
 | En-tête    | Sélecteur « 3D » / « Pièces », avatars                                                                                        | `SideBarConfig` (personnes)                       |
 | Vue 3D     | Scène 3D cadrée sur une pièce, menu rapide, carrousel des pièces                                                              | `HouseConfig.rooms`, [menu rapide](raccourcis.md) |
 | Vue Pièces | Une carte par pièce, avec une tuile par équipement et des filtres                                                             | `HouseConfig.rooms[].items`                       |
-| Foyer      | Menu sous les avatars : personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs), Système et Se déconnecter | `SideBarConfig`                                   |
+| Foyer      | Menu sous les avatars : personnes, animaux, raccourcis, puis Thème, Maison (s'il y en a plusieurs), Configuration, Système et Se déconnecter | `SideBarConfig`                                   |
 
 ## Gestes
 
