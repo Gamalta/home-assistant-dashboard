@@ -104,7 +104,10 @@ type LedLayoutType = {
 type VacuumConfigType = BaseItemConfigType & {
   type: 'vacuum';
   prefix: string;
+  mapAlignment?: MapAlignmentType;
 };
+
+type MapAlignmentType = {x: number; z: number; rotation: number};
 
 type BatteryConfigType = BaseItemConfigType & {
   type: 'battery';
