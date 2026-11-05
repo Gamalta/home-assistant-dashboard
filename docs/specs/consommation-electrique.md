@@ -17,7 +17,7 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 - Les options tarifaires autres que heures pleines / heures creuses (Base, Tempo, EJP).
 - L'abonnement et les taxes fixes : le coût est une estimation à partir du prix du kWh.
 - La production (panneaux solaires) et la consommation par appareil.
-- Le relevé des tarifs : ils sont écrits dans la config de la maison, et une période passée est estimée aux tarifs d'aujourd'hui.
+- Le relevé des tarifs : ils sont écrits dans la config de la maison, et une période passée est estimée aux tarifs d'aujourd'hui de sa saison.
 
 ## Comportement attendu
 
@@ -28,6 +28,14 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 - **Alors** la modale s'ouvre depuis le bouton rond du menu et montre le mois en cours : en grand le total en kWh, dessous le coût estimé, puis l'écart avec le mois précédent à date égale (« +12 % par rapport à septembre 2026, à date égale »), dans la couleur principale si l'on consomme plus, en vert si l'on consomme moins
 - **Et** sous ces chiffres, hors du tracé pour que la bande du survol ne les traverse pas, un graphique en barres empilées, heures pleines et heures creuses, montre chaque jour, aujourd'hui compris ; le mois précédent est tracé en pointillés, jour par jour
 - **Et** une légende donne les kWh et le coût des heures pleines, des heures creuses et du mois précédent, avec sous chaque période tarifaire le prix du kWh retenu pour le coût (« 0,2516 €/kWh »)
+
+### Scénario : des prix différents en saison haute
+
+- **Étant donné** une config `energy` avec `highSeasonPrices`, pour un acheminement à quatre plages
+- **Quand** la modale montre un mois de novembre à mars
+- **Alors** son coût et le prix du kWh sous chaque période tarifaire sont ceux de `highSeasonPrices`, et ceux de `prices` d'avril à octobre
+- **Et** une période à cheval sur les deux saisons, comme une année, compte chaque jour ou mois aux prix de sa saison, et la légende donne la fourchette (« 0,1896 à 0,2534 €/kWh »)
+- **Et** le schéma du courant et le coût horaire prennent les prix du jour
 
 ### Scénario : la modale sur téléphone
 
@@ -77,7 +85,7 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 
 ## Critères d'acceptation
 
-- [x] La config ne demande que des entités et les deux tarifs.
+- [x] La config ne demande que des entités et les deux tarifs, plus deux pour la saison haute si l'acheminement est à quatre plages ([ADR 0054](../adr/0054-prix-du-kwh-par-saison.md)).
 - [x] Les consommations viennent des statistiques à long terme ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md)), par jour ou par mois selon l'échelle, une requête par période affichée ([ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)).
 - [x] Les index en Wh, kWh ou MWh sont convertis en kWh.
 - [x] Le graphique est le composant commun `Chart` ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).

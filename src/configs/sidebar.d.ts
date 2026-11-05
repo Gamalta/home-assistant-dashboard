@@ -39,6 +39,7 @@ type EnergyConfigType = {
   offPeakIndexEntityId: FilterByDomain<EntityName, 'sensor'>;
   subscribedCurrentEntityId?: FilterByDomain<EntityName, 'sensor'>;
   prices: {peak: number; offPeak: number};
+  highSeasonPrices?: {peak: number; offPeak: number};
 };
 
 type TrainsShortcutConfigType = {

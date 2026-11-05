@@ -175,6 +175,29 @@ describe('EnergyModalContent', () => {
     await screen.findByText(/par rapport à octobre 2026/);
   });
 
+  it('compte chaque mois aux prix de sa saison, et donne leur fourchette sur l’année', async () => {
+    render(
+      <EnergyModalContent
+        energyConfig={{...config, highSeasonPrices: {peak: 0.3, offPeak: 0.22}}}
+      />,
+    );
+
+    // Du 1er au 9 novembre, en saison haute : 45 kWh à 0,30 € et 27 kWh à 0,22 €.
+    expect(await screen.findByText(/^19,44\s€$/)).toBeInTheDocument();
+    const totals = screen.getByRole('region', {name: 'Totaux'});
+    expect(totals).toHaveTextContent(
+      /Heures pleines0,30\s€\/kWh45 kWh13,50\s€/,
+    );
+    // Octobre reste en saison basse.
+    expect(totals).toHaveTextContent(/Mois précédent310 kWh71,30\s€/);
+
+    fireEvent.click(screen.getByRole('button', {name: 'Année'}));
+    await screen.findByText(/par rapport à 2025/);
+    expect(screen.getByRole('region', {name: 'Totaux'})).toHaveTextContent(
+      /Heures pleines0,25 à 0,30\s€\/kWh/,
+    );
+  });
+
   it('affiche des tirets sans statistiques', async () => {
     connection.sendMessagePromise.mockResolvedValue({});
     render(<EnergyModalContent energyConfig={config} />);

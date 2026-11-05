@@ -39,7 +39,7 @@ type EnergyModalContentProps = {
 
 export function EnergyModalContent(props: EnergyModalContentProps) {
   const {energyConfig} = props;
-  const {peakIndexEntityId, offPeakIndexEntityId, prices} = energyConfig;
+  const {peakIndexEntityId, offPeakIndexEntityId} = energyConfig;
   const [scale, setScale] = useState<Scale>('month');
   const [comparison, setComparison] = useState<Comparison>('previous');
   // 0 pour la période en cours, -1 pour la précédente…
@@ -49,10 +49,11 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
   const unit = STATISTICS_PERIOD[scale];
   const period = getPeriod(scale, now, offset);
   const referencePeriod = getComparisonPeriod(scale, period, comparison);
+  const buckets = getBuckets(period, unit);
   const current = useEnergyConsumption(
     peakIndexEntityId,
     offPeakIndexEntityId,
-    getBuckets(period, unit),
+    buckets,
     unit,
     now.getTime(),
   );
@@ -77,7 +78,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
         referencePeriod={referencePeriod}
         now={now.getTime()}
         comparisonLabel={comparisonLabel}
-        prices={prices}
+        tariff={energyConfig}
       />
       <Stack spacing={3} sx={{width: {xs: '100%', sm: 300}}}>
         <EnergyFlow energyConfig={energyConfig} />
@@ -146,10 +147,11 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
           </ToggleButtonGroup>
         </Stack>
         <EnergyTotals
+          buckets={buckets}
           current={current}
           reference={reference}
           comparisonLabel={comparisonLabel}
-          prices={prices}
+          tariff={energyConfig}
         />
       </Stack>
     </Stack>

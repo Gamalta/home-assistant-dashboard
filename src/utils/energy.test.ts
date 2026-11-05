@@ -11,9 +11,10 @@ import {
   getChange,
   getComparisonPeriod,
   getConsumption,
-  getCost,
+  getCosts,
   getFlowDuration,
   getPeriod,
+  getPrices,
   getSubscribedPower,
   getTariffPeriod,
   getTotal,
@@ -405,29 +406,58 @@ describe('getChange', () => {
 });
 
 describe('coûts', () => {
-  const prices = {peak: 0.25, offPeak: 0.2};
+  const tariff = {prices: {peak: 0.25, offPeak: 0.2}};
+  const seasonal = {...tariff, highSeasonPrices: {peak: 0.3, offPeak: 0.22}};
+  const day = (start: number, peak: number | null, offPeak: number | null) => ({
+    start,
+    end: start + 1,
+    peak,
+    offPeak,
+  });
 
   it('additionne les heures pleines et creuses à leur tarif', () => {
-    expect(getCost({peak: 4, offPeak: 5}, prices)).toBe(2);
+    expect(getCosts([day(0, 4, 5)], tariff)).toEqual({peak: 1, offPeak: 1});
   });
 
   it('ne donne pas de coût partiel', () => {
-    expect(getCost({peak: 4, offPeak: null}, prices)).toBeNull();
+    expect(getTotal(getCosts([day(0, 4, null)], tariff))).toBeNull();
   });
 
   it('additionne les jours connus d’une période', () => {
-    const total = sumConsumption([
-      {start: 0, end: 1, peak: 4, offPeak: 5},
-      {start: 1, end: 2, peak: null, offPeak: null},
-      {start: 2, end: 3, peak: 2, offPeak: 1},
-    ]);
+    const days = [day(0, 4, 5), day(1, null, null), day(2, 2, 1)];
+    const total = sumConsumption(days);
 
     expect(total).toEqual({peak: 6, offPeak: 6});
     expect(getTotal(total)).toBe(12);
-    expect(getCost(total, prices)).toBe(2.7);
-    expect(
-      sumConsumption([{start: 0, end: 1, peak: null, offPeak: null}]),
-    ).toEqual({peak: null, offPeak: null});
+    expect(getTotal(getCosts(days, tariff))).toBe(2.7);
+    expect(sumConsumption([day(0, null, null)])).toEqual({
+      peak: null,
+      offPeak: null,
+    });
+  });
+
+  it('applique les prix de la saison haute de novembre à mars', () => {
+    expect(getPrices(seasonal, local('2026-10-31'))).toBe(tariff.prices);
+    expect(getPrices(seasonal, local('2026-11-01'))).toBe(
+      seasonal.highSeasonPrices,
+    );
+    expect(getPrices(seasonal, local('2027-03-31'))).toBe(
+      seasonal.highSeasonPrices,
+    );
+    expect(getPrices(seasonal, local('2027-04-01'))).toBe(tariff.prices);
+    expect(getPrices(tariff, local('2026-12-15'))).toBe(tariff.prices);
+  });
+
+  it('compte chaque jour aux prix de sa saison', () => {
+    const days = [
+      day(local('2026-10-31'), 10, 10),
+      day(local('2026-11-01'), 10, 10),
+    ];
+
+    expect(getCosts(days, seasonal)).toEqual({
+      peak: expect.closeTo(5.5),
+      offPeak: expect.closeTo(4.2),
+    });
   });
 });
 
@@ -473,6 +503,13 @@ describe('formatage', () => {
   it('écrit le prix du kWh avec ses décimales, au moins deux', () => {
     expect(formatPrice(0.2516)).toMatch(/^0,2516\s€\/kWh$/);
     expect(formatPrice(0.27)).toMatch(/^0,27\s€\/kWh$/);
+  });
+
+  it('écrit la fourchette des prix d’une période à cheval sur deux saisons', () => {
+    expect(formatPrice(0.25343, 0.18959, 0.25343)).toMatch(
+      /^0,1896 à 0,2534\s€\/kWh$/,
+    );
+    expect(formatPrice(0.2, 0.2)).toMatch(/^0,20\s€\/kWh$/);
   });
 
   it('écrit l’écart signé, au pour cent', () => {

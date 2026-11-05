@@ -1,5 +1,5 @@
 import {render, screen} from '@testing-library/react';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {EnergyConfigType} from '../../../configs/sidebar';
 import {EnergyFlow} from './EnergyFlow';
 
@@ -24,6 +24,10 @@ const config: EnergyConfigType = {
 };
 
 describe('EnergyFlow', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('fait passer le courant par le fil de la période en cours, avec son prix', () => {
     render(<EnergyFlow energyConfig={config} />);
 
@@ -35,6 +39,21 @@ describe('EnergyFlow', () => {
       'false',
     );
     expect(screen.getByText(/^≈ 0,38\s€\/h$/)).toBeInTheDocument();
+  });
+
+  it('donne les prix et le coût horaire de la saison en cours', () => {
+    vi.useFakeTimers({toFake: ['Date']});
+    vi.setSystemTime(new Date('2026-12-01T12:00'));
+    render(
+      <EnergyFlow
+        energyConfig={{...config, highSeasonPrices: {peak: 0.3, offPeak: 0.22}}}
+      />,
+    );
+
+    expect(screen.getByText('HP').closest('[aria-current]')).toHaveTextContent(
+      /^HP 0,30\s€\/kWh$/,
+    );
+    expect(screen.getByText(/^≈ 0,45\s€\/h$/)).toBeInTheDocument();
   });
 
   it('affiche la charge si l’intensité souscrite est configurée', () => {
