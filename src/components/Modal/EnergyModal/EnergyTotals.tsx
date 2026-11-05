@@ -7,38 +7,44 @@ import {
   formatCost,
   formatEnergy,
   formatPrice,
-  getCost,
+  getCosts,
+  getPrices,
   getTotal,
+  type Period,
   sumConsumption,
-  type TariffPeriod,
+  type Tariff,
   TARIFF_PERIODS,
 } from '../../../utils/energy';
 
 type EnergyTotalsProps = {
+  /** Jours ou mois de la période, pour ses prix avant même le chargement. */
+  buckets: Period[];
   current: Consumption[] | null;
   reference: Consumption[] | null;
   comparisonLabel: string;
-  prices: Record<TariffPeriod, number>;
+  tariff: Tariff;
 };
 
 export function EnergyTotals(props: EnergyTotalsProps) {
-  const {current, reference, comparisonLabel, prices} = props;
+  const {buckets, current, reference, comparisonLabel, tariff} = props;
   const total = sumConsumption(current ?? []);
   const referenceTotal = sumConsumption(reference ?? []);
+  const costs = getCosts(current ?? [], tariff);
+  const prices = buckets.map(bucket => getPrices(tariff, bucket.start));
   const rows = [
-    ...(['peak', 'offPeak'] as const).map(tariff => ({
-      label: TARIFF_PERIODS[tariff].label,
-      color: TARIFF_PERIODS[tariff].color,
-      price: prices[tariff],
-      kWh: total[tariff],
-      cost: total[tariff] === null ? null : total[tariff] * prices[tariff],
+    ...(['peak', 'offPeak'] as const).map(period => ({
+      label: TARIFF_PERIODS[period].label,
+      color: TARIFF_PERIODS[period].color,
+      price: formatPrice(...prices.map(price => price[period])),
+      kWh: total[period],
+      cost: costs[period],
     })),
     {
       label: comparisonLabel,
       color: null,
       price: null,
       kWh: getTotal(referenceTotal),
-      cost: getCost(referenceTotal, prices),
+      cost: getTotal(getCosts(reference ?? [], tariff)),
     },
   ];
 
@@ -78,7 +84,7 @@ export function EnergyTotals(props: EnergyTotalsProps) {
             <Typography variant="body2">{row.label}</Typography>
             {row.price !== null && (
               <Typography variant="caption" color="textSecondary">
-                {formatPrice(row.price)}
+                {row.price}
               </Typography>
             )}
           </Stack>
