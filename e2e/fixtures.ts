@@ -40,15 +40,19 @@ export async function waitForScene(page: Page) {
 }
 
 // Le dock apparaît quand la souris passe en bas de la barre latérale.
-export async function openSystemModal(page: Page) {
+async function openDockModal(page: Page, name: string) {
   await waitForScene(page);
   await page.mouse.move(150, 700);
-  const button = page.getByRole('button', {name: 'Système'});
+  const button = page.getByRole('button', {name, exact: true});
   // Un clic pendant l'animation d'entrée du dock peut tomber à côté.
   await expect(button.locator('..')).toHaveCSS('opacity', '1');
   await button.click();
-  await expect(page.getByRole('heading', {name: 'Système'})).toBeVisible();
+  await expect(page.getByRole('heading', {name})).toBeVisible();
 }
+
+export const openSystemModal = (page: Page) => openDockModal(page, 'Système');
+export const openConfigurationModal = (page: Page) =>
+  openDockModal(page, 'Configuration');
 
 // Glissement du doigt vers la gauche, un peu de biais comme à la main.
 // Chromium headless ne simule pas le doigt de la même façon partout : sous

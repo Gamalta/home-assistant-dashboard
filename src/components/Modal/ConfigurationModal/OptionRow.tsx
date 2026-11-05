@@ -8,7 +8,10 @@ import {
 
 type OptionRowProps = {
   label: string;
-  option: Exclude<keyof ConfigurationOptions, 'screensaverMinutes'>;
+  option: Exclude<
+    keyof ConfigurationOptions,
+    'shownCategories' | 'screensaverMinutes'
+  >;
   disabled?: boolean;
 };
 

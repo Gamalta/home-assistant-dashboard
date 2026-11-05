@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {expect, openSystemModal, test, waitForScene} from './fixtures';
+import {expect, openConfigurationModal, test, waitForScene} from './fixtures';
 
 // Les interrupteurs n'ont pas de libellé associé : on passe par leur ligne.
 const option = (page: Page, label: string) =>
@@ -9,12 +9,12 @@ const option = (page: Page, label: string) =>
 // au contraire de « Debug », trop lent avec SwiftShader en CI.
 test('garde une option graphique après rechargement', async ({page}) => {
   await page.goto('/');
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await expect(option(page, 'Murs transparents')).toBeChecked();
   await option(page, 'Murs transparents').uncheck();
 
   await page.reload();
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await expect(option(page, 'Murs transparents')).not.toBeChecked();
 });
 
@@ -46,11 +46,11 @@ test('redessine la scène après un changement d’option', async ({page}) => {
     )
     .toBe(true);
 
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await option(page, 'Murs transparents').uncheck();
   await expect(page.getByRole('progressbar')).toHaveCount(0);
   // Le bouton de fermeture n'a pas de nom : c'est le dernier de l'en-tête.
-  const title = page.getByRole('heading', {name: 'Système'});
+  const title = page.getByRole('heading', {name: 'Configuration'});
   await title.locator('..').getByRole('button').last().click();
   await expect(title).toBeHidden();
 
@@ -64,7 +64,7 @@ test('redessine la scène après un changement d’option', async ({page}) => {
 // Trop lourds pour la tablette, remplacés par le ciel et le soleil (ADR 0030).
 test('ne propose plus les reflets d’environnement', async ({page}) => {
   await page.goto('/');
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
   await expect(page.getByText("Reflets d'environnement")).toHaveCount(0);
 });
@@ -72,20 +72,20 @@ test('ne propose plus les reflets d’environnement', async ({page}) => {
 // Elle ne s'affiche plus que depuis le menu rapide (ADR 0041).
 test('ne propose plus la carte des températures', async ({page}) => {
   await page.goto('/');
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await expect(page.getByText('Ombres', {exact: true})).toBeVisible();
   await expect(page.getByText('Carte des températures')).toHaveCount(0);
 });
 
 // Le panneau d'essai se pose sur la vue 3D, à la place de la modale.
 async function openLightingTrial(page: Page) {
-  await openSystemModal(page);
+  await openConfigurationModal(page);
   await page
     .getByRole('button', {name: "Essayer l'éclairage selon l'heure"})
     .click();
   const trial = page.getByRole('region', {name: "Essai de l'éclairage"});
   await expect(trial).toBeVisible();
-  await expect(page.getByRole('heading', {name: 'Système'})).toBeHidden();
+  await expect(page.getByRole('heading', {name: 'Configuration'})).toBeHidden();
   return trial;
 }
 
@@ -96,6 +96,7 @@ test('simule une heure pour essayer le jour et la nuit', async ({page}) => {
   const [simulated, label, theme] = day
     ? [22, 'Heure 22:00', /dark/]
     : [12, 'Heure 12:00', /light/];
+  await page.addInitScript(() => localStorage.setItem('theme', 'auto'));
   await page.goto('/');
   const trial = await openLightingTrial(page);
   await expect(trial.getByText('Heure réelle')).toBeVisible();

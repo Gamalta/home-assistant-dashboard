@@ -16,7 +16,12 @@ import {createTrain} from './createTrain';
 import {createMediaPlayer} from './createMediaPlayer';
 import {MediaPlayerFeature} from '../../utils/entity/media';
 import {createScript} from './createScript';
+import {createWledStrip} from './createWledStrip';
+import {createAmbilight} from './createAmbilight';
 import {createLoan} from './createLoan';
+import {createUpdate} from './createUpdate';
+
+const DAY = 24 * 60 * 60 * 1000;
 
 export const entities: HassEntities = {
   ...createWeather('weather.home', openWeatherFixture),
@@ -101,6 +106,36 @@ export const entities: HassEntities = {
       unit_of_measurement: '%',
     },
   }),
+  // Sauvegarde quotidienne : réussie il y a 3 jours, échouée hier.
+  ...createSensor('sensor.backup_last_successful', {
+    state: new Date(Date.now() - 3.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_last_attempted', {
+    state: new Date(Date.now() - 1.1 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_next_scheduled', {
+    state: new Date(Date.now() + 0.9 * DAY).toISOString(),
+  }),
+  ...createSensor('sensor.backup_manager_state', {state: 'idle'}),
+  ...createUpdate('update.home_assistant_core_update', {
+    state: 'on',
+    attributes: {latest_version: '2026.10.2'},
+  }),
+  ...createUpdate('update.zigbee_bridge_update', {
+    state: 'on',
+    attributes: {
+      friendly_name: 'Pont Zigbee',
+      installed_version: '2.6.0',
+      latest_version: '2.7.0',
+    },
+  }),
+  ...createUpdate('update.home_assistant_operating_system_update', {
+    attributes: {
+      friendly_name: 'Home Assistant Operating System',
+      installed_version: '16.2',
+      latest_version: '16.2',
+    },
+  }),
 
   ...createCover('cover.living_room_shutter', {
     attributes: {friendly_name: 'Volet du séjour'},
@@ -136,6 +171,15 @@ export const entities: HassEntities = {
       icon: 'hue:play-bar-v',
       color_mode: 'hs',
       hs_color: [240, 100],
+    },
+  }),
+  ...createLight('light.living_room_led_strip', {
+    state: 'off',
+    attributes: {
+      friendly_name: 'Ruban LED de la TV',
+      icon: 'hue:lightstrip',
+      color_mode: 'hs',
+      hs_color: [28, 64],
     },
   }),
   ...createLight('light.kitchen_light', {
@@ -493,6 +537,8 @@ export const entities: HassEntities = {
     attributes: {friendly_name: 'Pont Zigbee'},
   }),
 
+  ...createWledStrip('light.living_room_strip'),
+  ...createAmbilight('light.tv_ambilight'),
   ...createLoan('sensor.loan_main', {
     label: 'Prêt principal',
     principal: 250_000,

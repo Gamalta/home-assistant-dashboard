@@ -8,16 +8,17 @@ import {RoomPrinter3d} from './RoomPrinter3d';
 import {RoomShutter} from './RoomShutter';
 import {RoomSmoke} from './RoomSmoke';
 import {RoomTemperature} from './RoomTemperature';
+import {RoomTv} from './RoomTv';
 import {RoomVacuum} from './RoomVacuum';
 
 type RoomItemProps = {
   id: string;
   itemConfig: RoomItemConfigType;
-  // Étiquette de la scène 3D, ou tuile de la version mobile.
+  // Étiquette de la scène 3D, sa pile seule, ou tuile de la version mobile.
   variant?: ItemVariant;
 };
 
-export type ItemVariant = 'label' | 'tile';
+export type ItemVariant = 'label' | 'battery' | 'tile';
 
 export function RoomItem(props: RoomItemProps) {
   const {id, itemConfig, variant = 'label'} = props;
@@ -47,6 +48,8 @@ export function RoomItem(props: RoomItemProps) {
       return (
         <RoomPrinter3d id={id} printer3dConfig={itemConfig} variant={variant} />
       );
+    case 'tv':
+      return <RoomTv id={id} tvConfig={itemConfig} variant={variant} />;
     case 'vacuum':
       return <RoomVacuum id={id} vacuumConfig={itemConfig} variant={variant} />;
     case 'battery':

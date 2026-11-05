@@ -5,7 +5,7 @@
 #
 # Usage : Blender -b -P bake-lighting.py -- <entrée.glb> <sortie.glb>
 #         <ciel.png> <soleil.png>
-import bpy, sys, math, time
+import bpy, sys, math, re, time
 import numpy as np
 from mathutils import Vector
 
@@ -30,6 +30,56 @@ scene = bpy.context.scene
 layer = bpy.context.view_layer
 meshes = [o for o in scene.objects if o.type == 'MESH']
 log('objets', len(meshes), 'faces', sum(len(o.data.polygons) for o in meshes))
+
+def is_wall(material):
+    # Même règle que SceneMaterials et optimize-model.sh.
+    name = re.sub(r'\.\d+$', '', material.name.lower())
+    return name.startswith('wall_') or name in ('white', 'yellowbrt')
+
+# Les murs s'interpénètrent à leurs jonctions : deux faces dans le même plan se
+# masquent l'une l'autre dans Cycles, puis se disputent le tampon de profondeur,
+# d'où des taches sombres. Leur union n'en garde qu'une. Elle se fait à part,
+# sinon Blender redécoupe aussi les meubles du même objet.
+for o in meshes:
+    walls = [i for i, slot in enumerate(o.material_slots)
+             if slot.material and is_wall(slot.material)]
+    if not walls:
+        continue
+    bpy.ops.object.select_all(action='DESELECT')
+    o.select_set(True)
+    layer.objects.active = o
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='DESELECT')
+    for i in walls:
+        o.active_material_index = i
+        bpy.ops.object.material_slot_select()
+    bpy.ops.mesh.separate(type='SELECTED')
+    bpy.ops.object.mode_set(mode='OBJECT')
+    part = next(p for p in bpy.context.selected_objects if p != o)
+    bpy.ops.object.select_all(action='DESELECT')
+    part.select_set(True)
+    layer.objects.active = part
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.mesh.intersect_boolean(operation='UNION', use_self=True,
+                                   solver='EXACT')
+    # L'union découpe les faces : on les refond dans leur plan, puis on retire
+    # les arêtes de moins de 2 mm, l'écart de la simplification. Ce retrait se
+    # fait sur des triangles : sur les faces refondues, il en replie certaines
+    # sur elles-mêmes.
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.mesh.dissolve_limited(angle_limit=math.radians(1),
+                                  delimit={'MATERIAL'})
+    bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY',
+                                       ngon_method='BEAUTY')
+    bpy.ops.mesh.dissolve_degenerate(threshold=0.002)
+    bpy.ops.mesh.dissolve_limited(angle_limit=math.radians(1),
+                                  delimit={'MATERIAL'})
+    bpy.ops.object.mode_set(mode='OBJECT')
+    o.select_set(True)
+    layer.objects.active = o
+    bpy.ops.object.join()
+log('murs unis, faces', sum(len(o.data.polygons) for o in meshes))
 
 # Dépliage commun à tous les objets, à l'échelle de leur surface réelle.
 for o in meshes:

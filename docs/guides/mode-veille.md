@@ -1,6 +1,6 @@
 # Mode veille
 
-Sur la tablette murale, ouvrir le dock en bas de la barre latérale, puis **Système**, et choisir un délai dans **Veille** : « Jamais » (par défaut), 1, 5, 10 ou 30 minutes.
+Sur la tablette murale, ouvrir le dock en bas de la barre latérale, puis **Configuration**, et choisir un délai dans **Veille** : « Jamais » (par défaut), 1, 5, 10 ou 30 minutes.
 
 Après ce délai sans interaction, l'écran de veille affiche :
 

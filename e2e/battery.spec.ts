@@ -9,8 +9,15 @@ const switchButton = (page: Page, name: string) =>
 const RED = 'rgb(211, 47, 47)';
 
 test.beforeEach(async ({page}) => {
-  // Le thème suit l'heure par défaut : on fixe le clair pour la couleur d'alerte.
-  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+  // Le thème est sombre par défaut : on fixe le clair pour la couleur d'alerte.
+  // Les appareils sur pile, masqués par défaut, sont affichés.
+  await page.addInitScript(() => {
+    localStorage.setItem('theme', 'light');
+    localStorage.setItem(
+      'graphics-options',
+      JSON.stringify({shownCategories: {battery: true}}),
+    );
+  });
   await page.goto('/');
   await waitForScene(page);
 });

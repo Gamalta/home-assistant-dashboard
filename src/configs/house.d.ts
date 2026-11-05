@@ -4,7 +4,6 @@ type Position3dType = {x: number; y: number; z: number};
 
 type HouseConfigType = {
   model?: string;
-  /** Cartes de lumière du modèle, écrites par `pnpm bake-lighting`. */
   lightMaps?: {sky: string; sun: string};
   camera?: string;
   rooms: {
@@ -23,6 +22,7 @@ type RoomItemConfigType =
   | DestkopConfigType
   | OutletConfigType
   | Printer3dConfigType
+  | TvConfigType
   | VacuumConfigType
   | BatteryConfigType
   | SmokeConfigType;
@@ -83,20 +83,28 @@ type OutletConfigType = BaseItemConfigType & {
 
 type Printer3dConfigType = BaseItemConfigType & {
   type: 'printer3d';
-  // Préfixe des entités ha-bambulab, sans domaine : `p1s_<numéro de série>`.
   prefix: string;
+};
+
+type TvConfigType = BaseItemConfigType & {
+  type: 'tv';
+  lightEntityId: FilterByDomain<EntityName, 'light'>;
+  ledLayout: LedLayoutType;
+};
+
+type LedLayoutType = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  position?: number;
+  reverse?: boolean;
 };
 
 type VacuumConfigType = BaseItemConfigType & {
   type: 'vacuum';
-  // Préfixe des entités dreame-vacuum, sans domaine : le nom de l'appareil.
   prefix: string;
-  mapAlignment?: MapAlignmentType;
 };
-
-// Origine du plan du robot dans la scène, et rotation du plan autour de la
-// verticale en degrés, comme `rotation.y` de three.
-type MapAlignmentType = {x: number; z: number; rotation: number};
 
 type BatteryConfigType = BaseItemConfigType & {
   type: 'battery';

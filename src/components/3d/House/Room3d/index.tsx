@@ -4,6 +4,7 @@ import {RoomProvider} from '../../../../contexts/RoomContext';
 import {HouseConfigType} from '../../../../configs/house';
 import {RoomItem3d} from './RoomItem3d';
 import {useAppContext} from '../../../../contexts/AppContext';
+import {hasBattery, isLabelShown} from '../../../../utils/labelCategories';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
@@ -29,11 +30,26 @@ export function Room3d(props: RoomProps) {
       item => !display || display.includes(item.type),
     ),
   };
+  // Le filtre ne retire que les étiquettes : les lumières 3D restent pilotées.
+  const {batteriesOnly, shownCategories} = configuration;
+  const labelledRoom = {
+    ...cleanedRoom,
+    items: cleanedRoom.items.filter(item =>
+      batteriesOnly
+        ? hasBattery(item)
+        : isLabelShown(item.type, shownCategories),
+    ),
+  };
 
   return (
     <RoomProvider>
       {/* Les lumières 3D suivent Home Assistant même sans étiquettes. */}
-      {showLabels && <Room room={cleanedRoom} />}
+      {showLabels && (
+        <Room
+          room={labelledRoom}
+          variant={batteriesOnly ? 'battery' : undefined}
+        />
+      )}
       {cleanedRoom.items.map((item, id) => (
         <RoomItem3d key={`item-3d-${id}`} itemConfig={item} model={model} />
       ))}

@@ -1,39 +1,42 @@
 import Stack from '@mui/material/Stack';
 import type {HouseConfigType} from '../../../configs/house';
 import {Html} from '../../3d/Html';
-import {RoomItem} from './RoomItem';
+import {RoomItem, type ItemVariant} from './RoomItem';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 type RoomProps = {
   room: HouseConfigType['rooms'][0];
+  variant?: ItemVariant;
 };
 
 export function Room(props: RoomProps) {
-  const {room} = props;
+  const {room, variant} = props;
   const items = room.items ?? [];
+  const roomItems = items.filter(item => item.roomDisplay);
 
   return (
     <>
-      <Html position={[room.position.x, room.position.y, room.position.z]}>
-        <ButtonGroup
-          variant="contained"
-          size="small"
-          sx={{
-            border: 0,
-            boxShadow: 0,
-          }}
-        >
-          {items
-            .filter(item => item.roomDisplay)
-            .map((item, id) => (
+      {roomItems.length > 0 && (
+        <Html position={[room.position.x, room.position.y, room.position.z]}>
+          <ButtonGroup
+            variant="contained"
+            size="small"
+            sx={{
+              border: 0,
+              boxShadow: 0,
+            }}
+          >
+            {roomItems.map((item, id) => (
               <RoomItem
                 key={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 id={`room-${room.id}-item-${item.type}-room-id-${id}`}
                 itemConfig={item}
+                variant={variant}
               />
             ))}
-        </ButtonGroup>
-      </Html>
+          </ButtonGroup>
+        </Html>
+      )}
       {items.map((item, id) =>
         item.roomDisplay ? null : (
           <Html
@@ -44,6 +47,7 @@ export function Room(props: RoomProps) {
               <RoomItem
                 id={`room-${room.id}-item-${item.type}-id-${id}`}
                 itemConfig={item}
+                variant={variant}
               />
             </Stack>
           </Html>

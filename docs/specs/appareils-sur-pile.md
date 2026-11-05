@@ -24,7 +24,7 @@ Sous **20 %**, une pile est faible. Les éléments se configurent dans la pièce
 
 ### Scénario : affiche le niveau de pile dans la scène
 
-- **Étant donné** la démo, avec les interrupteurs du séjour à 54 %, de la cuisine à 12 % et de la chambre à 85 %
+- **Étant donné** la démo, avec les interrupteurs du séjour à 54 %, de la cuisine à 12 % et de la chambre à 85 %, et les appareils sur pile affichés dans la modale Configuration (ils sont masqués par défaut)
 - **Quand** j'ouvre le dashboard
 - **Alors** chaque interrupteur a une étiquette avec une icône de pile remplie selon le niveau et le pourcentage ;
 - **et** l'étiquette de la cuisine, sous 20 %, est en rouge, les autres dans la couleur habituelle des étiquettes.
@@ -48,7 +48,7 @@ Un niveau inconnu ou indisponible s'affiche `--`, avec une pile vide.
 
 - **Étant donné** le détecteur au repos
 - **Quand** j'appuie sur son étiquette
-- **Alors** la modale « Détecteur de fumée » montre le détecteur vu de dessous avec son voyant vert, « Aucune fumée » en grand, puis la pile (90%), la chaleur (« Normale »), l'autoprotection (« OK ») et la dernière mise à jour ;
+- **Alors** la modale « Détecteur de fumée » montre le détecteur carré vu de dessous avec son voyant vert, « Aucune fumée » en grand, puis la pile (90%), la chaleur (« Normale »), l'autoprotection (« OK ») et la dernière mise à jour ;
 - **et** un bouton « Tester », parce que la démo configure un bouton de test.
 
 Sans entité de test dans la config, le bouton « Tester » n'existe pas. Une ligne n'apparaît que si son entité est configurée.

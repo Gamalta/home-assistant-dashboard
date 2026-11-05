@@ -7,6 +7,7 @@ import {motion} from 'framer-motion';
 import {TemperatureModal} from '../../../Modal/TemperatureModal';
 import {ThermostatIcon} from '../../../Icons/ThermostatIcon';
 import {Tile} from '../../../Mobile/Tile';
+import {BatteryLevelDisplay} from '../../../display/BatteryLevelDisplay';
 import type {ItemVariant} from '.';
 
 type RoomTemperatureProps = {
@@ -67,7 +68,11 @@ export function RoomTemperature(props: RoomTemperatureProps) {
             }}
             {...tempLongPress}
           >
-            {degrees}°
+            {variant === 'battery' ? (
+              <BatteryLevelDisplay state={battery?.state} />
+            ) : (
+              `${degrees}°`
+            )}
           </Button>
         )}
       </motion.div>

@@ -28,7 +28,7 @@ type ThemeContextType = {
 };
 
 const ThemeContext = createContext<ThemeContextType>({
-  themeMode: 'auto',
+  themeMode: 'dark',
   setTheme: () => {},
 });
 
@@ -36,7 +36,7 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   const {children} = props;
-  const [themeMode, setThemeMode] = useState<themeType>('auto');
+  const [themeMode, setThemeMode] = useState<themeType>('dark');
   const {mode, setMode} = useColorScheme();
   const {simulatedHour} = useAppContext();
 
@@ -61,7 +61,7 @@ const ThemeModeProvider = (props: {children: React.ReactNode}) => {
   }, [setMode, themeMode, mode, simulatedHour]);
 
   useEffect(() => {
-    const theme = (window.localStorage.getItem('theme') || 'auto') as themeType;
+    const theme = (window.localStorage.getItem('theme') || 'dark') as themeType;
     if (theme === mode) return;
     setThemeMode(theme);
     if (theme !== 'auto') setMode(theme);

@@ -51,6 +51,14 @@ export const SideBarConfig: SideBarConfigType = {
   system: {
     uptimeEntityId: 'sensor.system_monitor_last_boot',
     powerStatusEntityId: 'binary_sensor.rpi_power_status',
+    internetEntityId: 'binary_sensor.router_wan_status',
+    lastBackupEntityId: 'sensor.backup_last_successful',
+    lastBackupAttemptEntityId: 'sensor.backup_last_attempted',
+    nextBackupEntityId: 'sensor.backup_next_scheduled',
+    backupStateEntityId: 'sensor.backup_manager_state',
+    tabletBatteryLevelEntityId: 'sensor.wall_tablet_battery_level',
+    tabletBatteryStateEntityId: 'sensor.wall_tablet_battery_state',
+    tabletChargerTypeEntityId: 'sensor.wall_tablet_charger_type',
     graphs: [
       {
         color: 'red',
@@ -119,6 +127,11 @@ export const HouseConfig: HouseConfigType = {
           position: {x: -3.2, y: 0.3, z: 3.1},
         },
         {
+          type: 'light',
+          lightEntityId: 'light.living_room_led_strip',
+          position: {x: -3.3, y: 1.4, z: 4.1},
+        },
+        {
           type: 'shutter',
           shutterEntityId: 'cover.living_room_shutter',
           position: {x: -0.8, y: 1.3, z: 5.8},
@@ -128,6 +141,17 @@ export const HouseConfig: HouseConfigType = {
           switchEntityId: 'switch.tv_outlet',
           powerEntityId: 'sensor.tv_outlet_power',
           position: {x: -3.3, y: 0.3, z: 4.3},
+        },
+        {
+          type: 'light',
+          lightEntityId: 'light.living_room_strip',
+          position: {x: -3.0, y: 0.4, z: 5.6},
+        },
+        {
+          type: 'tv',
+          lightEntityId: 'light.tv_ambilight',
+          ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
+          position: {x: -3.3, y: 2.6, z: 4.0},
         },
         {
           type: 'vacuum',
@@ -162,12 +186,12 @@ export const HouseConfig: HouseConfigType = {
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter',
-          position: {x: -0.6, y: 1.5, z: -7.2},
+          position: {x: 1.0, y: 1.5, z: -7.2},
         },
         {
           type: 'shutter',
           shutterEntityId: 'cover.kitchen_shutter_2',
-          position: {x: -2.5, y: 1.3, z: -4.2},
+          position: {x: -2.5, y: 0.8, z: -4.2},
         },
         {
           type: 'battery',

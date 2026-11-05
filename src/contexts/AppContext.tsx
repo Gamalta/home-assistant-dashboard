@@ -14,6 +14,11 @@ export type ConfigurationOptions = {
   vacuumMapShader: boolean;
   shadows: boolean;
   webGPU: boolean;
+  // Étiquettes affichées ou masquées par catégorie, choisies par l'utilisateur ;
+  // une catégorie absente suit sa valeur par défaut (voir labelCategories).
+  shownCategories: Record<string, boolean>;
+  // N'affiche que le niveau de pile des éléments qui en ont une.
+  batteriesOnly: boolean;
   /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
   screensaverMinutes: number;
 };
@@ -70,6 +75,8 @@ const defaultConfiguration: ConfigurationOptions = {
   vacuumMapShader: false,
   shadows: false,
   webGPU: false,
+  shownCategories: {},
+  batteriesOnly: false,
   screensaverMinutes: 0,
 };
 
