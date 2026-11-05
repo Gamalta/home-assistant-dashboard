@@ -12,6 +12,7 @@ import {
   formatPower,
   formatPrice,
   getFlowDuration,
+  getPrices,
   getSubscribedPower,
   getTariffPeriod,
   parseState,
@@ -30,12 +31,8 @@ type EnergyFlowProps = {
 /** Le courant du Linky à la maison : un fil par période tarifaire, animé dans la période en cours. */
 export function EnergyFlow(props: EnergyFlowProps) {
   const {energyConfig} = props;
-  const {
-    powerEntityId,
-    tariffPeriodEntityId,
-    subscribedCurrentEntityId,
-    prices,
-  } = energyConfig;
+  const {powerEntityId, tariffPeriodEntityId, subscribedCurrentEntityId} =
+    energyConfig;
   const power = useEntity(powerEntityId, ENTITY_OPTIONS);
   const tariffPeriod = useEntity(tariffPeriodEntityId, ENTITY_OPTIONS);
   const subscribedCurrent = useEntity(
@@ -44,6 +41,7 @@ export function EnergyFlow(props: EnergyFlowProps) {
   );
 
   const period = getTariffPeriod(tariffPeriod?.state);
+  const prices = getPrices(energyConfig, new Date().getTime());
   const powerValue = parseState(power?.state);
   const subscribedPower = getSubscribedPower(
     parseState(subscribedCurrent?.state),

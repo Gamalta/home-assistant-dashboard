@@ -10,12 +10,12 @@ import {
   formatEnergy,
   formatPeriod,
   getChange,
-  getCost,
+  getCosts,
   getTotal,
   type Period,
   type Scale,
   sumConsumption,
-  type TariffPeriod,
+  type Tariff,
   TARIFF_PERIODS,
 } from '../../../utils/energy';
 import {Chart} from '../../Charts/Chart';
@@ -30,7 +30,7 @@ type EnergyChartProps = {
   /** « Mois précédent », « Un an avant ». */
   comparisonLabel: string;
   now: number;
-  prices: Record<TariffPeriod, number>;
+  tariff: Tariff;
 };
 
 export function EnergyChart(props: EnergyChartProps) {
@@ -41,7 +41,7 @@ export function EnergyChart(props: EnergyChartProps) {
     referencePeriod,
     comparisonLabel,
     now,
-    prices,
+    tariff,
   } = props;
   const mobile = useIsMobile();
   const total = current && sumConsumption(current);
@@ -67,7 +67,7 @@ export function EnergyChart(props: EnergyChartProps) {
           {formatEnergy(total && getTotal(total))}
         </Typography>
         <Typography variant="h6" color="textSecondary">
-          {formatCost(total && getCost(total, prices))}
+          {formatCost(current && getTotal(getCosts(current, tariff)))}
         </Typography>
         {change != null && (
           <Stack

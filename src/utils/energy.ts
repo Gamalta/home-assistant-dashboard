@@ -1,4 +1,8 @@
+import type {EnergyConfigType} from '../configs/sidebar';
+
 export type TariffPeriod = 'peak' | 'offPeak';
+
+export type Tariff = Pick<EnergyConfigType, 'prices' | 'highSeasonPrices'>;
 
 export const TARIFF_PERIODS = {
   // La couleur primary du thème, qui suit le mode clair ou sombre.
@@ -198,14 +202,28 @@ export function sumConsumption(
   };
 }
 
-/** Coût estimé en euros, hors abonnement. */
-export function getCost(
-  consumption: Record<TariffPeriod, number | null>,
-  prices: Record<TariffPeriod, number>,
-) {
-  const {peak, offPeak} = consumption;
-  if (peak === null || offPeak === null) return null;
-  return peak * prices.peak + offPeak * prices.offPeak;
+/** Prix du kWh à `time` : ceux de la saison haute de l'acheminement, de novembre à mars, s'ils sont configurés. */
+export function getPrices(tariff: Tariff, time: number) {
+  const month = new Date(time).getMonth();
+  const highSeason = month >= 10 || month <= 2;
+  return (highSeason && tariff.highSeasonPrices) || tariff.prices;
+}
+
+/** Coût estimé en euros de chaque période tarifaire, hors abonnement : chaque jour ou mois à ses prix. */
+export function getCosts(
+  buckets: Consumption[],
+  tariff: Tariff,
+): Record<TariffPeriod, number | null> {
+  const cost = (period: TariffPeriod) =>
+    sum(
+      buckets.map(bucket => {
+        const kWh = bucket[period];
+        return kWh === null
+          ? null
+          : kWh * getPrices(tariff, bucket.start)[period];
+      }),
+    );
+  return {peak: cost('peak'), offPeak: cost('offPeak')};
 }
 
 /**
@@ -284,9 +302,17 @@ export function formatPeriod(scale: Scale, period: Period) {
   return `semaine du ${date.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'})}`;
 }
 
-/** « 0,2516 €/kWh » : les tarifs ont jusqu'à quatre décimales. */
-export function formatPrice(euros: number) {
-  return `${euros.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 4})} €/kWh`;
+const formatEuros = (euros: number) =>
+  euros.toLocaleString('fr-FR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  });
+
+/** « 0,2516 €/kWh », ou « 0,1596 à 0,2050 €/kWh » d'une saison à l'autre : les tarifs ont jusqu'à quatre décimales. */
+export function formatPrice(...euros: number[]) {
+  const min = Math.min(...euros);
+  const max = Math.max(...euros);
+  return `${formatEuros(min)}${max > min ? ` à ${formatEuros(max)}` : ''} €/kWh`;
 }
 
 /** « 1,23 € » ; « — » sans valeur. */
