@@ -54,7 +54,7 @@ export function TvModal(props: TvModalProps) {
             />
           </Box>
         </Box>
-        <Stack direction="row" spacing={2} sx={{alignItems: 'center'}}>
+        <Stack direction="row" spacing={2} sx={{alignItems: 'center', pr: 1}}>
           <FormControlLabel
             label="Ambilight"
             control={
@@ -74,7 +74,6 @@ export function TvModal(props: TvModalProps) {
             defaultValue={brightness}
             min={1}
             valueLabelDisplay="auto"
-            sx={{mr: 1}}
             onChangeCommitted={(_, value) =>
               light.service.turnOn({serviceData: {brightness_pct: value}})
             }
