@@ -17,6 +17,7 @@ import {
   fwidth,
   positionWorld,
   If,
+  select,
 } from 'three/tsl';
 
 import type {TemperatureMap} from '../common';
@@ -104,12 +105,19 @@ export function createHeatmapGroundMaterialWebGPU(
   material.name = 'heatmapGround';
   material.depthWrite = false;
   material.colorNode = Fn(() => {
-    const temperature = map.r;
+    // La texture garde l'écart au milieu de l'échelle.
+    const temperature = map.r.add(minTemp.add(maxTemp).mul(0.5));
     const temperatureStep = float(1.0);
     const contourValue = mod(temperature, temperatureStep);
     const width = fwidth(temperature).mul(0.3);
-    const contourLine = float(1.0).sub(
-      smoothstep(width, width.mul(2.0), abs(contourValue.sub(0.5))),
+    // Pas d'isotherme là où la température ne varie pas : autour d'un capteur
+    // à 21,5 °C, elle couvrirait tout le sol.
+    const contourLine = select(
+      width.greaterThan(0.0),
+      float(1.0).sub(
+        smoothstep(width, width.mul(2.0), abs(contourValue.sub(0.5))),
+      ),
+      float(0.0),
     );
     let color: THREE.Node<'vec3'> = temperatureToColor(temperature);
     color = mix(color, vec3(0.0), contourLine.mul(0.3));

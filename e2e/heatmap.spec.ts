@@ -57,8 +57,10 @@ test('un mur arrête la chaleur', async ({page}) => {
     return DataUtils.fromHalfFloat(data[j * width + i]);
   };
 
-  // Chambre 2 à 21 °C, au pied du mur de la salle de bain à 19 °C : la
-  // salle de bain, à 1,5 m à vol d'oiseau, la ramènerait à 20 °C.
-  expect(temperatureAt(6.6, -2.55)).toBeGreaterThan(20.5);
-  expect(temperatureAt(6, -1.2)).toBeCloseTo(19, 1);
+  // La texture garde l'écart au milieu de l'échelle. Chambre 2 à 21 °C, au pied
+  // du mur de la salle de bain à 19 °C : la salle de bain, à 1,5 m à vol
+  // d'oiseau, la ramènerait à 20 °C.
+  expect(temperatureAt(6.6, -2.55) - temperatureAt(6, -1.2)).toBeGreaterThan(
+    1.5,
+  );
 });

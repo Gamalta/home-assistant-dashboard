@@ -64,6 +64,13 @@ La chaleur de chaque capteur se diffuse dans sa pièce et ne passe d'une pièce 
 - **Alors** son sol garde son matériau, translucide comme le reste de la maison
 - **Et** ses capteurs ne colorent pas les pièces voisines et ne comptent pas dans l'échelle
 
+### Scénario : des températures proches restent de couleurs proches
+
+- **Étant donné** des capteurs entre 18 °C et 20 °C
+- **Quand** la carte est affichée
+- **Alors** l'échelle des couleurs couvre 6 °C, de 16 °C à 22 °C, et les pièces vont du bleu clair au jaune, pas du bleu au rouge
+- **Et** au-delà de 6 °C d'écart, l'échelle va du capteur le plus froid au plus chaud
+
 ### Scénario : un capteur placé dans un mur
 
 - **Étant donné** un capteur dont la position tombe dans un mur ou hors du sol
@@ -76,7 +83,7 @@ La chaleur de chaque capteur se diffuse dans sa pièce et ne passe d'une pièce 
 - [x] `rooms[].outdoor` est documenté dans le [guide d'ajout d'une maison](../guides/ajouter-une-maison.md).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : la carte ne coûte pas plus de GPU qu'avant.
 - [x] Chaque scénario est couvert par un test :
-  - unitaires : `utils/temperatureField.test.ts`, `rendering/floorPlan.test.ts` et `hooks/useTemperatureMap.test.ts` ;
+  - unitaires : `utils/temperatureField.test.ts`, `rendering/floorPlan.test.ts`, `hooks/useTemperatureMap.test.ts` et `HeatmapGroundMaterial/common.test.ts` ;
   - E2E : `e2e/heatmap.spec.ts`.
 
 ## Impacts

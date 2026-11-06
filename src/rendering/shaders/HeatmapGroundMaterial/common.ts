@@ -8,15 +8,21 @@ export type HeatmapPoint = {
   temperature: number;
 };
 
-/** Températures du sol (°C), posées sur le sol comme le plan de l'aspirateur. */
+/**
+ * Températures du sol (°C, écart au milieu de l'échelle), posées sur le sol
+ * comme le plan de l'aspirateur.
+ */
 export type TemperatureMap = FloorMap & {minTemp: number; maxTemp: number};
 
-/** Écart minimal (en °C) entre les bornes de l'échelle de couleurs. */
-const MIN_TEMPERATURE_SPREAD = 1;
+/**
+ * Écart minimal (en °C) entre les bornes de l'échelle de couleurs : deux
+ * degrés d'écart n'en occupent qu'un tiers, au lieu d'aller du bleu au rouge.
+ */
+const MIN_TEMPERATURE_SPREAD = 6;
 
 /**
- * Bornes de l'échelle de couleurs. On garantit un écart minimal pour éviter
- * une division par zéro dans le shader (un seul capteur, ou températures égales).
+ * Bornes de l'échelle de couleurs, des capteurs le plus froid au plus chaud,
+ * élargies autour de leur milieu quand ils sont proches.
  */
 export function getTemperatureRange(points: HeatmapPoint[]) {
   if (!points.length) return {minTemp: 0, maxTemp: MIN_TEMPERATURE_SPREAD};
@@ -31,16 +37,25 @@ export function getTemperatureRange(points: HeatmapPoint[]) {
   };
 }
 
-/** `field` : température de chaque cellule du plan ; échelle des `points`. */
+/**
+ * `field` : température de chaque cellule du plan ; échelle des `points`. La
+ * texture garde l'écart au milieu de l'échelle.
+ */
 export function createTemperatureMap(
   plan: FloorPlan,
   field: Float32Array,
   points: HeatmapPoint[],
 ): TemperatureMap {
+  const range = getTemperatureRange(points);
   // Demi-flottants : filtrés linéairement partout, ce que les flottants ne
-  // garantissent pas sur mobile.
+  // garantissent pas sur mobile. Vers 21 °C, ils ne gardent que le 64e de
+  // degré, et les isothermes s'élargissent en escalier ; à 3 °C du milieu de
+  // l'échelle, le millième.
+  const middle = (range.minTemp + range.maxTemp) / 2;
   const texture = new THREE.DataTexture(
-    Uint16Array.from(field, value => THREE.DataUtils.toHalfFloat(value)),
+    Uint16Array.from(field, value =>
+      THREE.DataUtils.toHalfFloat(value - middle),
+    ),
     plan.width,
     plan.height,
     THREE.RedFormat,
@@ -57,6 +72,6 @@ export function createTemperatureMap(
       [1 / sizeX, 0, -plan.minX / sizeX],
       [0, 1 / sizeZ, -plan.minZ / sizeZ],
     ],
-    ...getTemperatureRange(points),
+    ...range,
   };
 }

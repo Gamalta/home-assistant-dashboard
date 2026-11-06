@@ -67,8 +67,9 @@ describe('useTemperatureMap', () => {
     const {width, data} = (map.texture as THREE.DataTexture).image;
 
     expect(width).toBe(20);
-    expect(THREE.DataUtils.fromHalfFloat(data![15])).toBeCloseTo(21);
-    expect(map).toMatchObject({minTemp: 20.5, maxTemp: 21.5});
+    const middle = (map.minTemp + map.maxTemp) / 2;
+    expect(middle + THREE.DataUtils.fromHalfFloat(data![15])).toBeCloseTo(21);
+    expect(map).toMatchObject({minTemp: 18, maxTemp: 24});
   });
 
   it('ne calcule rien sans la carte', () => {

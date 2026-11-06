@@ -15,21 +15,21 @@ const point = (temperature: number, x = 0): HeatmapPoint => ({
 
 describe('getTemperatureRange', () => {
   it('prend la température minimale et maximale', () => {
-    expect(getTemperatureRange([point(20), point(23.5), point(18)])).toEqual({
+    expect(getTemperatureRange([point(20), point(26.5), point(18)])).toEqual({
       minTemp: 18,
-      maxTemp: 23.5,
+      maxTemp: 26.5,
     });
   });
 
-  it("élargit l'échelle à 1 °C autour du milieu si les températures sont trop proches", () => {
-    expect(getTemperatureRange([point(20), point(20.5)])).toEqual({
-      minTemp: 19.75,
-      maxTemp: 20.75,
+  it("élargit l'échelle à 6 °C autour du milieu si les températures sont proches", () => {
+    expect(getTemperatureRange([point(18), point(20)])).toEqual({
+      minTemp: 16,
+      maxTemp: 22,
     });
   });
 
   it('renvoie une échelle non nulle sans capteur', () => {
-    expect(getTemperatureRange([])).toEqual({minTemp: 0, maxTemp: 1});
+    expect(getTemperatureRange([])).toEqual({minTemp: 0, maxTemp: 6});
   });
 });
 
@@ -55,5 +55,18 @@ describe('createTemperatureMap', () => {
     expect(at(-1, 2)).toEqual([0, 0]);
     expect(at(-0.7, 2.2)[0]).toBeCloseTo(1);
     expect(at(-0.7, 2.2)[1]).toBeCloseTo(1);
+  });
+
+  it('garde l’écart au milieu de l’échelle, au millième de degré', () => {
+    const {texture, minTemp, maxTemp} = createTemperatureMap(
+      plan,
+      Float32Array.of(21.501, 20, 20, 20, 20, 20),
+      [point(20)],
+    );
+    const data = (texture as THREE.DataTexture).image.data as Uint16Array;
+
+    expect(
+      (minTemp + maxTemp) / 2 + THREE.DataUtils.fromHalfFloat(data[0]),
+    ).toBeCloseTo(21.501, 3);
   });
 });

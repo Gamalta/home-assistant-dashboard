@@ -28,11 +28,14 @@ vec3 temperatureToColor(float temp) {
 
 void main() {
   vec3 point = vec3(vWorldPosition.xz, 1.0);
-  float temp = texture2D(map, vec2(dot(uRow, point), dot(vRow, point))).r;
+  // La texture garde l'écart au milieu de l'échelle.
+  float temp = 0.5 * (minTemp + maxTemp) + texture2D(map, vec2(dot(uRow, point), dot(vRow, point))).r;
   float tempStep = 1.0;
   float contourValue = mod(temp, tempStep);
   float width = fwidth(temp) * 0.3;
-  float contourLine = 1.0 - smoothstep(width, 2.0 * width, abs(contourValue - 0.5));
+  // Pas d'isotherme là où la température ne varie pas : autour d'un capteur
+  // à 21,5 °C, elle couvrirait tout le sol.
+  float contourLine = width > 0.0 ? 1.0 - smoothstep(width, 2.0 * width, abs(contourValue - 0.5)) : 0.0;
   vec3 color = temperatureToColor(temp);
   color = mix(color, vec3(0.0), contourLine * 0.3);
   gl_FragColor = vec4(color, 1.0);
