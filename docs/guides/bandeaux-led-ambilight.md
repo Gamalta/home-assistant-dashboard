@@ -62,12 +62,14 @@ Utiliser la lumière principale de l'instance, pas `light.<instance>_priority`, 
 
 Comme une lumière, un appui court sur le bouton TV (ou sa tuile sur téléphone, qui affiche l'état de l'ambilight) allume ou éteint l'ambilight, et un appui long ouvre la modale TV :
 
-- **l'image de la TV**, en direct, entourée du halo des LED quand l'ambilight est allumé ; les flux s'arrêtent à la fermeture de la modale ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)) ;
+- **l'image de la TV**, en direct, sur un mur sombre qu'éclaire le halo des LED quand l'ambilight est allumé ; les flux s'arrêtent à la fermeture de la modale ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)). En couleur fixe, HyperHDR ne diffuse aucune image : l'écran reste noir et le halo prend la couleur, sans ouvrir de flux ([ADR 0055](../adr/0055-aucun-flux-en-couleur-fixe.md)) ;
 - **Ambilight** et le curseur de luminosité ;
 - **la source** :
   - « Vidéo » lance l'effet `USB Capture`, la capture de la carte d'acquisition HDMI-USB ;
-  - « Couleur » propose huit couleurs fixes (effet `Solid`) ;
+  - « Couleur » propose huit couleurs fixes (effet `Solid`), et entoure celle en cours ;
   - « Effet » liste les effets de HyperHDR.
+
+Sur tablette (900 px de large et plus), l'écran occupe la gauche de la modale et les commandes se rangent à sa droite.
 
 La source affichée se déduit de l'effet en cours : `Solid` est une couleur, une source externe (`USB Capture`, `Platform Capture`, `Flatbuffers Server`…) est de la vidéo, le reste est un effet. Une installation qui capture l'écran plutôt qu'une carte USB devra changer `VIDEO_EFFECT` dans `src/utils/entity/ambilight.ts`.
 
@@ -75,6 +77,6 @@ Les réglages de lissage, de moteur de couleur et de tone mapping HDR restent da
 
 ## Démo et mock
 
-La démo place près de la TV du séjour un bandeau WLED fictif, `light.living_room_strip`, et une TV dont l'ambilight fictif est `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). Les caméras fictives servent des images fixes, `public/ambilight/demo-tv-image.svg` et `demo-led-gradient.svg`, dont les couleurs se répondent pour la disposition de la démo (16, 9, 16, 9 LED) ; le halo ne suit donc pas la source choisie.
+La démo place près de la TV du séjour un bandeau WLED fictif, `light.living_room_strip`, et une TV dont l'ambilight fictif est `light.tv_ambilight`. Leurs entités sont créées par `createWledStrip` et `createAmbilight` (`src/mock/mocks/`), avec les mêmes fonctions de déduction que l'application. `light.turn_on`, `select.select_option` et `number.set_value` modifient leur état simulé (`src/mock/mocks/fake-call-service/`). Les caméras fictives servent des images fixes, `public/ambilight/demo-tv-image.svg` et `demo-led-gradient.svg`, dont les couleurs se répondent pour la disposition de la démo (16, 9, 16, 9 LED) ; le halo ne suit donc pas la source choisie, sauf en couleur fixe.
 
 Le bandeau n'a pas de lumière dans le modèle 3D de la démo : la console signale « Aucune lumière 3D trouvée pour light.living_room_strip », sans conséquence.
