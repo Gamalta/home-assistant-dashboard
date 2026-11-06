@@ -198,6 +198,20 @@ describe('EnergyModalContent', () => {
     );
   });
 
+  it('ajoute l’abonnement des jours de la période au coût', async () => {
+    render(
+      <EnergyModalContent energyConfig={{...config, subscription: 176.48}} />,
+    );
+    fireEvent.click(screen.getByRole('button', {name: 'Période précédente'}));
+
+    // Octobre : 71,30 € de kWh et 31 jours d'abonnement, 14,99 €.
+    expect(await screen.findByText(/^86,29\s€$/)).toBeInTheDocument();
+    const totals = screen.getByRole('region', {name: 'Totaux'});
+    expect(totals).toHaveTextContent(/Abonnement176,48\s€\/an14,99\s€/);
+    // Septembre : 55,50 € de kWh et 30 jours d'abonnement.
+    expect(totals).toHaveTextContent(/Mois précédent240 kWh70,01\s€/);
+  });
+
   it('affiche des tirets sans statistiques', async () => {
     connection.sendMessagePromise.mockResolvedValue({});
     render(<EnergyModalContent energyConfig={config} />);

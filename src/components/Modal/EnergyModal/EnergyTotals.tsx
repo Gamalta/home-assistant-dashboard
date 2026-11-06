@@ -9,7 +9,9 @@ import {
   formatPrice,
   getCosts,
   getPrices,
+  getSubscriptionCost,
   getTotal,
+  getTotalCost,
   type Period,
   sumConsumption,
   type Tariff,
@@ -23,10 +25,11 @@ type EnergyTotalsProps = {
   reference: Consumption[] | null;
   comparisonLabel: string;
   tariff: Tariff;
+  now: number;
 };
 
 export function EnergyTotals(props: EnergyTotalsProps) {
-  const {buckets, current, reference, comparisonLabel, tariff} = props;
+  const {buckets, current, reference, comparisonLabel, tariff, now} = props;
   const total = sumConsumption(current ?? []);
   const referenceTotal = sumConsumption(reference ?? []);
   const costs = getCosts(current ?? [], tariff);
@@ -39,12 +42,24 @@ export function EnergyTotals(props: EnergyTotalsProps) {
       kWh: total[period],
       cost: costs[period],
     })),
+    ...(tariff.subscription
+      ? [
+          {
+            label: 'Abonnement',
+            // Sans série dans le graphique : un point transparent garde la colonne.
+            color: 'transparent',
+            price: `${formatCost(tariff.subscription)}/an`,
+            kWh: undefined,
+            cost: getSubscriptionCost(buckets, tariff.subscription, now),
+          },
+        ]
+      : []),
     {
       label: comparisonLabel,
       color: null,
       price: null,
       kWh: getTotal(referenceTotal),
-      cost: getTotal(getCosts(reference ?? [], tariff)),
+      cost: reference && getTotalCost(reference, tariff, now),
     },
   ];
 
@@ -89,7 +104,7 @@ export function EnergyTotals(props: EnergyTotalsProps) {
             )}
           </Stack>
           <Typography variant="body2" sx={{textAlign: 'right'}}>
-            {formatEnergy(row.kWh)}
+            {row.kWh !== undefined && formatEnergy(row.kWh)}
           </Typography>
           <Typography
             variant="body2"
