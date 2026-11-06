@@ -51,8 +51,6 @@ const cellOf = (plan: FloorPlan, x: number, z: number) =>
   Math.floor(z / 0.1) * plan.width + Math.floor(x / 0.1);
 const isFloor = (plan: FloorPlan, x: number, z: number) =>
   plan.floor[cellOf(plan, x, z)] === 1;
-const roomAt = (plan: FloorPlan, x: number, z: number) =>
-  plan.room[cellOf(plan, x, z)];
 
 describe('createFloorPlan', () => {
   it('couvre le sol des pièces par cellules de 10 cm', () => {
@@ -75,15 +73,6 @@ describe('createFloorPlan', () => {
     expect(isFloor(plan, 0.95, 0.85)).toBe(true);
   });
 
-  it('sépare les pièces par les murs, portes comprises', () => {
-    const plan = createFloorPlan(house().scene, noOutdoor)!;
-
-    expect(roomAt(plan, 0.5, 0.5)).toBeGreaterThan(0);
-    expect(roomAt(plan, 1.5, 0.5)).toBeGreaterThan(0);
-    expect(roomAt(plan, 1.5, 0.5)).not.toBe(roomAt(plan, 0.5, 0.5));
-    expect(roomAt(plan, 0.95, 0.85)).toBe(0);
-  });
-
   it('laisse le sol sous les meubles et les portes ouvertes', () => {
     const plan = createFloorPlan(house().scene, noOutdoor)!;
 
@@ -99,7 +88,7 @@ describe('createFloorPlan', () => {
     const plan = createFloorPlan(scene, noOutdoor)!;
 
     expect(isFloor(plan, 1, 0.5)).toBe(false);
-    expect(roomAt(plan, 0.5, 0.5)).toBeGreaterThan(0);
+    expect(isFloor(plan, 0.5, 0.5)).toBe(true);
   });
 
   it('laisse de côté le sol des pièces extérieures', () => {

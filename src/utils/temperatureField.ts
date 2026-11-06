@@ -3,68 +3,67 @@ import {CELL_SIZE, type FloorPlan} from '../rendering/floorPlan';
 // Traverser 10 cm de mur coûte autant que 2 m de sol : la chaleur passe par
 // les portes, et une cellule enfermée reçoit quand même une température.
 const WALL_COST = 20;
+// Un capteur fixe la température de l'air autour de lui, sur ce rayon (m).
+const SENSOR_REACH = 0.5;
+// Pertes : chaque cellule tend aussi un peu vers la moyenne des capteurs
+// pondérée par l'inverse du carré de leur distance. Loin de ses portes, une
+// pièce sans capteur en prend la valeur plutôt que celle de sa voisine.
+const LOSS = 0.003;
 // Distance plancher : évite une division par zéro sur le capteur lui-même.
 const MIN_DISTANCE = 0.1;
-
-// Distance à une porte sur laquelle une pièce passe de la température du
-// passage à celle de ses capteurs.
-const DOOR_BLEND = 0.75;
+// Surrelaxation de la diffusion : converge en une centaine de passes.
+const OMEGA = 1.9;
+const MAX_PASSES = 400;
+const TOLERANCE = 0.001;
 
 /**
- * Distance (m) de chaque cellule à la pièce la plus proche de (x, z), en
+ * Distance (m) de chaque cellule au sol le plus proche de (x, z), en
  * contournant les murs.
  */
 export function distancesFrom(plan: FloorPlan, x: number, z: number) {
-  const start = nearestRoomCell(plan, x, z);
+  const start = nearestFloorCell(plan, x, z);
   return geodesic(plan, start === undefined ? [] : [start]);
 }
 
-/** Distance (m) de chaque cellule au passage d'une porte. */
-export function doorDistances(plan: FloorPlan) {
-  const doorways: number[] = [];
-  plan.floor.forEach((open, cell) => {
-    if (open && !plan.room[cell]) doorways.push(cell);
-  });
-  return geodesic(plan, doorways);
-}
-
 /**
- * Température de chaque cellule. Une pièce mesurée prend la température de ses
- * capteurs jusqu'à ses murs, avec un fondu vers celle du passage près des
- * portes. Ailleurs, chaque capteur pèse l'inverse du carré de sa distance en
- * contournant les murs.
+ * Température de chaque cellule : la chaleur se diffuse depuis les capteurs,
+ * par les portes, sans traverser les murs, avec un peu de pertes.
+ * `previous`, la carte d'avant, accélère la diffusion.
  */
 export function temperatureField(
   plan: FloorPlan,
-  doors: Float32Array,
   distances: Float32Array[],
   temperatures: number[],
+  previous?: Float32Array,
 ) {
-  // La cellule de départ d'un capteur est à distance nulle.
-  const rooms = distances.map(source => plan.room[source.indexOf(0)]);
-  return Float32Array.from(plan.room, (room, cell) => {
-    const all = weightedMean(distances, temperatures, cell, () => true);
-    if (!room || !rooms.includes(room)) return all;
-    const own = weightedMean(
-      distances,
-      temperatures,
-      cell,
-      k => rooms[k] === room,
-    );
-    return all + Math.min(doors[cell] / DOOR_BLEND, 1) * (own - all);
+  const fixed = new Uint8Array(plan.floor.length);
+  const field = Float32Array.from(plan.floor, (open, cell) => {
+    let nearest = 0;
+    distances.forEach((source, k) => {
+      if (source[cell] < distances[nearest][cell]) nearest = k;
+    });
+    fixed[cell] = distances[nearest][cell] < SENSOR_REACH ? 1 : 0;
+    // Départ de la diffusion, déjà proche de l'arrivée : la carte d'avant sur
+    // le sol libre ; le capteur le plus proche autour de lui et sous les murs.
+    return previous?.length === plan.floor.length && open && !fixed[cell]
+      ? previous[cell]
+      : temperatures[nearest];
   });
+  const blend = Float32Array.from(plan.floor, (_, cell) =>
+    weightedMean(distances, temperatures, cell),
+  );
+  diffuse(plan, field, fixed, blend);
+  return underWalls(plan, field);
 }
 
 function weightedMean(
   distances: Float32Array[],
   temperatures: number[],
   cell: number,
-  keep: (sensor: number) => boolean,
 ) {
   let sum = 0;
   let weights = 0;
   distances.forEach((source, k) => {
-    if (!keep(k)) return;
     const weight = Math.max(source[cell], MIN_DISTANCE) ** -2;
     sum += temperatures[k] * weight;
     weights += weight;
@@ -72,7 +71,75 @@ function weightedMean(
   return weights ? sum / weights : 0;
 }
 
-/** Dijkstra sur les huit voisins, depuis les cellules `starts`. */
+/**
+ * Régime permanent de l'équation de la chaleur autour des capteurs, les murs
+ * isolant : chaque cellule de sol prend la moyenne de ses voisines, et un peu
+ * de `blend`.
+ */
+function diffuse(
+  plan: FloorPlan,
+  field: Float32Array,
+  fixed: Uint8Array,
+  blend: Float32Array,
+) {
+  const {width, height, floor} = plan;
+  for (let pass = 0; pass < MAX_PASSES; pass++) {
+    let change = 0;
+    for (let j = 0; j < height; j++) {
+      for (let i = 0; i < width; i++) {
+        const cell = j * width + i;
+        if (!floor[cell] || fixed[cell]) continue;
+        const left = i > 0 ? floor[cell - 1] : 0;
+        const right = i < width - 1 ? floor[cell + 1] : 0;
+        const up = j > 0 ? floor[cell - width] : 0;
+        const down = j < height - 1 ? floor[cell + width] : 0;
+        const count = left + right + up + down;
+        const sum =
+          (left && field[cell - 1]) +
+          (right && field[cell + 1]) +
+          (up && field[cell - width]) +
+          (down && field[cell + width]);
+        const target = (sum + LOSS * blend[cell]) / (count + LOSS);
+        const delta = OMEGA * (target - field[cell]);
+        field[cell] += delta;
+        change = Math.max(change, Math.abs(delta));
+      }
+    }
+    if (change < TOLERANCE) return;
+  }
+}
+
+/**
+ * Sous les murs, la moyenne du sol voisin : le filtrage de la texture ne borde
+ * pas les pièces d'une autre couleur.
+ */
+function underWalls(plan: FloorPlan, field: Float32Array) {
+  const {width, height, floor} = plan;
+  return field.map((value, cell) => {
+    if (floor[cell]) return value;
+    const i = cell % width;
+    const j = (cell - i) / width;
+    let sum = 0;
+    let count = 0;
+    for (let nj = Math.max(j - 1, 0); nj <= Math.min(j + 1, height - 1); nj++) {
+      for (
+        let ni = Math.max(i - 1, 0);
+        ni <= Math.min(i + 1, width - 1);
+        ni++
+      ) {
+        if (!floor[nj * width + ni]) continue;
+        sum += field[nj * width + ni];
+        count++;
+      }
+    }
+    return count ? sum / count : value;
+  });
+}
+
+/**
+ * Distance (m) de chaque cellule à la plus proche des cellules `starts` :
+ * Dijkstra sur les huit voisins.
+ */
 function geodesic(plan: FloorPlan, starts: number[]) {
   const {width, height, floor} = plan;
   const distances = new Float64Array(width * height).fill(Infinity);
@@ -115,12 +182,12 @@ function geodesic(plan: FloorPlan, starts: number[]) {
   return Float32Array.from(distances, d => d * CELL_SIZE);
 }
 
-/** Cellule de pièce la plus proche : un capteur fixé au mur tombe dans le mur. */
-function nearestRoomCell(plan: FloorPlan, x: number, z: number) {
+/** Cellule de sol la plus proche : un capteur fixé au mur tombe dans le mur. */
+function nearestFloorCell(plan: FloorPlan, x: number, z: number) {
   let nearest: number | undefined;
   let best = Infinity;
-  plan.room.forEach((room, cell) => {
-    if (!room) return;
+  plan.floor.forEach((open, cell) => {
+    if (!open) return;
     const i = cell % plan.width;
     const j = (cell - i) / plan.width;
     const dx = plan.minX + (i + 0.5) * CELL_SIZE - x;

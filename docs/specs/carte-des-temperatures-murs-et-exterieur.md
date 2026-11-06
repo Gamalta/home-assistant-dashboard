@@ -15,12 +15,11 @@ Sur la tablette, on lit mal quelle pièce est froide.
 
 ## Objectif
 
-Chaque pièce garde la température de ses capteurs jusqu'à ses murs, et la chaleur ne passe d'une pièce à l'autre que par les portes. Les pièces extérieures restent hors de la carte.
+La chaleur de chaque capteur se diffuse dans sa pièce et ne passe d'une pièce à l'autre que par les portes. Les pièces extérieures restent hors de la carte.
 
 ## Hors périmètre
 
-- Une simulation thermique : isolation réelle, soleil, inertie.
-- Les écarts à l'intérieur d'une pièce, que ses capteurs ne mesurent pas.
+- Une simulation thermique complète : isolation réelle, pertes vers l'extérieur mesurées, soleil, inertie.
 - La température extérieure sur la carte.
 - Les maisons à plusieurs niveaux.
 
@@ -30,26 +29,33 @@ Chaque pièce garde la température de ses capteurs jusqu'à ses murs, et la cha
 
 - **Étant donné** deux pièces voisines à 19 °C et 21 °C, séparées par un mur percé d'une porte
 - **Quand** la carte des températures est affichée
-- **Alors** chaque pièce garde la couleur de son capteur jusqu'à ses murs
-- **Et** le passage de l'une à l'autre se fait en fondu, près de la porte
+- **Alors** chaque pièce garde la couleur de son capteur le long du mur
+- **Et** la chaleur passe de l'une à l'autre par la porte, en se diffusant
+
+### Scénario : un capteur garde sa mesure
+
+- **Étant donné** un capteur à 20 °C
+- **Quand** la carte est affichée
+- **Alors** le sol à moins de 50 cm de lui est à 20 °C, quelles que soient les pièces voisines
 
 ### Scénario : une pièce sans capteur
 
 - **Étant donné** une pièce sans capteur, ouverte sur deux pièces mesurées
 - **Quand** la carte est affichée
-- **Alors** elle prend un mélange de leurs températures, d'autant plus proche de l'une que le chemin par les portes est court
+- **Alors** elle tient de chacune près de sa porte
+- **Et** au-delà, elle prend la moyenne des capteurs pondérée par leur distance, plutôt que de copier sa voisine
 
 ### Scénario : plusieurs capteurs dans une même pièce
 
 - **Étant donné** une pièce ouverte, un séjour et sa cuisine sans mur entre eux, avec un capteur de chaque côté
 - **Quand** la carte est affichée
-- **Alors** la pièce passe de la température de l'un à celle de l'autre, sans tenir compte des pièces voisines
+- **Alors** la pièce passe de la température de l'un à celle de l'autre
 
 ### Scénario : les meubles et les portes ouvertes ne comptent pas
 
-- **Étant donné** une pièce mesurée avec une porte ouverte, une baignoire ou un meuble
+- **Étant donné** une pièce avec une porte ouverte, une baignoire ou un meuble
 - **Quand** la carte est affichée
-- **Alors** la pièce garde une seule couleur, autour d'eux comme derrière eux
+- **Alors** la chaleur passe autour d'eux et derrière eux comme s'ils n'étaient pas là
 
 ### Scénario : une terrasse reste hors de la carte
 
@@ -62,11 +68,11 @@ Chaque pièce garde la température de ses capteurs jusqu'à ses murs, et la cha
 
 - **Étant donné** un capteur dont la position tombe dans un mur ou hors du sol
 - **Quand** la carte est affichée
-- **Alors** il colore la pièce la plus proche de sa position
+- **Alors** il fixe la température du sol le plus proche de sa position
 
 ## Critères d'acceptation
 
-- [x] Le plan (sol, murs, pièces) est tiré du modèle chargé, sans fichier ni réglage en plus ([ADR 0055](../adr/0055-carte-des-temperatures-sur-le-plan-du-modele.md)).
+- [x] Le plan (sol et murs) est tiré du modèle chargé, sans fichier ni réglage en plus ([ADR 0055](../adr/0055-carte-des-temperatures-sur-le-plan-du-modele.md)).
 - [x] `rooms[].outdoor` est documenté dans le [guide d'ajout d'une maison](../guides/ajouter-une-maison.md).
 - [x] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : la carte ne coûte pas plus de GPU qu'avant.
 - [x] Chaque scénario est couvert par un test :
@@ -76,7 +82,7 @@ Chaque pièce garde la température de ses capteurs jusqu'à ses murs, et la cha
 ## Impacts
 
 - Config : `outdoor?: boolean` sur une pièce. Une maison sans pièce extérieure ne change rien.
-- Modèle : seuls les murs `wall_*` séparent les pièces. Un sol de terrasse doit avoir son propre matériau.
-- Démo : aucune pièce extérieure ; sa carte change par les murs et les pièces.
+- Modèle : seuls les murs `wall_*` arrêtent la chaleur. Un sol de terrasse doit avoir son propre matériau.
+- Démo : aucune pièce extérieure ; sa carte change par les murs et la diffusion.
 - La limite de 32 capteurs disparaît : le shader ne lit plus les capteurs.
-- Performance : le calcul du plan et des distances se fait sur le processeur, une fois, à l'activation de la carte ; chaque nouvelle température ne refait que le mélange.
+- Performance : le plan et les distances se calculent sur le processeur, une fois, à l'activation de la carte ; chaque nouvelle température relance la diffusion, à partir de la carte d'avant.

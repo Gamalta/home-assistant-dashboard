@@ -6,15 +6,10 @@ import {getMaterialKind} from './materialKind';
 export const CELL_SIZE = 0.1;
 // Sous l'allège des fenêtres : les portes restent ouvertes, les fenêtres non.
 const WALL_CUT_HEIGHT = 0.5;
-// Sous le haut des murs, au-dessus des portes : les linteaux ferment chaque
-// pièce.
-const ROOM_CUT_DEPTH = 0.15;
 
 /**
- * Plan du sol vu de dessus, cellule par cellule, ligne après ligne selon z.
- * `floor` : 1 là où l'on marche, 0 sur un mur ou hors du sol. `room` : la
- * pièce de la cellule à partir de 1, 0 hors d'une pièce, sous une porte
- * comprise.
+ * Plan du sol vu de dessus, cellule par cellule, ligne après ligne selon z :
+ * 1 là où l'on marche, 0 sur un mur ou hors du sol.
  */
 export type FloorPlan = {
   width: number;
@@ -22,7 +17,6 @@ export type FloorPlan = {
   minX: number;
   minZ: number;
   floor: Uint8Array;
-  room: Uint16Array;
 };
 
 type Triangle = [THREE.Vector3, THREE.Vector3, THREE.Vector3];
@@ -33,8 +27,7 @@ const materialOf = (mesh: THREE.Mesh): THREE.Material | THREE.Material[] =>
 
 /**
  * Plan du sol (`room_*`), sans celui des pièces extérieures, coupé par les
- * murs (`wall_*`) : à mi-hauteur d'allège pour savoir où l'on passe, sous
- * leur sommet pour séparer les pièces.
+ * murs (`wall_*`) à mi-hauteur d'allège.
  */
 export function createFloorPlan(
   scene: THREE.Object3D,
@@ -70,23 +63,11 @@ export function createFloorPlan(
     minX: box.min.x,
     minZ: box.min.z,
     floor: new Uint8Array(width * height),
-    room: new Uint16Array(width * height),
   };
   ground.forEach(triangle => fillTriangle(plan, triangle));
-  const low = new Uint8Array(width * height);
-  const high = new Uint8Array(width * height);
-  const top = walls.reduce(
-    (max, triangle) => Math.max(max, ...triangle.map(v => v.y)),
-    -Infinity,
-  );
-  walls.forEach(triangle => {
-    cutWall(plan, triangle, box.min.y + WALL_CUT_HEIGHT, low);
-    cutWall(plan, triangle, top - ROOM_CUT_DEPTH, high);
-  });
-  low.forEach((cut, cell) => {
-    if (cut) plan.floor[cell] = 0;
-  });
-  labelRooms(plan, high);
+  const cutY = box.min.y + WALL_CUT_HEIGHT;
+  walls.forEach(triangle => cutWall(plan, triangle, cutY));
+  removeThinFloor(plan);
   return plan;
 }
 
@@ -155,13 +136,8 @@ function fillTriangle(plan: FloorPlan, [a, b, c]: Triangle) {
   }
 }
 
-/** Marque dans `cut` le trait que laisse le triangle à la hauteur `y`. */
-function cutWall(
-  plan: FloorPlan,
-  triangle: Triangle,
-  y: number,
-  cut: Uint8Array,
-) {
+/** Efface du sol le trait que laisse le triangle à la hauteur `y`. */
+function cutWall(plan: FloorPlan, triangle: Triangle, y: number) {
   const crossings = triangle.flatMap((p, k) => {
     const q = triangle[(k + 1) % 3];
     if (p.y === q.y || (p.y - y) * (q.y - y) > 0) return [];
@@ -175,22 +151,22 @@ function cutWall(
     const i = column(plan, point.x);
     const j = row(plan, point.z);
     if (i >= 0 && j >= 0 && i < plan.width && j < plan.height) {
-      cut[j * plan.width + i] = 1;
+      plan.floor[j * plan.width + i] = 0;
     }
   }
 }
 
 /**
- * Numérote les étendues de sol que séparent les murs coupés sous leur sommet.
- * Celles qui n'atteignent nulle part 50 cm de large sont l'intérieur d'un mur
- * épais, entre ses deux faces : elles quittent le sol.
+ * Retire les étendues de sol qui n'atteignent nulle part 50 cm de large :
+ * l'intérieur d'un mur épais, entre ses deux faces.
  */
-function labelRooms(plan: FloorPlan, walls: Uint8Array) {
-  const {width, height, floor, room} = plan;
-  let count = 0;
+function removeThinFloor(plan: FloorPlan) {
+  const {width, height, floor} = plan;
+  const region = new Int32Array(floor.length);
+  const wide: boolean[] = [false];
   floor.forEach((open, start) => {
-    if (!open || walls[start] || room[start]) return;
-    room[start] = ++count;
+    if (!open || region[start]) return;
+    region[start] = wide.push(false) - 1;
     const stack = [start];
     while (stack.length) {
       const cell = stack.pop()!;
@@ -203,17 +179,14 @@ function labelRooms(plan: FloorPlan, walls: Uint8Array) {
         j < height - 1 && cell + width,
       ];
       neighbours.forEach(next => {
-        if (next === false || !floor[next] || walls[next] || room[next]) {
-          return;
-        }
-        room[next] = count;
+        if (next === false || !floor[next] || region[next]) return;
+        region[next] = region[start];
         stack.push(next);
       });
     }
   });
 
-  const wide = new Uint8Array(count + 1);
-  room.forEach((label, cell) => {
+  region.forEach((label, cell) => {
     if (!label || wide[label]) return;
     const i = cell % width;
     const j = (cell - i) / width;
@@ -221,12 +194,12 @@ function labelRooms(plan: FloorPlan, walls: Uint8Array) {
     let inside = true;
     for (let dj = -2; dj <= 2 && inside; dj++) {
       for (let di = -2; di <= 2 && inside; di++) {
-        inside = room[cell + dj * width + di] === label;
+        inside = region[cell + dj * width + di] === label;
       }
     }
-    if (inside) wide[label] = 1;
+    wide[label] = inside;
   });
-  room.forEach((label, cell) => {
-    if (label && !wide[label]) room[cell] = floor[cell] = 0;
+  region.forEach((label, cell) => {
+    if (label && !wide[label]) floor[cell] = 0;
   });
 }
