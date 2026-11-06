@@ -14,8 +14,11 @@ const cellOf = (x: number, z: number) => ({
 });
 
 // Les autres scénarios de docs/specs/carte-des-temperatures-murs-et-exterieur.md
-// sont testés en unitaire (temperatureField.test.ts, useTemperatureMap.test.ts).
-test('un mur arrête la chaleur', async ({page}) => {
+// sont testés en unitaire (temperatureField.test.ts, floorPlan.test.ts,
+// useTemperatureMap.test.ts).
+test('chaque pièce garde la température de son capteur jusqu’à ses murs', async ({
+  page,
+}) => {
   // Textures en demi-flottants envoyées au GPU : la carte du sol.
   await page.addInitScript(() => {
     window.__halfFloatTextures = [];
@@ -58,6 +61,6 @@ test('un mur arrête la chaleur', async ({page}) => {
 
   // Chambre 2 à 21 °C, au pied du mur de la salle de bain à 19 °C : la
   // salle de bain, à 1,5 m à vol d'oiseau, la ramènerait à 20 °C.
-  expect(temperatureAt(6.6, -2.55)).toBeGreaterThan(20.5);
-  expect(temperatureAt(6, -1.2)).toBeCloseTo(19, 0);
+  expect(temperatureAt(6.6, -2.55)).toBeCloseTo(21, 1);
+  expect(temperatureAt(6, -1.2)).toBeCloseTo(19, 1);
 });

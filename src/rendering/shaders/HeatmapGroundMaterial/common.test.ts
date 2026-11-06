@@ -41,6 +41,7 @@ describe('createTemperatureMap', () => {
     minX: -1,
     minZ: 2,
     floor: new Uint8Array(6).fill(1),
+    room: new Uint16Array(6).fill(1),
   };
   const field = new Float32Array(6).fill(20);
 

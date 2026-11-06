@@ -6,20 +6,83 @@ const WALL_COST = 20;
 // Distance plancher : évite une division par zéro sur le capteur lui-même.
 const MIN_DISTANCE = 0.1;
 
+// Distance à une porte sur laquelle une pièce passe de la température du
+// passage à celle de ses capteurs.
+const DOOR_BLEND = 0.75;
+
 /**
- * Distance (m) de chaque cellule au sol le plus proche de (x, z), en
- * contournant les murs : Dijkstra sur les huit voisins.
+ * Distance (m) de chaque cellule à la pièce la plus proche de (x, z), en
+ * contournant les murs.
  */
 export function distancesFrom(plan: FloorPlan, x: number, z: number) {
+  const start = nearestRoomCell(plan, x, z);
+  return geodesic(plan, start === undefined ? [] : [start]);
+}
+
+/** Distance (m) de chaque cellule au passage d'une porte. */
+export function doorDistances(plan: FloorPlan) {
+  const doorways: number[] = [];
+  plan.floor.forEach((open, cell) => {
+    if (open && !plan.room[cell]) doorways.push(cell);
+  });
+  return geodesic(plan, doorways);
+}
+
+/**
+ * Température de chaque cellule. Une pièce mesurée prend la température de ses
+ * capteurs jusqu'à ses murs, avec un fondu vers celle du passage près des
+ * portes. Ailleurs, chaque capteur pèse l'inverse du carré de sa distance en
+ * contournant les murs.
+ */
+export function temperatureField(
+  plan: FloorPlan,
+  doors: Float32Array,
+  distances: Float32Array[],
+  temperatures: number[],
+) {
+  // La cellule de départ d'un capteur est à distance nulle.
+  const rooms = distances.map(source => plan.room[source.indexOf(0)]);
+  return Float32Array.from(plan.room, (room, cell) => {
+    const all = weightedMean(distances, temperatures, cell, () => true);
+    if (!room || !rooms.includes(room)) return all;
+    const own = weightedMean(
+      distances,
+      temperatures,
+      cell,
+      k => rooms[k] === room,
+    );
+    return all + Math.min(doors[cell] / DOOR_BLEND, 1) * (own - all);
+  });
+}
+
+function weightedMean(
+  distances: Float32Array[],
+  temperatures: number[],
+  cell: number,
+  keep: (sensor: number) => boolean,
+) {
+  let sum = 0;
+  let weights = 0;
+  distances.forEach((source, k) => {
+    if (!keep(k)) return;
+    const weight = Math.max(source[cell], MIN_DISTANCE) ** -2;
+    sum += temperatures[k] * weight;
+    weights += weight;
+  });
+  return weights ? sum / weights : 0;
+}
+
+/** Dijkstra sur les huit voisins, depuis les cellules `starts`. */
+function geodesic(plan: FloorPlan, starts: number[]) {
   const {width, height, floor} = plan;
   const distances = new Float64Array(width * height).fill(Infinity);
-  const start = nearestFloorCell(plan, x, z);
-  if (start === undefined) return Float32Array.from(distances);
   const cost = (cell: number) => (floor[cell] ? 1 : WALL_COST);
   const done = new Uint8Array(width * height);
   const queue = new MinQueue();
-  distances[start] = 0;
-  queue.push(0, start);
+  starts.forEach(start => {
+    distances[start] = 0;
+    queue.push(0, start);
+  });
   while (queue.size) {
     const cell = queue.pop();
     if (done[cell]) continue;
@@ -52,60 +115,12 @@ export function distancesFrom(plan: FloorPlan, x: number, z: number) {
   return Float32Array.from(distances, d => d * CELL_SIZE);
 }
 
-/**
- * Température de chaque cellule : moyenne des capteurs pondérée par
- * l'inverse du carré de leur distance en contournant les murs.
- */
-export const temperatureField = (
-  distances: Float32Array[],
-  temperatures: number[],
-) => weightedMean(distances, temperatures, 2);
-
-/**
- * Mêle la température extérieure au champ selon la part de chaque cellule qui
- * revient aux pièces extérieures, à partir des distances au centre de toutes
- * les pièces : une terrasse prend la météo sans qu'elle entre par la
- * porte-fenêtre dans les pièces sans capteur.
- */
-export function withOutdoor(
-  field: Float32Array,
-  rooms: Float32Array[],
-  outdoor: boolean[],
-  temperature: number,
-) {
-  // Puissance 4 : chaque cellule revient presque entière à la pièce la plus
-  // proche, avec un fondu autour de la limite.
-  const share = weightedMean(rooms, outdoor.map(Number), 4);
-  return field.map(
-    (value, cell) => value + share[cell] * (temperature - value),
-  );
-}
-
-function weightedMean(
-  distances: Float32Array[],
-  values: number[],
-  power: number,
-) {
-  const field = new Float32Array(distances[0]?.length ?? 0);
-  for (let cell = 0; cell < field.length; cell++) {
-    let sum = 0;
-    let weights = 0;
-    distances.forEach((source, k) => {
-      const weight = Math.max(source[cell], MIN_DISTANCE) ** -power;
-      sum += values[k] * weight;
-      weights += weight;
-    });
-    field[cell] = weights ? sum / weights : 0;
-  }
-  return field;
-}
-
-/** Cellule de sol la plus proche : un capteur fixé au mur tombe dans le mur. */
-function nearestFloorCell(plan: FloorPlan, x: number, z: number) {
+/** Cellule de pièce la plus proche : un capteur fixé au mur tombe dans le mur. */
+function nearestRoomCell(plan: FloorPlan, x: number, z: number) {
   let nearest: number | undefined;
   let best = Infinity;
-  plan.floor.forEach((open, cell) => {
-    if (!open) return;
+  plan.room.forEach((room, cell) => {
+    if (!room) return;
     const i = cell % plan.width;
     const j = (cell - i) / plan.width;
     const dx = plan.minX + (i + 0.5) * CELL_SIZE - x;

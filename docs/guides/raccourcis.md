@@ -60,7 +60,7 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 
 ## Température
 
-La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. Chaque pièce garde la couleur de ses capteurs jusqu'à ses murs, la chaleur passe d'une pièce à l'autre par les portes, et une terrasse prend la température de la météo. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Configuration ne le propose pas ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
+La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. Chaque pièce garde la couleur de ses capteurs jusqu'à ses murs, la chaleur passe d'une pièce à l'autre par les portes, et les terrasses restent hors de la carte. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Configuration ne le propose pas ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)).
 
 ## Énergie
 

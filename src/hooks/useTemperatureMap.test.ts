@@ -1,35 +1,32 @@
 import {renderHook} from '@testing-library/react';
 import * as THREE from 'three';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import type {HouseConfigType} from '../configs/house';
+import {getOutdoorFloors} from '../rendering/floorPlan';
 import {useTemperatureMap} from './useTemperatureMap';
 
-const {entities} = vi.hoisted(() => ({entities: {current: [] as object[]}}));
+const entities = [
+  {entity_id: 'sensor.living_room_temperature', state: '21'},
+  {entity_id: 'sensor.terrace_temperature', state: '5'},
+];
 
 vi.mock('@hakit/core', () => ({
   useEntities: (ids: string[]) =>
-    ids.map(
-      id =>
-        entities.current.find(
-          entity => (entity as {entity_id: string}).entity_id === id,
-        ) ?? null,
-    ),
+    ids.map(id => entities.find(entity => entity.entity_id === id) ?? null),
 }));
 
-// Un séjour de 2 m et une terrasse de 2 m, séparés en x = 2 m par un mur
-// percé d'une porte-fenêtre.
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(4, 2),
-  new THREE.MeshStandardMaterial({name: 'room_1'}),
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.set(2, 0, 1);
-const wall = new THREE.Mesh(
-  new THREE.BoxGeometry(0.1, 2.5, 1.4),
-  new THREE.MeshStandardMaterial({name: 'wall_1'}),
-);
-wall.position.set(2, 1.25, 0.7);
-const scene = new THREE.Group().add(floor, wall);
+const plane = (name: string, x: number) => {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2),
+    new THREE.MeshStandardMaterial({name}),
+  );
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.set(x, 0, 1);
+  return mesh;
+};
+
+// Un séjour de 2 m et une terrasse de 2 m, de plain-pied.
+const scene = new THREE.Group().add(plane('room_1', 1), plane('room_2', 3));
 
 const rooms: HouseConfigType['rooms'] = [
   {
@@ -47,57 +44,36 @@ const rooms: HouseConfigType['rooms'] = [
   {
     id: 'Terrace',
     name: 'Terrasse',
-    position: {x: 3, y: 2.5, z: 1},
     outdoor: true,
+    position: {x: 3, y: 2.5, z: 1},
+    items: [
+      {
+        type: 'temperature',
+        roomDisplay: true,
+        temperatureEntityId: 'sensor.terrace_temperature',
+      },
+    ],
   },
 ];
-
-// FloorMap type sa texture en Texture : celle de la carte est une DataTexture.
-const temperatureAt = (texture: THREE.Texture, x: number, z: number) =>
-  THREE.DataUtils.fromHalfFloat(
-    (texture as THREE.DataTexture).image.data![
-      Math.floor(z / 0.1) * 40 + Math.floor(x / 0.1)
-    ],
-  );
-const render = () =>
-  renderHook(() => useTemperatureMap(scene, rooms, 'weather.home', true)).result
-    .current!;
+const outdoorFloors = getOutdoorFloors(scene, rooms);
 
 describe('useTemperatureMap', () => {
-  beforeEach(() => {
-    entities.current = [
-      {entity_id: 'sensor.living_room_temperature', state: '21'},
-    ];
-  });
+  it('laisse la terrasse et sa sonde hors de la carte', () => {
+    const {result} = renderHook(() =>
+      useTemperatureMap(scene, rooms, outdoorFloors, true),
+    );
+    const map = result.current!;
+    // FloorMap type sa texture en Texture : celle de la carte est une DataTexture.
+    const {width, data} = (map.texture as THREE.DataTexture).image;
 
-  it('une terrasse prend la température extérieure', () => {
-    entities.current.push({
-      entity_id: 'weather.home',
-      state: 'sunny',
-      attributes: {temperature: 5},
-    });
-    const map = render();
-
-    expect(temperatureAt(map.texture, 3.5, 0.5)).toBeCloseTo(5, 0);
-    expect(temperatureAt(map.texture, 1, 1)).toBeCloseTo(21, 0);
-    // L'échelle reste celle de l'intérieur.
+    expect(width).toBe(20);
+    expect(THREE.DataUtils.fromHalfFloat(data![15])).toBeCloseTo(21);
     expect(map).toMatchObject({minTemp: 20.5, maxTemp: 21.5});
-  });
-
-  it('météo indisponible', () => {
-    entities.current.push({
-      entity_id: 'weather.home',
-      state: 'unavailable',
-      attributes: {},
-    });
-    const map = render();
-
-    expect(temperatureAt(map.texture, 3.5, 0.5)).toBeCloseTo(21);
   });
 
   it('ne calcule rien sans la carte', () => {
     const {result} = renderHook(() =>
-      useTemperatureMap(scene, rooms, 'weather.home', false),
+      useTemperatureMap(scene, rooms, outdoorFloors, false),
     );
 
     expect(result.current).toBeUndefined();

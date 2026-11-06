@@ -1,11 +1,11 @@
-import type {EntityName} from '@hakit/core';
 import {useFrame, useThree} from '@react-three/fiber';
-import {useEffect, useLayoutEffect, useRef} from 'react';
+import {useEffect, useLayoutEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
 import {useTemperatureMap} from '../../../hooks/useTemperatureMap';
 import {useVacuumFloorMap} from '../../../hooks/useVacuumFloorMap';
+import {getOutdoorFloors} from '../../../rendering/floorPlan';
 import {createWallFade} from '../../../rendering/wallFade';
 import {getMaterialKind} from '../../../rendering/materialKind';
 import type {LightMaps} from '../../../rendering/shaders/BakedLight/common';
@@ -17,7 +17,6 @@ type SceneMaterialsProps = {
   heatmap: boolean;
   vacuumMap: boolean;
   rooms: HouseConfigType['rooms'];
-  weatherEntityId?: EntityName;
   lightMaps?: LightMaps;
 };
 
@@ -62,22 +61,18 @@ function toLambert(source: THREE.Material) {
  * plus d'effets qui se marchent dessus selon l'ordre d'activation des options.
  */
 export function SceneMaterials(props: SceneMaterialsProps) {
-  const {
-    scene,
-    backend,
-    hideWalls,
-    heatmap,
-    vacuumMap,
-    rooms,
-    weatherEntityId,
-    lightMaps,
-  } = props;
+  const {scene, backend, hideWalls, heatmap, vacuumMap, rooms, lightMaps} =
+    props;
   const invalidate = useThree(state => state.invalidate);
 
+  const outdoorFloors = useMemo(
+    () => getOutdoorFloors(scene, rooms),
+    [scene, rooms],
+  );
   const temperatureMap = useTemperatureMap(
     scene,
     rooms,
-    weatherEntityId,
+    outdoorFloors,
     heatmap,
   );
   const temperatureMapRef = useRef(temperatureMap);
@@ -104,7 +99,12 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     ): {material: THREE.Material; fade?: THREE.Material} => {
       const kind = getMaterialKind(gltfMaterial);
 
-      if (showHeatmap && kind === 'ground') {
+      // Le sol d'une terrasse reste celui du modèle, translucide.
+      if (
+        showHeatmap &&
+        kind === 'ground' &&
+        !outdoorFloors.has(gltfMaterial)
+      ) {
         const material = backend.createHeatmapMaterial(
           temperatureMapRef.current!,
         );
