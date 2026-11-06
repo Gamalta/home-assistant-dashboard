@@ -11,31 +11,29 @@ type CameraStreamProps = {
 };
 
 // Le flux MJPEG de la caméra, en direct. Chrome garde la connexion ouverte
-// après le retrait de l'image : on retire sa source pour la fermer.
+// après le retrait de l'image : on retire sa source pour la fermer. La source
+// se pose au rattachement, que StrictMode rejoue après un détachement.
 export function CameraStream(props: CameraStreamProps) {
   const {cameraEntityId, alt, ref, sx} = props;
   const camera = useEntity(cameraEntityId, {returnNullIfNotFound: true});
   const joinHassUrl = useHass(state => state.helpers.joinHassUrl);
+  const picture = camera?.attributes.entity_picture;
+  const src =
+    picture &&
+    joinHassUrl(
+      picture.replace('/api/camera_proxy/', '/api/camera_proxy_stream/'),
+    );
   const attach = useCallback(
     (image: HTMLImageElement | null) => {
       if (ref) ref.current = image;
-      return () => image?.removeAttribute('src');
+      if (!image || !src) return;
+      image.src = src;
+      return () => image.removeAttribute('src');
     },
-    [ref],
+    [ref, src],
   );
 
-  const picture = camera?.attributes.entity_picture;
-  if (!picture) return null;
+  if (!src) return null;
 
-  return (
-    <Box
-      component="img"
-      ref={attach}
-      alt={alt}
-      src={joinHassUrl(
-        picture.replace('/api/camera_proxy/', '/api/camera_proxy_stream/'),
-      )}
-      sx={sx}
-    />
-  );
+  return <Box component="img" ref={attach} alt={alt} sx={sx} />;
 }

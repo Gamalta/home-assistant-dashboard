@@ -13,20 +13,31 @@ const REFRESH_MS = 100;
 type LedGlowProps = {
   cameraEntityId: FilterByDomain<EntityName, 'camera'>;
   ledLayout: LedLayoutType;
+  // Une couleur fixe, que toutes les LED prennent : aucun flux à ouvrir.
+  color?: number[];
 };
 
 // Chaque LED reprend son pixel de l'image « LED Gradient » et le peint sur sa
 // zone du bord de l'écran ; le flou en fait le halo autour de la TV. Dessiner
 // sans relire les pixels marche aussi avec une image d'une autre origine.
 export function LedGlow(props: LedGlowProps) {
-  const {cameraEntityId, ledLayout} = props;
+  const {cameraEntityId, ledLayout, color} = props;
   const canvas = useRef<HTMLCanvasElement>(null);
   const image = useRef<HTMLImageElement>(null);
+  const fill = color && `rgb(${color.join(',')})`;
 
   useEffect(() => {
     const context = canvas.current?.getContext('2d');
     if (!context) return;
     const areas = ledAreas(ledLayout);
+    context.clearRect(0, 0, WIDTH, HEIGHT);
+    if (fill) {
+      context.fillStyle = fill;
+      areas.forEach(({x, y, width, height}) =>
+        context.fillRect(x * WIDTH, y * HEIGHT, width * WIDTH, height * HEIGHT),
+      );
+      return;
+    }
     const timer = window.setInterval(() => {
       const leds = image.current;
       if (!leds?.naturalWidth) return;
@@ -45,16 +56,18 @@ export function LedGlow(props: LedGlowProps) {
       });
     }, REFRESH_MS);
     return () => window.clearInterval(timer);
-  }, [ledLayout]);
+  }, [ledLayout, fill]);
 
   return (
     <>
-      <CameraStream
-        ref={image}
-        cameraEntityId={cameraEntityId}
-        alt=""
-        sx={{display: 'none'}}
-      />
+      {!fill && (
+        <CameraStream
+          ref={image}
+          cameraEntityId={cameraEntityId}
+          alt=""
+          sx={{display: 'none'}}
+        />
+      )}
       <Box
         component="canvas"
         ref={canvas}
@@ -66,8 +79,8 @@ export function LedGlow(props: LedGlowProps) {
           inset: 0,
           width: '100%',
           height: '100%',
-          transform: 'scale(1.15)',
-          filter: 'blur(16px)',
+          transform: 'scale(1.18)',
+          filter: 'blur(28px)',
         }}
       />
     </>
