@@ -1,23 +1,18 @@
+import * as THREE from 'three';
+import {CELL_SIZE, type FloorPlan} from '../../floorPlan';
+import type {FloorMap} from '../VacuumMapGroundMaterial/common';
+
 export type HeatmapPoint = {
   x: number;
   z: number;
   temperature: number;
 };
 
-/** Nombre maximum de capteurs pris en compte par les shaders. */
-export const MAX_HEATMAP_POINTS = 32;
+/** Températures du sol (°C), posées sur le sol comme le plan de l'aspirateur. */
+export type TemperatureMap = FloorMap & {minTemp: number; maxTemp: number};
 
 /** Écart minimal (en °C) entre les bornes de l'échelle de couleurs. */
 const MIN_TEMPERATURE_SPREAD = 1;
-
-export function limitHeatmapPoints(points: HeatmapPoint[]) {
-  if (points.length > MAX_HEATMAP_POINTS) {
-    console.warn(
-      `Heatmap: ${points.length} capteurs, seuls les ${MAX_HEATMAP_POINTS} premiers sont affichés.`,
-    );
-  }
-  return points.slice(0, MAX_HEATMAP_POINTS);
-}
 
 /**
  * Bornes de l'échelle de couleurs. On garantit un écart minimal pour éviter
@@ -33,5 +28,35 @@ export function getTemperatureRange(points: HeatmapPoint[]) {
   return {
     minTemp: middle - MIN_TEMPERATURE_SPREAD / 2,
     maxTemp: middle + MIN_TEMPERATURE_SPREAD / 2,
+  };
+}
+
+/** `field` : température de chaque cellule du plan ; échelle des `points`. */
+export function createTemperatureMap(
+  plan: FloorPlan,
+  field: Float32Array,
+  points: HeatmapPoint[],
+): TemperatureMap {
+  // Demi-flottants : filtrés linéairement partout, ce que les flottants ne
+  // garantissent pas sur mobile.
+  const texture = new THREE.DataTexture(
+    Uint16Array.from(field, value => THREE.DataUtils.toHalfFloat(value)),
+    plan.width,
+    plan.height,
+    THREE.RedFormat,
+    THREE.HalfFloatType,
+  );
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  const sizeX = plan.width * CELL_SIZE;
+  const sizeZ = plan.height * CELL_SIZE;
+  return {
+    texture,
+    uv: [
+      [1 / sizeX, 0, -plan.minX / sizeX],
+      [0, 1 / sizeZ, -plan.minZ / sizeZ],
+    ],
+    ...getTemperatureRange(points),
   };
 }

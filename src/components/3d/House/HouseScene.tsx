@@ -116,6 +116,7 @@ export function HouseScene(props: HouseSceneProps) {
             heatmap={configuration.heatmapShader}
             vacuumMap={configuration.vacuumMapShader}
             rooms={rooms}
+            weatherEntityId={houseConfig?.sideBar.weatherEntityId}
             lightMaps={lightMaps}
           />
           <LightShadows

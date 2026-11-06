@@ -1,9 +1,10 @@
-import {describe, expect, it, vi} from 'vitest';
+import * as THREE from 'three';
+import {describe, expect, it} from 'vitest';
+import type {FloorPlan} from '../../floorPlan';
 import {
   HeatmapPoint,
-  MAX_HEATMAP_POINTS,
+  createTemperatureMap,
   getTemperatureRange,
-  limitHeatmapPoints,
 } from './common';
 
 const point = (temperature: number, x = 0): HeatmapPoint => ({
@@ -32,24 +33,27 @@ describe('getTemperatureRange', () => {
   });
 });
 
-describe('limitHeatmapPoints', () => {
-  it('garde les premiers capteurs au-delà de la limite et prévient', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const points = Array.from({length: MAX_HEATMAP_POINTS + 5}, (_, i) =>
-      point(20, i),
-    );
+describe('createTemperatureMap', () => {
+  // 3 × 2 cellules de 10 cm, coin en (-1, 2).
+  const plan: FloorPlan = {
+    width: 3,
+    height: 2,
+    minX: -1,
+    minZ: 2,
+    floor: new Uint8Array(6).fill(1),
+  };
+  const field = new Float32Array(6).fill(20);
 
-    expect(limitHeatmapPoints(points)).toEqual(
-      points.slice(0, MAX_HEATMAP_POINTS),
-    );
-    expect(warn).toHaveBeenCalledOnce();
-  });
+  it('étend la texture sur le plan, vu de dessus', () => {
+    const {texture, uv} = createTemperatureMap(plan, field, [point(20)]);
+    const at = (x: number, z: number) => [
+      new THREE.Vector3(...uv[0]).dot(new THREE.Vector3(x, z, 1)),
+      new THREE.Vector3(...uv[1]).dot(new THREE.Vector3(x, z, 1)),
+    ];
 
-  it('ne prévient pas sous la limite', () => {
-    const warn = vi.spyOn(console, 'warn');
-    const points = [point(20), point(21)];
-
-    expect(limitHeatmapPoints(points)).toEqual(points);
-    expect(warn).not.toHaveBeenCalled();
+    expect(texture.image).toMatchObject({width: 3, height: 2});
+    expect(at(-1, 2)).toEqual([0, 0]);
+    expect(at(-0.7, 2.2)[0]).toBeCloseTo(1);
+    expect(at(-0.7, 2.2)[1]).toBeCloseTo(1);
   });
 });
