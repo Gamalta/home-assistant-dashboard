@@ -85,6 +85,7 @@ export const SideBarConfig: SideBarConfigType = {
     offPeakIndexEntityId: 'sensor.meter_off_peak_index',
     subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
     prices: {peak: 0.27, offPeak: 0.21},
+    subscription: 180,
   },
   mortgages: [
     'sensor.loan_main',

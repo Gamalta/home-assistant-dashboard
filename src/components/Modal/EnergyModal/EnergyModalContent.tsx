@@ -152,6 +152,7 @@ export function EnergyModalContent(props: EnergyModalContentProps) {
           reference={reference}
           comparisonLabel={comparisonLabel}
           tariff={energyConfig}
+          now={now.getTime()}
         />
       </Stack>
     </Stack>

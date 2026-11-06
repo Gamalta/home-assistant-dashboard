@@ -16,8 +16,10 @@ import {
   getPeriod,
   getPrices,
   getSubscribedPower,
+  getSubscriptionCost,
   getTariffPeriod,
   getTotal,
+  getTotalCost,
   shift,
   sumConsumption,
   toKWh,
@@ -458,6 +460,40 @@ describe('coûts', () => {
       peak: expect.closeTo(5.5),
       offPeak: expect.closeTo(4.2),
     });
+  });
+});
+
+describe('abonnement', () => {
+  const now = new Date('2026-11-10T15:00').getTime();
+  const month = (day: string) =>
+    getBuckets(getPeriod('month', new Date(day)), 'day');
+
+  it('compte un 365e de l’abonnement annuel par jour, changement d’heure compris', () => {
+    expect(getSubscriptionCost(month('2026-10-15'), 365, now)).toBe(31);
+  });
+
+  it('s’arrête à aujourd’hui inclus pour une période en cours', () => {
+    expect(getSubscriptionCost(month('2026-11-15'), 365, now)).toBe(10);
+    const year = getBuckets(getPeriod('year', new Date(now)), 'month');
+    expect(getSubscriptionCost(year, 365, now)).toBe(314);
+  });
+
+  it('ajoute l’abonnement au coût des kWh, sans coût sans consommation', () => {
+    const october = month('2026-10-15').map(bucket => ({
+      ...bucket,
+      peak: 1,
+      offPeak: 1,
+    }));
+    const tariff = {prices: {peak: 0.25, offPeak: 0.2}, subscription: 365};
+
+    expect(getTotalCost(october, tariff, now)).toBeCloseTo(31 * 0.45 + 31);
+    expect(
+      getTotalCost(
+        october.map(bucket => ({...bucket, offPeak: null})),
+        tariff,
+        now,
+      ),
+    ).toBeNull();
   });
 });
 

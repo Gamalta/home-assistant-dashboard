@@ -15,7 +15,6 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 
 - Une carte dans le carrousel de la barre latérale : la modale ne s'ouvre que depuis le menu rapide.
 - Les options tarifaires autres que heures pleines / heures creuses (Base, Tempo, EJP).
-- L'abonnement et les taxes fixes : le coût est une estimation à partir du prix du kWh.
 - La production (panneaux solaires) et la consommation par appareil.
 - Le relevé des tarifs : ils sont écrits dans la config de la maison, et une période passée est estimée aux tarifs d'aujourd'hui de sa saison.
 
@@ -36,6 +35,14 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 - **Alors** son coût et le prix du kWh sous chaque période tarifaire sont ceux de `highSeasonPrices`, et ceux de `prices` d'avril à octobre
 - **Et** une période à cheval sur les deux saisons, comme une année, compte chaque jour ou mois aux prix de sa saison, et la légende donne la fourchette (« 0,1896 à 0,2534 €/kWh »)
 - **Et** le schéma du courant et le coût horaire prennent les prix du jour
+
+### Scénario : l'abonnement compte dans le coût
+
+- **Étant donné** une config `energy` avec `subscription`, l'abonnement annuel TTC
+- **Quand** la modale montre une période
+- **Alors** les totaux ajoutent une ligne « Abonnement », avec l'abonnement annuel (« 176,48 €/an ») et sa part pour la période : un 365e par jour, jusqu'à aujourd'hui inclus pour une période en cours
+- **Et** le coût en grand et celui de la période comparée l'incluent, mais pas le coût horaire du courant
+- **Et** sans `subscription`, le coût ne compte que les kWh
 
 ### Scénario : la modale sur téléphone
 
@@ -85,7 +92,7 @@ L'entrée « Énergie » du menu rapide ouvre une modale qui montre la consommat
 
 ## Critères d'acceptation
 
-- [x] La config ne demande que des entités et les deux tarifs, plus deux pour la saison haute si l'acheminement est à quatre plages ([ADR 0054](../adr/0054-prix-du-kwh-par-saison.md)).
+- [x] La config ne demande que des entités et les deux tarifs, plus deux pour la saison haute si l'acheminement est à quatre plages ([ADR 0054](../adr/0054-prix-du-kwh-par-saison.md)), et l'abonnement s'il doit compter dans le coût.
 - [x] Les consommations viennent des statistiques à long terme ([ADR 0021](../adr/0021-consommation-par-les-statistiques-long-terme.md)), par jour ou par mois selon l'échelle, une requête par période affichée ([ADR 0037](../adr/0037-comparaison-de-consommation-par-periode.md)).
 - [x] Les index en Wh, kWh ou MWh sont convertis en kWh.
 - [x] Le graphique est le composant commun `Chart` ([ADR 0031](../adr/0031-un-composant-de-graphique-unique.md)).

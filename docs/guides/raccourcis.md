@@ -73,6 +73,7 @@ energy: {
   subscribedCurrentEntityId: 'sensor.compteur_isousc',
   prices: {peak: 0.27, offPeak: 0.21},
   highSeasonPrices: {peak: 0.33, offPeak: 0.25},
+  subscription: 180,
 },
 ```
 
@@ -81,7 +82,7 @@ Un appui sur « Énergie », dans le menu rapide, referme le menu et ouvre la mo
 - en grand, la consommation du mois en kWh, son coût estimé et l'écart avec le mois précédent, en vert si l'on consomme moins, dans la couleur principale du thème si l'on consomme plus. Tant que la période n'est pas finie, l'écart est calculé « à date égale » : le 24 octobre à midi, on compare au 1er–24 septembre à midi ;
 - dessous, un graphique en barres, heures pleines et heures creuses empilées, avec la période comparée en pointillés ; un appui sur une barre en donne le détail ;
 - à droite (dessous sur téléphone), le courant du Linky à la maison : deux fils, « HP » et « HC », avec le prix du kWh du jour. Seul celui de la période en cours s'anime, d'autant plus vite que la puissance est forte, sauf si « réduire les animations » est activé ([ADR 0045](../adr/0045-animation-du-courant-en-css.md)). Côté maison, la puissance instantanée, la charge par rapport à la puissance souscrite si l'intensité souscrite est fournie, et le coût horaire estimé (« ≈ 0,32 €/h ») ;
-- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire, ou sa fourchette si la période traverse les deux saisons : chaque jour ou mois est compté aux prix de sa saison ([ADR 0054](../adr/0054-prix-du-kwh-par-saison.md)).
+- dessous, l'échelle (« Semaine », « Mois », « Année »), les flèches pour reculer ou avancer d'une période, la comparaison (période précédente ou « Un an avant ») et les totaux en kWh et en euros, avec le prix du kWh sous chaque période tarifaire, ou sa fourchette si la période traverse les deux saisons : chaque jour ou mois est compté aux prix de sa saison ([ADR 0054](../adr/0054-prix-du-kwh-par-saison.md)). Avec `subscription`, une ligne « Abonnement » donne sa part pour les jours de la période, jusqu'à aujourd'hui inclus : elle compte dans le coût en grand et dans celui de la période comparée, pas dans le coût horaire.
 
 « Un an avant » compare au même mois ou à la même année, et une semaine à celle d'il y a 52 semaines, pour garder les mêmes jours. Les jours s'alignent par leur rang : le 1er avec le 1er.
 
@@ -92,8 +93,9 @@ Un appui sur « Énergie », dans le menu rapide, referme le menu et ouvre la mo
 | `peakIndexEntityId`         | Index heures pleines (HCHP), en Wh, kWh ou MWh.                                                                             |
 | `offPeakIndexEntityId`      | Index heures creuses (HCHC), en Wh, kWh ou MWh.                                                                             |
 | `subscribedCurrentEntityId` | Facultatif. Intensité souscrite en A (ISOUSC) : la puissance souscrite vaut 200 V par ampère, soit 6 kVA pour 30 A.         |
-| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses. Le coût n'inclut pas l'abonnement.       |
+| `prices`                    | Prix du kWh TTC en euros, `peak` en heures pleines et `offPeak` en heures creuses.                                          |
 | `highSeasonPrices`          | Facultatif. Prix de novembre à mars si l'acheminement est à quatre plages (MU4, CU4) : `prices` vaut d'avril à octobre.     |
+| `subscription`              | Facultatif. Abonnement TTC en euros par an : le coût en compte un 365e par jour.                                            |
 
 Avec un ZLinky sous Zigbee2MQTT, les entités s'appellent `sensor.<nom>_papp`, `sensor.<nom>_active_register_tier_delivered`, `sensor.<nom>_hchp`, `sensor.<nom>_hchc` et `sensor.<nom>_isousc`.
 
