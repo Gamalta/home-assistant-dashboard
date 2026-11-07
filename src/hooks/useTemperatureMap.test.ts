@@ -72,7 +72,7 @@ describe('useTemperatureMap', () => {
     expect(width).toBe(20);
     const middle = (map.minTemp + map.maxTemp) / 2;
     expect(middle + THREE.DataUtils.fromHalfFloat(data![15])).toBeCloseTo(21);
-    expect(map).toMatchObject({minTemp: 17, maxTemp: 25});
+    expect(map).toMatchObject({minTemp: 19, maxTemp: 23});
   });
 
   it('suit l’échelle choisie dans la modale Configuration', () => {
@@ -85,7 +85,7 @@ describe('useTemperatureMap', () => {
       {wrapper: AppProvider},
     );
 
-    expect(result.current).toMatchObject({minTemp: 15, maxTemp: 27});
+    expect(result.current).toMatchObject({minTemp: 17, maxTemp: 25});
   });
 
   it('ne calcule rien sans la carte', () => {

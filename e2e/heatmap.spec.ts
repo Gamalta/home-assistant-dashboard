@@ -71,13 +71,13 @@ test('règle l’échelle des températures dans la modale Configuration', async
   await page.goto('/');
   await openConfigurationModal(page);
   const scale = page.getByRole('combobox', {name: 'Échelle des températures'});
-  await expect(scale).toHaveText('Équilibrée (8 °C)');
+  await expect(scale).toHaveText('Équilibrée (4 °C)');
   await scale.click();
-  await page.getByRole('option', {name: 'Douce (12 °C)'}).click();
+  await page.getByRole('option', {name: 'Douce (8 °C)'}).click();
 
   await page.reload();
   await openConfigurationModal(page);
   await expect(
     page.getByRole('combobox', {name: 'Échelle des températures'}),
-  ).toHaveText('Douce (12 °C)');
+  ).toHaveText('Douce (8 °C)');
 });

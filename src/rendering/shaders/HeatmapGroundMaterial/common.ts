@@ -16,10 +16,10 @@ export type TemperatureMap = FloorMap & {minTemp: number; maxTemp: number};
 
 /**
  * Écart minimal (en °C) entre les bornes de l'échelle de couleurs, au choix
- * dans la modale Configuration. Avec 8 °C, deux degrés d'écart n'en occupent
- * qu'un quart, au lieu d'aller du bleu au rouge.
+ * dans la modale Configuration. Avec 4 °C, deux degrés d'écart n'en occupent
+ * que la moitié, au lieu d'aller du bleu au rouge.
  */
-export const HEATMAP_SCALES = {contrasted: 4, balanced: 8, soft: 12};
+export const HEATMAP_SCALES = {contrasted: 2, balanced: 4, soft: 8};
 export type HeatmapScale = keyof typeof HEATMAP_SCALES;
 
 /**
