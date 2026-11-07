@@ -10,7 +10,7 @@ type OptionRowProps = {
   label: string;
   option: Exclude<
     keyof ConfigurationOptions,
-    'shownCategories' | 'screensaverMinutes'
+    'shownCategories' | 'screensaverMinutes' | 'heatmapScale'
   >;
   disabled?: boolean;
 };

@@ -15,21 +15,20 @@ const point = (temperature: number, x = 0): HeatmapPoint => ({
 
 describe('getTemperatureRange', () => {
   it('prend la température minimale et maximale', () => {
-    expect(getTemperatureRange([point(20), point(26.5), point(18)])).toEqual({
-      minTemp: 18,
-      maxTemp: 26.5,
-    });
+    expect(getTemperatureRange([point(20), point(26.5), point(18)], 8)).toEqual(
+      {minTemp: 18, maxTemp: 26.5},
+    );
   });
 
-  it("élargit l'échelle à 6 °C autour du milieu si les températures sont proches", () => {
-    expect(getTemperatureRange([point(18), point(20)])).toEqual({
-      minTemp: 16,
-      maxTemp: 22,
+  it("élargit l'échelle autour du milieu si les températures sont proches", () => {
+    expect(getTemperatureRange([point(18), point(20)], 8)).toEqual({
+      minTemp: 15,
+      maxTemp: 23,
     });
   });
 
   it('renvoie une échelle non nulle sans capteur', () => {
-    expect(getTemperatureRange([])).toEqual({minTemp: 0, maxTemp: 6});
+    expect(getTemperatureRange([], 8)).toEqual({minTemp: 0, maxTemp: 8});
   });
 });
 
@@ -45,7 +44,7 @@ describe('createTemperatureMap', () => {
   const field = new Float32Array(6).fill(20);
 
   it('étend la texture sur le plan, vu de dessus', () => {
-    const {texture, uv} = createTemperatureMap(plan, field, [point(20)]);
+    const {texture, uv} = createTemperatureMap(plan, field, [point(20)], 8);
     const at = (x: number, z: number) => [
       new THREE.Vector3(...uv[0]).dot(new THREE.Vector3(x, z, 1)),
       new THREE.Vector3(...uv[1]).dot(new THREE.Vector3(x, z, 1)),
@@ -62,6 +61,7 @@ describe('createTemperatureMap', () => {
       plan,
       Float32Array.of(21.501, 20, 20, 20, 20, 20),
       [point(20)],
+      8,
     );
     const data = (texture as THREE.DataTexture).image.data as Uint16Array;
 

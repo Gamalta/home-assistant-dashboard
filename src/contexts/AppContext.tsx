@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import type {HeatmapScale} from '../rendering/shaders/HeatmapGroundMaterial/common';
 
 export type ConfigurationOptions = {
   debug: boolean;
@@ -21,6 +22,8 @@ export type ConfigurationOptions = {
   batteriesOnly: boolean;
   /** Délai avant la veille de l'écran, en minutes ; 0 la désactive. */
   screensaverMinutes: number;
+  /** Écart minimal de l'échelle de couleurs de la carte des températures. */
+  heatmapScale: HeatmapScale;
 };
 
 export type RendererInfo = {
@@ -78,6 +81,7 @@ const defaultConfiguration: ConfigurationOptions = {
   shownCategories: {},
   batteriesOnly: false,
   screensaverMinutes: 0,
+  heatmapScale: 'balanced',
 };
 
 const defaultRendererInfo: RendererInfo = {

@@ -1,5 +1,5 @@
 import {DataUtils} from 'three';
-import {expect, test, waitForScene} from './fixtures';
+import {expect, openConfigurationModal, test, waitForScene} from './fixtures';
 
 declare global {
   interface Window {
@@ -63,4 +63,21 @@ test('un mur arrête la chaleur', async ({page}) => {
   expect(temperatureAt(6.6, -2.55) - temperatureAt(6, -1.2)).toBeGreaterThan(
     1.5,
   );
+});
+
+test('règle l’échelle des températures dans la modale Configuration', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await openConfigurationModal(page);
+  const scale = page.getByRole('combobox', {name: 'Échelle des températures'});
+  await expect(scale).toHaveText('Équilibrée (8 °C)');
+  await scale.click();
+  await page.getByRole('option', {name: 'Douce (12 °C)'}).click();
+
+  await page.reload();
+  await openConfigurationModal(page);
+  await expect(
+    page.getByRole('combobox', {name: 'Échelle des températures'}),
+  ).toHaveText('Douce (12 °C)');
 });

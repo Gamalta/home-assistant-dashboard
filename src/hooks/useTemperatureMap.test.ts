@@ -1,7 +1,8 @@
 import {renderHook} from '@testing-library/react';
 import * as THREE from 'three';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {HouseConfigType} from '../configs/house';
+import {AppProvider} from '../contexts/AppContext';
 import {getOutdoorFloors} from '../rendering/floorPlan';
 import {useTemperatureMap} from './useTemperatureMap';
 
@@ -58,6 +59,8 @@ const rooms: HouseConfigType['rooms'] = [
 const outdoorFloors = getOutdoorFloors(scene, rooms);
 
 describe('useTemperatureMap', () => {
+  afterEach(() => localStorage.clear());
+
   it('laisse la terrasse et sa sonde hors de la carte', () => {
     const {result} = renderHook(() =>
       useTemperatureMap(scene, rooms, outdoorFloors, true),
@@ -69,7 +72,20 @@ describe('useTemperatureMap', () => {
     expect(width).toBe(20);
     const middle = (map.minTemp + map.maxTemp) / 2;
     expect(middle + THREE.DataUtils.fromHalfFloat(data![15])).toBeCloseTo(21);
-    expect(map).toMatchObject({minTemp: 18, maxTemp: 24});
+    expect(map).toMatchObject({minTemp: 17, maxTemp: 25});
+  });
+
+  it('suit l’échelle choisie dans la modale Configuration', () => {
+    localStorage.setItem(
+      'graphics-options',
+      JSON.stringify({heatmapScale: 'soft'}),
+    );
+    const {result} = renderHook(
+      () => useTemperatureMap(scene, rooms, outdoorFloors, true),
+      {wrapper: AppProvider},
+    );
+
+    expect(result.current).toMatchObject({minTemp: 15, maxTemp: 27});
   });
 
   it('ne calcule rien sans la carte', () => {

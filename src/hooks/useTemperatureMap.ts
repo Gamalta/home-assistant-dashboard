@@ -1,8 +1,12 @@
 import {useEffect, useMemo, useRef} from 'react';
 import type * as THREE from 'three';
 import type {HouseConfigType} from '../configs/house';
+import {useAppContext} from '../contexts/AppContext';
 import {createFloorPlan} from '../rendering/floorPlan';
-import {createTemperatureMap} from '../rendering/shaders/HeatmapGroundMaterial/common';
+import {
+  HEATMAP_SCALES,
+  createTemperatureMap,
+} from '../rendering/shaders/HeatmapGroundMaterial/common';
 import {distancesFrom, temperatureField} from '../utils/temperatureField';
 import {useHeatmapPoints} from './useHeatmapPoints';
 
@@ -17,6 +21,7 @@ export function useTemperatureMap(
   outdoorFloors: Set<THREE.Material>,
   enabled: boolean,
 ) {
+  const {configuration} = useAppContext();
   const points = useHeatmapPoints(rooms.filter(room => !room.outdoor));
   const plan = useMemo(
     () => (enabled ? createFloorPlan(scene, outdoorFloors) : undefined),
@@ -32,17 +37,22 @@ export function useTemperatureMap(
 
   const temperatures = JSON.stringify(points.map(point => point.temperature));
   const previous = useRef<Float32Array>(undefined);
-  const map = useMemo(() => {
+  const field = useMemo(() => {
     if (!plan || !sensors?.length) return undefined;
-    const field = temperatureField(
+    previous.current = temperatureField(
       plan,
       sensors,
       points.map(point => point.temperature),
       previous.current,
     );
-    previous.current = field;
-    return createTemperatureMap(plan, field, points);
+    return previous.current;
   }, [sensors, temperatures]);
+
+  const spread = HEATMAP_SCALES[configuration.heatmapScale];
+  const map = useMemo(
+    () => plan && field && createTemperatureMap(plan, field, points, spread),
+    [field, spread],
+  );
   useEffect(() => () => map?.texture.dispose(), [map]);
   return map;
 }

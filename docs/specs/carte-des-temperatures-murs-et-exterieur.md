@@ -66,10 +66,17 @@ La chaleur de chaque capteur se diffuse dans sa pièce et ne passe d'une pièce 
 
 ### Scénario : des températures proches restent de couleurs proches
 
-- **Étant donné** des capteurs entre 18 °C et 20 °C
+- **Étant donné** des capteurs entre 18 °C et 20 °C, et l'échelle « Équilibrée », par défaut
 - **Quand** la carte est affichée
-- **Alors** l'échelle des couleurs couvre 6 °C, de 16 °C à 22 °C, et les pièces vont du bleu clair au jaune, pas du bleu au rouge
-- **Et** au-delà de 6 °C d'écart, l'échelle va du capteur le plus froid au plus chaud
+- **Alors** l'échelle des couleurs couvre 8 °C, de 15 °C à 23 °C, et les pièces restent de couleurs voisines, pas du bleu au rouge
+- **Et** au-delà de 8 °C d'écart, l'échelle va du capteur le plus froid au plus chaud
+
+### Scénario : choisir l'échelle des couleurs
+
+- **Étant donné** la modale Configuration ouverte
+- **Quand** l'utilisateur choisit l'échelle des températures « Contrastée » (4 °C), « Équilibrée » (8 °C) ou « Douce » (12 °C)
+- **Alors** la carte s'étend au moins sur cet écart
+- **Et** le choix est mémorisé après un rechargement
 
 ### Scénario : un capteur placé dans un mur
 

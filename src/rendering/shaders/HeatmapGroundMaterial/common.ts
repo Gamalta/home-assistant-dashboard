@@ -15,38 +15,41 @@ export type HeatmapPoint = {
 export type TemperatureMap = FloorMap & {minTemp: number; maxTemp: number};
 
 /**
- * Écart minimal (en °C) entre les bornes de l'échelle de couleurs : deux
- * degrés d'écart n'en occupent qu'un tiers, au lieu d'aller du bleu au rouge.
+ * Écart minimal (en °C) entre les bornes de l'échelle de couleurs, au choix
+ * dans la modale Configuration. Avec 8 °C, deux degrés d'écart n'en occupent
+ * qu'un quart, au lieu d'aller du bleu au rouge.
  */
-const MIN_TEMPERATURE_SPREAD = 6;
+export const HEATMAP_SCALES = {contrasted: 4, balanced: 8, soft: 12};
+export type HeatmapScale = keyof typeof HEATMAP_SCALES;
 
 /**
  * Bornes de l'échelle de couleurs, des capteurs le plus froid au plus chaud,
- * élargies autour de leur milieu quand ils sont proches.
+ * élargies à `spread` autour de leur milieu quand ils sont proches.
  */
-export function getTemperatureRange(points: HeatmapPoint[]) {
-  if (!points.length) return {minTemp: 0, maxTemp: MIN_TEMPERATURE_SPREAD};
+export function getTemperatureRange(points: HeatmapPoint[], spread: number) {
+  if (!points.length) return {minTemp: 0, maxTemp: spread};
   const temperatures = points.map(point => point.temperature);
   const minTemp = Math.min(...temperatures);
   const maxTemp = Math.max(...temperatures);
-  if (maxTemp - minTemp >= MIN_TEMPERATURE_SPREAD) return {minTemp, maxTemp};
+  if (maxTemp - minTemp >= spread) return {minTemp, maxTemp};
   const middle = (minTemp + maxTemp) / 2;
   return {
-    minTemp: middle - MIN_TEMPERATURE_SPREAD / 2,
-    maxTemp: middle + MIN_TEMPERATURE_SPREAD / 2,
+    minTemp: middle - spread / 2,
+    maxTemp: middle + spread / 2,
   };
 }
 
 /**
- * `field` : température de chaque cellule du plan ; échelle des `points`. La
- * texture garde l'écart au milieu de l'échelle.
+ * `field` : température de chaque cellule du plan ; échelle des `points`,
+ * d'au moins `spread` °C. La texture garde l'écart au milieu de l'échelle.
  */
 export function createTemperatureMap(
   plan: FloorPlan,
   field: Float32Array,
   points: HeatmapPoint[],
+  spread: number,
 ): TemperatureMap {
-  const range = getTemperatureRange(points);
+  const range = getTemperatureRange(points, spread);
   // Demi-flottants : filtrés linéairement partout, ce que les flottants ne
   // garantissent pas sur mobile. Vers 21 °C, ils ne gardent que le 64e de
   // degré, et les isothermes s'élargissent en escalier ; à 3 °C du milieu de
