@@ -25,8 +25,8 @@ export const webGLBackend: RenderBackend = {
       source as THREE.MeshStandardMaterial | THREE.MeshLambertMaterial,
     ),
   createHeatmapMaterial: createHeatmapGroundMaterialWebGl,
-  updateHeatmapMaterial: (material, points) =>
-    updateHeatmapGroundMaterialWebGl(material as THREE.ShaderMaterial, points),
+  updateHeatmapMaterial: (material, map) =>
+    updateHeatmapGroundMaterialWebGl(material as THREE.ShaderMaterial, map),
   createVacuumMapMaterial: createVacuumMapGroundMaterialWebGl,
   updateVacuumMapMaterial: (material, floorMap) =>
     updateVacuumMapGroundMaterialWebGl(

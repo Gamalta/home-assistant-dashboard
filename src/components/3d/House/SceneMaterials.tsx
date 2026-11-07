@@ -1,11 +1,13 @@
 import {useFrame, useThree} from '@react-three/fiber';
-import {useEffect, useLayoutEffect, useRef} from 'react';
+import {useEffect, useLayoutEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
 import type {HouseConfigType} from '../../../configs/house';
 import type {RenderBackend} from '../../../rendering/backends';
-import {useHeatmapPoints} from '../../../hooks/useHeatmapPoints';
+import {useTemperatureMap} from '../../../hooks/useTemperatureMap';
 import {useVacuumFloorMap} from '../../../hooks/useVacuumFloorMap';
+import {getOutdoorFloors} from '../../../rendering/floorPlan';
 import {createWallFade} from '../../../rendering/wallFade';
+import {getMaterialKind} from '../../../rendering/materialKind';
 import type {LightMaps} from '../../../rendering/shaders/BakedLight/common';
 
 type SceneMaterialsProps = {
@@ -18,26 +20,9 @@ type SceneMaterialsProps = {
   lightMaps?: LightMaps;
 };
 
-type MaterialKind = 'wall' | 'ground' | 'other';
-
 type MeshUserData = {
   originalMaterial?: THREE.Material | THREE.Material[];
 };
-
-/** Nom du matériau sans le suffixe ajouté par Blender (`white.003` → `white`). */
-const baseName = (material: THREE.Material) =>
-  material.name.toLowerCase().replace(/\.\d+$/, '');
-
-// Même règle dans scripts/optimize-model.sh, qui ne fusionne pas deux rôles, et
-// dans scripts/bake-lighting.py, qui unit les murs.
-function getMaterialKind(material: THREE.Material): MaterialKind {
-  const name = baseName(material);
-  if (name.startsWith('room_')) return 'ground';
-  if (name.startsWith('wall_') || ['white', 'yellowbrt'].includes(name)) {
-    return 'wall';
-  }
-  return 'other';
-}
 
 /**
  * Le modèle utilise KHR_materials_specular : GLTFLoader crée des
@@ -80,11 +65,20 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     props;
   const invalidate = useThree(state => state.invalidate);
 
-  const heatmapPoints = useHeatmapPoints(rooms);
-  const heatmapPointsRef = useRef(heatmapPoints);
-  heatmapPointsRef.current = heatmapPoints;
+  const outdoorFloors = useMemo(
+    () => getOutdoorFloors(scene, rooms),
+    [scene, rooms],
+  );
+  const temperatureMap = useTemperatureMap(
+    scene,
+    rooms,
+    outdoorFloors,
+    heatmap,
+  );
+  const temperatureMapRef = useRef(temperatureMap);
+  temperatureMapRef.current = temperatureMap;
   const heatmapMaterials = useRef<THREE.Material[]>([]);
-  const showHeatmap = heatmap && heatmapPoints.length > 0;
+  const showHeatmap = !!temperatureMap;
   const floorMap = useVacuumFloorMap(rooms, vacuumMap);
   const floorMapRef = useRef(floorMap);
   floorMapRef.current = floorMap;
@@ -105,9 +99,14 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     ): {material: THREE.Material; fade?: THREE.Material} => {
       const kind = getMaterialKind(gltfMaterial);
 
-      if (showHeatmap && kind === 'ground') {
+      // Le sol d'une terrasse reste celui du modèle, translucide.
+      if (
+        showHeatmap &&
+        kind === 'ground' &&
+        !outdoorFloors.has(gltfMaterial)
+      ) {
         const material = backend.createHeatmapMaterial(
-          heatmapPointsRef.current,
+          temperatureMapRef.current!,
         );
         heatmapMaterials.current.push(material);
         createdMaterials.push(material);
@@ -226,13 +225,13 @@ export function SceneMaterials(props: SceneMaterialsProps) {
     wallFade.current.sort(camera);
   });
 
-  const heatmapPointsKey = JSON.stringify(heatmapPoints);
   useEffect(() => {
+    if (!temperatureMap) return;
     heatmapMaterials.current.forEach(material =>
-      backend.updateHeatmapMaterial(material, heatmapPointsRef.current),
+      backend.updateHeatmapMaterial(material, temperatureMap),
     );
     invalidate();
-  }, [heatmapPointsKey, backend, invalidate]);
+  }, [temperatureMap, backend, invalidate]);
 
   const floorMapKey =
     floorMap && floorMap.texture.uuid + JSON.stringify(floorMap.uv);
