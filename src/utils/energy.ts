@@ -2,7 +2,10 @@ import type {EnergyConfigType} from '../configs/sidebar';
 
 export type TariffPeriod = 'peak' | 'offPeak';
 
-export type Tariff = Pick<EnergyConfigType, 'prices' | 'highSeasonPrices'>;
+export type Tariff = Pick<
+  EnergyConfigType,
+  'prices' | 'highSeasonPrices' | 'subscription'
+>;
 
 export const TARIFF_PERIODS = {
   // La couleur primary du thème, qui suit le mode clair ou sombre.
@@ -224,6 +227,32 @@ export function getCosts(
       }),
     );
   return {peak: cost('peak'), offPeak: cost('offPeak')};
+}
+
+/** Part de l'abonnement annuel sur les jours ou mois `buckets`, jusqu'à aujourd'hui inclus : un 365e par jour. */
+export function getSubscriptionCost(
+  buckets: Period[],
+  subscription: number,
+  now: number,
+) {
+  const tomorrow = new Date(now);
+  tomorrow.setHours(24, 0, 0, 0);
+  const end = Math.min(buckets[buckets.length - 1].end, tomorrow.getTime());
+  // Arrondi au jour : un jour de changement d'heure dure 23 ou 25 h.
+  const days = Math.round((end - buckets[0].start) / 86_400_000);
+  return (subscription * days) / 365;
+}
+
+/** Coût estimé d'une période : ses kWh à leurs prix et l'abonnement ; `null` s'il manque les heures pleines ou creuses. */
+export function getTotalCost(
+  buckets: Consumption[],
+  tariff: Tariff,
+  now: number,
+) {
+  const cost = getTotal(getCosts(buckets, tariff));
+  return cost === null
+    ? null
+    : cost + getSubscriptionCost(buckets, tariff.subscription ?? 0, now);
 }
 
 /**

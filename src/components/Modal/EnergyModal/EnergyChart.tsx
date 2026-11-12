@@ -10,8 +10,8 @@ import {
   formatEnergy,
   formatPeriod,
   getChange,
-  getCosts,
   getTotal,
+  getTotalCost,
   type Period,
   type Scale,
   sumConsumption,
@@ -67,7 +67,7 @@ export function EnergyChart(props: EnergyChartProps) {
           {formatEnergy(total && getTotal(total))}
         </Typography>
         <Typography variant="h6" color="textSecondary">
-          {formatCost(current && getTotal(getCosts(current, tariff)))}
+          {formatCost(current && getTotalCost(current, tariff, now))}
         </Typography>
         {change != null && (
           <Stack

@@ -82,5 +82,5 @@ Les alertes se testent en unitaire (`VacuumAlerts.test.tsx`) : le mock de la dé
 
 - Configuration des maisons : nouvel élément `vacuum` ([guide](../guides/aspirateur-robot.md)).
 - Mock Home Assistant : aspirateur `dreame_demo` et services `vacuum.*` et `dreame_vacuum.vacuum_clean_segment` simulés.
-- Images : `public/vacuum/demo_map.svg`, plan fictif de la démo, calqué sur la maison 3D.
+- Images : `public/vacuum/demo_map.svg`, plan fictif de la démo, tiré des murs de la maison 3D.
 - Imprimante 3D : la vitesse passe par le composant commun `SelectToggle`, sans changement visible.

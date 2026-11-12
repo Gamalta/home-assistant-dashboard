@@ -85,6 +85,7 @@ export const SideBarConfig: SideBarConfigType = {
     offPeakIndexEntityId: 'sensor.meter_off_peak_index',
     subscribedCurrentEntityId: 'sensor.meter_subscribed_current',
     prices: {peak: 0.27, offPeak: 0.21},
+    subscription: 180,
   },
   mortgages: [
     'sensor.loan_main',
@@ -152,11 +153,6 @@ export const HouseConfig: HouseConfigType = {
           lightEntityId: 'light.tv_ambilight',
           ledLayout: {top: 16, right: 9, bottom: 16, left: 9},
           position: {x: -3.3, y: 2.6, z: 4.0},
-        },
-        {
-          type: 'vacuum',
-          prefix: 'dreame_demo',
-          position: {x: 0.6, y: 0.3, z: 4.6},
         },
         {
           type: 'battery',
@@ -342,6 +338,11 @@ export const HouseConfig: HouseConfigType = {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.cellar_light',
+        },
+        {
+          type: 'vacuum',
+          prefix: 'dreame_demo',
+          position: {x: -3.2, y: 0.3, z: -2.2},
         },
       ],
     },

@@ -42,6 +42,7 @@ test('les totaux donnent le prix du kWh de chaque période', async ({page}) => {
   const totals = page.getByRole('region', {name: 'Totaux'});
   await expect(totals).toContainText(/Heures pleines0,27\s€\/kWh/);
   await expect(totals).toContainText(/Heures creuses0,21\s€\/kWh/);
+  await expect(totals).toContainText(/Abonnement180,00\s€\/an\d+,\d{2}\s€/);
 });
 
 test('le courant circule du Linky à la maison par le fil de la période en cours', async ({

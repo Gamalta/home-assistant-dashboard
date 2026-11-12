@@ -18,7 +18,7 @@ Dans le `House.ts` de la maison, ajouter l'élément à la pièce où se trouve 
 {
   type: 'vacuum',
   prefix: 'dreame_demo',
-  position: {x: 0.6, y: 0.3, z: 4.6},
+  position: {x: -3.2, y: 0.3, z: -2.2},
 },
 ```
 
@@ -65,7 +65,7 @@ Le robot compte en millimètres, dans son propre repère. `mapAlignment` le plac
 {
   type: 'vacuum',
   prefix: 'dreame_demo',
-  position: {x: 0.6, y: 0.3, z: 4.6},
+  position: {x: -3.2, y: 0.3, z: -2.2},
   mapAlignment: {x: 0, z: 0, rotation: 0},
 },
 ```
@@ -79,6 +79,6 @@ Pour le régler, choisir d'abord le quart de tour qui rend les murs du plan para
 
 ## Démo et mock
 
-La démo place un aspirateur fictif, `dreame_demo`, dans le séjour, en train de laver le séjour après la cuisine. Ses entités sont créées par `createVacuum` (`src/mock/mocks/createVacuum.ts`) avec la même déduction d'identifiants que l'application. Ses services modifient son état simulé (`src/mock/mocks/fake-call-service/vacuum.ts`) : il rentre à sa station en cinq secondes.
+La démo place un aspirateur fictif, `dreame_demo`, dans le cellier, où se trouve sa station, en train de laver le séjour après la cuisine. Ses entités sont créées par `createVacuum` (`src/mock/mocks/createVacuum.ts`) avec la même déduction d'identifiants que l'application. Ses services modifient son état simulé (`src/mock/mocks/fake-call-service/vacuum.ts`) : il rentre à sa station en cinq secondes.
 
-Son plan, `public/vacuum/demo_map.svg`, est un dessin fictif calqué sur la maison 3D de la démo, avec ses points de calibration : 40 pixels par mètre, axe vertical inversé comme chez Dreame. L'origine du robot y est celle de la scène : le plan se pose sur le sol sans `mapAlignment`.
+Son plan, `public/vacuum/demo_map.svg`, est tiré des murs de `Demo.glb` : ses pièces, ses portes et ses cloisons sont celles de la maison 3D. Ses points de calibration : 40 pixels par mètre, axe vertical inversé comme chez Dreame. L'origine du robot y est celle de la scène : le plan se pose sur le sol sans `mapAlignment`.
