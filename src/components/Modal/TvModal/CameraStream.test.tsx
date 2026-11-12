@@ -21,6 +21,17 @@ describe('CameraStream', () => {
     );
   });
 
+  it('garde le flux quand StrictMode détache puis rattache l’image', () => {
+    render(<CameraStream cameraEntityId="camera.tv" alt="Image de la TV" />, {
+      reactStrictMode: true,
+    });
+
+    expect(screen.getByRole('img', {name: 'Image de la TV'})).toHaveAttribute(
+      'src',
+      'https://ha/api/camera_proxy_stream/camera.tv?token=abc',
+    );
+  });
+
   it('ferme le flux quand l’image disparaît', () => {
     const {unmount} = render(
       <CameraStream cameraEntityId="camera.tv" alt="Image de la TV" />,

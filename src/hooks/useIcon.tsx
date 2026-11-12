@@ -9,8 +9,8 @@ import {LightStripIcon} from '../components/Icons/LightStripIcon';
 import {BulbSpotIcon} from '../components/Icons/BulbSpotIcon';
 import {BulbFilamentIcon} from '../components/Icons/BulbFilamentIcon';
 import {BulbGroupSpotIcon} from '../components/Icons/BulbGroupSpotIcon';
-import { BulbGroupFilamentIcon } from '../components/Icons/BulbGroupFilamentIcon';
-import { BulbFilamentCandleIcon } from '../components/Icons/BulbFilamentCandleIcon';
+import {BulbGroupFilamentIcon} from '../components/Icons/BulbGroupFilamentIcon';
+import {BulbFilamentCandleIcon} from '../components/Icons/BulbFilamentCandleIcon';
 
 export function useIcon(
   icon?: string | null,
