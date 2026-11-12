@@ -8,7 +8,7 @@ declare global {
 }
 
 // Le mock fait laver le séjour, après la cuisine, à l'aspirateur
-// `dreame_demo`, placé dans le séjour de la config démo.
+// `dreame_demo`, placé dans le cellier de la config démo, près de sa station.
 const vacuumButton = (page: Page) =>
   page.getByRole('button', {name: 'Aspirateur', exact: true});
 
