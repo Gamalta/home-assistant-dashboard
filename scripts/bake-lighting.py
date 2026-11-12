@@ -32,7 +32,7 @@ meshes = [o for o in scene.objects if o.type == 'MESH']
 log('objets', len(meshes), 'faces', sum(len(o.data.polygons) for o in meshes))
 
 def is_wall(material):
-    # Même règle que SceneMaterials et optimize-model.sh.
+    # Même règle que src/rendering/materialKind.ts et optimize-model.sh.
     name = re.sub(r'\.\d+$', '', material.name.lower())
     return name.startswith('wall_') or name in ('white', 'yellowbrt')
 

@@ -10,6 +10,8 @@ type HouseConfigType = {
     id: string;
     name: string;
     position: Position3dType;
+    /** Terrasse, balcon : hors de la carte des températures. */
+    outdoor?: boolean;
     items?: RoomItemConfigType[];
   }[];
 };

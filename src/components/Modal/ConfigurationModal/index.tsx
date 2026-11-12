@@ -9,6 +9,7 @@ import {useIsMobile} from '../../../hooks/useIsMobile';
 import {houseLabelCategories} from '../../../utils/labelCategories';
 import {BenchmarkRow} from './BenchmarkRow';
 import {CategoryRow} from './CategoryRow';
+import {HeatmapScaleRow} from './HeatmapScaleRow';
 import {InfoRow} from './InfoRow';
 import {OptionRow} from './OptionRow';
 import {ScreensaverRow} from './ScreensaverRow';
@@ -58,6 +59,7 @@ export function ConfigurationModal(props: ConfigurationModalProps) {
             disabled={!is3d || !webGPUSupported}
           />
           <OptionRow label="Debug" option="debug" disabled={!is3d} />
+          <HeatmapScaleRow disabled={!is3d} />
           {!mobile && <ScreensaverRow />}
           {is3d && configuration.debug && (
             <>
