@@ -28,11 +28,11 @@ test('suit le nettoyage depuis la scène', async ({page}) => {
   const mapBox = (await map.boundingBox())!;
   const livingBox = (await living.boundingBox())!;
   expect(livingBox.x + livingBox.width / 2).toBeCloseTo(
-    mapBox.x + (258 / 640) * mapBox.width,
+    mapBox.x + (288 / 672) * mapBox.width,
     0,
   );
   expect(livingBox.y + livingBox.height / 2).toBeCloseTo(
-    mapBox.y + (404 / 548) * mapBox.height,
+    mapBox.y + (436 / 576) * mapBox.height,
     0,
   );
 

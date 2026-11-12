@@ -16,16 +16,23 @@ function entity(entity_id: string, state: string, attributes = {}) {
   };
 }
 
-// Pièces de `public/vacuum/demo_map.svg`, centres en millimètres.
+// Pièces de `public/vacuum/demo_map.svg`, tiré des murs de la maison 3D de la
+// démo, en millimètres. Le point de chaque pièce écarte son étiquette de celles
+// des voisines.
 const rooms = {
-  1: {room_id: 1, name: 'Séjour', x: -1300, y: -2600},
-  2: {room_id: 2, name: 'Salle à manger', x: 300, y: 2100},
+  1: {room_id: 1, name: 'Séjour', x: -800, y: -3000},
+  2: {room_id: 2, name: 'Salle à manger', x: 300, y: 2600},
   3: {room_id: 3, name: 'Cuisine', x: -500, y: 5400},
-  4: {room_id: 4, name: 'Couloir', x: 3300, y: 300},
-  5: {room_id: 5, name: 'Chambre', x: -5300, y: -3200},
-  6: {room_id: 6, name: 'Chambre 2', x: 5400, y: 4100},
-  7: {room_id: 7, name: 'Chambre 3', x: 6000, y: -2100},
-  8: {room_id: 8, name: 'Entrée', x: 1500, y: -3700},
+  4: {room_id: 4, name: 'Couloir', x: 3400, y: -200},
+  5: {room_id: 5, name: 'Chambre', x: -5500, y: -2400},
+  6: {room_id: 6, name: 'Chambre 2', x: 5400, y: 3600},
+  7: {room_id: 7, name: 'Chambre 3', x: 6500, y: -3200},
+  8: {room_id: 8, name: 'Entrée', x: 2600, y: -3400},
+  9: {room_id: 9, name: 'Dressing', x: -6000, y: 400},
+  10: {room_id: 10, name: 'Salle de bain', x: 6300, y: 1100},
+  11: {room_id: 11, name: "Salle d'eau", x: -5600, y: 2900},
+  12: {room_id: 12, name: 'Cellier', x: -2400, y: 1250},
+  13: {room_id: 13, name: 'Toilettes', x: 3800, y: -1800},
 };
 
 // Aspirateur dreame-vacuum fictif, qui lave le séjour après la cuisine.
@@ -51,9 +58,9 @@ export function createVacuum(prefix: string): HassEntities {
     ...entity(ids.map, now, {
       entity_picture: 'vacuum/demo_map.svg',
       calibration_points: [
-        {vacuum: {x: 0, y: 0}, map: {x: 310, y: 300}},
-        {vacuum: {x: 1000, y: 0}, map: {x: 350, y: 300}},
-        {vacuum: {x: 0, y: 1000}, map: {x: 310, y: 260}},
+        {vacuum: {x: 0, y: 0}, map: {x: 320, y: 316}},
+        {vacuum: {x: 1000, y: 0}, map: {x: 360, y: 316}},
+        {vacuum: {x: 0, y: 1000}, map: {x: 320, y: 276}},
       ],
       rooms,
       active_segments: [3, 1, 2, 4],

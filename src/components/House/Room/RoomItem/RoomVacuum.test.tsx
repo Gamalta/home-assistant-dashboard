@@ -29,8 +29,8 @@ async function openVacuumModal() {
   const map = await screen.findByRole('img', {name: 'Plan de nettoyage'});
   // jsdom ne charge pas les images : les pièces se placent sur sa taille.
   Object.defineProperties(map, {
-    naturalWidth: {value: 640},
-    naturalHeight: {value: 548},
+    naturalWidth: {value: 672},
+    naturalHeight: {value: 576},
   });
   fireEvent.load(map);
 }
