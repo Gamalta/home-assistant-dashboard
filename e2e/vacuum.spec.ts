@@ -8,7 +8,7 @@ declare global {
 }
 
 // Le mock fait laver le séjour, après la cuisine, à l'aspirateur
-// `dreame_demo`, placé dans le séjour de la config démo.
+// `dreame_demo`, placé dans le cellier de la config démo, près de sa station.
 const vacuumButton = (page: Page) =>
   page.getByRole('button', {name: 'Aspirateur', exact: true});
 
@@ -28,11 +28,11 @@ test('suit le nettoyage depuis la scène', async ({page}) => {
   const mapBox = (await map.boundingBox())!;
   const livingBox = (await living.boundingBox())!;
   expect(livingBox.x + livingBox.width / 2).toBeCloseTo(
-    mapBox.x + (258 / 640) * mapBox.width,
+    mapBox.x + (288 / 672) * mapBox.width,
     0,
   );
   expect(livingBox.y + livingBox.height / 2).toBeCloseTo(
-    mapBox.y + (404 / 548) * mapBox.height,
+    mapBox.y + (436 / 576) * mapBox.height,
     0,
   );
 

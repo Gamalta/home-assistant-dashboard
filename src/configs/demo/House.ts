@@ -155,11 +155,6 @@ export const HouseConfig: HouseConfigType = {
           position: {x: -3.3, y: 2.6, z: 4.0},
         },
         {
-          type: 'vacuum',
-          prefix: 'dreame_demo',
-          position: {x: 0.6, y: 0.3, z: 4.6},
-        },
-        {
           type: 'battery',
           name: 'Interrupteur du séjour',
           batteryEntityId: 'sensor.living_room_button_battery',
@@ -343,6 +338,11 @@ export const HouseConfig: HouseConfigType = {
           type: 'light',
           roomDisplay: true,
           lightEntityId: 'light.cellar_light',
+        },
+        {
+          type: 'vacuum',
+          prefix: 'dreame_demo',
+          position: {x: -3.2, y: 0.3, z: -2.2},
         },
       ],
     },
