@@ -1,5 +1,5 @@
 import type * as THREE from 'three';
-import type {HeatmapPoint} from '../shaders/HeatmapGroundMaterial/common';
+import type {TemperatureMap} from '../shaders/HeatmapGroundMaterial/common';
 import type {LightMaps} from '../shaders/BakedLight/common';
 import type {FloorMap} from '../shaders/VacuumMapGroundMaterial/common';
 
@@ -12,10 +12,10 @@ export type RenderBackend = {
     opaque: THREE.Material;
     fade: THREE.Material;
   };
-  createHeatmapMaterial: (points: HeatmapPoint[]) => THREE.Material;
+  createHeatmapMaterial: (map: TemperatureMap) => THREE.Material;
   updateHeatmapMaterial: (
     material: THREE.Material,
-    points: HeatmapPoint[],
+    map: TemperatureMap,
   ) => void;
   createVacuumMapMaterial: (floorMap: FloorMap) => THREE.Material;
   updateVacuumMapMaterial: (

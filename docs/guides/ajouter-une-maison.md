@@ -7,7 +7,7 @@ Une maison regroupe un modèle 3D et la description de ses pièces et entités (
 - Exporter en glTF binaire (`.glb`), avec les lumières (`KHR_lights_punctual`) et une caméra.
 - Nommer les matériaux selon le rôle qu'ils jouent dans les effets ([ADR 0004](../adr/0004-scenematerials-proprietaire-unique.md)) :
   - `room_*` pour les sols, colorés par la carte des températures ;
-  - `wall_*`, `white` ou `yellowbrt` pour les murs, qui s'effacent près de la caméra. Les murs sont des couleurs unies : là où ils s'effacent, ils partagent un même matériau dont seule la couleur change ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)).
+  - `wall_*`, `white` ou `yellowbrt` pour les murs, qui s'effacent près de la caméra. Les murs sont des couleurs unies : là où ils s'effacent, ils partagent un même matériau dont seule la couleur change ([ADR 0011](../adr/0011-fusion-des-meshes-des-modeles.md)). Seuls les `wall_*` arrêtent la chaleur sur la carte des températures : un vrai mur doit l'être, et les portes, sanitaires et meubles ne doivent pas l'être ([ADR 0055](../adr/0055-carte-des-temperatures-sur-le-plan-du-modele.md)).
 - Nommer chaque lumière en commençant par l'identifiant de son entité sans le domaine : `kitchen_light` pour `light.kitchen_light`. L'entité pilote la première lumière dont le nom commence ainsi, et ses copies (`kitchen_light.001`…).
 - Une lampe d'appoint devient un spot, posé à quelques centimètres de la surface qu'il éclaire. Un ruban LED devient quatre spots répartis sur sa longueur : le spot nommé d'après l'entité et trois copies (Maj+D), au centre de quatre tronçons égaux ([ADR 0052](../adr/0052-rubans-led-en-plusieurs-spots.md)). Un Ambilight en compte un par côté de la TV, derrière l'écran, tourné vers le mur.
 - Un mur du côté de la caméra ne se voit que de dos : un ruban qui l'éclaire, sous une étagère par exemple, se tourne plutôt vers l'intérieur de la pièce. Le halo d'un Ambilight sur ce mur ne se voit qu'en tournant la vue vers la TV.
@@ -47,6 +47,8 @@ Créer `src/configs/<id>/House.ts` sur le modèle de `src/configs/demo/House.ts`
 - `SideBarConfig` : la météo, les personnes, les animaux et la modale Système.
 
 Les identifiants d'entités sont typés : une faute de frappe sur le domaine est signalée par `pnpm typecheck`.
+
+Une terrasse ou un balcon se déclare comme une pièce, avec `outdoor: true` : la carte des températures laisse son sol de côté, et ses capteurs avec ([ADR 0055](../adr/0055-carte-des-temperatures-sur-le-plan-du-modele.md)). Sa position doit tomber sur son sol, et ce sol avoir un matériau `room_*` à lui : un matériau partagé avec le séjour l'emporterait hors de la carte.
 
 Un élément `light` peut désigner un groupe de lumières Home Assistant : chaque membre pilote alors sa lumière du modèle, nommée d'après lui, et toutes suivent l'état du groupe ([ADR 0049](../adr/0049-groupes-de-lumieres.md)).
 

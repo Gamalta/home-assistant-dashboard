@@ -1,37 +1,80 @@
+import * as THREE from 'three';
+import {CELL_SIZE, type FloorPlan} from '../../floorPlan';
+import type {FloorMap} from '../VacuumMapGroundMaterial/common';
+
 export type HeatmapPoint = {
   x: number;
   z: number;
   temperature: number;
 };
 
-/** Nombre maximum de capteurs pris en compte par les shaders. */
-export const MAX_HEATMAP_POINTS = 32;
-
-/** Écart minimal (en °C) entre les bornes de l'échelle de couleurs. */
-const MIN_TEMPERATURE_SPREAD = 1;
-
-export function limitHeatmapPoints(points: HeatmapPoint[]) {
-  if (points.length > MAX_HEATMAP_POINTS) {
-    console.warn(
-      `Heatmap: ${points.length} capteurs, seuls les ${MAX_HEATMAP_POINTS} premiers sont affichés.`,
-    );
-  }
-  return points.slice(0, MAX_HEATMAP_POINTS);
-}
+/**
+ * Températures du sol (°C, écart au milieu de l'échelle), posées sur le sol
+ * comme le plan de l'aspirateur.
+ */
+export type TemperatureMap = FloorMap & {minTemp: number; maxTemp: number};
 
 /**
- * Bornes de l'échelle de couleurs. On garantit un écart minimal pour éviter
- * une division par zéro dans le shader (un seul capteur, ou températures égales).
+ * Écart minimal (en °C) entre les bornes de l'échelle de couleurs, au choix
+ * dans la modale Configuration. Avec 4 °C, deux degrés d'écart n'en occupent
+ * que la moitié, au lieu d'aller du bleu au rouge.
  */
-export function getTemperatureRange(points: HeatmapPoint[]) {
-  if (!points.length) return {minTemp: 0, maxTemp: MIN_TEMPERATURE_SPREAD};
+export const HEATMAP_SCALES = {contrasted: 2, balanced: 4, soft: 8};
+export type HeatmapScale = keyof typeof HEATMAP_SCALES;
+
+/**
+ * Bornes de l'échelle de couleurs, des capteurs le plus froid au plus chaud,
+ * élargies à `spread` autour de leur milieu quand ils sont proches.
+ */
+export function getTemperatureRange(points: HeatmapPoint[], spread: number) {
+  if (!points.length) return {minTemp: 0, maxTemp: spread};
   const temperatures = points.map(point => point.temperature);
   const minTemp = Math.min(...temperatures);
   const maxTemp = Math.max(...temperatures);
-  if (maxTemp - minTemp >= MIN_TEMPERATURE_SPREAD) return {minTemp, maxTemp};
+  if (maxTemp - minTemp >= spread) return {minTemp, maxTemp};
   const middle = (minTemp + maxTemp) / 2;
   return {
-    minTemp: middle - MIN_TEMPERATURE_SPREAD / 2,
-    maxTemp: middle + MIN_TEMPERATURE_SPREAD / 2,
+    minTemp: middle - spread / 2,
+    maxTemp: middle + spread / 2,
+  };
+}
+
+/**
+ * `field` : température de chaque cellule du plan ; échelle des `points`,
+ * d'au moins `spread` °C. La texture garde l'écart au milieu de l'échelle.
+ */
+export function createTemperatureMap(
+  plan: FloorPlan,
+  field: Float32Array,
+  points: HeatmapPoint[],
+  spread: number,
+): TemperatureMap {
+  const range = getTemperatureRange(points, spread);
+  // Demi-flottants : filtrés linéairement partout, ce que les flottants ne
+  // garantissent pas sur mobile. Vers 21 °C, ils ne gardent que le 64e de
+  // degré, et les isothermes s'élargissent en escalier ; à 3 °C du milieu de
+  // l'échelle, le millième.
+  const middle = (range.minTemp + range.maxTemp) / 2;
+  const texture = new THREE.DataTexture(
+    Uint16Array.from(field, value =>
+      THREE.DataUtils.toHalfFloat(value - middle),
+    ),
+    plan.width,
+    plan.height,
+    THREE.RedFormat,
+    THREE.HalfFloatType,
+  );
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  const sizeX = plan.width * CELL_SIZE;
+  const sizeZ = plan.height * CELL_SIZE;
+  return {
+    texture,
+    uv: [
+      [1 / sizeX, 0, -plan.minX / sizeX],
+      [0, 1 / sizeZ, -plan.minZ / sizeZ],
+    ],
+    ...range,
   };
 }
