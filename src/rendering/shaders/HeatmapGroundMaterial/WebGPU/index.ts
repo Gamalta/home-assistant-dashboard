@@ -1,35 +1,33 @@
 import * as THREE from 'three/webgpu';
 
 import {
+  vec2,
   vec3,
   vec4,
   float,
   uniform,
-  uniformArray,
+  texture,
+  dot,
   Fn,
   mix,
   clamp,
-  max,
   smoothstep,
   abs,
   mod,
   fwidth,
   positionWorld,
   If,
+  select,
 } from 'three/tsl';
 
-import {
-  getTemperatureRange,
-  HeatmapPoint,
-  limitHeatmapPoints,
-  MAX_HEATMAP_POINTS,
-} from '../common';
+import type {TemperatureMap} from '../common';
 
 type HeatmapUniforms = {
-  points: THREE.Vector3[];
+  map: THREE.TextureNode;
+  uRow: THREE.UniformNode<'vec3', THREE.Vector3>;
+  vRow: THREE.UniformNode<'vec3', THREE.Vector3>;
   minTemp: THREE.UniformNode<'float', number>;
   maxTemp: THREE.UniformNode<'float', number>;
-  numPoints: THREE.UniformNode<'float', number>;
 };
 
 type HeatmapNodeMaterial = THREE.MeshBasicNodeMaterial & {
@@ -37,39 +35,18 @@ type HeatmapNodeMaterial = THREE.MeshBasicNodeMaterial & {
 };
 
 export function createHeatmapGroundMaterialWebGPU(
-  points: HeatmapPoint[],
+  temperatureMap: TemperatureMap,
 ): THREE.MeshBasicNodeMaterial {
-  // Tableau de taille fixe : les mises à jour de température ne modifient que
-  // les valeurs des uniforms, sans recompiler le shader.
-  const pointValues = Array.from(
-    {length: MAX_HEATMAP_POINTS},
-    () => new THREE.Vector3(),
-  );
-  const pointsNode = uniformArray(pointValues, 'vec3');
+  const uRow = uniform(new THREE.Vector3());
+  const vRow = uniform(new THREE.Vector3());
   const minTemp = uniform(0);
   const maxTemp = uniform(1);
-  const numPoints = uniform(0);
-
-  const idwInterpolation = Fn(([pos]: [THREE.Node<'vec3'>]) => {
-    const tempSum = float(0).toVar();
-    const weightSum = float(0).toVar();
-
-    for (let i = 0; i < MAX_HEATMAP_POINTS; i++) {
-      // point = (x, température, z) en coordonnées monde.
-      const point = pointsNode.element(i) as unknown as THREE.Node<'vec3'>;
-      const dx = pos.x.sub(point.x);
-      const dz = pos.z.sub(point.z);
-      // Distance plancher : évite une division par zéro sur le capteur lui-même.
-      const distSq = max(dx.mul(dx).add(dz.mul(dz)), 0.01);
-      // Les emplacements au-delà de numPoints ont un poids nul.
-      const active = float(i).lessThan(numPoints).toFloat();
-      const weight = active.div(distSq);
-      tempSum.addAssign(point.y.mul(weight));
-      weightSum.addAssign(weight);
-    }
-
-    return tempSum.div(max(weightSum, 1e-6));
-  });
+  // u = dot(uRow, (x, z, 1)) sur le sol, v de même.
+  const point = vec3(positionWorld.x, positionWorld.z, 1);
+  const map = texture(
+    temperatureMap.texture,
+    vec2(dot(uRow, point), dot(vRow, point)),
+  );
 
   const temperatureToColor = Fn(([temperature]: [THREE.Node<'float'>]) => {
     const normalized = clamp(
@@ -128,43 +105,40 @@ export function createHeatmapGroundMaterialWebGPU(
   material.name = 'heatmapGround';
   material.depthWrite = false;
   material.colorNode = Fn(() => {
-    const temperature = idwInterpolation(positionWorld);
+    // La texture garde l'écart au milieu de l'échelle.
+    const temperature = map.r.add(minTemp.add(maxTemp).mul(0.5));
     const temperatureStep = float(1.0);
     const contourValue = mod(temperature, temperatureStep);
     const width = fwidth(temperature).mul(0.3);
-    const contourLine = float(1.0).sub(
-      smoothstep(width, width.mul(2.0), abs(contourValue.sub(0.5))),
+    // Pas d'isotherme là où la température ne varie pas : autour d'un capteur
+    // à 21,5 °C, elle couvrirait tout le sol.
+    const contourLine = select(
+      width.greaterThan(0.0),
+      float(1.0).sub(
+        smoothstep(width, width.mul(2.0), abs(contourValue.sub(0.5))),
+      ),
+      float(0.0),
     );
     let color: THREE.Node<'vec3'> = temperatureToColor(temperature);
     color = mix(color, vec3(0.0), contourLine.mul(0.3));
     return vec4(color, 1.0);
   })();
 
-  material.userData.heatmapUniforms = {
-    points: pointValues,
-    minTemp,
-    maxTemp,
-    numPoints,
-  };
-  updateHeatmapGroundMaterialWebGPU(material, points);
+  material.userData.heatmapUniforms = {map, uRow, vRow, minTemp, maxTemp};
+  updateHeatmapGroundMaterialWebGPU(material, temperatureMap);
 
   return material;
 }
 
 export function updateHeatmapGroundMaterialWebGPU(
   material: THREE.Material,
-  points: HeatmapPoint[],
+  temperatureMap: TemperatureMap,
 ) {
   const uniforms = (material as HeatmapNodeMaterial).userData.heatmapUniforms;
   if (!uniforms) return;
-  const limitedPoints = limitHeatmapPoints(points);
-  const {minTemp, maxTemp} = getTemperatureRange(limitedPoints);
-  uniforms.points.forEach((value, i) => {
-    const p = limitedPoints[i];
-    if (p) value.set(p.x, p.temperature, p.z);
-    else value.set(0, 0, 0);
-  });
-  uniforms.minTemp.value = minTemp;
-  uniforms.maxTemp.value = maxTemp;
-  uniforms.numPoints.value = limitedPoints.length;
+  uniforms.map.value = temperatureMap.texture;
+  uniforms.uRow.value.fromArray(temperatureMap.uv[0]);
+  uniforms.vRow.value.fromArray(temperatureMap.uv[1]);
+  uniforms.minTemp.value = temperatureMap.minTemp;
+  uniforms.maxTemp.value = temperatureMap.maxTemp;
 }
