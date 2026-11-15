@@ -61,11 +61,28 @@ Les listes « Préréglage », « Playlist » et « Palette » et les curseurs �
 - **quand** j'active « Ambilight », **alors** un halo entoure l'image : chaque LED y prend sa place autour de l'écran, avec sa couleur du moment ;
 - **quand** je l'éteins, **alors** le halo disparaît ; **quand** je ferme la modale, **alors** les flux de l'image et des LED sont coupés.
 
+L'écran est posé sur un mur sombre, que le halo éclaire depuis les bords de la TV.
+
+### Scénario : voir une couleur fixe
+
+- **Étant donné** la modale TV ouverte, l'ambilight allumé en capture vidéo
+- **Quand** je choisis « Couleur » puis « Bleu »
+- **Alors** l'écran devient noir, le halo prend le bleu, et la pastille « Bleu » est entourée ;
+- **quand** je choisis « Vidéo », **alors** l'image de la TV revient.
+
+HyperHDR ne diffuse aucune image pendant une couleur fixe : la modale n'ouvre alors aucun flux ([ADR 0055](../adr/0055-aucun-flux-en-couleur-fixe.md)).
+
+### Scénario : modale TV sur tablette
+
+- **Étant donné** un écran d'au moins 900 px de large
+- **Quand** j'ouvre la modale TV
+- **Alors** l'écran occupe la gauche, et l'ambilight, la luminosité et la source se rangent à sa droite. Sur un écran plus étroit, ils restent dessous.
+
 ## Critères d'acceptation
 
 - [ ] L'onglet « Effets » fonctionne pour toute lumière qui a une liste d'effets, sans configuration propre à WLED ou Hue.
 - [ ] Les réglages WLED sont trouvés à partir du nom de la lumière, sans configuration ([ADR 0020](../adr/0020-reglages-par-nom-de-lumiere-et-tv-en-direct.md)).
-- [ ] Le flux de l'image n'est ouvert que modale TV ouverte, celui des LED seulement si l'ambilight est allumé, et chacun est fermé dès que son image disparaît.
+- [ ] Le flux de l'image n'est ouvert que modale TV ouverte, celui des LED seulement si l'ambilight est allumé, aucun des deux en couleur fixe, et chacun est fermé dès que son image disparaît.
 - [ ] Budget de performance respecté ([ADR 0009](../adr/0009-budget-performance-tablette.md)) : aucun draw call ni programme de plus dans la démo.
 
 ## Impacts
@@ -73,4 +90,4 @@ Les listes « Préréglage », « Playlist » et « Palette » et les curseurs �
 - Configuration des maisons : nouvel élément `tv` (`lightEntityId`, `ledLayout`). Les bandeaux restent des éléments `light`.
 - Mock Home Assistant : un bandeau WLED fictif (`light.living_room_strip` et ses `select` et `number`) et une instance HyperHDR fictive (`light.tv_ambilight`, `camera.tv_ambilight_led_colors`, `camera.tv_ambilight_led_gradient`). `light.turn_on` enregistre l'effet, `light.turn_off` éteint enfin une lumière, `select.select_option` et `number.set_value` modifient l'état simulé.
 - Démo : le bandeau n'a pas de lumière 3D dans le modèle, d'où l'avertissement « Aucune lumière 3D trouvée pour light.living_room_strip » au chargement.
-- Performance : aucun changement de la scène 3D ; deux étiquettes HTML de plus dans le séjour. Modale TV ouverte, la tablette décode les deux flux et redessine le halo dix fois par seconde.
+- Performance : aucun changement de la scène 3D ; deux étiquettes HTML de plus dans le séjour. Modale TV ouverte, la tablette décode les deux flux et redessine le halo dix fois par seconde, sauf en couleur fixe, où aucun flux n'est ouvert.

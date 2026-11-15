@@ -98,6 +98,24 @@ test('affiche l’image de la TV et le halo des LED en direct', async ({
   await expect.poll(() => glowWarmth(page, 3, 3)).toBeGreaterThan(150);
   await expect.poll(() => glowWarmth(page, 156, 86)).toBeLessThan(-150);
 
+  // En couleur fixe, HyperHDR ne diffuse plus d'image : toutes les LED la prennent.
+  await page.getByRole('button', {name: 'Couleur'}).click();
+  await page.getByRole('button', {name: 'Bleu'}).click();
+  await expect(page.getByRole('img', {name: 'Image de la TV'})).toHaveCount(0);
+  await expect.poll(() => glowWarmth(page, 3, 3)).toBeLessThan(-150);
+
   await power.uncheck();
   await expect(glow).toHaveCount(0);
+});
+
+test('range les commandes à côté de l’écran sur tablette', async ({page}) => {
+  await openModal(page, 'TV', 'TV');
+
+  const screen = await page
+    .getByRole('img', {name: 'Image de la TV'})
+    .boundingBox();
+  const power = await page
+    .getByRole('switch', {name: 'Ambilight'})
+    .boundingBox();
+  expect(power!.x).toBeGreaterThan(screen!.x + screen!.width);
 });
