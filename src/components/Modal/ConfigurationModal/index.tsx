@@ -10,6 +10,7 @@ import {houseLabelCategories} from '../../../utils/labelCategories';
 import {BenchmarkRow} from './BenchmarkRow';
 import {CategoryRow} from './CategoryRow';
 import {HeatmapScaleRow} from './HeatmapScaleRow';
+import {HolidayRow} from './HolidayRow';
 import {InfoRow} from './InfoRow';
 import {OptionRow} from './OptionRow';
 import {ScreensaverRow} from './ScreensaverRow';
@@ -61,6 +62,7 @@ export function ConfigurationModal(props: ConfigurationModalProps) {
           <OptionRow label="Debug" option="debug" disabled={!is3d} />
           <HeatmapScaleRow disabled={!is3d} />
           {!mobile && <ScreensaverRow />}
+          <HolidayRow />
           {is3d && configuration.debug && (
             <>
               <InfoRow label="GPU" value={rendererInfo.gpu ?? '—'} />

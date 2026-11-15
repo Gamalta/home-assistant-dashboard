@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import type {ReactNode} from 'react';
 import {useDaylight} from '../../hooks/useDaylight';
+import {useHolidayMode} from '../../hooks/useHolidayMode';
+import {Snowfall} from '../Snowfall';
 
 const NIGHT = 'linear-gradient(#060a18, #1b2042)';
 const DAY = 'linear-gradient(#173f69, #44739f)';
@@ -16,6 +18,7 @@ type ScreensaverSkyProps = {
 export function ScreensaverSky(props: ScreensaverSkyProps) {
   const {children} = props;
   const day = useDaylight();
+  const holiday = useHolidayMode();
   const layer = {position: 'absolute', inset: 0} as const;
 
   return (
@@ -28,6 +31,7 @@ export function ScreensaverSky(props: ScreensaverSkyProps) {
           opacity: 1 - Math.abs(2 * day - 1),
         }}
       />
+      {holiday && <Snowfall />}
       {/* Plus discret la nuit, pour ne pas éclairer la pièce. */}
       <Stack
         spacing={6}

@@ -15,11 +15,14 @@ import {
 import {useState} from 'react';
 import {useEffect} from 'react';
 import {useIsMobile} from './hooks/useIsMobile';
+import {useIdle} from './hooks/useIdle';
 import {MobileDashboard} from './components/Mobile';
 
 export default function Dashboard() {
   const mobile = useIsMobile();
   const {configuration} = useAppContext();
+  // La scène se met en pause sous l'écran de veille : rien ne la redessine.
+  const [idle, wake] = useIdle(configuration.screensaverMinutes * 60_000);
   const [isDragging, setIsDragging] = useState(false);
   const {defaultLayout, onLayoutChanged} = useDefaultLayout({
     groupId: 'siderbar-main',
@@ -94,12 +97,12 @@ export default function Dashboard() {
           </Stack>
         </Separator>
         <Panel defaultSize="70%" style={{position: 'relative'}}>
-          <House />
+          <House paused={idle} />
           <QuickMenu />
           {configuration.heatmapShader && <HeatmapLegend />}
         </Panel>
       </Group>
-      <Screensaver />
+      <Screensaver idle={idle} onWake={wake} />
     </HouseProvider>
   );
 }

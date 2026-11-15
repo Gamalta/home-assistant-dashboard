@@ -24,7 +24,11 @@ export type ConfigurationOptions = {
   screensaverMinutes: number;
   /** Écart minimal de l'échelle de couleurs de la carte des températures. */
   heatmapScale: HeatmapScale;
+  holidayMode: HolidayMode;
 };
+
+/** Mode fêtes : `auto` du 1er décembre au 6 janvier. */
+export type HolidayMode = 'auto' | 'on' | 'off';
 
 export type RendererInfo = {
   triangles: number;
@@ -82,6 +86,7 @@ const defaultConfiguration: ConfigurationOptions = {
   batteriesOnly: false,
   screensaverMinutes: 0,
   heatmapScale: 'balanced',
+  holidayMode: 'auto',
 };
 
 const defaultRendererInfo: RendererInfo = {

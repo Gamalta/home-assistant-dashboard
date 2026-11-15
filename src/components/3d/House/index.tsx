@@ -6,8 +6,10 @@ import {useLoader} from '@react-three/fiber';
 import * as THREE from 'three';
 import {useHouseContext} from '../../../contexts/HouseContext';
 import {useAppContext} from '../../../contexts/AppContext';
+import {useHolidayMode} from '../../../hooks/useHolidayMode';
 import {loadRenderBackend, RenderBackend} from '../../../rendering/backends';
 import {ErrorBoundary} from '../../ErrorBoundary';
+import {Snowfall} from '../../Snowfall';
 import {ModelLoader} from './ModelLoader';
 import {HouseScene} from './HouseScene';
 import {LightingTrial} from '../../LightingTrial';
@@ -32,6 +34,7 @@ export default function House(props: HouseProps) {
   const {configuration, setConfiguration, webGLSupported, lightingTrial} =
     useAppContext();
   const {houseConfig} = useHouseContext();
+  const holiday = useHolidayMode();
   const model = houseConfig?.house.model;
   const lightMaps = houseConfig?.house.lightMaps;
   const [backend, setBackend] = useState<RenderBackend | null>(null);
@@ -83,6 +86,8 @@ export default function House(props: HouseProps) {
         ...theme.applyStyles('dark', {background: SCENE_BACKGROUND.dark}),
       })}
     >
+      {/* Avant le canvas, transparent : elle tombe derrière la maison. */}
+      {holiday && <Snowfall paused={paused} />}
       <ErrorBoundary
         resetKey={`${houseConfig?.id}-${backend.kind}`}
         onError={() => {
@@ -111,6 +116,7 @@ export default function House(props: HouseProps) {
             model={model}
             focusRoomId={focusRoomId}
             paused={paused}
+            holiday={holiday}
           />
         </Suspense>
         {lightingTrial && <LightingTrial />}

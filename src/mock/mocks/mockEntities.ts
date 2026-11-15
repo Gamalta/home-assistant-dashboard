@@ -421,6 +421,10 @@ export const entities: HassEntities = {
     state: '85.4',
     attributes: {unit_of_measurement: 'W', device_class: 'power'},
   }),
+  ...createSwitch('switch.christmas_tree', {
+    state: 'on',
+    attributes: {friendly_name: 'Guirlandes du sapin'},
+  }),
   // TV éteinte à la télécommande : la prise reste allumée et consomme peu.
   ...createSwitch('switch.tv_outlet', {
     state: 'on',

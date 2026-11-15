@@ -104,6 +104,10 @@ export const SideBarConfig: SideBarConfigType = {
 export const HouseConfig: HouseConfigType = {
   model: Demo,
   lightMaps: {sky: DemoSky, sun: DemoSun},
+  christmasTree: {
+    position: {x: -0.5, y: 0, z: 1.8},
+    switchEntityId: 'switch.christmas_tree',
+  },
   rooms: [
     {
       id: 'Living_room',

@@ -15,6 +15,7 @@
 | [Guide : aspirateur robot](guides/aspirateur-robot.md)             | Configurer un aspirateur Dreame (dreame-vacuum)      |
 | [Guide : appareils sur pile](guides/appareils-sur-pile.md)         | Afficher les piles et le détecteur de fumée          |
 | [Guide : mode veille](guides/mode-veille.md)                       | Mettre la tablette murale en veille après inactivité |
+| [Guide : mode fêtes](guides/mode-fetes.md)                         | Neige et sapin pendant les fêtes                     |
 | [Guide : raccourcis](guides/raccourcis.md)                         | Carrousel et scénarios de la barre latérale          |
 | [Guide : filtrer les étiquettes](guides/filtrer-les-etiquettes.md) | Afficher seulement certaines étiquettes de la vue 3D |
 | [Guide : alertes](guides/alertes.md)                               | Configurer la pastille d'alertes                     |
