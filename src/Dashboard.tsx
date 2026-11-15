@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
+import {useAppContext} from './contexts/AppContext';
 import {SideBar} from './components/SideBar';
 import {QuickMenu} from './components/QuickMenu';
 import {HeatmapLegend} from './components/HeatmapLegend';
@@ -18,6 +19,7 @@ import {MobileDashboard} from './components/Mobile';
 
 export default function Dashboard() {
   const mobile = useIsMobile();
+  const {configuration} = useAppContext();
   const [isDragging, setIsDragging] = useState(false);
   const {defaultLayout, onLayoutChanged} = useDefaultLayout({
     groupId: 'siderbar-main',
@@ -94,7 +96,7 @@ export default function Dashboard() {
         <Panel defaultSize="70%" style={{position: 'relative'}}>
           <House />
           <QuickMenu />
-          <HeatmapLegend />
+          {configuration.heatmapShader && <HeatmapLegend />}
         </Panel>
       </Group>
       <Screensaver />

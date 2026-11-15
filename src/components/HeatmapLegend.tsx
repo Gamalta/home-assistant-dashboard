@@ -21,8 +21,9 @@ const format = (temperature: number) =>
   `${temperature.toLocaleString('fr', {maximumFractionDigits: 1})} °C`;
 
 /**
- * Échelle de la carte des températures, en bas de la vue 3D. Survoler le
- * dégradé, ou le toucher, donne la température de chaque couleur.
+ * Échelle de la carte des températures, en bas de la vue 3D, montée avec la
+ * carte. Survoler le dégradé, ou le toucher, donne la température de chaque
+ * couleur.
  */
 export function HeatmapLegend() {
   const {configuration} = useAppContext();
@@ -31,7 +32,7 @@ export function HeatmapLegend() {
   const points = useHeatmapPoints(rooms.filter(room => !room.outdoor));
   const [ratio, setRatio] = useState<number>();
 
-  if (!configuration.heatmapShader || !points.length) return null;
+  if (!points.length) return null;
   const {minTemp, maxTemp} = getTemperatureRange(
     points,
     HEATMAP_SCALES[configuration.heatmapScale],
