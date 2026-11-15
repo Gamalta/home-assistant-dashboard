@@ -23,16 +23,18 @@ import {SceneMaterials} from './SceneMaterials';
 import {LightShadows} from './LightShadows';
 import {Precompile} from './Precompile';
 import {ModelLoader} from './ModelLoader';
+import {ChristmasTree3d} from './ChristmasTree3d';
 
 type HouseSceneProps = {
   backend: RenderBackend;
   model: string;
   focusRoomId?: string;
   paused?: boolean;
+  holiday?: boolean;
 };
 
 export function HouseScene(props: HouseSceneProps) {
-  const {backend, model, focusRoomId, paused = false} = props;
+  const {backend, model, focusRoomId, paused = false, holiday} = props;
   const {configuration} = useAppContext();
   const {houseConfig} = useHouseContext();
   const {scene, cameras} = useGLTF(model);
@@ -44,6 +46,11 @@ export function HouseScene(props: HouseSceneProps) {
   const rooms = houseConfig?.house.rooms ?? [];
   const focusRoom = rooms.find(room => room.id === focusRoomId);
   const moving = useRef(false);
+  // Sur une carte au sol, le sapin la cacherait.
+  const tree =
+    holiday && !configuration.heatmapShader && !configuration.vacuumMapShader
+      ? houseConfig?.house.christmasTree
+      : undefined;
   // Options qui changent les shaders : la scène ne s'affiche qu'une fois
   // compilée pour celles en cours.
   const graphics = [
@@ -51,6 +58,7 @@ export function HouseScene(props: HouseSceneProps) {
     configuration.heatmapShader,
     configuration.vacuumMapShader,
     configuration.shadows,
+    !!tree,
   ].join();
   const [compiled, setCompiled] = useState<string>();
   const ready = compiled === graphics;
@@ -132,6 +140,7 @@ export function HouseScene(props: HouseSceneProps) {
               showLabels={!focusRoomId || room.id === focusRoomId}
             />
           ))}
+          {tree && <ChristmasTree3d tree={tree} />}
           <Precompile
             key={graphics}
             backend={backend}

@@ -1,19 +1,21 @@
 import Stack from '@mui/material/Stack';
 import {AnimatePresence, motion} from 'framer-motion';
-import {useAppContext} from '../../contexts/AppContext';
 import {useHouseContext} from '../../contexts/HouseContext';
-import {useIdle} from '../../hooks/useIdle';
 import {ScreensaverAlerts} from './ScreensaverAlerts';
 import {ScreensaverClock} from './ScreensaverClock';
 import {ScreensaverSky} from './ScreensaverSky';
 import {ScreensaverTrains} from './ScreensaverTrains';
 import {ScreensaverWeather} from './ScreensaverWeather';
 
-export function Screensaver() {
-  const {configuration} = useAppContext();
+type ScreensaverProps = {
+  idle: boolean;
+  onWake: () => void;
+};
+
+export function Screensaver(props: ScreensaverProps) {
+  const {idle, onWake} = props;
   const {houseConfig} = useHouseContext();
   const sideBar = houseConfig?.sideBar;
-  const [idle, wake] = useIdle(configuration.screensaverMinutes * 60_000);
 
   return (
     <AnimatePresence>
@@ -23,7 +25,7 @@ export function Screensaver() {
           role="button"
           aria-label="Réveiller l'écran"
           className="dark"
-          onClick={wake}
+          onClick={onWake}
           initial={{opacity: 0}}
           animate={{opacity: 1}}
           exit={{opacity: 0}}

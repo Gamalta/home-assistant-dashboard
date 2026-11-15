@@ -14,6 +14,17 @@ type HouseConfigType = {
     outdoor?: boolean;
     items?: RoomItemConfigType[];
   }[];
+  /** Sapin de la scène, visible en mode fêtes. */
+  christmasTree?: ChristmasTreeConfigType;
+};
+
+type ChristmasTreeConfigType = {
+  /** Pied du sapin, sur le sol. */
+  position: Position3dType;
+  /** En mètres ; 1,6 par défaut. */
+  height?: number;
+  /** Prise des guirlandes : coupée, elles s'éteignent. Sans prise, elles restent allumées. */
+  switchEntityId?: FilterByDomain<EntityName, 'switch'>;
 };
 
 type RoomItemConfigType =
