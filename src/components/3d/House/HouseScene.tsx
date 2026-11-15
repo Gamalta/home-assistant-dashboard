@@ -123,7 +123,15 @@ export function HouseScene(props: HouseSceneProps) {
             enabled={configuration.shadows}
             moving={moving}
           />
-          <Daylight baked={!!lightMaps} />
+          <Daylight
+            baked={!!lightMaps}
+            // En WebGPU, le tone mapping s'applique à toute l'image : la carte
+            // des températures s'en passe pour garder les couleurs de sa
+            // légende (ADR 0056).
+            toneMapped={
+              backend.kind === 'webgl' || !configuration.heatmapShader
+            }
+          />
           {rooms.map(room => (
             <Room3d
               key={room.id}

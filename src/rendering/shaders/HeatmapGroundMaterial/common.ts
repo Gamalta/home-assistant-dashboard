@@ -23,6 +23,45 @@ export const HEATMAP_SCALES = {contrasted: 2, balanced: 4, soft: 8};
 export type HeatmapScale = keyof typeof HEATMAP_SCALES;
 
 /**
+ * Couleurs de l'échelle (RVB de 0 à 1), régulièrement espacées du plus froid
+ * au plus chaud. Les shaders du sol les répètent : elles doivent rester les
+ * mêmes pour que la légende dise vrai.
+ */
+export const HEATMAP_COLORS = [
+  [0.1, 0.2, 0.8],
+  [0.0, 0.5, 1.0],
+  [0.2, 0.8, 0.3],
+  [1.0, 1.0, 0.1],
+  [1.0, 0.5, 0.0],
+  [1.0, 0.0, 0.0],
+];
+
+/** Couleur CSS du sol à `ratio` de l'échelle (0 : le plus froid). */
+export function heatmapColor(ratio: number) {
+  const position =
+    Math.min(Math.max(ratio, 0), 1) * (HEATMAP_COLORS.length - 1);
+  const index = Math.min(Math.floor(position), HEATMAP_COLORS.length - 2);
+  const from = HEATMAP_COLORS[index];
+  const to = HEATMAP_COLORS[index + 1];
+  const channels = from.map((value, channel) =>
+    Math.round(255 * (value + (to[channel] - value) * (position - index))),
+  );
+  return `rgb(${channels.join(' ')})`;
+}
+
+/** Dégradé CSS du sol entre `from` et `to` de l'échelle (0 : le plus froid). */
+export function heatmapGradient(from: number, to: number) {
+  const stops = HEATMAP_COLORS.map(
+    (_, index) => index / (HEATMAP_COLORS.length - 1),
+  ).filter(ratio => ratio > from && ratio < to);
+  const colors = [from, ...stops, to].map(ratio => {
+    const position = ((ratio - from) / (to - from || 1)) * 100;
+    return `${heatmapColor(ratio)} ${position.toFixed(1)}%`;
+  });
+  return `linear-gradient(to right, ${colors.join(', ')})`;
+}
+
+/**
  * Bornes de l'échelle de couleurs, des capteurs le plus froid au plus chaud,
  * élargies à `spread` autour de leur milieu quand ils sont proches.
  */

@@ -16,7 +16,10 @@ test('affiche les personnes et la météo dans la barre latérale', async ({
 test('ouvre et ferme la modale de climatisation du séjour', async ({page}) => {
   await waitForScene(page);
   // Le séjour est la première pièce de la config démo.
-  await page.getByRole('button', {name: '22°', exact: true}).first().click();
+  await page
+    .getByRole('button', {name: '22°, consigne 25°', exact: true})
+    .first()
+    .click();
   const title = page.getByRole('heading', {name: 'Climatisation'});
   await expect(title).toBeVisible();
 

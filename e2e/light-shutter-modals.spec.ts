@@ -20,7 +20,7 @@ async function modalContent(title: Locator) {
 // lumières : on la trouve juste avant sa clim « 22° ».
 const livingRoomLight = (page: Page) =>
   page
-    .getByRole('button', {name: '22°', exact: true})
+    .getByRole('button', {name: '22°, consigne 25°', exact: true})
     .first()
     .locator('xpath=../preceding-sibling::div[1]//button');
 
