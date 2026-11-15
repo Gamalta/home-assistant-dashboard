@@ -18,6 +18,7 @@ import {
   positionWorld,
   If,
   select,
+  sRGBTransferEOTF,
 } from 'three/tsl';
 
 import type {TemperatureMap} from '../common';
@@ -121,7 +122,9 @@ export function createHeatmapGroundMaterialWebGPU(
     );
     let color: THREE.Node<'vec3'> = temperatureToColor(temperature);
     color = mix(color, vec3(0.0), contourLine.mul(0.3));
-    return vec4(color, 1.0);
+    // La sortie réencode l'image en sRGB, sans tone mapping sous la carte
+    // (ADR 0056). `as` : @types/three type sRGBTransferEOTF en simple Node.
+    return vec4(sRGBTransferEOTF(color) as THREE.Node<'vec3'>, 1.0);
   })();
 
   material.userData.heatmapUniforms = {map, uRow, vRow, minTemp, maxTemp};
