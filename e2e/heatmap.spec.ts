@@ -1,3 +1,4 @@
+import type {Page} from '@playwright/test';
 import {DataUtils} from 'three';
 import {expect, openConfigurationModal, test, waitForScene} from './fixtures';
 
@@ -63,6 +64,60 @@ test('un mur arrête la chaleur', async ({page}) => {
   expect(temperatureAt(6.6, -2.55) - temperatureAt(6, -1.2)).toBeGreaterThan(
     1.5,
   );
+});
+
+async function showHeatmap(page: Page) {
+  await page.goto('/');
+  await waitForScene(page);
+  await page.getByRole('button', {name: 'Menu rapide'}).click();
+  await page.getByRole('menuitemcheckbox', {name: 'Température'}).click();
+  return page.getByRole('region', {name: 'Légende des températures'});
+}
+
+// Scénarios de docs/specs/legende-des-temperatures.md. Les capteurs de la
+// démo vont de 19 à 21 °C : l'échelle « Équilibrée » couvre 18 à 22 °C.
+test('survoler la légende donne la température d’une couleur', async ({
+  page,
+}) => {
+  const legend = await showHeatmap(page);
+  await expect(legend).toContainText('18 °C');
+  await expect(legend).toContainText('22 °C');
+
+  const gradient = legend.getByTestId('heatmap-gradient');
+  const box = (await gradient.boundingBox())!;
+  await gradient.hover({position: {x: box.width / 4, y: box.height / 2}});
+  await expect(legend.getByRole('status')).toHaveText('19 °C');
+
+  await page.mouse.move(0, 0);
+  await expect(legend.getByRole('status')).toBeHidden();
+
+  await page.getByRole('button', {name: 'Menu rapide'}).click();
+  await page.getByRole('menuitemcheckbox', {name: 'Température'}).click();
+  await expect(legend).toBeHidden();
+});
+
+test.describe('téléphone', () => {
+  test.use({
+    viewport: {width: 390, height: 844},
+    hasTouch: true,
+    isMobile: true,
+  });
+
+  test('la légende se pose au-dessus du carrousel et répond au doigt', async ({
+    page,
+  }) => {
+    const legend = await showHeatmap(page);
+    const chips = page.getByRole('group', {name: 'Choix de la pièce'});
+    expect((await legend.boundingBox())!.y).toBeLessThan(
+      (await chips.boundingBox())!.y,
+    );
+
+    const gradient = legend.getByTestId('heatmap-gradient');
+    const box = (await gradient.boundingBox())!;
+    await gradient.tap({position: {x: (box.width * 3) / 4, y: box.height / 2}});
+    // L'appui levé, la température reste affichée.
+    await expect(legend.getByRole('status')).toHaveText('21 °C');
+  });
 });
 
 test('règle l’échelle des températures dans la modale Configuration', async ({

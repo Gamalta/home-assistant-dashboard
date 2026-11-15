@@ -3,6 +3,7 @@ import House from './components/3d/House';
 import {HouseProvider} from './contexts/HouseContext';
 import {SideBar} from './components/SideBar';
 import {QuickMenu} from './components/QuickMenu';
+import {HeatmapLegend} from './components/HeatmapLegend';
 import {Screensaver} from './components/Screensaver';
 import {
   Group,
@@ -93,6 +94,7 @@ export default function Dashboard() {
         <Panel defaultSize="70%" style={{position: 'relative'}}>
           <House />
           <QuickMenu />
+          <HeatmapLegend />
         </Panel>
       </Group>
       <Screensaver />

@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import {useEffect, useRef} from 'react';
 import type {HouseConfigType} from '../../configs/house';
 import {carouselPage} from '../../utils/carousel';
+import {HeatmapLegend} from '../HeatmapLegend';
 import {RoomCard} from './RoomCard';
 
 // Délai sans défilement avant de choisir la pièce : la caméra ne vise pas
@@ -62,6 +63,7 @@ export function RoomCarousel(props: RoomCarouselProps) {
         '& > *': {pointerEvents: 'auto'},
       }}
     >
+      <HeatmapLegend />
       <Stack
         ref={chipsRef}
         direction="row"
