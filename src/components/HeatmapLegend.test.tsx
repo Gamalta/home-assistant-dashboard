@@ -1,6 +1,7 @@
 import {fireEvent, render, screen, within} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {AppProvider} from '../contexts/AppContext';
+import {heatmapGradient} from '../rendering/shaders/HeatmapGroundMaterial/common';
 import {HeatmapScaleRow} from './Modal/ConfigurationModal/HeatmapScaleRow';
 import {HeatmapLegend} from './HeatmapLegend';
 
@@ -34,7 +35,7 @@ vi.mock('@hakit/core', () => ({
 describe('HeatmapLegend', () => {
   afterEach(() => localStorage.clear());
 
-  it('suit l’échelle des températures choisie dans la modale Configuration', () => {
+  it('montre les températures et les couleurs du sol, selon l’échelle choisie', () => {
     render(
       <AppProvider>
         <HeatmapScaleRow disabled={false} />
@@ -44,8 +45,13 @@ describe('HeatmapLegend', () => {
     const legend = screen.getByRole('region', {
       name: 'Légende des températures',
     });
-    expect(legend).toHaveTextContent('18 °C');
-    expect(legend).toHaveTextContent('22 °C');
+    const gradient = screen.getByTestId('heatmap-gradient');
+    expect(legend).toHaveTextContent('19 °C');
+    expect(legend).toHaveTextContent('21 °C');
+    // Échelle « Équilibrée » de 18 à 22 °C : le sol en couvre le milieu.
+    expect(gradient).toHaveStyle({
+      backgroundImage: heatmapGradient(0.25, 0.75),
+    });
 
     fireEvent.mouseDown(
       screen.getByRole('combobox', {name: 'Échelle des températures'}),
@@ -56,7 +62,11 @@ describe('HeatmapLegend', () => {
       }),
     );
 
-    expect(legend).toHaveTextContent('16 °C');
-    expect(legend).toHaveTextContent('24 °C');
+    expect(legend).toHaveTextContent('19 °C');
+    expect(legend).toHaveTextContent('21 °C');
+    // De 16 à 24 °C, le sol se resserre sur le vert et le jaune.
+    expect(gradient).toHaveStyle({
+      backgroundImage: heatmapGradient(0.375, 0.625),
+    });
   });
 });

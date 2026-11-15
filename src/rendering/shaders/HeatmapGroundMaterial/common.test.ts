@@ -6,6 +6,7 @@ import {
   createTemperatureMap,
   getTemperatureRange,
   heatmapColor,
+  heatmapGradient,
 } from './common';
 
 const point = (temperature: number, x = 0): HeatmapPoint => ({
@@ -43,6 +44,30 @@ describe('heatmapColor', () => {
   it('s’arrête aux bornes de l’échelle', () => {
     expect(heatmapColor(-1)).toBe(heatmapColor(0));
     expect(heatmapColor(2)).toBe(heatmapColor(1));
+  });
+});
+
+describe('heatmapGradient', () => {
+  it('reprend toute l’échelle, une couleur tous les cinquièmes', () => {
+    expect(heatmapGradient(0, 1)).toBe(
+      'linear-gradient(to right, rgb(26 51 204) 0.0%, rgb(0 128 255) 20.0%, ' +
+        'rgb(51 204 77) 40.0%, rgb(255 255 26) 60.0%, rgb(255 128 0) 80.0%, ' +
+        'rgb(255 0 0) 100.0%)',
+    );
+  });
+
+  it('ne garde que les couleurs entre ses bornes', () => {
+    expect(heatmapGradient(0.25, 0.75)).toBe(
+      `linear-gradient(to right, ${heatmapColor(0.25)} 0.0%, ` +
+        'rgb(51 204 77) 30.0%, rgb(255 255 26) 70.0%, ' +
+        `${heatmapColor(0.75)} 100.0%)`,
+    );
+  });
+
+  it('se réduit à une couleur pour une seule température', () => {
+    expect(heatmapGradient(0.5, 0.5)).toBe(
+      `linear-gradient(to right, ${heatmapColor(0.5)} 0.0%, ${heatmapColor(0.5)} 0.0%)`,
+    );
   });
 });
 
