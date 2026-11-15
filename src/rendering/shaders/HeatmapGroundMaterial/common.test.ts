@@ -5,6 +5,7 @@ import {
   HeatmapPoint,
   createTemperatureMap,
   getTemperatureRange,
+  heatmapColor,
 } from './common';
 
 const point = (temperature: number, x = 0): HeatmapPoint => ({
@@ -29,6 +30,19 @@ describe('getTemperatureRange', () => {
 
   it('renvoie une échelle non nulle sans capteur', () => {
     expect(getTemperatureRange([], 8)).toEqual({minTemp: 0, maxTemp: 8});
+  });
+});
+
+describe('heatmapColor', () => {
+  it('reprend les couleurs du sol, du plus froid au plus chaud', () => {
+    expect(heatmapColor(0)).toBe('rgb(26 51 204)');
+    expect(heatmapColor(0.5)).toBe('rgb(153 230 51)');
+    expect(heatmapColor(1)).toBe('rgb(255 0 0)');
+  });
+
+  it('s’arrête aux bornes de l’échelle', () => {
+    expect(heatmapColor(-1)).toBe(heatmapColor(0));
+    expect(heatmapColor(2)).toBe(heatmapColor(1));
   });
 });
 
