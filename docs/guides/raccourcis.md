@@ -62,7 +62,7 @@ Un script doit pouvoir se relancer sans dommage, car un appui accidentel suffit 
 
 La première action du menu n'est pas un script : « Température » affiche la carte des températures, et seules les étiquettes de thermomètre et de climatisation restent sur la vue 3D. La chaleur de chaque capteur se diffuse dans sa pièce et passe d'une pièce à l'autre par les portes, pas à travers les murs ; les terrasses restent hors de la carte. L'action reste en surbrillance tant que la carte est affichée, et un second appui la coupe. Le réglage est mémorisé : la carte reste affichée après un rechargement. La modale Configuration ne le propose pas ([ADR 0041](../adr/0041-carte-des-temperatures-dans-le-menu-rapide.md)). Elle règle en revanche l'**échelle des températures**, l'écart minimal des couleurs : « Contrastée » (2 °C), « Équilibrée » (4 °C, par défaut) ou « Douce » (8 °C). Au-delà de cet écart, l'échelle va du capteur le plus froid au plus chaud.
 
-Une légende, en bas de la vue 3D (au-dessus du carrousel des pièces sur téléphone), donne les bornes de l'échelle ; survoler ou toucher son dégradé donne la température de chaque couleur. L'étiquette d'une climatisation indique la température mesurée et, en indice, sa consigne (« 20°/25° »), sauf à l'arrêt.
+Une légende, en bas de la vue 3D (au-dessus du carrousel des pièces sur téléphone), donne les bornes de l'échelle et les suit quand l'échelle change ; survoler ou toucher son dégradé donne la température de chaque couleur, la même que sur le sol. L'étiquette d'une climatisation indique la température mesurée et, en indice, sa consigne (« 20°/25° »), sauf à l'arrêt.
 
 ## Énergie
 

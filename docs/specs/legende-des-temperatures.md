@@ -27,6 +27,12 @@ On lit sans rien ouvrir la température d'une couleur de la carte, et la consign
 - **Et** un repère de la couleur survolée en donne la température, au dixième de degré
 - **Et** le repère disparaît quand la souris quitte le dégradé, et la légende quand la carte se coupe
 
+### Scénario : la légende suit l'échelle des températures
+
+- **Étant donné** la carte des températures affichée, avec des capteurs de 19 à 21 °C et l'échelle « Équilibrée »
+- **Quand** l'utilisateur choisit « Douce (8 °C) » dans la modale Configuration
+- **Alors** les bornes de la légende passent de 18 et 22 °C à 16 et 24 °C, comme les couleurs du sol
+
 ### Scénario : la légende se pose au-dessus du carrousel et répond au doigt
 
 - **Étant donné** la carte des températures affichée sur un téléphone
@@ -49,12 +55,14 @@ On lit sans rien ouvrir la température d'une couleur de la carte, et la consign
 ## Critères d'acceptation
 
 - [x] La légende reprend les couleurs et l'échelle du sol (`HEATMAP_COLORS`, `getTemperatureRange`).
+- [x] En WebGPU aussi, le sol dégagé reprend au pixel près les couleurs de la légende : le tone mapping se coupe tant que la carte est affichée ([ADR 0056](../adr/0056-carte-des-temperatures-sans-tone-mapping-en-webgpu.md)). Vérifié à la main, les E2E ne tournant qu'en WebGL.
 - [x] Budget de performance : rien de nouveau dans la scène, la légende est hors du `Canvas`.
 - [x] Chaque scénario est couvert par un test :
   - E2E : `e2e/heatmap.spec.ts` ;
-  - unitaires : `HeatmapGroundMaterial/common.test.ts` et `RoomItem/RoomClimate.test.tsx`.
+  - unitaires : `HeatmapLegend.test.tsx`, `HeatmapGroundMaterial/common.test.ts` et `RoomItem/RoomClimate.test.tsx`.
 
 ## Impacts
 
 - Les shaders du sol (WebGL et WebGPU) répètent les couleurs de `HEATMAP_COLORS` : les changer demande de changer les trois.
+- En WebGPU, la maison translucide autour du sol perd le tone mapping tant que la carte est affichée.
 - Le nom accessible d'une étiquette de climatisation devient « 20°, consigne 25° » quand elle a une consigne.
