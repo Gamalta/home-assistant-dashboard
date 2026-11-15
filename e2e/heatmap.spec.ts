@@ -75,18 +75,18 @@ async function showHeatmap(page: Page) {
 }
 
 // Scénarios de docs/specs/legende-des-temperatures.md. Les capteurs de la
-// démo vont de 19 à 21 °C : l'échelle « Équilibrée » couvre 18 à 22 °C.
+// démo vont de 19 à 21 °C, comme le sol et la légende.
 test('survoler la légende donne la température d’une couleur', async ({
   page,
 }) => {
   const legend = await showHeatmap(page);
-  await expect(legend).toContainText('18 °C');
-  await expect(legend).toContainText('22 °C');
+  await expect(legend).toContainText('19 °C');
+  await expect(legend).toContainText('21 °C');
 
   const gradient = legend.getByTestId('heatmap-gradient');
   const box = (await gradient.boundingBox())!;
   await gradient.hover({position: {x: box.width / 4, y: box.height / 2}});
-  await expect(legend.getByRole('status')).toHaveText('19 °C');
+  await expect(legend.getByRole('status')).toHaveText('19,5 °C');
 
   await page.mouse.move(0, 0);
   await expect(legend.getByRole('status')).toBeHidden();
@@ -116,7 +116,7 @@ test.describe('téléphone', () => {
     const box = (await gradient.boundingBox())!;
     await gradient.tap({position: {x: (box.width * 3) / 4, y: box.height / 2}});
     // L'appui levé, la température reste affichée.
-    await expect(legend.getByRole('status')).toHaveText('21 °C');
+    await expect(legend.getByRole('status')).toHaveText('20,5 °C');
   });
 });
 

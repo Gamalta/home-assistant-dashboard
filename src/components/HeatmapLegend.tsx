@@ -7,23 +7,20 @@ import {useAppContext} from '../contexts/AppContext';
 import {useHouseContext} from '../contexts/HouseContext';
 import {useHeatmapPoints} from '../hooks/useHeatmapPoints';
 import {
-  HEATMAP_COLORS,
   HEATMAP_SCALES,
   getTemperatureRange,
   heatmapColor,
+  heatmapGradient,
 } from '../rendering/shaders/HeatmapGroundMaterial/common';
-
-const GRADIENT = `linear-gradient(to right, ${HEATMAP_COLORS.map((_, index) =>
-  heatmapColor(index / (HEATMAP_COLORS.length - 1)),
-).join(', ')})`;
 
 const format = (temperature: number) =>
   `${temperature.toLocaleString('fr', {maximumFractionDigits: 1})} °C`;
 
 /**
- * Échelle de la carte des températures, en bas de la vue 3D, montée avec la
- * carte. Survoler le dégradé, ou le toucher, donne la température de chaque
- * couleur.
+ * Couleurs de la carte des températures, en bas de la vue 3D, montée avec la
+ * carte. Comme le sol, elle va du capteur le plus froid au plus chaud, avec
+ * leurs couleurs sur l'échelle choisie. Survoler le dégradé, ou le toucher,
+ * donne la température de chaque couleur.
  */
 export function HeatmapLegend() {
   const {configuration} = useAppContext();
@@ -37,6 +34,12 @@ export function HeatmapLegend() {
     points,
     HEATMAP_SCALES[configuration.heatmapScale],
   );
+  const temperatures = points.map(point => point.temperature);
+  const low = Math.min(...temperatures);
+  const high = Math.max(...temperatures);
+  const onScale = (temperature: number) =>
+    (temperature - minTemp) / (maxTemp - minTemp);
+  const at = (ratio: number) => low + ratio * (high - low);
   const point = (event: PointerEvent<HTMLElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
     setRatio(Math.min(Math.max((event.clientX - box.left) / box.width, 0), 1));
@@ -61,7 +64,7 @@ export function HeatmapLegend() {
       }}
     >
       <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
-        <Typography variant="caption">{format(minTemp)}</Typography>
+        <Typography variant="caption">{format(low)}</Typography>
         <Box
           data-testid="heatmap-gradient"
           onPointerDown={point}
@@ -75,7 +78,7 @@ export function HeatmapLegend() {
             flex: 1,
             height: 12,
             borderRadius: 6,
-            background: GRADIENT,
+            background: heatmapGradient(onScale(low), onScale(high)),
             cursor: 'crosshair',
             // Glisser le doigt parcourt l'échelle au lieu de faire défiler.
             touchAction: 'none',
@@ -93,7 +96,7 @@ export function HeatmapLegend() {
                 borderRadius: '50%',
                 border: '3px solid white',
                 boxShadow: 2,
-                bgcolor: heatmapColor(ratio),
+                bgcolor: heatmapColor(onScale(at(ratio))),
                 pointerEvents: 'none',
               }}
             >
@@ -113,12 +116,12 @@ export function HeatmapLegend() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {format(minTemp + ratio * (maxTemp - minTemp))}
+                {format(at(ratio))}
               </Typography>
             </Box>
           )}
         </Box>
-        <Typography variant="caption">{format(maxTemp)}</Typography>
+        <Typography variant="caption">{format(high)}</Typography>
       </Stack>
     </Paper>
   );

@@ -49,6 +49,18 @@ export function heatmapColor(ratio: number) {
   return `rgb(${channels.join(' ')})`;
 }
 
+/** Dégradé CSS du sol entre `from` et `to` de l'échelle (0 : le plus froid). */
+export function heatmapGradient(from: number, to: number) {
+  const stops = HEATMAP_COLORS.map(
+    (_, index) => index / (HEATMAP_COLORS.length - 1),
+  ).filter(ratio => ratio > from && ratio < to);
+  const colors = [from, ...stops, to].map(ratio => {
+    const position = ((ratio - from) / (to - from || 1)) * 100;
+    return `${heatmapColor(ratio)} ${position.toFixed(1)}%`;
+  });
+  return `linear-gradient(to right, ${colors.join(', ')})`;
+}
+
 /**
  * Bornes de l'échelle de couleurs, des capteurs le plus froid au plus chaud,
  * élargies à `spread` autour de leur milieu quand ils sont proches.

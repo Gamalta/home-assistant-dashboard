@@ -17,6 +17,8 @@ type Ambience = {
 type DaylightProps = {
   /** Le ciel et le soleil viennent des cartes de lumière précalculées. */
   baked: boolean;
+  /** Tone mapping Neutral ; sans lui, les couleurs passent telles quelles. */
+  toneMapped: boolean;
 };
 
 // Clair doux : ciel bleuté, soleil chaud, nuit bleue où les lampes dominent
@@ -73,7 +75,7 @@ const mix = (night: string, day: string, t: number) =>
  * Seuls des uniforms suivent l'heure : aucun shader n'est recompilé.
  */
 export function Daylight(props: DaylightProps) {
-  const {baked} = props;
+  const {baked, toneMapped} = props;
   const {gl, invalidate} = useThree();
   const day = useDaylight();
   const {day: DAY, night: NIGHT} = baked ? BAKED : SOFT;
@@ -93,7 +95,9 @@ export function Daylight(props: DaylightProps) {
   // Avant la première image : le tone mapping fait partie des shaders,
   // l'exposition n'est qu'un uniform.
   useLayoutEffect(() => {
-    gl.toneMapping = THREE.NeutralToneMapping;
+    gl.toneMapping = toneMapped
+      ? THREE.NeutralToneMapping
+      : THREE.NoToneMapping;
     gl.toneMappingExposure = THREE.MathUtils.lerp(
       NIGHT.exposure,
       DAY.exposure,
@@ -102,7 +106,7 @@ export function Daylight(props: DaylightProps) {
     bakedLight.sky.copy(sky).multiplyScalar(skyIntensity);
     bakedLight.sun.copy(sunColor).multiplyScalar(sunIntensity);
     invalidate();
-  }, [gl, day, baked, invalidate]);
+  }, [gl, day, baked, toneMapped, invalidate]);
 
   return (
     <>
