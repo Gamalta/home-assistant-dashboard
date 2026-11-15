@@ -45,7 +45,9 @@ test('n’affiche que les températures et la climatisation depuis le menu rapid
   const shutters = page.locator(
     'div:has(> canvas) ~ div button:has(path[transform="rotate(90 480 -480)"])',
   );
-  const climate = page.getByRole('button', {name: '22°', exact: true}).first();
+  const climate = page
+    .getByRole('button', {name: '22°, consigne 25°', exact: true})
+    .first();
   await expect(shutters.first()).toBeVisible();
 
   await dial.tap();

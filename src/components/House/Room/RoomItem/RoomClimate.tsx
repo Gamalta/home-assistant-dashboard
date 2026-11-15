@@ -1,4 +1,5 @@
 import {UNKNOWN, useEntity} from '@hakit/core';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {ClimateConfigType} from '../../../../configs/house';
 import {useState} from 'react';
@@ -25,6 +26,14 @@ export function RoomClimate(props: RoomClimateProps) {
   });
 
   if (!climate) return;
+  const degrees =
+    climate.state === UNKNOWN || !climate.attributes.current_temperature
+      ? '--'
+      : Math.floor(Number(climate.attributes.current_temperature));
+  const target =
+    climate.state === 'off'
+      ? undefined
+      : climate.attributes.temperature?.toLocaleString('fr');
   return (
     <>
       <motion.div layoutId={`${id}-climate`}>
@@ -50,12 +59,15 @@ export function RoomClimate(props: RoomClimateProps) {
               px: '6px',
             }}
             onClick={() => setClimateModal(true)}
+            // Chromium ne nomme pas un bouton qui contient un indice.
+            aria-label={target && `${degrees}°, consigne ${target}°`}
           >
-            {climate.state === UNKNOWN ||
-            !climate.attributes.current_temperature
-              ? '--'
-              : Math.floor(Number(climate.attributes.current_temperature))}
-            °
+            {degrees}°
+            {target && (
+              <Box component="sub" sx={{fontSize: '0.75em', opacity: 0.8}}>
+                /{target}°
+              </Box>
+            )}
           </Button>
         )}
       </motion.div>

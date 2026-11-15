@@ -21,7 +21,7 @@ test('se met en veille, puis se réveille sans actionner ce qui est dessous', as
   await page.goto('/');
   await waitForScene(page);
   const roomButton = page
-    .getByRole('button', {name: '22°', exact: true})
+    .getByRole('button', {name: '22°, consigne 25°', exact: true})
     .first();
   const box = await roomButton.boundingBox();
 

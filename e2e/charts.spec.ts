@@ -5,7 +5,10 @@ async function openClimateHistory(page: Page) {
   await page.goto('/');
   await waitForScene(page);
   // Le séjour est la première pièce de la config démo.
-  await page.getByRole('button', {name: '22°', exact: true}).first().click();
+  await page
+    .getByRole('button', {name: '22°, consigne 25°', exact: true})
+    .first()
+    .click();
   const history = page.getByRole('button', {name: 'Historique'});
   // Un clic pendant l'animation d'ouverture de la modale peut tomber à côté.
   await expect(history).toBeVisible();
